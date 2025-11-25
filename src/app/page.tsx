@@ -1,65 +1,129 @@
-import Image from "next/image";
+import { headers } from "next/headers";
+import HomeClient, {
+  type CityRate,
+  type NewsItem,
+  type RateResponse,
+} from "./components/HomeClient";
 
-export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+// Fetch scraped rates including India rate
+// Using Next.js cache with 30-minute revalidation to prevent multiple calls
+async function getScrapedRates() {
+  const headersList = await headers();
+  const host = headersList.get("host") ?? "localhost:3000";
+  const protocol = host.startsWith("localhost") ? "http" : "https";
+  
+  console.log("🔄 [HomePage] Fetching scraped rates from API...");
+  
+  try {
+    const res = await fetch(`${protocol}://${host}/api/scrape-rates`, {
+      next: { revalidate: 1800 }, // Cache for 30 minutes
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch scraped rates");
+    }
+
+    const data = await res.json();
+    console.log("✅ [HomePage] Scraped rates received successfully");
+    return data;
+  } catch (error) {
+    console.error("❌ [HomePage] Failed to fetch scraped rates:", error);
+    return null;
+  }
+}
+
+const mockCities: CityRate[] = [
+  {
+    name: "Chennai",
+    gold22k: 59680,
+    gold24k: 64890,
+    updated: "10:35 AM",
+    change: 0.4,
+  },
+  {
+    name: "Mumbai",
+    gold22k: 59410,
+    gold24k: 64600,
+    updated: "10:30 AM",
+    change: -0.1,
+  },
+  {
+    name: "Bangalore",
+    gold22k: 59720,
+    gold24k: 64980,
+    updated: "10:33 AM",
+    change: 0.2,
+  },
+  {
+    name: "Delhi",
+    gold22k: 59540,
+    gold24k: 64720,
+    updated: "10:32 AM",
+    change: 0.15,
+  },
+  {
+    name: "Hyderabad",
+    gold22k: 59390,
+    gold24k: 64580,
+    updated: "10:31 AM",
+    change: -0.05,
+  },
+  {
+    name: "Coimbatore",
+    gold22k: 59610,
+    gold24k: 64810,
+    updated: "10:36 AM",
+    change: 0.25,
+  },
+];
+
+const mockNews: NewsItem[] = [
+  {
+    id: 1,
+    title: "Why Gold Prices Spiked Today?",
+    date: "20 Nov 2025",
+    summary:
+      "Rupee weakness and festive demand lifted domestic prices despite a flat COMEX session.",
+    city: "India",
+    slug: "gold-price-spike-today",
+  },
+  {
+    id: 2,
+    title: "Chennai Demand Pushes 22K Higher",
+    date: "19 Nov 2025",
+    summary:
+      "Retail buying in T Nagar and increased wedding orders nudged 22K prices up by ₹45.",
+    city: "Chennai",
+    slug: "chennai-gold-demand",
+  },
+  {
+    id: 3,
+    title: "Is 24K Premium Justified in 2025?",
+    date: "18 Nov 2025",
+    summary:
+      "We decode the spread between 22K vs 24K coins and how investors can optimize purchases.",
+    slug: "24k-premium-2025",
+  },
+];
+
+export default async function HomePage() {
+  const scrapedData = await getScrapedRates();
+  
+  console.log("Scraped data:", JSON.stringify(scrapedData, null, 2));
+  
+  // Use scraped India rate or fallback to mock
+  const baseRates: RateResponse = {
+    date: new Date().toLocaleDateString("en-IN"),
+    gold_24k: scrapedData?.success && scrapedData?.data?.india?.gold24k 
+      ? scrapedData.data.india.gold24k 
+      : 64500,
+    gold_22k: scrapedData?.success && scrapedData?.data?.india?.gold22k 
+      ? scrapedData.data.india.gold22k 
+      : 59200,
+    city: "India",
+  };
+  
+  console.log("Base rates being used:", baseRates);
+
+  return <HomeClient baseRates={baseRates} cities={mockCities} newsItems={mockNews} />;
 }

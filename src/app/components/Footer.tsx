@@ -1,0 +1,31 @@
+export default function Footer() {
+  return (
+    <footer className="mt-12 border-t border-slate-200 bg-white">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 text-sm text-slate-600 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-lg font-semibold text-charcoal">GoldRate</p>
+          <p className="text-sm text-slate-500">
+            Live gold prices updated daily • 22K & 24K
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-4">
+          {["About", "Contact", "Privacy", "Terms", "Disclaimer"].map(
+            (item) => (
+              <a
+                key={item}
+                className="text-sm text-slate-500 hover:text-amber-600"
+                href="#"
+              >
+                {item}
+              </a>
+            ),
+          )}
+        </div>
+      </div>
+      <div className="bg-slate-50 py-4 text-center text-xs text-slate-500">
+        © {new Date().getFullYear()} GoldRate. All rights reserved.
+      </div>
+    </footer>
+  );
+}
+
