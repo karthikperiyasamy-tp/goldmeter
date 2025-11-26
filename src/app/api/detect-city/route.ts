@@ -130,14 +130,16 @@ export async function GET(request: NextRequest) {
 
           if (geoResponse.ok) {
             geoData = await geoResponse.json();
-            detectedCity = geoData.city?.toLowerCase();
-            detectedCountry = geoData.country_code;
-            
-            console.log(`🗺️  [Detect-City] Geolocation data:`, {
-              city: detectedCity,
-              country: detectedCountry,
-              region: geoData.region,
-            });
+            if (geoData) {
+              detectedCity = geoData.city?.toLowerCase() ?? null;
+              detectedCountry = geoData.country_code ?? null;
+              
+              console.log(`🗺️  [Detect-City] Geolocation data:`, {
+                city: detectedCity,
+                country: detectedCountry,
+                region: geoData.region,
+              });
+            }
           }
         } catch (geoError) {
           console.error("❌ [Detect-City] Geolocation API error:", geoError);
