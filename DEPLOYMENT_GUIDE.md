@@ -176,7 +176,7 @@ git push origin main
 1. In Vercel dashboard, go to **Settings** → **Cron Jobs**
 2. You should see:
    - Path: `/api/cron/daily-scrape`
-   - Schedule: `30 4 * * *` (10:00 AM IST daily)
+   - Schedule: `0 * * * *` (Every hour)
    - Status: **Active**
 
 ### 5.5: Manual First Run (Important!)
@@ -209,10 +209,10 @@ This ensures data is available immediately rather than waiting for the first CRO
 - Browse Collections → `goldrate.gold_prices`
 - Should see 11 documents with today's date
 
-### 6.4: Check CRON Logs (Next Day)
+### 6.4: Check CRON Logs (Within an Hour)
 - Go to Vercel Dashboard → Logs
 - Filter by `/api/cron/daily-scrape`
-- Should see successful runs at 10 AM IST daily
+- Should see successful runs every hour (at the start of each hour)
 
 ---
 

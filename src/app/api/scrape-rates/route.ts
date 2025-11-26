@@ -311,6 +311,42 @@ async function scrapeGoodReturnsCity(citySlug: string): Promise<GoldRate> {
   }
 }
 
+/**
+ * Performs the actual scraping work
+ * Can be called directly or via HTTP
+ */
+export async function performScraping(): Promise<ScrapedRates> {
+  console.log("🌐 [Scrape] Starting fresh scrape...");
+  
+  // Scrape India rate and all cities in parallel
+  const indiaPromise = scrapeGoodReturnsIndia();
+  const cityPromises = CITIES.map(async (city) => {
+    const rates = await scrapeGoodReturnsCity(city.slug);
+    return { name: city.name, rates };
+  });
+
+  const [india, ...cityResults] = await Promise.all([
+    indiaPromise,
+    ...cityPromises,
+  ]);
+
+  // Convert array to object with city names as keys
+  const cities: CityRates = {};
+  cityResults.forEach(({ name, rates }) => {
+    cities[name] = rates;
+  });
+
+  const results: ScrapedRates = {
+    india,
+    cities,
+  };
+
+  console.log("✅ [Scrape] Fresh data scraped");
+  console.log(`📊 [Scrape] India rates: 22K=₹${india.gold22k}, 24K=₹${india.gold24k}`);
+
+  return results;
+}
+
 export async function GET() {
   try {
     console.log("🔍 [Scrape-Rates] API called");
@@ -331,37 +367,13 @@ export async function GET() {
 
     console.log("🌐 [Scrape-Rates] Cache miss or expired, scraping fresh data...");
     
-    // Scrape India rate and all cities in parallel
-    const indiaPromise = scrapeGoodReturnsIndia();
-    const cityPromises = CITIES.map(async (city) => {
-      const rates = await scrapeGoodReturnsCity(city.slug);
-      return { name: city.name, rates };
-    });
-
-    const [india, ...cityResults] = await Promise.all([
-      indiaPromise,
-      ...cityPromises,
-    ]);
-
-    // Convert array to object with city names as keys
-    const cities: CityRates = {};
-    cityResults.forEach(({ name, rates }) => {
-      cities[name] = rates;
-    });
-
-    const results: ScrapedRates = {
-      india,
-      cities,
-    };
+    const results = await performScraping();
 
     // Update cache
     cachedData = {
       data: results,
       timestamp: now,
     };
-
-    console.log("✅ [Scrape-Rates] Fresh data scraped and cached");
-    console.log(`📊 [Scrape-Rates] India rates: 22K=₹${india.gold22k}, 24K=₹${india.gold24k}`);
 
     return NextResponse.json({
       success: true,

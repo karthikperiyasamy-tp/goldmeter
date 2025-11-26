@@ -6,7 +6,7 @@ MongoDB Atlas integration has been successfully implemented for the GoldRate app
 
 1. ✅ Stores gold rates in MongoDB Atlas
 2. ✅ Reads rates from DB with fallback to scraping
-3. ✅ Runs daily CRON job (10 AM IST) to scrape and save rates
+3. ✅ Runs hourly CRON job to scrape and save rates
 4. ✅ Provides manual trigger endpoint for testing
 
 ## Files Created/Modified
@@ -150,18 +150,20 @@ Visit `http://localhost:3000` - should show rates from DB
 
 ## CRON Schedule
 
-**Schedule**: Daily at 10:00 AM IST (4:30 AM UTC)
-**Cron Expression**: `30 4 * * *`
+**Schedule**: Every hour (at the start of each hour)
+**Cron Expression**: `0 * * * *`
 
 Configured in `vercel.json`:
 ```json
 {
   "crons": [{
     "path": "/api/cron/daily-scrape",
-    "schedule": "30 4 * * *"
+    "schedule": "0 * * * *"
   }]
 }
 ```
+
+**Note**: Runs 24 times per day at: 00:00, 01:00, 02:00, ..., 23:00 UTC
 
 ## Deployment to Vercel
 
@@ -191,7 +193,7 @@ Configured in `vercel.json`:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     Daily at 10 AM IST                       │
+│                     Every Hour (0 * * * *)                   │
 │                  Vercel CRON Trigger                         │
 └────────────────────────┬────────────────────────────────────┘
                          │

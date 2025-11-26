@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { saveGoldRates } from '@/lib/goldRatesDB';
+import { performScraping } from '../../scrape-rates/route';
 
 /**
  * Vercel Cron Job endpoint
- * This is triggered automatically by Vercel at scheduled times
+ * This is triggered automatically by Vercel every hour
  * Vercel automatically adds the Authorization header for cron jobs
  * 
- * Scheduled in vercel.json
+ * Schedule: 0 * * * * (every hour)
+ * Configured in vercel.json
  */
 export async function GET(request: NextRequest) {
   try {
@@ -30,37 +32,18 @@ export async function GET(request: NextRequest) {
       console.log('🔧 [Cron] Running in development mode (auth check skipped)');
     }
     
-    // Get the host for internal API call
-    const host = request.headers.get('host') || 'localhost:3000';
-    const protocol = host.startsWith('localhost') ? 'http' : 'https';
-    
-    // Call the scraping API
-    console.log('🌐 [Cron] Fetching rates from scraping API...');
-    const scrapeResponse = await fetch(`${protocol}://${host}/api/scrape-rates`, {
-      cache: 'no-store',
-      headers: {
-        'User-Agent': 'GoldRate-Cron/1.0',
-      },
-    });
-    
-    if (!scrapeResponse.ok) {
-      throw new Error(`Scraping failed with status ${scrapeResponse.status}`);
-    }
-    
-    const scrapedData = await scrapeResponse.json();
-    
-    if (!scrapedData.success) {
-      throw new Error('Scraping returned unsuccessful response');
-    }
+    // Perform scraping directly (no HTTP call)
+    console.log('🌐 [Cron] Starting scraping...');
+    const scrapedData = await performScraping();
     
     console.log('✅ [Cron] Scraping successful');
-    console.log(`📊 [Cron] India: 22K=₹${scrapedData.data.india.gold22k}, 24K=₹${scrapedData.data.india.gold24k}`);
+    console.log(`📊 [Cron] India: 22K=₹${scrapedData.india.gold22k}, 24K=₹${scrapedData.india.gold24k}`);
     
     // Save to MongoDB
     console.log('💾 [Cron] Saving rates to MongoDB...');
     const saveResult = await saveGoldRates(
-      scrapedData.data.india,
-      scrapedData.data.cities
+      scrapedData.india,
+      scrapedData.cities
     );
     
     if (!saveResult.success) {
@@ -74,8 +57,8 @@ export async function GET(request: NextRequest) {
       success: true,
       message: successMessage,
       scraped: {
-        india: scrapedData.data.india,
-        citiesCount: Object.keys(scrapedData.data.cities).length,
+        india: scrapedData.india,
+        citiesCount: Object.keys(scrapedData.cities).length,
       },
       saved: saveResult.saved,
       errors: saveResult.errors,

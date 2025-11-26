@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { saveGoldRates } from '@/lib/goldRatesDB';
+import { performScraping } from '../../scrape-rates/route';
 
 /**
  * Manual trigger endpoint to scrape rates and save to MongoDB
@@ -25,33 +26,17 @@ export async function POST(request: NextRequest) {
 
     console.log('🔧 [Admin] Manual scrape-and-save triggered');
     
-    // Get the host for internal API call
-    const host = request.headers.get('host') || 'localhost:3000';
-    const protocol = host.startsWith('localhost') ? 'http' : 'https';
-    
-    // Call the scraping API
-    console.log('🌐 [Admin] Calling scrape-rates API...');
-    const scrapeResponse = await fetch(`${protocol}://${host}/api/scrape-rates`, {
-      cache: 'no-store',
-    });
-    
-    if (!scrapeResponse.ok) {
-      throw new Error(`Scraping failed with status ${scrapeResponse.status}`);
-    }
-    
-    const scrapedData = await scrapeResponse.json();
-    
-    if (!scrapedData.success) {
-      throw new Error('Scraping returned unsuccessful response');
-    }
+    // Perform scraping directly (no HTTP call)
+    console.log('🌐 [Admin] Starting scraping...');
+    const scrapedData = await performScraping();
     
     console.log('✅ [Admin] Scraping successful');
     
     // Save to database
     console.log('💾 [Admin] Saving rates to MongoDB...');
     const saveResult = await saveGoldRates(
-      scrapedData.data.india,
-      scrapedData.data.cities
+      scrapedData.india,
+      scrapedData.cities
     );
     
     if (!saveResult.success) {
@@ -64,8 +49,8 @@ export async function POST(request: NextRequest) {
       success: true,
       message: 'Rates scraped and saved successfully',
       scraped: {
-        india: scrapedData.data.india,
-        citiesCount: Object.keys(scrapedData.data.cities).length,
+        india: scrapedData.india,
+        citiesCount: Object.keys(scrapedData.cities).length,
       },
       saved: saveResult.saved,
       errors: saveResult.errors,
