@@ -125,5 +125,30 @@ export default async function HomePage() {
   
   console.log("Base rates being used:", baseRates);
 
-  return <HomeClient baseRates={baseRates} cities={mockCities} newsItems={mockNews} />;
+  // Convert scraped city data to CityRate format, or fallback to mock
+  let cityRates: CityRate[] = mockCities;
+  
+  if (scrapedData?.success && scrapedData?.data?.cities) {
+    const cities = scrapedData.data.cities as Record<string, { gold22k: number | null; gold24k: number | null; timestamp: string }>;
+    
+    cityRates = Object.entries(cities)
+      .filter(([_, rates]) => rates.gold22k !== null && rates.gold24k !== null)
+      .map(([name, rates]) => ({
+        name,
+        gold22k: rates.gold22k as number,
+        gold24k: rates.gold24k as number,
+        updated: new Date(rates.timestamp).toLocaleTimeString("en-IN", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        }),
+        change: 0, // Calculate change if you have historical data
+      }));
+    
+    console.log(`✅ Using ${cityRates.length} scraped city rates`);
+  } else {
+    console.log("⚠️ Using mock city data (scraping failed or no data)");
+  }
+
+  return <HomeClient baseRates={baseRates} cities={cityRates} newsItems={mockNews} />;
 }
