@@ -4,6 +4,7 @@ import HomeClient, {
   type NewsItem,
   type RateResponse,
 } from "./components/HomeClient";
+import { getLatestGoldRates } from "@/lib/goldRatesDB";
 
 // Fetch scraped rates including India rate
 // Using Next.js cache with 30-minute revalidation to prevent multiple calls
@@ -107,47 +108,90 @@ const mockNews: NewsItem[] = [
 ];
 
 export default async function HomePage() {
-  const scrapedData = await getScrapedRates();
+  console.log("🏠 [HomePage] Loading gold rates...");
   
-  console.log("Scraped data:", JSON.stringify(scrapedData, null, 2));
+  // Try to fetch from database first
+  let dbData = null;
+  try {
+    dbData = await getLatestGoldRates();
+    console.log("📊 [HomePage] DB fetch result:", dbData.india ? "India data found" : "No India data", Object.keys(dbData.cities).length, "cities found");
+  } catch (error) {
+    console.error("❌ [HomePage] Database error:", error);
+  }
   
-  // Use scraped India rate or fallback to mock
-  const baseRates: RateResponse = {
-    date: new Date().toLocaleDateString("en-IN"),
-    gold_24k: scrapedData?.success && scrapedData?.data?.india?.gold24k 
-      ? scrapedData.data.india.gold24k 
-      : 64500,
-    gold_22k: scrapedData?.success && scrapedData?.data?.india?.gold22k 
-      ? scrapedData.data.india.gold22k 
-      : 59200,
-    city: "India",
-  };
-  
-  console.log("Base rates being used:", baseRates);
-
-  // Convert scraped city data to CityRate format, or fallback to mock
+  // Prepare base rates (India)
+  let baseRates: RateResponse;
   let cityRates: CityRate[] = mockCities;
   
-  if (scrapedData?.success && scrapedData?.data?.cities) {
-    const cities = scrapedData.data.cities as Record<string, { gold22k: number | null; gold24k: number | null; timestamp: string }>;
+  if (dbData?.india) {
+    // Use database data
+    console.log("✅ [HomePage] Using rates from MongoDB");
+    baseRates = {
+      date: dbData.india.date.toLocaleDateString("en-IN"),
+      gold_24k: dbData.india.gold24k,
+      gold_22k: dbData.india.gold22k,
+      city: "India",
+    };
     
-    cityRates = Object.entries(cities)
-      .filter(([_, rates]) => rates.gold22k !== null && rates.gold24k !== null)
-      .map(([name, rates]) => ({
+    // Convert DB city data to CityRate format
+    if (Object.keys(dbData.cities).length > 0) {
+      cityRates = Object.entries(dbData.cities).map(([name, rates]) => ({
         name,
-        gold22k: rates.gold22k as number,
-        gold24k: rates.gold24k as number,
-        updated: new Date(rates.timestamp).toLocaleTimeString("en-IN", {
+        gold22k: rates.gold22k,
+        gold24k: rates.gold24k,
+        updated: rates.date.toLocaleTimeString("en-IN", {
           hour: "numeric",
           minute: "2-digit",
           hour12: true,
         }),
-        change: 0, // Calculate change if you have historical data
+        change: 0, // TODO: Calculate from historical data
       }));
-    
-    console.log(`✅ Using ${cityRates.length} scraped city rates`);
+      console.log(`✅ [HomePage] Using ${cityRates.length} city rates from MongoDB`);
+    }
   } else {
-    console.log("⚠️ Using mock city data (scraping failed or no data)");
+    // Fallback to scraping
+    console.log("⚠️  [HomePage] No DB data found, falling back to scraping");
+    const scrapedData = await getScrapedRates();
+    
+    if (scrapedData?.success && scrapedData?.data?.india) {
+      console.log("✅ [HomePage] Using scraped rates");
+      baseRates = {
+        date: new Date().toLocaleDateString("en-IN"),
+        gold_24k: scrapedData.data.india.gold24k || 64500,
+        gold_22k: scrapedData.data.india.gold22k || 59200,
+        city: "India",
+      };
+      
+      // Convert scraped city data
+      if (scrapedData.data.cities) {
+        const cities = scrapedData.data.cities as Record<string, { gold22k: number | null; gold24k: number | null; timestamp: string }>;
+        
+        cityRates = Object.entries(cities)
+          .filter(([_, rates]) => rates.gold22k !== null && rates.gold24k !== null)
+          .map(([name, rates]) => ({
+            name,
+            gold22k: rates.gold22k as number,
+            gold24k: rates.gold24k as number,
+            updated: new Date(rates.timestamp).toLocaleTimeString("en-IN", {
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true,
+            }),
+            change: 0,
+          }));
+        
+        console.log(`✅ [HomePage] Using ${cityRates.length} scraped city rates`);
+      }
+    } else {
+      // Final fallback to mock data
+      console.log("⚠️  [HomePage] Using mock data (DB and scraping unavailable)");
+      baseRates = {
+        date: new Date().toLocaleDateString("en-IN"),
+        gold_24k: 64500,
+        gold_22k: 59200,
+        city: "India",
+      };
+    }
   }
 
   return <HomeClient baseRates={baseRates} cities={cityRates} newsItems={mockNews} />;

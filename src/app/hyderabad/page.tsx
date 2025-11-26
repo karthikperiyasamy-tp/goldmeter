@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import CityPageShell from "../components/CityPageShell";
+import { fetchCityRates } from "@/lib/fetchCityRates";
 
 const grams = [
   { label: "1g", value: 1 },
@@ -8,28 +9,13 @@ const grams = [
   { label: "100g", value: 100 },
 ];
 
-async function fetchRates() {
+export default async function HyderabadPage() {
   const headersList = await headers();
   const host = headersList.get("host") ?? "localhost:3000";
-  const protocol = host.startsWith("localhost") ? "http" : "https";
-  const res = await fetch(`${protocol}://${host}/api/scrape-rates`, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    throw new Error("Unable to fetch rates");
-  }
-
-  return res.json();
-}
-
-export default async function HyderabadPage() {
-  try {
-    const data = await fetchRates();
-    const hyderabadRates = data.data?.cities?.Hyderabad;
-    
-    const gold22k = hyderabadRates?.gold22k || 59390;
-    const gold24k = hyderabadRates?.gold24k || 64580;
+  
+  const rates = await fetchCityRates("Hyderabad", host);
+  const gold22k = rates.gold22k;
+  const gold24k = rates.gold24k;
 
     const gramPrices = [
       {
@@ -91,71 +77,6 @@ export default async function HyderabadPage() {
         similarCities={["Vijayawada", "Bangalore", "Chennai", "Visakhapatnam"]}
       />
     );
-  } catch (error) {
-    const gold22k = 59390;
-    const gold24k = 64580;
-
-    const gramPrices = [
-      {
-        carat: "22K",
-        values: grams.map((item) => ({
-          label: item.label,
-          price: (gold22k / 10) * item.value,
-        })),
-      },
-      {
-        carat: "24K",
-        values: grams.map((item) => ({
-          label: item.label,
-          price: (gold24k / 10) * item.value,
-        })),
-      },
-    ];
-
-    return (
-      <CityPageShell
-        city="Hyderabad"
-        updated={new Date().toLocaleDateString("en-IN")}
-        gold22k={gold22k}
-        gold24k={gold24k}
-        gramPrices={gramPrices}
-        todayVsYesterday={{ gold22k: -5, gold24k: 10 }}
-        localInfo={[
-          {
-            title: "Hallmarking centers",
-            description:
-              "Telangana State Hallmarking Center and Regional Assay Office (Hyderabad).",
-          },
-          {
-            title: "Making charges",
-            description: "₹180 – ₹500 per gram for 22K ornaments in Old City.",
-          },
-          {
-            title: "Top jewellery hubs",
-            description: "Abids, Sultan Bazaar, and Begum Bazaar flagship stores.",
-          },
-        ]}
-        faqs={[
-          {
-            question: "Why is Hyderabad gold rate competitive?",
-            answer:
-              "Lower state taxes and local competition keep Hyderabad rates among the most competitive in South India.",
-          },
-          {
-            question: "Best place to buy gold in Hyderabad?",
-            answer:
-              "Abids and Sultan Bazaar offer a wide range of jewellers with competitive prices and traditional designs.",
-          },
-          {
-            question: "What affects Hyderabad gold price?",
-            answer:
-              "International gold prices, rupee exchange rate, and local demand during festivals like Ugadi.",
-          },
-        ]}
-        similarCities={["Vijayawada", "Bangalore", "Chennai", "Visakhapatnam"]}
-      />
-    );
-  }
 }
 
 export const metadata = {
