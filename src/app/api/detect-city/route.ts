@@ -52,7 +52,7 @@ function getRandomTestIP(): string {
 }
 
 // Get mock geolocation data for test IPs (development mode only)
-function getMockGeoData(ip: string) {
+function getMockGeoData(ip: string): { city: string; country: string; region: string } | null {
   return MOCK_GEO_DATA[ip] || null;
 }
 
@@ -94,22 +94,28 @@ export async function GET(request: NextRequest) {
     }
 
     // Use ipapi.co for free IP geolocation OR mock data in development
-    let detectedCity = null;
-    let detectedCountry = null;
-    let geoData = null;
+    let detectedCity: string | null = null;
+    let detectedCountry: string | null = null;
+    let geoData: { 
+      city?: string; 
+      country?: string; 
+      region?: string; 
+      country_code?: string;
+    } | null = null;
 
     if (ip !== "unknown" && ip !== "127.0.0.1" && !ip.startsWith("::")) {
       // In development mode, use mock data for test IPs to avoid external API calls
       if (isDevelopment && MOCK_GEO_DATA[ip]) {
         console.log(`🧪 [Detect-City] Using MOCK geolocation data (dev mode)`);
-        geoData = getMockGeoData(ip);
-        if (geoData) {
-          detectedCity = geoData.city.toLowerCase();
-          detectedCountry = geoData.country;
+        const mockData = getMockGeoData(ip);
+        if (mockData) {
+          geoData = mockData;
+          detectedCity = mockData.city.toLowerCase();
+          detectedCountry = mockData.country;
           console.log(`🗺️  [Detect-City] Mock geolocation data:`, {
             city: detectedCity,
             country: detectedCountry,
-            region: geoData.region,
+            region: mockData.region,
           });
         }
       } else {
