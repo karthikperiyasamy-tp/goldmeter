@@ -176,8 +176,10 @@ git push origin main
 1. In Vercel dashboard, go to **Settings** → **Cron Jobs**
 2. You should see:
    - Path: `/api/cron/daily-scrape`
-   - Schedule: `0 * * * *` (Every hour)
+   - Schedule: `0 10 * * *` (Daily at 10:00 AM UTC)
    - Status: **Active**
+
+**Note:** Vercel's free plan only supports **once-daily** cron jobs. For **hourly scraping**, see `CRON_ALTERNATIVES.md` for free alternatives using GitHub Actions.
 
 ### 5.5: Manual First Run (Important!)
 
