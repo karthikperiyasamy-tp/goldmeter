@@ -186,7 +186,7 @@ git push origin main
 After deployment, manually trigger scraping to populate the database:
 
 ```bash
-curl -X POST https://gdrate.app/api/admin/scrape-and-save \
+curl -X POST https://goldmeter.in/api/admin/scrape-and-save \
   -H "Authorization: Bearer YOUR_CRON_SECRET_HERE"
 ```
 
@@ -197,13 +197,13 @@ This ensures data is available immediately rather than waiting for the first CRO
 ## ✅ Step 6: Verify Everything Works
 
 ### 6.1: Check Homepage
-- Visit https://gdrate.app
+- Visit https://goldmeter.in
 - Rates should display from database
 - "Live" badges should show
 
 ### 6.2: Check City Pages
-- Visit https://gdrate.app/chennai
-- Visit https://gdrate.app/mumbai
+- Visit https://goldmeter.in/chennai
+- Visit https://goldmeter.in/mumbai
 - Etc. - all should show DB data
 
 ### 6.3: Check MongoDB

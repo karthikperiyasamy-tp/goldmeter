@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/'],
     },
-    sitemap: 'https://gdrate.app/sitemap.xml',
+    sitemap: 'https://goldmeter.in/sitemap.xml',
   }
 }
 

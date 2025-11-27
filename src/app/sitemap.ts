@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 
-const baseUrl = 'https://gdrate.app'
+const baseUrl = 'https://goldmeter.in'
 
 // List of supported cities
 const cities = [

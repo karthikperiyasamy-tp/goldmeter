@@ -185,7 +185,7 @@ Configured in `vercel.json`:
 
 4. **Manual First Run:**
    ```bash
-   curl -X POST https://gdrate.app/api/admin/scrape-and-save \
+   curl -X POST https://goldmeter.in/api/admin/scrape-and-save \
      -H "Authorization: Bearer YOUR_CRON_SECRET"
    ```
 
