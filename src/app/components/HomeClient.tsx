@@ -4,11 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import CitySelector from "./CitySelector";
-import Footer from "./Footer";
 import PriceHero from "./PriceHero";
 import RateCard from "./RateCard";
-import RatesModal from "./RatesModal";
-import TopBar from "./TopBar";
 import PriceChart from "./PriceChart";
 import { generateMockChartData } from "../utils/chartDataHelpers";
 
@@ -69,38 +66,13 @@ const formatINR = new Intl.NumberFormat("en-IN", {
   maximumFractionDigits: 0,
 });
 
-type GoldRate = {
-  gold22k: number | null;
-  gold24k: number | null;
-  error?: string;
-  timestamp: string;
-};
-
-type CityRates = {
-  [city: string]: GoldRate;
-};
-
-type ScrapedRatesData = {
-  india: {
-    gold22k: number | null;
-    gold24k: number | null;
-    error?: string;
-    timestamp: string;
-  };
-  cities: CityRates;
-};
-
 export default function HomeClient({
   baseRates,
   cities,
   newsItems,
 }: HomeClientProps) {
   const router = useRouter();
-  const [activeCity, setActiveCity] = useState("India"); // Default to India on homepage
   const [chartRange, setChartRange] = useState<"7D" | "30D" | "1Y">("7D");
-  const [modalOpen, setModalOpen] = useState(false);
-  const [scrapedData, setScrapedData] = useState<ScrapedRatesData | null>(null);
-  const [loading, setLoading] = useState(false);
 
   // Auto-detect user's city and redirect
   useEffect(() => {
@@ -139,27 +111,6 @@ export default function HomeClient({
     detectAndRedirect();
   }, [router]);
 
-  const fetchGoldRates = async () => {
-    setModalOpen(true);
-    setLoading(true);
-    setScrapedData(null);
-
-    try {
-      const response = await fetch("/api/scrape-rates");
-      const result = await response.json();
-
-      if (result.success) {
-        setScrapedData(result.data);
-      } else {
-        console.error("Failed to fetch rates:", result.error);
-      }
-    } catch (error) {
-      console.error("Error fetching rates:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Use India rates directly from baseRates for homepage
   const hero22k = baseRates.gold_22k;
   const hero24k = baseRates.gold_24k;
@@ -176,42 +127,11 @@ export default function HomeClient({
 
   return (
     <div className="min-h-screen bg-[#fffdf7] text-charcoal">
-      <TopBar city={activeCity} onCityChange={setActiveCity} />
       <PriceHero
         city="India"
         gold22k={hero22k}
         gold24k={hero24k}
         updated={baseRates.date}
-      />
-
-      {/* Test Button for Web Scraping */}
-      <div className="mx-auto max-w-6xl px-4 py-4">
-        <div className="rounded-2xl border-2 border-dashed border-amber-300 bg-amber-50/50 p-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm font-semibold text-amber-900">
-                🧪 Test Web Scraping Feature
-              </p>
-              <p className="text-xs text-amber-700">
-                Fetch real-time gold rates from GoodReturns for 10+ cities
-              </p>
-            </div>
-            <button
-              onClick={fetchGoldRates}
-              disabled={loading}
-              className="rounded-full bg-amber-600 px-6 py-2 text-sm font-semibold text-white shadow-soft hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? "Fetching..." : "Fetch Gold Rates"}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <RatesModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        data={scrapedData}
-        loading={loading}
       />
 
       <main className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-8">
@@ -293,7 +213,6 @@ export default function HomeClient({
           gold22k: city.gold22k,
           updated: city.updated,
         }))}
-        onSelect={setActiveCity}
       />
 
       <section className="mx-auto w-full max-w-6xl px-4">
@@ -344,16 +263,22 @@ export default function HomeClient({
             <p className="text-sm text-slate-500">
               Estimate making + wastage charges
             </p>
-            <button className="mt-4 rounded-full border border-amber-200 px-4 py-2 text-sm font-semibold text-amber-600">
-              Coming soon
-            </button>
+            <Link
+              href="/wastage-calculator"
+              className="mt-4 inline-flex rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white"
+            >
+              Open
+            </Link>
           </div>
           <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-soft">
             <p className="text-sm font-semibold">Purity Converter</p>
             <p className="text-sm text-slate-500">22K ↔ 24K in one tap</p>
-            <button className="mt-4 rounded-full border border-amber-200 px-4 py-2 text-sm font-semibold text-amber-600">
-              Coming soon
-            </button>
+            <Link
+              href="/purity-converter"
+              className="mt-4 inline-flex rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white"
+            >
+              Open
+            </Link>
           </div>
         </div>
       </section>
@@ -423,28 +348,6 @@ export default function HomeClient({
           </div>
         </div>
       </section>
-
-      <Footer />
-
-      <div className="fixed bottom-6 left-1/2 z-40 w-full max-w-xs -translate-x-1/2 rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-sm shadow-soft backdrop-blur md:hidden">
-        <div className="flex items-center justify-between">
-          <button
-            className="font-semibold text-amber-600"
-            onClick={() => setActiveCity(cities[0]?.name ?? "Chennai")}
-          >
-            Home
-          </button>
-          <Link href="/chennai" className="text-slate-500">
-            City
-          </Link>
-          <Link href="/calculator" className="text-slate-500">
-            Calc
-          </Link>
-          <Link href="/news" className="text-slate-500">
-            News
-          </Link>
-        </div>
-      </div>
     </div>
   );
 }

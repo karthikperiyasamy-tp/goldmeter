@@ -14,7 +14,6 @@ const defaultCityRates: CityRate[] = [
   { name: "India", gold22k: 59200, gold24k: 64500 },
   { name: "Chennai", gold22k: 59680, gold24k: 64890 },
   { name: "Mumbai", gold22k: 59410, gold24k: 64600 },
-  { name: "Hyderabad", gold22k: 59390, gold24k: 64580 },
 ];
 
 const formatCurrency = (value: number) =>
@@ -22,11 +21,12 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: 0,
   });
 
-export default function CalculatorPage() {
+export default function WastageCalculatorPage() {
   const [cityRates, setCityRates] = useState<CityRate[]>(defaultCityRates);
   const [city, setCity] = useState<CityRate>(defaultCityRates[0]);
   const [grams, setGrams] = useState(10);
   const [purity, setPurity] = useState<"22K" | "24K">("24K");
+  const [wastagePercent, setWastagePercent] = useState(8);
   const [makingCharges, setMakingCharges] = useState(150);
   const [loading, setLoading] = useState(true);
 
@@ -39,11 +39,11 @@ export default function CalculatorPage() {
         
         if (data.success && data.rates && data.rates.length > 0) {
           setCityRates(data.rates);
-          setCity(data.rates[0]); // Set first city as default
-          console.log(`✅ [Calculator] Loaded ${data.rates.length} city rates from ${data.source}`);
+          setCity(data.rates[0]);
+          console.log(`✅ [Wastage Calculator] Loaded ${data.rates.length} city rates`);
         }
       } catch (error) {
-        console.error('❌ [Calculator] Failed to fetch rates:', error);
+        console.error('❌ [Wastage Calculator] Failed to fetch rates:', error);
       } finally {
         setLoading(false);
       }
@@ -57,16 +57,21 @@ export default function CalculatorPage() {
 
   const result = useMemo(() => {
     const goldValue = pricePerGram * grams;
+    const wastageAmount = goldValue * (wastagePercent / 100);
     const making = makingCharges * grams;
-    const gst = (goldValue + making) * 0.03;
-    const total = goldValue + making + gst;
+    const subtotal = goldValue + wastageAmount + making;
+    const gst = subtotal * 0.03;
+    const total = subtotal + gst;
+    
     return {
       goldValue,
+      wastageAmount,
       making,
+      subtotal,
       gst,
       total,
     };
-  }, [grams, makingCharges, pricePerGram]);
+  }, [grams, wastagePercent, makingCharges, pricePerGram]);
 
   return (
     <main className="min-h-screen bg-amber-50 py-10">
@@ -83,10 +88,10 @@ export default function CalculatorPage() {
           Gold tools
         </p>
         <h1 className="mt-2 text-3xl font-bold text-charcoal">
-          Gold Price Calculator
+          Jewellery Wastage Tool
         </h1>
         <p className="text-sm text-slate-600">
-          Estimate real-time payable amount including making charges & GST.
+          Estimate making + wastage charges
         </p>
         
         {loading && (
@@ -135,6 +140,20 @@ export default function CalculatorPage() {
             </select>
           </label>
           <label className="text-sm font-medium text-slate-600">
+            Wastage (%)
+            <input
+              type="number"
+              className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"
+              value={wastagePercent}
+              onChange={(event) =>
+                setWastagePercent(Number(event.target.value) || 0)
+              }
+              min={0}
+              max={100}
+              step={0.5}
+            />
+          </label>
+          <label className="text-sm font-medium text-slate-600 md:col-span-2">
             Making charges (₹ per gram)
             <input
               type="number"
@@ -156,8 +175,17 @@ export default function CalculatorPage() {
               <span>₹{formatCurrency(result.goldValue)}</span>
             </div>
             <div className="flex items-center justify-between">
+              <span>Wastage ({wastagePercent}%)</span>
+              <span>₹{formatCurrency(result.wastageAmount)}</span>
+            </div>
+            <div className="flex items-center justify-between">
               <span>Making charges</span>
               <span>₹{formatCurrency(result.making)}</span>
+            </div>
+            <hr className="border-dashed border-slate-300" />
+            <div className="flex items-center justify-between font-medium">
+              <span>Subtotal</span>
+              <span>₹{formatCurrency(result.subtotal)}</span>
             </div>
             <div className="flex items-center justify-between">
               <span>GST (3%)</span>
@@ -179,6 +207,18 @@ export default function CalculatorPage() {
             </button>
           </div>
         </section>
+
+        <div className="mt-6 rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
+          <h3 className="text-sm font-semibold text-blue-900">
+            💡 About Wastage Charges
+          </h3>
+          <p className="mt-2 text-xs text-blue-800">
+            Wastage charges compensate for gold lost during jewellery making.
+            Typical wastage ranges from 6-12% depending on jewellery design
+            complexity. Intricate designs like chains and bracelets may have
+            higher wastage.
+          </p>
+        </div>
           </div>
           
           {/* Calculator Switcher Sidebar */}

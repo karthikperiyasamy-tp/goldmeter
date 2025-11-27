@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 type City = {
   name: string;
   gold22k: number;
@@ -8,10 +10,23 @@ type City = {
 
 type CitySelectorProps = {
   cities: City[];
-  onSelect: (city: string) => void;
 };
 
-export default function CitySelector({ cities, onSelect }: CitySelectorProps) {
+const citySlugMap: Record<string, string> = {
+  "Chennai": "chennai",
+  "Bangalore": "bangalore",
+  "Mumbai": "mumbai",
+  "Delhi": "delhi",
+  "Hyderabad": "hyderabad",
+  "Coimbatore": "coimbatore",
+  "Pune": "pune",
+  "Kolkata": "kolkata",
+  "Ahmedabad": "ahmedabad",
+  "Vijayawada": "vijayawada",
+};
+
+export default function CitySelector({ cities }: CitySelectorProps) {
+  const router = useRouter();
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-8">
       <div className="flex items-center justify-between">
@@ -27,7 +42,10 @@ export default function CitySelector({ cities, onSelect }: CitySelectorProps) {
           <button
             key={city.name}
             className="text-left rounded-2xl border border-slate-100 bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-amber-200"
-            onClick={() => onSelect(city.name)}
+            onClick={() => {
+              const slug = citySlugMap[city.name] || city.name.toLowerCase();
+              router.push(`/${slug}`);
+            }}
           >
             <p className="text-sm text-slate-500">{city.name}</p>
             <p className="mt-1 text-2xl font-bold text-charcoal">

@@ -28,7 +28,7 @@ export async function fetchCityRates(
         gold22k: dbData.cities[cityName].gold22k,
         gold24k: dbData.cities[cityName].gold24k,
         source: 'db',
-        date: dbData.cities[cityName].date.toLocaleDateString('en-IN'),
+        date: dbData.cities[cityName].date, // Already formatted as string
       };
     }
     

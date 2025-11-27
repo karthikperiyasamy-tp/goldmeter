@@ -1,3 +1,7 @@
+"use client";
+
+import Link from "next/link";
+
 type PriceHeroProps = {
   city: string;
   gold22k: number;
@@ -66,9 +70,12 @@ export default function PriceHero({
           <p className="mt-2 text-sm text-slate-500">
             Estimate jewellery cost with making + GST
           </p>
-          <button className="mt-4 w-full rounded-2xl bg-amber-100 py-2 text-sm font-semibold text-amber-700">
-            Open Full Calculator
-          </button>
+          <Link 
+            href="/wastage-calculator"
+            className="mt-4 block w-full rounded-2xl bg-amber-100 py-2 text-center text-sm font-semibold text-amber-700 hover:bg-amber-200 transition-colors"
+          >
+            Open Jewellery Wastage Tool
+          </Link>
         </div>
       </div>
     </section>

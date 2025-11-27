@@ -85,3 +85,6 @@ export const metadata = {
     "Get today's Mumbai gold rate per 10 grams for 22K and 24K gold. Compare prices, check making charges, and find best jewellery shops in Mumbai.",
 };
 
+// Cache this page for 5 minutes (300 seconds)
+export const revalidate = 300;
+

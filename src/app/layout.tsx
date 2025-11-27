@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import LayoutWrapper from "./components/LayoutWrapper";
 
 export const metadata: Metadata = {
   title: "GoldRate — Daily India Gold Prices & Tools",
@@ -32,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-[#fffdf7] text-charcoal min-h-screen">
-        {children}
+        <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>
   );

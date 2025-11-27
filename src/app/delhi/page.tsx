@@ -85,3 +85,6 @@ export const metadata = {
     "Today's Delhi gold rate for 22K and 24K gold per 10 grams. Check Chandni Chowk prices, making charges, and best jewellery shops.",
 };
 
+// Cache this page for 5 minutes (300 seconds)
+export const revalidate = 300;
+

@@ -85,3 +85,6 @@ export const metadata = {
     "Check Pune gold rate today for 22K and 24K gold per 10 grams. Get Laxmi Road prices, making charges, and trusted jewellers list.",
 };
 
+// Cache this page for 5 minutes (300 seconds)
+export const revalidate = 300;
+

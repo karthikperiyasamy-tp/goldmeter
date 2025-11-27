@@ -127,7 +127,7 @@ export default async function HomePage() {
     // Use database data
     console.log("✅ [HomePage] Using rates from MongoDB");
     baseRates = {
-      date: dbData.india.date.toLocaleDateString("en-IN"),
+      date: dbData.india.date, // Already formatted as string
       gold_24k: dbData.india.gold24k,
       gold_22k: dbData.india.gold22k,
       city: "India",
@@ -139,11 +139,7 @@ export default async function HomePage() {
         name,
         gold22k: rates.gold22k,
         gold24k: rates.gold24k,
-        updated: rates.date.toLocaleTimeString("en-IN", {
-          hour: "numeric",
-          minute: "2-digit",
-          hour12: true,
-        }),
+        updated: "Today", // Use simple label since date is already a formatted string
         change: 0, // TODO: Calculate from historical data
       }));
       console.log(`✅ [HomePage] Using ${cityRates.length} city rates from MongoDB`);
@@ -196,3 +192,6 @@ export default async function HomePage() {
 
   return <HomeClient baseRates={baseRates} cities={cityRates} newsItems={mockNews} />;
 }
+
+// Cache this page for 5 minutes (300 seconds)
+export const revalidate = 300;

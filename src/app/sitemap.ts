@@ -40,6 +40,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }
 
+  // Wastage calculator page
+  const wastageCalculator = {
+    url: `${baseUrl}/wastage-calculator`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }
+
+  // Purity converter page
+  const purityConverter = {
+    url: `${baseUrl}/purity-converter`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }
+
   // News index page
   const news = {
     url: `${baseUrl}/news`,
@@ -67,6 +83,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     homepage,
     calculator,
+    wastageCalculator,
+    purityConverter,
     news,
     ...newsPages,
     ...cityPages,

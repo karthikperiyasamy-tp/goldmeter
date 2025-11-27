@@ -1,4 +1,5 @@
 import { getDatabase } from './mongodb';
+import { unstable_cache } from 'next/cache';
 
 export type GoldRateDocument = {
   date: Date;
@@ -106,11 +107,12 @@ export async function saveGoldRates(
 }
 
 /**
- * Get latest gold rates for all cities
+ * Get latest gold rates for all cities (internal uncached version)
+ * Returns dates as strings to work with Next.js cache serialization
  */
-export async function getLatestGoldRates(): Promise<{
-  india: { gold22k: number; gold24k: number; date: Date } | null;
-  cities: Record<string, { gold22k: number; gold24k: number; date: Date }>;
+async function getLatestGoldRatesUncached(): Promise<{
+  india: { gold22k: number; gold24k: number; date: string } | null;
+  cities: Record<string, { gold22k: number; gold24k: number; date: string }>;
 }> {
   try {
     const db = await getDatabase();
@@ -137,13 +139,14 @@ export async function getLatestGoldRates(): Promise<{
       .toArray();
 
     let india = null;
-    const cities: Record<string, { gold22k: number; gold24k: number; date: Date }> = {};
+    const cities: Record<string, { gold22k: number; gold24k: number; date: string }> = {};
 
     for (const rate of allRates) {
+      // Convert Date to formatted string for cache serialization
       const rateData = {
         gold22k: rate.gold_22k,
         gold24k: rate.gold_24k,
-        date: rate.date,
+        date: rate.date.toLocaleDateString('en-IN'),
       };
 
       if (rate.city === 'India') {
@@ -161,6 +164,19 @@ export async function getLatestGoldRates(): Promise<{
     return { india: null, cities: {} };
   }
 }
+
+/**
+ * Get latest gold rates for all cities (cached version)
+ * Cache duration: 5 minutes (300 seconds)
+ */
+export const getLatestGoldRates = unstable_cache(
+  getLatestGoldRatesUncached,
+  ['latest-gold-rates'],
+  {
+    revalidate: 300, // Cache for 5 minutes
+    tags: ['gold-rates'],
+  }
+);
 
 /**
  * Get historical gold rates for a city (for charts)

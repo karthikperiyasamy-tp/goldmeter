@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 
 type TopBarProps = {
@@ -25,7 +25,6 @@ const cityOptions = [
 
 const navLinks = [
   { label: "Gold Rate Today", href: "/" },
-  { label: "Cities", href: "/chennai" },
   { label: "Calculator", href: "/calculator" },
   { label: "News", href: "/news" },
 ];
@@ -35,6 +34,11 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearchResults, setShowSearchResults] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
+  
+  // List of city pages for highlighting "Gold Rate Today"
+  const cityPages = ["chennai", "bangalore", "mumbai", "delhi", "hyderabad", "coimbatore", "pune", "kolkata", "ahmedabad", "vijayawada"];
+  const isGoldRatePage = pathname === "/" || cityPages.some(city => pathname === `/${city}`);
 
   // Filter cities based on search query
   const filteredCities = searchQuery
@@ -54,7 +58,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 gap-4">
-        <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-lg font-bold text-white shadow-soft">
             GR
           </div>
@@ -62,7 +66,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
             <div className="text-lg font-semibold text-charcoal">GoldRate</div>
             <p className="text-xs text-slate-500">Live 22K · 24K prices</p>
           </div>
-        </div>
+        </Link>
 
         <div className="relative hidden flex-1 md:block">
           <div className="flex items-center gap-4 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-600">
@@ -97,15 +101,25 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
         </div>
 
         <nav className="hidden items-center gap-4 text-sm font-medium text-slate-600 lg:flex">
-          {navLinks.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="hover:text-amber-600 transition-colors"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navLinks.map((item) => {
+            const isActive = item.label === "Gold Rate Today" 
+              ? isGoldRatePage 
+              : pathname === item.href;
+            
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`transition-colors ${
+                  isActive 
+                    ? "text-amber-600 font-semibold" 
+                    : "hover:text-amber-600"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
           <div className="group relative">
             <button className="text-slate-600 transition-colors hover:text-amber-600">
               More ▾
@@ -133,7 +147,8 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                 handleCitySelect(selectedCity.slug, selectedCity.name);
               }
             }}
-            className="rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm"
+            className="rounded-full border border-slate-200 bg-white pl-4 pr-8 py-2 text-sm font-medium text-slate-700 shadow-sm appearance-none cursor-pointer hover:border-amber-300 transition-colors"
+            style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 0.5rem center", backgroundSize: "1.25rem" }}
             aria-label="Select city"
           >
             {cityOptions.map((option) => (
@@ -163,16 +178,26 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
         <div className="absolute left-0 right-0 top-full z-50 border-b border-slate-200 bg-white shadow-lg md:hidden">
           <nav className="mx-auto max-w-6xl px-4 py-4">
             <div className="space-y-3">
-              {navLinks.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="block rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-amber-50 hover:text-amber-600 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {navLinks.map((item) => {
+                const isActive = item.label === "Gold Rate Today" 
+                  ? isGoldRatePage 
+                  : pathname === item.href;
+                
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className={`block rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-amber-50 text-amber-600 font-semibold"
+                        : "text-slate-600 hover:bg-amber-50 hover:text-amber-600"
+                    }`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
               <div className="border-t border-slate-100 pt-3">
                 <Link 
                   href="/calculator" 
