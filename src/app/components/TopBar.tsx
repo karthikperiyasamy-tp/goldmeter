@@ -59,20 +59,26 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 gap-4">
-        <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-90 transition-opacity">
+        <button 
+          onClick={() => {
+            onCityChange("India");
+            router.push("/");
+          }}
+          className="flex items-center gap-2 sm:gap-3 hover:opacity-90 transition-opacity shrink-0 min-w-0"
+        >
           <Image
             src="/logo.png"
             alt="GoldMeter Logo"
             width={56}
             height={56}
-            className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain"
+            className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain shrink-0"
             priority
           />
-          <div>
-            <div className="text-base sm:text-lg font-semibold text-charcoal">GoldMeter</div>
-            <p className="text-[10px] sm:text-xs text-slate-500">Live 22K · 24K prices</p>
+          <div className="min-w-0">
+            <div className="text-sm sm:text-base md:text-lg font-semibold text-charcoal truncate">GoldMeter</div>
+            <p className="text-[9px] sm:text-[10px] md:text-xs text-slate-500 truncate">Live 22K · 24K prices</p>
           </div>
-        </Link>
+        </button>
 
         <div className="relative hidden flex-1 md:block">
           <div className="flex items-center gap-4 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-600">
@@ -144,7 +150,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
           </div>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
           <select
             value={city}
             onChange={(event) => {
@@ -153,8 +159,8 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                 handleCitySelect(selectedCity.slug, selectedCity.name);
               }
             }}
-            className="rounded-full border border-slate-200 bg-white pl-4 pr-8 py-2 text-sm font-medium text-slate-700 shadow-sm appearance-none cursor-pointer hover:border-amber-300 transition-colors"
-            style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 0.5rem center", backgroundSize: "1.25rem" }}
+            className="rounded-full border border-slate-200 bg-white pl-2 pr-6 sm:pl-4 sm:pr-8 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-slate-700 shadow-sm appearance-none cursor-pointer hover:border-amber-300 transition-colors max-w-[100px] sm:max-w-none"
+            style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 0.25rem center", backgroundSize: "1rem" }}
             aria-label="Select city"
           >
             {cityOptions.map((option) => (
@@ -166,11 +172,11 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
           <button className="hidden rounded-full bg-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-soft md:inline-block">
             Install App
           </button>
-          <button className="rounded-full border border-slate-200 p-2 text-lg">
+          <button className="rounded-full border border-slate-200 p-1.5 sm:p-2 text-base sm:text-lg">
             🔔
           </button>
           <button 
-            className="rounded-full border border-slate-200 p-2 text-lg md:hidden"
+            className="rounded-full border border-slate-200 p-1.5 sm:p-2 text-base sm:text-lg md:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
