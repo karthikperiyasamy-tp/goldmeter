@@ -46,10 +46,6 @@ export async function POST() {
 
 // GET /api/fetch-news - Also allow GET for easy testing
 export async function GET() {
-  // Create a mock request for the POST handler
-  const mockRequest = new Request('http://localhost/api/fetch-news', {
-    method: 'POST',
-  });
-  return POST(mockRequest);
+  return POST();
 }
 

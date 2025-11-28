@@ -1,10 +1,15 @@
 import Link from "next/link";
 import { getGroupedNews } from "@/lib/newsDB";
 import NewsClient from "./NewsClient";
+import type { GroupedNews } from "@/lib/newsTypes";
 
 // Server component that fetches initial data
 export default async function NewsPage() {
-  let initialData = { groups: [], totalCount: 0, hasMore: false };
+  let initialData: { groups: GroupedNews[]; totalCount: number; hasMore: boolean } = { 
+    groups: [], 
+    totalCount: 0, 
+    hasMore: false 
+  };
   
   try {
     initialData = await getGroupedNews(15, 0);
