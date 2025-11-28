@@ -2,46 +2,19 @@ import { headers } from "next/headers";
 import CityPageShell from "../components/CityPageShell";
 import { fetchCityRates } from "@/lib/fetchCityRates";
 
-const grams = [
-  { label: "1g", value: 1 },
-  { label: "8g", value: 8 },
-  { label: "10g", value: 10 },
-  { label: "100g", value: 100 },
-];
-
 export default async function HyderabadPage() {
   const headersList = await headers();
   const host = headersList.get("host") ?? "localhost:3000";
   
   const rates = await fetchCityRates("Hyderabad", host);
-  const gold22k = rates.gold22k;
-  const gold24k = rates.gold24k;
 
-    const gramPrices = [
-      {
-        carat: "22K",
-        values: grams.map((item) => ({
-          label: item.label,
-          price: (gold22k / 10) * item.value,
-        })),
-      },
-      {
-        carat: "24K",
-        values: grams.map((item) => ({
-          label: item.label,
-          price: (gold24k / 10) * item.value,
-        })),
-      },
-    ];
-
-    return (
-      <CityPageShell
-        city="Hyderabad"
-        updated={new Date().toLocaleDateString("en-IN")}
-        gold22k={gold22k}
-        gold24k={gold24k}
-        gramPrices={gramPrices}
-        todayVsYesterday={{ gold22k: -5, gold24k: 10 }}
+  return (
+    <CityPageShell
+      city="Hyderabad"
+      updated={rates.date}
+      gold22k={rates.gold22k}
+      gold24k={rates.gold24k}
+      todayVsYesterday={{ gold22k: -5, gold24k: 10 }}
         localInfo={[
           {
             title: "Hallmarking centers",

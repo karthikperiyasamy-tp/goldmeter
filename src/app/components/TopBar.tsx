@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 
@@ -58,13 +59,18 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 gap-4">
-        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-lg font-bold text-white shadow-soft">
-            GR
-          </div>
+        <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-90 transition-opacity">
+          <Image
+            src="/logo.png"
+            alt="GoldMeter Logo"
+            width={56}
+            height={56}
+            className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain"
+            priority
+          />
           <div>
-            <div className="text-lg font-semibold text-charcoal">GoldRate</div>
-            <p className="text-xs text-slate-500">Live 22K · 24K prices</p>
+            <div className="text-base sm:text-lg font-semibold text-charcoal">GoldMeter</div>
+            <p className="text-[10px] sm:text-xs text-slate-500">Live 22K · 24K prices</p>
           </div>
         </Link>
 

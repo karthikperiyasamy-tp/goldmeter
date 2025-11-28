@@ -1,12 +1,5 @@
 import Link from "next/link";
-
-type PriceTableRow = {
-  carat: string;
-  values: {
-    label: string;
-    price: number;
-  }[];
-};
+import RateCard from "./RateCard";
 
 type LocalInfo = {
   title: string;
@@ -23,7 +16,6 @@ type CityPageShellProps = {
   updated: string;
   gold22k: number;
   gold24k: number;
-  gramPrices: PriceTableRow[];
   todayVsYesterday: {
     gold22k: number;
     gold24k: number;
@@ -37,106 +29,163 @@ const inr = new Intl.NumberFormat("en-IN", {
   maximumFractionDigits: 0,
 });
 
+// Quick presets for gram cards
+const quickPresets = [
+  { label: "1 gram", grams: 1 },
+  { label: "8 gram", grams: 8 },
+  { label: "10 gram", grams: 10 },
+  { label: "100 gram", grams: 100 },
+];
+
 export default function CityPageShell({
   city,
   updated,
   gold22k,
   gold24k,
-  gramPrices,
   todayVsYesterday,
   localInfo,
   faqs,
   similarCities,
 }: CityPageShellProps) {
-  return (
-    <main className="min-h-screen bg-amber-50 pb-12">
-      <div className="mx-auto max-w-5xl px-4 py-6">
-        <div className="flex items-center justify-between text-sm text-slate-500">
-          <Link 
-            href="/" 
-            className="flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-amber-700 font-medium hover:bg-amber-100 transition-colors"
-          >
-            ← Back to India Rates
-          </Link>
-          <button className="rounded-full border border-slate-200 px-3 py-1 text-sm hover:bg-slate-50 transition-colors">
-            Share
-          </button>
-        </div>
+  // Calculate per gram prices
+  const perGram22k = gold22k / 10;
+  const perGram24k = gold24k / 10;
 
-        <section className="mt-6 rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">
-          <p className="text-xs uppercase tracking-widest text-slate-500">
-            {city} • Updated {updated}
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-charcoal">
-            {city} Gold Rate Today
-          </h1>
-          <div className="mt-4 grid gap-4 md:grid-cols-2">
-            <div className="rounded-2xl bg-amber-50 p-4">
-              <p className="text-xs text-slate-500">22K (per 10g)</p>
-              <p className="text-3xl font-bold text-amber-700">
-                ₹{inr.format(gold22k)}
+  return (
+    <main className="min-h-screen bg-[#fffdf7] pb-12">
+      <div className="mx-auto max-w-6xl px-4 py-6">
+        {/* Hero Section - Like India Page */}
+        <section className="border-y border-amber-100 bg-gradient-to-r from-white to-amber-50 rounded-3xl p-6 shadow-soft">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-widest text-slate-500">
+                Updated {updated}
+              </p>
+              <h1 className="mt-2 text-3xl font-extrabold text-amber-700 md:text-4xl">
+                {city} Gold Rate Today
+              </h1>
+              <p className="mt-2 text-sm text-slate-600">
+                Per 10 grams • Spot price sourced from leading jewellers
+              </p>
+              <div className="mt-6 flex flex-wrap gap-4">
+                <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">
+                    22K Gold
+                  </p>
+                  <p className="text-3xl font-bold text-charcoal">
+                    ₹{inr.format(gold22k)}
+                  </p>
+                  <p className={`text-xs ${todayVsYesterday.gold22k >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
+                    {todayVsYesterday.gold22k >= 0 ? '+' : ''}₹{todayVsYesterday.gold22k} vs yesterday
+                  </p>
+                </div>
+                <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">
+                    24K Gold
+                  </p>
+                  <p className="text-3xl font-bold text-charcoal">
+                    ₹{inr.format(gold24k)}
+                  </p>
+                  <p className={`text-xs ${todayVsYesterday.gold24k >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
+                    {todayVsYesterday.gold24k >= 0 ? '+' : ''}₹{todayVsYesterday.gold24k} vs yesterday
+                  </p>
+                </div>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3 text-sm">
+                <Link 
+                  href="/" 
+                  className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  ← Back to India
+                </Link>
+                <Link 
+                  href="/calculator"
+                  className="rounded-full bg-amber-600 px-4 py-2 font-semibold text-white shadow-soft hover:bg-amber-700 transition-colors"
+                >
+                  Calculate Price
+                </Link>
+              </div>
+            </div>
+            {/* Quick Calculator Card */}
+            <div className="w-full rounded-3xl border border-amber-100 bg-white p-5 shadow-soft md:w-1/3">
+              <p className="text-xs uppercase text-slate-400">Quick Calculator</p>
+              <p className="mt-3 text-3xl font-bold text-amber-600">
+                ₹{(gold24k / 10).toFixed(2)}
+                <span className="text-sm font-medium text-slate-500">/ gram</span>
+              </p>
+              <p className="mt-2 text-sm text-slate-500">
+                Estimate jewellery cost with making + GST
+              </p>
+              <Link 
+                href="/wastage-calculator"
+                className="mt-4 block w-full rounded-2xl bg-amber-100 py-2 text-center text-sm font-semibold text-amber-700 hover:bg-amber-200 transition-colors"
+              >
+                Open Jewellery Wastage Tool
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* 22K Quick Cards */}
+        <section className="mt-8">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">22K Gold - Quick Cards</h3>
+            <p className="text-sm text-slate-500">{city} price</p>
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {quickPresets.map((preset, index) => (
+              <RateCard
+                key={`22k-${preset.label}`}
+                label={preset.label}
+                grams={preset.grams}
+                price={Math.round(perGram22k * preset.grams)}
+                change={index % 2 === 0 ? todayVsYesterday.gold22k : -Math.abs(todayVsYesterday.gold22k)}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* 24K Quick Cards */}
+        <section className="mt-8">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">24K Gold - Quick Cards</h3>
+            <p className="text-sm text-slate-500">{city} price</p>
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {quickPresets.map((preset, index) => (
+              <RateCard
+                key={`24k-${preset.label}`}
+                label={preset.label}
+                grams={preset.grams}
+                price={Math.round(perGram24k * preset.grams)}
+                change={index % 2 === 0 ? -Math.abs(todayVsYesterday.gold24k) : todayVsYesterday.gold24k}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Price Trend Section */}
+        <section className="mt-8 rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 className="text-lg font-semibold">Price Trend - {city}</h3>
+              <p className="text-sm text-slate-500">
+                Historical price movement · Per 10 grams
               </p>
             </div>
-            <div className="rounded-2xl bg-slate-900 p-4 text-white">
-              <p className="text-xs text-white/80">24K (per 10g)</p>
-              <p className="text-3xl font-bold">₹{inr.format(gold24k)}</p>
+            <div className="flex gap-2 rounded-full bg-amber-50 p-1 text-sm font-semibold">
+              {["7D", "30D", "1Y"].map((range) => (
+                <button
+                  key={range}
+                  className="rounded-full px-4 py-1 text-slate-500 hover:bg-white hover:text-amber-600 transition-colors"
+                >
+                  {range}
+                </button>
+              ))}
             </div>
           </div>
-        </section>
-
-        <section className="mt-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-          <h2 className="text-lg font-semibold">Price Table</h2>
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-slate-500">
-                  <th className="py-2 text-left font-semibold">Carat</th>
-                  {gramPrices[0]?.values.map((value) => (
-                    <th key={value.label} className="py-2 text-left font-semibold">
-                      {value.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {gramPrices.map((row) => (
-                  <tr key={row.carat} className="border-t border-slate-100">
-                    <td className="py-3 font-semibold">{row.carat}</td>
-                    {row.values.map((value) => (
-                      <td key={value.label} className="py-3">
-                        ₹{inr.format(value.price)}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <section className="mt-6 grid gap-4 md:grid-cols-2">
-          <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-soft">
-            <p className="text-sm font-semibold text-slate-500">
-              Today vs Yesterday
-            </p>
-            <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
-              <div className="rounded-2xl bg-emerald-50 p-4 font-semibold text-emerald-700">
-                22K: {todayVsYesterday.gold22k > 0 ? "+" : "-"}₹
-                {Math.abs(todayVsYesterday.gold22k)}
-              </div>
-              <div className="rounded-2xl bg-rose-50 p-4 font-semibold text-rose-600">
-                24K: {todayVsYesterday.gold24k > 0 ? "+" : "-"}₹
-                {Math.abs(todayVsYesterday.gold24k)}
-              </div>
-            </div>
-          </div>
-          <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-soft">
-            <p className="text-sm font-semibold text-slate-500">
-              City Price Trend
-            </p>
-            <div className="mt-3 h-32 rounded-2xl bg-slate-100 text-center text-slate-400">
-              30 day trend chart placeholder
-            </div>
+          <div className="mt-6 h-80 rounded-2xl bg-gradient-to-br from-amber-50 to-white p-4 flex items-center justify-center text-slate-400">
+            Price chart coming soon
           </div>
         </section>
 
