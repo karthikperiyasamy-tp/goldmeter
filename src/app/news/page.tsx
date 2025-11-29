@@ -1,7 +1,47 @@
 import Link from "next/link";
 import { getGroupedNews } from "@/lib/newsDB";
+import { getRecentRecaps, formatDateForDisplay } from "@/lib/recapDB";
 import NewsClient from "./NewsClient";
 import type { GroupedNews } from "@/lib/newsTypes";
+import type { DailyRecap } from "@/lib/recapTypes";
+
+// Recap card component
+function RecapCard({ recap }: { recap: DailyRecap }) {
+  const displayDate = formatDateForDisplay(recap.date);
+  
+  return (
+    <Link
+      href={`/news/recap/${recap.slug}`}
+      className="group block rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-100 to-amber-50 p-5 hover:border-amber-300 hover:shadow-md transition-all"
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center text-2xl">
+          🤖
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="px-2 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-semibold uppercase">
+              AI Recap
+            </span>
+            <span className="text-xs text-slate-500">{displayDate}</span>
+          </div>
+          <h3 className="text-base font-semibold text-charcoal line-clamp-2 group-hover:text-amber-700 transition-colors">
+            {recap.title}
+          </h3>
+          <p className="text-sm text-slate-600 line-clamp-2 mt-1">
+            {recap.summary}
+          </p>
+          <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
+            <span>📰 {recap.sourcesCount} sources</span>
+            <span className="text-amber-600 font-medium group-hover:underline">
+              Read full recap →
+            </span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
 
 // Server component that fetches initial data
 export default async function NewsPage() {
@@ -11,10 +51,18 @@ export default async function NewsPage() {
     hasMore: false 
   };
   
+  let recaps: DailyRecap[] = [];
+  
   try {
     initialData = await getGroupedNews(15, 0);
   } catch (error) {
     console.error("Error fetching news:", error);
+  }
+  
+  try {
+    recaps = await getRecentRecaps(3);
+  } catch (error) {
+    console.error("Error fetching recaps:", error);
   }
 
   return (
@@ -40,11 +88,39 @@ export default async function NewsPage() {
           </p>
         </div>
 
-        <NewsClient 
-          initialGroups={initialData.groups} 
-          initialHasMore={initialData.hasMore}
-          totalCount={initialData.totalCount}
-        />
+        {/* Daily Recaps Section */}
+        {recaps.length > 0 && (
+          <div className="mt-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-charcoal flex items-center gap-2">
+                🤖 AI Daily Recaps
+              </h2>
+              <Link
+                href="/news/recap"
+                className="text-sm text-amber-600 hover:text-amber-700 font-medium"
+              >
+                View all →
+              </Link>
+            </div>
+            <div className="space-y-3">
+              {recaps.map((recap) => (
+                <RecapCard key={recap._id || recap.slug} recap={recap} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* News Articles Section */}
+        <div className="mt-8">
+          <h2 className="text-lg font-semibold text-charcoal mb-4 flex items-center gap-2">
+            📰 Latest Headlines
+          </h2>
+          <NewsClient 
+            initialGroups={initialData.groups} 
+            initialHasMore={initialData.hasMore}
+            totalCount={initialData.totalCount}
+          />
+        </div>
       </section>
     </main>
   );

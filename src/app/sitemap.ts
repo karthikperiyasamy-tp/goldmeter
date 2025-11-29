@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { getAllRecaps } from '@/lib/recapDB'
 
 const baseUrl = 'https://goldmeter.in'
 
@@ -16,14 +17,22 @@ const cities = [
   'vijayawada',
 ]
 
-// List of news article slugs
+// List of static news article slugs
 const newsArticles = [
   'gold-price-increase-today',
   'gold-rate-prediction-2025',
   '22k-vs-24k-guide',
 ]
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Fetch all recaps for sitemap
+  let recaps: Array<{ slug: string; publishedAt: Date }> = []
+  try {
+    recaps = await getAllRecaps(60) // Get last 60 recaps
+  } catch (error) {
+    console.error('Error fetching recaps for sitemap:', error)
+  }
+
   // Homepage
   const homepage = {
     url: baseUrl,
@@ -60,16 +69,32 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const news = {
     url: `${baseUrl}/news`,
     lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.7,
+    changeFrequency: 'daily' as const,
+    priority: 0.8,
   }
 
-  // News article pages
+  // Recap listing page
+  const recapListing = {
+    url: `${baseUrl}/news/recap`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: 0.8,
+  }
+
+  // Static news article pages
   const newsPages = newsArticles.map((slug) => ({
     url: `${baseUrl}/news/${slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.6,
+  }))
+
+  // Daily recap pages (AI-generated)
+  const recapPages = recaps.map((recap) => ({
+    url: `${baseUrl}/news/recap/${recap.slug}`,
+    lastModified: new Date(recap.publishedAt),
+    changeFrequency: 'yearly' as const, // Recaps don't change once published
+    priority: 0.7,
   }))
 
   // City pages
@@ -86,8 +111,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     wastageCalculator,
     purityConverter,
     news,
+    recapListing,
     ...newsPages,
+    ...recapPages,
     ...cityPages,
   ]
 }
-
