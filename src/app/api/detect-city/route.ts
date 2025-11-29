@@ -1,19 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Map of cities we support
+// Supported cities with their coordinates
 const SUPPORTED_CITIES = [
-  { name: "Chennai", slug: "chennai", aliases: ["madras"] },
-  { name: "Mumbai", slug: "mumbai", aliases: ["bombay"] },
-  { name: "Bangalore", slug: "bangalore", aliases: ["bengaluru"] },
-  { name: "Delhi", slug: "delhi", aliases: ["new delhi"] },
-  { name: "Hyderabad", slug: "hyderabad", aliases: [] },
-  { name: "Coimbatore", slug: "coimbatore", aliases: [] },
-  { name: "Pune", slug: "pune", aliases: [] },
-  { name: "Kolkata", slug: "kolkata", aliases: ["calcutta"] },
-  { name: "Ahmedabad", slug: "ahmedabad", aliases: [] },
-  { name: "Vijayawada", slug: "vijayawada", aliases: [] },
+  { name: "Chennai", slug: "chennai", lat: 13.0827, lon: 80.2707, aliases: ["madras"] },
+  { name: "Mumbai", slug: "mumbai", lat: 19.0760, lon: 72.8777, aliases: ["bombay"] },
+  { name: "Bangalore", slug: "bangalore", lat: 12.9716, lon: 77.5946, aliases: ["bengaluru"] },
+  { name: "Delhi", slug: "delhi", lat: 28.6139, lon: 77.2090, aliases: ["new delhi"] },
+  { name: "Hyderabad", slug: "hyderabad", lat: 17.3850, lon: 78.4867, aliases: [] },
+  { name: "Coimbatore", slug: "coimbatore", lat: 11.0168, lon: 76.9558, aliases: [] },
+  { name: "Pune", slug: "pune", lat: 18.5204, lon: 73.8567, aliases: [] },
+  { name: "Kolkata", slug: "kolkata", lat: 22.5726, lon: 88.3639, aliases: ["calcutta"] },
+  { name: "Ahmedabad", slug: "ahmedabad", lat: 23.0225, lon: 72.5714, aliases: [] },
+  { name: "Vijayawada", slug: "vijayawada", lat: 16.5062, lon: 80.6480, aliases: [] },
 ];
 
+// Calculate distance between two coordinates using Haversine formula
+function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371; // Earth's radius in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c; // Distance in km
+}
+
+// Find nearest supported city based on coordinates
+function findNearestCity(lat: number, lon: number): { city: typeof SUPPORTED_CITIES[0]; distance: number } {
+  let nearest = SUPPORTED_CITIES[0];
+  let minDistance = calculateDistance(lat, lon, nearest.lat, nearest.lon);
+
+  for (const city of SUPPORTED_CITIES) {
+    const distance = calculateDistance(lat, lon, city.lat, city.lon);
+    if (distance < minDistance) {
+      minDistance = distance;
+      nearest = city;
+    }
+  }
+
+  return { city: nearest, distance: Math.round(minDistance) };
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -26,9 +54,10 @@ export async function GET(request: NextRequest) {
     
     console.log(`📍 [Detect-City] IP detected: ${ip}`);
 
-    // Use ipapi.co for IP geolocation
     let detectedCity: string | null = null;
     let detectedCountry: string | null = null;
+    let latitude: number | null = null;
+    let longitude: number | null = null;
 
     if (ip !== "unknown" && ip !== "127.0.0.1" && !ip.startsWith("::")) {
       try {
@@ -41,14 +70,18 @@ export async function GET(request: NextRequest) {
 
         if (geoResponse.ok) {
           const geoData = await geoResponse.json();
-          if (geoData) {
+          if (geoData && !geoData.error) {
             detectedCity = geoData.city?.toLowerCase() ?? null;
             detectedCountry = geoData.country_code ?? null;
+            latitude = geoData.latitude ?? null;
+            longitude = geoData.longitude ?? null;
             
             console.log(`🗺️  [Detect-City] Geolocation data:`, {
               city: detectedCity,
               country: detectedCountry,
               region: geoData.region,
+              lat: latitude,
+              lon: longitude,
             });
           }
         }
@@ -57,55 +90,66 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Match detected city to our supported cities
+    // Step 1: Try exact city match (by name or alias)
     if (detectedCity) {
-      const matchedCity = SUPPORTED_CITIES.find(
+      const exactMatch = SUPPORTED_CITIES.find(
         (city) =>
           city.name.toLowerCase() === detectedCity ||
           city.aliases.some(alias => alias.toLowerCase() === detectedCity)
       );
 
-      if (matchedCity) {
-        const matchResponse = {
+      if (exactMatch) {
+        console.log(`✅ [Detect-City] Exact match: ${exactMatch.name}`);
+        return NextResponse.json({
           success: true,
           detected: true,
-          city: matchedCity.name,
-          slug: matchedCity.slug,
+          city: exactMatch.name,
+          slug: exactMatch.slug,
           country: detectedCountry,
-          ip,
-          message: `Detected city: ${matchedCity.name}`,
-        };
-        console.log(`✅ [Detect-City] Matched city: ${matchedCity.name} (${matchedCity.slug})`);
-        console.log(`📤 [Detect-City] Response:`, JSON.stringify(matchResponse, null, 2));
-        return NextResponse.json(matchResponse);
-      } else {
-        // City detected but not in our list
-        const noMatchResponse = {
-          success: true,
-          detected: false,
-          city: null,
-          slug: null,
-          country: detectedCountry,
-          message: `Detected ${detectedCity} but not in supported cities list`,
-        };
-        console.log(`⚠️  [Detect-City] City "${detectedCity}" not in supported list`);
-        console.log(`📤 [Detect-City] Response:`, JSON.stringify(noMatchResponse, null, 2));
-        return NextResponse.json(noMatchResponse);
+          matchType: "exact",
+          message: `Detected city: ${exactMatch.name}`,
+        });
       }
     }
 
-    // Default to stay on India page if detection fails or not in India
+    // Step 2: Use coordinates to find nearest city
+    if (latitude !== null && longitude !== null) {
+      const { city: nearestCity, distance } = findNearestCity(latitude, longitude);
+      
+      // Only use nearest city if within 300km (reasonable for India)
+      if (distance <= 300) {
+        console.log(`✅ [Detect-City] Nearest city: ${nearestCity.name} (${distance}km away)`);
+        return NextResponse.json({
+          success: true,
+          detected: true,
+          city: nearestCity.name,
+          slug: nearestCity.slug,
+          country: detectedCountry,
+          matchType: "nearest",
+          detectedLocation: detectedCity,
+          distance: `${distance}km`,
+          message: `Detected ${detectedCity || 'your location'}, showing nearest city: ${nearestCity.name} (${distance}km)`,
+        });
+      } else {
+        console.log(`⚠️  [Detect-City] Nearest city ${nearestCity.name} is ${distance}km away (too far)`);
+      }
+    }
+
+    // Step 3: No match - stay on India page
     const fallbackResponse = {
       success: true,
       detected: false,
       city: null,
       slug: null,
       country: detectedCountry || "unknown",
-      message: "Could not detect city, staying on India homepage",
+      detectedLocation: detectedCity,
+      message: detectedCity 
+        ? `Detected ${detectedCity} but no nearby supported city found`
+        : "Could not detect city, staying on India homepage",
     };
     console.log(`ℹ️  [Detect-City] Using fallback: Stay on India page`);
-    console.log(`📤 [Detect-City] Response:`, JSON.stringify(fallbackResponse, null, 2));
     return NextResponse.json(fallbackResponse);
+
   } catch (error) {
     console.error("❌ [Detect-City] Error:", error);
     return NextResponse.json(
@@ -119,4 +163,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
