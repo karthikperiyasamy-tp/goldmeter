@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import CitySelector from "./CitySelector";
 import PriceHero from "./PriceHero";
 import RateCard from "./RateCard";
-import PriceChart from "./PriceChart";
-import { generateMockChartData } from "../utils/chartDataHelpers";
+import PriceChartWrapper from "./PriceChartWrapper";
 
 export type RateResponse = {
   date: string;
@@ -72,7 +71,6 @@ export default function HomeClient({
   newsItems,
 }: HomeClientProps) {
   const router = useRouter();
-  const [chartRange, setChartRange] = useState<"7D" | "30D" | "1Y">("7D");
 
   // Auto-detect user's city and redirect
   useEffect(() => {
@@ -117,13 +115,6 @@ export default function HomeClient({
 
   const perGram22k = hero22k / 10;
   const perGram24k = hero24k / 10;
-
-  // Generate chart data based on current prices and selected range
-  // TODO: Replace with fetchChartDataFromDB when database is integrated
-  const chartData = useMemo(
-    () => generateMockChartData(hero22k, hero24k, chartRange, "India"),
-    [hero22k, hero24k, chartRange]
-  );
 
   return (
     <div className="min-h-screen bg-[#fffdf7] text-charcoal">
@@ -178,32 +169,11 @@ export default function HomeClient({
         </section>
 
         <section className="rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h3 className="text-lg font-semibold">Price Trend</h3>
-              <p className="text-sm text-slate-500">
-                Historical price movement · Per 10 grams
-              </p>
-            </div>
-            <div className="flex gap-2 rounded-full bg-amber-50 p-1 text-sm font-semibold">
-              {["7D", "30D", "1Y"].map((range) => (
-                <button
-                  key={range}
-                  onClick={() => setChartRange(range as "7D" | "30D" | "1Y")}
-                  className={`rounded-full px-4 py-1 ${
-                    chartRange === range
-                      ? "bg-white text-amber-600 shadow-soft"
-                      : "text-slate-500"
-                  }`}
-                >
-                  {range}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="mt-6 h-80 rounded-2xl bg-gradient-to-br from-amber-50 to-white p-4">
-            <PriceChart data={chartData} range={chartRange} />
-          </div>
+          <PriceChartWrapper
+            city="India"
+            currentGold22k={hero22k}
+            currentGold24k={hero24k}
+          />
         </section>
       </main>
 
@@ -244,6 +214,48 @@ export default function HomeClient({
         </div>
       </section>
 
+      {/* Latest News - moved after Prices by City */}
+      {newsItems.length > 0 && (
+        <section className="mx-auto w-full max-w-6xl px-4 pt-10">
+          <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Latest News</h3>
+              <Link href="/news" className="text-sm font-semibold text-amber-600">
+                View all →
+              </Link>
+            </div>
+            <div className="mt-4 space-y-3">
+              {newsItems.map((item) => (
+                <article
+                  key={item.id}
+                  className="rounded-2xl border border-slate-100 bg-slate-50 p-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h4 className="text-base font-semibold text-charcoal">
+                        {item.title}
+                      </h4>
+                      <p className="text-xs text-slate-500">
+                        {item.date} · {item.city ?? "India"}
+                      </p>
+                      <p className="mt-2 text-sm text-slate-600">
+                        {item.summary}
+                      </p>
+                    </div>
+                    <Link
+                      href={`/news/${item.slug}`}
+                      className="text-sm font-semibold text-amber-600"
+                    >
+                      Read
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="mx-auto w-full max-w-6xl px-4 py-10">
         <div className="grid gap-4 md:grid-cols-3">
           <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-soft">
@@ -279,45 +291,6 @@ export default function HomeClient({
             >
               Open
             </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto w-full max-w-6xl px-4">
-        <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Latest News</h3>
-            <Link href="/news" className="text-sm font-semibold text-amber-600">
-              View all →
-            </Link>
-          </div>
-          <div className="mt-4 space-y-3">
-            {newsItems.map((item) => (
-              <article
-                key={item.id}
-                className="rounded-2xl border border-slate-100 bg-slate-50 p-4"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h4 className="text-base font-semibold text-charcoal">
-                      {item.title}
-                    </h4>
-                    <p className="text-xs text-slate-500">
-                      {item.date} · {item.city ?? "India"}
-                    </p>
-                    <p className="mt-2 text-sm text-slate-600">
-                      {item.summary}
-                    </p>
-                  </div>
-                  <Link
-                    href={`/news/${item.slug}`}
-                    className="text-sm font-semibold text-amber-600"
-                  >
-                    Read
-                  </Link>
-                </div>
-              </article>
-            ))}
           </div>
         </div>
       </section>

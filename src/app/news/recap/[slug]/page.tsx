@@ -78,7 +78,7 @@ export default async function RecapPage({ params }: Props) {
 
           <div className="flex items-center gap-4 mt-4 text-sm text-slate-500">
             <span>📰 Based on {recap.sourcesCount} news sources</span>
-            <span>🤖 AI-generated summary</span>
+            <span>📊 Daily summary</span>
           </div>
         </header>
 

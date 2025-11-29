@@ -179,11 +179,11 @@ export const getLatestGoldRates = unstable_cache(
 );
 
 /**
- * Get historical gold rates for a city (for charts)
+ * Get historical gold rates for a city (internal uncached version)
  * @param city City name or 'India'
  * @param days Number of days to fetch (7, 30, 365)
  */
-export async function getHistoricalGoldRates(
+async function getHistoricalGoldRatesUncached(
   city: string = 'India',
   days: number = 7
 ): Promise<Array<{
@@ -222,6 +222,33 @@ export async function getHistoricalGoldRates(
     console.error('❌ [DB] Error fetching historical rates:', error);
     return [];
   }
+}
+
+/**
+ * Get historical gold rates for a city (cached version)
+ * Cache duration: 30 minutes (1800 seconds)
+ * Historical data doesn't change frequently, so longer cache is fine
+ */
+export async function getHistoricalGoldRates(
+  city: string = 'India',
+  days: number = 7
+): Promise<Array<{
+  date: string;
+  gold22k: number;
+  gold24k: number;
+  timestamp: number;
+}>> {
+  // Create a cached version with city and days as cache key
+  const cachedFn = unstable_cache(
+    () => getHistoricalGoldRatesUncached(city, days),
+    [`historical-gold-rates-${city}-${days}`],
+    {
+      revalidate: 1800, // Cache for 30 minutes
+      tags: ['gold-rates', `city-${city}`],
+    }
+  );
+  
+  return cachedFn();
 }
 
 /**

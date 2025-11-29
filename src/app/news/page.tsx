@@ -16,12 +16,12 @@ function RecapCard({ recap }: { recap: DailyRecap }) {
     >
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center text-2xl">
-          🤖
+          📊
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-semibold uppercase">
-              AI Recap
+              Daily Recap
             </span>
             <span className="text-xs text-slate-500">{displayDate}</span>
           </div>
@@ -93,7 +93,7 @@ export default async function NewsPage() {
           <div className="mt-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-charcoal flex items-center gap-2">
-                🤖 AI Daily Recaps
+                📰 Daily Market Recaps
               </h2>
               <Link
                 href="/news/recap"

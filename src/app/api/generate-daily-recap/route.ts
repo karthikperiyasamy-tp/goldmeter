@@ -32,14 +32,10 @@ export async function POST(request: Request) {
     // Ensure indexes
     await ensureRecapIndexes();
 
-    // Check if recap already exists (skip if forced)
-    if (!body.force && await recapExists(targetDate)) {
-      console.log(`⚠️ Recap already exists for ${targetDate}`);
-      return NextResponse.json({
-        success: false,
-        error: 'Recap already exists for this date',
-        date: targetDate,
-      });
+    // Check if recap already exists (for logging only - will overwrite)
+    const existingRecap = await recapExists(targetDate);
+    if (existingRecap) {
+      console.log(`📝 Recap exists for ${targetDate} - will overwrite`);
     }
 
     // Get news articles for the date
@@ -81,7 +77,7 @@ export async function POST(request: Request) {
       publishedAt: new Date(),
     });
 
-    console.log(`💾 Saved recap to database`);
+    console.log(`💾 ${existingRecap ? 'Updated' : 'Saved'} recap to database`);
 
     // Revalidate news page and recap page
     revalidatePath('/news');
@@ -89,7 +85,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: `Generated recap for ${displayDate}`,
+      message: `${existingRecap ? 'Regenerated' : 'Generated'} recap for ${displayDate}`,
+      overwritten: existingRecap,
       recap: {
         title: recap.title,
         slug: recap.slug,

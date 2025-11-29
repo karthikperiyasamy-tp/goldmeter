@@ -4,11 +4,11 @@ import type { DailyRecap } from "@/lib/recapTypes";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Daily Gold Market Recaps | AI-Generated Summaries | GoldMeter",
-  description: "Browse our AI-generated daily gold market recaps. Get comprehensive summaries of gold price movements, market trends, and expert insights from multiple news sources.",
+  title: "Daily Gold Market Recaps | GoldMeter",
+  description: "Browse our daily gold market recaps. Get comprehensive summaries of gold price movements, market trends, and expert insights from multiple news sources.",
   openGraph: {
     title: "Daily Gold Market Recaps",
-    description: "AI-generated summaries of daily gold market news and trends",
+    description: "Comprehensive summaries of daily gold market news and trends",
   },
 };
 
@@ -23,7 +23,7 @@ function RecapCard({ recap, featured }: { recap: DailyRecap; featured?: boolean 
       >
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-3xl shadow-lg">
-            🤖
+            📊
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
@@ -56,7 +56,7 @@ function RecapCard({ recap, featured }: { recap: DailyRecap; featured?: boolean 
       className="group flex items-center gap-4 rounded-xl border border-slate-100 bg-white p-4 hover:border-amber-200 hover:shadow-md transition-all"
     >
       <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl">
-        🤖
+        📊
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
@@ -99,9 +99,9 @@ export default async function RecapsPage() {
         {/* Header */}
         <div className="rounded-3xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-6 shadow-soft">
           <div className="flex items-center gap-3 mb-2">
-            <span className="text-3xl">🤖</span>
+            <span className="text-3xl">📊</span>
             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-              AI-Generated Summaries
+              Daily Market Insights
             </p>
           </div>
           <h1 className="text-3xl font-bold text-charcoal">
@@ -116,7 +116,7 @@ export default async function RecapsPage() {
         {/* Recaps List */}
         {recaps.length === 0 ? (
           <div className="mt-8 text-center py-12">
-            <div className="text-6xl mb-4">🤖</div>
+            <div className="text-6xl mb-4">📊</div>
             <h3 className="text-lg font-semibold text-slate-700">No recaps yet</h3>
             <p className="text-sm text-slate-500 mt-2">
               Daily recaps are generated automatically each morning.

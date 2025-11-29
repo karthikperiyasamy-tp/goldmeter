@@ -1,5 +1,6 @@
 import Link from "next/link";
 import RateCard from "./RateCard";
+import PriceChartWrapper from "./PriceChartWrapper";
 
 type LocalInfo = {
   title: string;
@@ -166,27 +167,11 @@ export default function CityPageShell({
 
         {/* Price Trend Section */}
         <section className="mt-8 rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h3 className="text-lg font-semibold">Price Trend - {city}</h3>
-              <p className="text-sm text-slate-500">
-                Historical price movement · Per 10 grams
-              </p>
-            </div>
-            <div className="flex gap-2 rounded-full bg-amber-50 p-1 text-sm font-semibold">
-              {["7D", "30D", "1Y"].map((range) => (
-                <button
-                  key={range}
-                  className="rounded-full px-4 py-1 text-slate-500 hover:bg-white hover:text-amber-600 transition-colors"
-                >
-                  {range}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="mt-6 h-80 rounded-2xl bg-gradient-to-br from-amber-50 to-white p-4 flex items-center justify-center text-slate-400">
-            Price chart coming soon
-          </div>
+          <PriceChartWrapper
+            city={city}
+            currentGold22k={gold22k}
+            currentGold24k={gold24k}
+          />
         </section>
 
         <section className="mt-6 grid gap-4 md:grid-cols-3">

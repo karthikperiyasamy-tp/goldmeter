@@ -5,6 +5,7 @@ import HomeClient, {
   type RateResponse,
 } from "./components/HomeClient";
 import { getLatestGoldRates } from "@/lib/goldRatesDB";
+import { getRecentNews } from "@/lib/newsDB";
 
 // Fetch scraped rates including India rate
 // Using Next.js cache with 30-minute revalidation to prevent multiple calls
@@ -78,37 +79,20 @@ const mockCities: CityRate[] = [
   },
 ];
 
-const mockNews: NewsItem[] = [
+// Fallback mock news in case database is unavailable
+const fallbackNews: NewsItem[] = [
   {
     id: 1,
-    title: "Why Gold Prices Spiked Today?",
-    date: "20 Nov 2025",
-    summary:
-      "Rupee weakness and festive demand lifted domestic prices despite a flat COMEX session.",
+    title: "Gold Market Update",
+    date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }),
+    summary: "Stay tuned for the latest gold market updates and price movements.",
     city: "India",
-    slug: "gold-price-spike-today",
-  },
-  {
-    id: 2,
-    title: "Chennai Demand Pushes 22K Higher",
-    date: "19 Nov 2025",
-    summary:
-      "Retail buying in T Nagar and increased wedding orders nudged 22K prices up by ₹45.",
-    city: "Chennai",
-    slug: "chennai-gold-demand",
-  },
-  {
-    id: 3,
-    title: "Is 24K Premium Justified in 2025?",
-    date: "18 Nov 2025",
-    summary:
-      "We decode the spread between 22K vs 24K coins and how investors can optimize purchases.",
-    slug: "24k-premium-2025",
+    slug: "gold-market-update",
   },
 ];
 
 export default async function HomePage() {
-  console.log("🏠 [HomePage] Loading gold rates...");
+  console.log("🏠 [HomePage] Loading gold rates and news...");
   
   // Try to fetch from database first
   let dbData = null;
@@ -117,6 +101,29 @@ export default async function HomePage() {
     console.log("📊 [HomePage] DB fetch result:", dbData.india ? "India data found" : "No India data", Object.keys(dbData.cities).length, "cities found");
   } catch (error) {
     console.error("❌ [HomePage] Database error:", error);
+  }
+  
+  // Fetch actual news from database
+  let newsItems: NewsItem[] = fallbackNews;
+  try {
+    const recentNews = await getRecentNews(3);
+    if (recentNews.length > 0) {
+      newsItems = recentNews.map((article, index) => ({
+        id: index + 1,
+        title: article.title,
+        date: article.publishedAt.toLocaleDateString("en-IN", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        }),
+        summary: article.summary,
+        city: article.sourceName,
+        slug: article.slug,
+      }));
+      console.log(`📰 [HomePage] Loaded ${newsItems.length} news articles`);
+    }
+  } catch (error) {
+    console.error("❌ [HomePage] News fetch error:", error);
   }
   
   // Prepare base rates (India)
@@ -190,7 +197,7 @@ export default async function HomePage() {
     }
   }
 
-  return <HomeClient baseRates={baseRates} cities={cityRates} newsItems={mockNews} />;
+  return <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} />;
 }
 
 // Cache this page for 5 minutes (300 seconds)

@@ -137,6 +137,25 @@ export async function getRecentNews(limit: number = 5): Promise<NewsArticle[]> {
   }));
 }
 
+// Get a single news article by slug
+export async function getArticleBySlug(slug: string): Promise<NewsArticle | null> {
+  const db = await getDatabase();
+  const collection = db.collection<NewsArticle>(COLLECTION_NAME);
+
+  const article = await collection.findOne({ slug });
+
+  if (!article) {
+    return null;
+  }
+
+  return {
+    ...article,
+    _id: article._id?.toString(),
+    publishedAt: new Date(article.publishedAt),
+    fetchedAt: new Date(article.fetchedAt),
+  };
+}
+
 // Create indexes for better performance
 export async function ensureIndexes(): Promise<void> {
   const db = await getDatabase();
