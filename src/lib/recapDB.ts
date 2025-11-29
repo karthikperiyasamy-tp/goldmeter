@@ -14,16 +14,37 @@ function generateSlug(date: string): string {
   return `daily-recap-${day}-${month}-${year}`;
 }
 
-// Get yesterday's date in YYYY-MM-DD format
-export function getYesterdayDate(): string {
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  return yesterday.toISOString().split('T')[0];
+// Get date in IST timezone (India Standard Time = UTC+5:30)
+function getDateInIST(date: Date = new Date()): Date {
+  // Convert to IST by adding 5 hours 30 minutes
+  const istOffset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
+  const utcTime = date.getTime() + (date.getTimezoneOffset() * 60 * 1000);
+  return new Date(utcTime + istOffset);
 }
 
-// Get today's date in YYYY-MM-DD format
+// Get yesterday's date in YYYY-MM-DD format (IST)
+export function getYesterdayDate(): string {
+  const nowIST = getDateInIST();
+  const yesterday = new Date(nowIST);
+  yesterday.setDate(yesterday.getDate() - 1);
+  
+  const year = yesterday.getFullYear();
+  const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+  const day = String(yesterday.getDate()).padStart(2, '0');
+  
+  console.log(`📅 [RecapDB] Today (IST): ${nowIST.toISOString()}, Yesterday: ${year}-${month}-${day}`);
+  
+  return `${year}-${month}-${day}`;
+}
+
+// Get today's date in YYYY-MM-DD format (IST)
 export function getTodayDate(): string {
-  return new Date().toISOString().split('T')[0];
+  const nowIST = getDateInIST();
+  const year = nowIST.getFullYear();
+  const month = String(nowIST.getMonth() + 1).padStart(2, '0');
+  const day = String(nowIST.getDate()).padStart(2, '0');
+  
+  return `${year}-${month}-${day}`;
 }
 
 // Format date for display (e.g., "28 November 2024")
@@ -36,28 +57,39 @@ export function formatDateForDisplay(dateStr: string): string {
   });
 }
 
-// Get news articles from a specific date
+// Get news articles from a specific date (IST)
 export async function getNewsForDate(date: string): Promise<NewsArticle[]> {
   const db = await getDatabase();
   const collection = db.collection<NewsArticle>(NEWS_COLLECTION);
 
-  // Get start and end of the day
-  const startOfDay = new Date(date);
-  startOfDay.setHours(0, 0, 0, 0);
+  // Parse the date string (YYYY-MM-DD) and create IST day boundaries
+  // Convert IST boundaries to UTC for MongoDB query
+  const [year, month, day] = date.split('-').map(Number);
   
-  const endOfDay = new Date(date);
-  endOfDay.setHours(23, 59, 59, 999);
+  // Start of day in IST (00:00:00 IST = previous day 18:30:00 UTC)
+  const startOfDayIST = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+  // Subtract IST offset (5:30) to get UTC time
+  startOfDayIST.setTime(startOfDayIST.getTime() - (5.5 * 60 * 60 * 1000));
+  
+  // End of day in IST (23:59:59 IST = same day 18:29:59 UTC)
+  const endOfDayIST = new Date(Date.UTC(year, month - 1, day, 23, 59, 59, 999));
+  endOfDayIST.setTime(endOfDayIST.getTime() - (5.5 * 60 * 60 * 1000));
+
+  console.log(`📰 [RecapDB] Fetching news for ${date} (IST)`);
+  console.log(`   UTC range: ${startOfDayIST.toISOString()} to ${endOfDayIST.toISOString()}`);
 
   const articles = await collection
     .find({
       publishedAt: {
-        $gte: startOfDay,
-        $lte: endOfDay,
+        $gte: startOfDayIST,
+        $lte: endOfDayIST,
       },
     })
     .sort({ publishedAt: -1 })
     .limit(20) // Get top 20 articles
     .toArray();
+
+  console.log(`📰 [RecapDB] Found ${articles.length} articles for ${date}`);
 
   return articles.map(article => ({
     ...article,
