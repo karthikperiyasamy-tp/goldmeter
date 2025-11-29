@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { fetchAllRSSFeeds } from '@/lib/rssParser';
 import { saveArticles, ensureIndexes } from '@/lib/newsDB';
 
@@ -19,11 +20,18 @@ export async function POST() {
         message: 'No articles found in RSS feeds',
         inserted: 0,
         skipped: 0,
+        revalidated: false,
       });
     }
 
     // Save to database
     const { inserted, skipped } = await saveArticles(articles);
+
+    // Revalidate the news page cache only if new articles were inserted
+    if (inserted > 0) {
+      console.log('🔄 Revalidating /news page cache...');
+      revalidatePath('/news');
+    }
 
     return NextResponse.json({
       success: true,
@@ -31,6 +39,7 @@ export async function POST() {
       fetched: articles.length,
       inserted,
       skipped,
+      revalidated: inserted > 0,
     });
   } catch (error) {
     console.error('❌ Error in fetch-news:', error);

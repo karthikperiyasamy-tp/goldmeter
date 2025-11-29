@@ -1,4 +1,4 @@
-name: Fetch Gold News (Every 4 Hours)
+name: Fetch Gold News (Every 6 Hours)
 
 on:
   schedule:

@@ -50,5 +50,6 @@ export default async function NewsPage() {
   );
 }
 
-// Revalidate every 30 minutes
-export const revalidate = 1800;
+// Fallback revalidation every 1 hour (on-demand revalidation handles freshness)
+// The /api/fetch-news endpoint triggers revalidatePath('/news') when new articles are saved
+export const revalidate = 3600;
