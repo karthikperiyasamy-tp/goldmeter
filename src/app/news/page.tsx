@@ -60,7 +60,7 @@ export default async function NewsPage() {
   }
   
   try {
-    recaps = await getRecentRecaps(3);
+    recaps = await getRecentRecaps(2); // Show max 2 recaps on news page
   } catch (error) {
     console.error("Error fetching recaps:", error);
   }

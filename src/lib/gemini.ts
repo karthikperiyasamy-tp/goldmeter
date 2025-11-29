@@ -44,7 +44,7 @@ export async function generateWithGemini(prompt: string): Promise<string> {
       ],
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 2048,
+        maxOutputTokens: 4096,
       },
     }),
   });
@@ -110,12 +110,11 @@ Write a comprehensive daily recap article with the following structure:
 
 3. **HIGHLIGHTS**: List exactly 5 key bullet points (each 10-15 words)
 
-4. **CONTENT**: Write a 400-500 word article covering:
+4. **CONTENT**: Write a 300-400 word article in plain paragraphs (no headers or bullet points in content) covering:
    - Opening paragraph summarizing the day's main gold market movements
-   - Key price movements and market trends
+   - Key price movements and market trends  
    - Important news that affected gold prices
-   - Expert opinions or market analysis mentioned
-   - Closing paragraph with outlook/what to watch
+   - Closing paragraph with outlook for investors
 
 Important guidelines:
 - Write for Indian audience (use ₹, mention MCX, Indian cities)
