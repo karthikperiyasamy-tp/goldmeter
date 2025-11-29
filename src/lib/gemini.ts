@@ -2,8 +2,8 @@
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-// Use gemini-1.5-flash-latest for better availability
-const GEMINI_MODEL = 'gemini-1.5-flash-latest';
+// Use Gemini 2.5 Pro (2 RPM free tier - sufficient for daily recap)
+const GEMINI_MODEL = 'gemini-2.5-pro';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 interface GeminiResponse {
