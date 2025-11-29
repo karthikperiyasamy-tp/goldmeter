@@ -1,7 +1,10 @@
 // Google Gemini AI integration for generating daily recaps
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+
+// Use gemini-1.5-flash-latest for better availability
+const GEMINI_MODEL = 'gemini-1.5-flash-latest';
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 interface GeminiResponse {
   candidates?: Array<{
@@ -13,13 +16,16 @@ interface GeminiResponse {
   }>;
   error?: {
     message: string;
+    code?: number;
   };
 }
 
 export async function generateWithGemini(prompt: string): Promise<string> {
   if (!GEMINI_API_KEY) {
-    throw new Error('GEMINI_API_KEY is not configured');
+    throw new Error('GEMINI_API_KEY is not configured. Please add it to your environment variables.');
   }
+
+  console.log(`🤖 Calling Gemini API (model: ${GEMINI_MODEL})...`);
 
   const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
     method: 'POST',
@@ -45,7 +51,24 @@ export async function generateWithGemini(prompt: string): Promise<string> {
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error('Gemini API error:', errorText);
+    console.error('Gemini API error response:', errorText);
+    
+    // Parse error for better messaging
+    try {
+      const errorJson = JSON.parse(errorText);
+      if (errorJson.error?.message) {
+        throw new Error(`Gemini API error: ${errorJson.error.message}`);
+      }
+    } catch {
+      // If parsing fails, use status code
+    }
+    
+    if (response.status === 404) {
+      throw new Error('Gemini API error: Model not found. Please check your API key is valid.');
+    } else if (response.status === 401 || response.status === 403) {
+      throw new Error('Gemini API error: Invalid or expired API key.');
+    }
+    
     throw new Error(`Gemini API error: ${response.status}`);
   }
 
@@ -60,6 +83,7 @@ export async function generateWithGemini(prompt: string): Promise<string> {
     throw new Error('No content generated from Gemini');
   }
 
+  console.log('✅ Gemini API response received successfully');
   return text;
 }
 
