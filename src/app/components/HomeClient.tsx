@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import CitySelector from "./CitySelector";
 import PriceHero from "./PriceHero";
 import RateCard from "./RateCard";
@@ -70,44 +68,8 @@ export default function HomeClient({
   cities,
   newsItems,
 }: HomeClientProps) {
-  const router = useRouter();
-
-  // Auto-detect user's city and redirect
-  useEffect(() => {
-    const detectAndRedirect = async () => {
-      console.log("🏠 [HomeClient] Checking city auto-redirect...");
-      
-      // Check if user has already been redirected in this session
-      const hasRedirected = sessionStorage.getItem("cityAutoRedirected");
-      if (hasRedirected) {
-        console.log("⏭️  [HomeClient] Already redirected in this session, skipping");
-        return;
-      }
-
-      try {
-        console.log("📡 [HomeClient] Calling /api/detect-city...");
-        const response = await fetch("/api/detect-city");
-        const data = await response.json();
-        
-        console.log("📍 [HomeClient] Detect-city response:", data);
-
-        if (data.success && data.detected && data.slug) {
-          console.log(`✈️  [HomeClient] Redirecting to /${data.slug}...`);
-          // Mark as redirected and navigate to city page
-          sessionStorage.setItem("cityAutoRedirected", "true");
-          router.push(`/${data.slug}`);
-        } else {
-          console.log("🌏 [HomeClient] No city detected, staying on India homepage");
-        }
-        // If not detected or not in our list, stay on India page (do nothing)
-      } catch (error) {
-        console.error("❌ [HomeClient] City detection failed:", error);
-        // On error, stay on India page
-      }
-    };
-
-    detectAndRedirect();
-  }, [router]);
+  // City detection is now handled by middleware (instant, at the edge)
+  // No client-side redirect needed - users are redirected before page loads
 
   // Use India rates directly from baseRates for homepage
   const hero22k = baseRates.gold_22k;
