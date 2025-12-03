@@ -71,7 +71,8 @@ export function middleware(request: NextRequest) {
   }
 
   // Skip if user has already been redirected (check cookie)
-  const hasRedirectedCookie = request.cookies.get("cityAutoRedirected");
+  // changed cookie name to break old stuck states
+  const hasRedirectedCookie = request.cookies.get("geo_redirect_checked");
   if (hasRedirectedCookie) {
     return NextResponse.next();
   }
@@ -80,7 +81,7 @@ export function middleware(request: NextRequest) {
   const savedCity = request.cookies.get("preferredCity")?.value;
   if (savedCity && CITY_SLUGS.includes(savedCity)) {
     const response = NextResponse.redirect(new URL(`/${savedCity}`, request.url));
-    response.cookies.set("cityAutoRedirected", "true", {
+    response.cookies.set("geo_redirect_checked", "true", {
       maxAge: 60 * 60 * 24, // 24 hours
       path: "/",
     });
@@ -125,7 +126,7 @@ export function middleware(request: NextRequest) {
         maxAge: 60 * 60 * 24 * 30, // 30 days
         path: "/",
       });
-      response.cookies.set("cityAutoRedirected", "true", {
+      response.cookies.set("geo_redirect_checked", "true", {
         maxAge: 60 * 60 * 24, // 24 hours
         path: "/",
       });
@@ -134,9 +135,12 @@ export function middleware(request: NextRequest) {
   }
 
   // No city detected or not in India - allow homepage to load normally
-  // We do NOT set the cityAutoRedirected cookie here, so that we retry detection on the next visit.
+  // We do NOT set the geo_redirect_checked cookie here, so that we retry detection on the next visit.
   // This helps if the user moves location or if headers were temporarily missing.
-  return NextResponse.next();
+  const response = NextResponse.next();
+  // If we are allowing the request to proceed without a city, 
+  // the client-side fallback in HomeClient will attempt detection if needed.
+  return response;
 }
 
 export const config = {

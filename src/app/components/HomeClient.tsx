@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CitySelector from "./CitySelector";
 import PriceHero from "./PriceHero";
@@ -84,8 +86,41 @@ export default function HomeClient({
   priceChange = { gold22k: 0, gold24k: 0 },
   history = [],
 }: HomeClientProps) {
-  // City detection is now handled by middleware (instant, at the edge)
-  // No client-side redirect needed - users are redirected before page loads
+  const router = useRouter();
+
+  // Client-side fallback for city detection (when middleware IP headers are missing)
+  useEffect(() => {
+    const checkLocation = async () => {
+      // Check if we've already checked location in this session/period
+      const cookies = document.cookie;
+      if (cookies.includes("geo_redirect_checked=true") || cookies.includes("preferredCity")) {
+        return;
+      }
+
+      try {
+        console.log("📍 Client-side detecting location...");
+        const res = await fetch("/api/detect-city");
+        const data = await res.json();
+
+        if (data.success && data.detected && data.slug) {
+          console.log(`✅ Detected ${data.city}, redirecting...`);
+          
+          // Set cookies to prevent re-detection loop
+          document.cookie = `preferredCity=${data.slug}; path=/; max-age=${60 * 60 * 24 * 30}`;
+          document.cookie = `geo_redirect_checked=true; path=/; max-age=${60 * 60 * 24}`;
+          
+          router.push(`/${data.slug}`);
+        } else {
+           // Mark as checked even if failed (for 1 hour) so we don't spam API on every refresh
+           document.cookie = `geo_redirect_checked=true; path=/; max-age=${3600}`;
+        }
+      } catch (error) {
+        console.error("Location detection failed:", error);
+      }
+    };
+    
+    checkLocation();
+  }, [router]);
 
   // Use India rates directly from baseRates for homepage
   const hero22k = baseRates.gold_22k;
