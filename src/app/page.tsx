@@ -8,6 +8,14 @@ import HomeClient, {
 import { getLatestGoldRates, getHistoricalGoldRates } from "@/lib/goldRatesDB";
 import { getRecentNews } from "@/lib/newsDB";
 
+type HistoryRate = {
+  date: string;
+  gold22k: number;
+  gold24k: number;
+  gold18k: number;
+  timestamp: number;
+};
+
 // Fetch scraped rates including India rate
 // Using Next.js cache with 30-minute revalidation to prevent multiple calls
 async function getScrapedRates() {
@@ -97,7 +105,7 @@ export default async function HomePage() {
   
   // Try to fetch from database first
   let dbData = null;
-  let history = [];
+  let history: HistoryRate[] = [];
   try {
     dbData = await getLatestGoldRates();
     console.log("📊 [HomePage] DB fetch result:", dbData.india ? "India data found" : "No India data", Object.keys(dbData.cities).length, "cities found");
