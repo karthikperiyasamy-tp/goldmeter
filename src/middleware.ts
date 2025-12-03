@@ -134,13 +134,9 @@ export function middleware(request: NextRequest) {
   }
 
   // No city detected or not in India - allow homepage to load normally
-  // Set the redirect flag to prevent client-side redirect attempt
-  const response = NextResponse.next();
-  response.cookies.set("cityAutoRedirected", "true", {
-    maxAge: 60 * 60 * 24, // 24 hours
-    path: "/",
-  });
-  return response;
+  // We do NOT set the cityAutoRedirected cookie here, so that we retry detection on the next visit.
+  // This helps if the user moves location or if headers were temporarily missing.
+  return NextResponse.next();
 }
 
 export const config = {

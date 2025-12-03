@@ -66,9 +66,12 @@ export default function PriceHero({
             </div>
           </div>
           <div className="mt-6 flex flex-wrap gap-3 text-sm">
-            <button className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700">
+            <Link
+              href="#price-chart"
+              className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+            >
               View Charts
-            </button>
+            </Link>
             <button className="rounded-full bg-amber-600 px-4 py-2 font-semibold text-white shadow-soft">
               Set Alert
             </button>

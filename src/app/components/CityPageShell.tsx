@@ -137,6 +137,12 @@ export default function CityPageShell({
                 >
                   ← Back to India
                 </Link>
+                <Link
+                  href="#price-chart"
+                  className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  View Charts
+                </Link>
                 <Link 
                   href="/calculator"
                   className="rounded-full bg-amber-600 px-4 py-2 font-semibold text-white shadow-soft hover:bg-amber-700 transition-colors"
@@ -233,7 +239,7 @@ export default function CityPageShell({
         </section>
 
         {/* Price Trend Section */}
-        <section className="mt-8 rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">
+        <section id="price-chart" className="mt-8 rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">
           <PriceChartWrapper
             city={city}
             currentGold22k={gold22k}

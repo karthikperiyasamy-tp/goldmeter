@@ -184,7 +184,7 @@ export default function HomeClient({
           <MonthStatistics history={history} />
         </section>
 
-        <section className="rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">
+        <section id="price-chart" className="rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">
           <PriceChartWrapper
             city="India"
             currentGold22k={hero22k}
