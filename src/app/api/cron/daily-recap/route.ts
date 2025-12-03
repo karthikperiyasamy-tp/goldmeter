@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { fetchAllRSSFeeds } from '@/lib/rssParser';
 import { saveArticles, ensureIndexes } from '@/lib/newsDB';
@@ -24,7 +24,7 @@ function generateSlug(date: string): string {
 // This cron job runs daily and does:
 // 1. Fetch latest news from RSS
 // 2. Generate AI recap for yesterday's news
-export async function GET() {
+export async function GET(request: NextRequest) {
   const results = {
     newsFetch: { success: false, message: '', inserted: 0 },
     recapGeneration: { success: false, message: '', title: '' },
@@ -32,6 +32,22 @@ export async function GET() {
 
   try {
     console.log('🕐 Daily cron job started...');
+    
+    // Verify authorization
+    const authHeader = request.headers.get('authorization');
+    if (process.env.NODE_ENV === 'production') {
+      const token = authHeader?.replace('Bearer ', '');
+      if (!process.env.CRON_SECRET || token !== process.env.CRON_SECRET) {
+        console.log('❌ [Cron] Unauthorized access attempt');
+        return NextResponse.json(
+          { success: false, error: 'Unauthorized' },
+          { status: 401 }
+        );
+      }
+    } else {
+        console.log('🔧 [Cron] Running in development mode (auth check skipped)');
+    }
+
     console.log(`📅 Current time: ${new Date().toISOString()}`);
 
     // ============================================

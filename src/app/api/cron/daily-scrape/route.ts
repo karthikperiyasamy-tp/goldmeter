@@ -4,10 +4,10 @@ import { performScraping } from '../../scrape-rates/route';
 
 /**
  * Vercel Cron Job endpoint
- * This is triggered automatically by Vercel every hour
+ * This is triggered automatically by Vercel every hour between 7 AM and 7 PM IST
  * Vercel automatically adds the Authorization header for cron jobs
  * 
- * Schedule: 0 * * * * (every hour)
+ * Schedule: 30 1-13 * * * (7 AM to 7 PM IST)
  * Configured in vercel.json
  */
 export async function GET(request: NextRequest) {
