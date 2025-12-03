@@ -5,11 +5,14 @@ import CitySelector from "./CitySelector";
 import PriceHero from "./PriceHero";
 import RateCard from "./RateCard";
 import PriceChartWrapper from "./PriceChartWrapper";
+import Last10DaysTable from "./Last10DaysTable";
+import MonthStatistics from "./MonthStatistics";
 
 export type RateResponse = {
   date: string;
   gold_24k: number;
   gold_22k: number;
+  gold_18k?: number;
   city: string;
 };
 
@@ -30,24 +33,35 @@ export type NewsItem = {
   slug: string;
 };
 
+// Price change per 10g (today - yesterday)
+export type PriceChange = {
+  gold22k: number;
+  gold24k: number;
+  gold18k?: number;
+};
+
+type HistoryRate = {
+  date: string;
+  gold22k: number;
+  gold24k: number;
+  gold18k: number;
+  timestamp: number;
+};
+
 type HomeClientProps = {
   baseRates: RateResponse;
   cities: CityRate[];
   newsItems: NewsItem[];
+  priceChange?: PriceChange;
+  history?: HistoryRate[];
 };
 
-const quickPresets22k = [
-  { label: "1 gram", grams: 1, change: 45 },
-  { label: "8 gram", grams: 8, change: -30 },
-  { label: "10 gram", grams: 10, change: 45 },
-  { label: "100 gram", grams: 100, change: -120 },
-];
-
-const quickPresets24k = [
-  { label: "1 gram", grams: 1, change: -30 },
-  { label: "8 gram", grams: 8, change: 20 },
-  { label: "10 gram", grams: 10, change: -30 },
-  { label: "100 gram", grams: 100, change: 150 },
+// Gram presets for quick cards (just the gram quantities)
+const gramPresets = [
+  { label: "1 gram", grams: 1 },
+  { label: "8 gram", grams: 8 },
+  { label: "10 gram", grams: 10 },
+  { label: "100 gram", grams: 100 },
 ];
 
 const cityListBlock = [
@@ -67,6 +81,8 @@ export default function HomeClient({
   baseRates,
   cities,
   newsItems,
+  priceChange = { gold22k: 0, gold24k: 0 },
+  history = [],
 }: HomeClientProps) {
   // City detection is now handled by middleware (instant, at the edge)
   // No client-side redirect needed - users are redirected before page loads
@@ -74,9 +90,16 @@ export default function HomeClient({
   // Use India rates directly from baseRates for homepage
   const hero22k = baseRates.gold_22k;
   const hero24k = baseRates.gold_24k;
+  const hero18k = baseRates.gold_18k || Math.round((hero24k * 18) / 24);
 
   const perGram22k = hero22k / 10;
   const perGram24k = hero24k / 10;
+  const perGram18k = hero18k / 10;
+
+  // Calculate change per gram from 10g price change
+  const changePerGram22k = priceChange.gold22k / 10;
+  const changePerGram24k = priceChange.gold24k / 10;
+  const changePerGram18k = (priceChange.gold18k || 0) / 10;
 
   return (
     <div className="min-h-screen bg-[#fffdf7] text-charcoal">
@@ -97,13 +120,13 @@ export default function HomeClient({
             </p>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
-            {quickPresets22k.map((preset) => (
+            {gramPresets.map((preset) => (
               <RateCard
                 key={`22k-${preset.label}`}
                 label={preset.label}
                 grams={preset.grams}
                 price={Math.round(perGram22k * preset.grams)}
-                change={preset.change}
+                change={Math.round(changePerGram22k * preset.grams)}
               />
             ))}
           </div>
@@ -118,16 +141,47 @@ export default function HomeClient({
             </p>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
-            {quickPresets24k.map((preset) => (
+            {gramPresets.map((preset) => (
               <RateCard
                 key={`24k-${preset.label}`}
                 label={preset.label}
                 grams={preset.grams}
                 price={Math.round(perGram24k * preset.grams)}
-                change={preset.change}
+                change={Math.round(changePerGram24k * preset.grams)}
               />
             ))}
           </div>
+        </section>
+
+        {/* 18K Quick Cards */}
+        <section>
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">18K Gold - Quick Cards</h3>
+            <p className="text-sm text-slate-500">
+              India reference price
+            </p>
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {gramPresets.map((preset) => (
+              <RateCard
+                key={`18k-${preset.label}`}
+                label={preset.label}
+                grams={preset.grams}
+                price={Math.round(perGram18k * preset.grams)}
+                change={Math.round(changePerGram18k * preset.grams)}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Last 10 Days Table */}
+        <section>
+          <Last10DaysTable history={history} />
+        </section>
+
+        {/* Month Statistics */}
+        <section>
+          <MonthStatistics history={history} />
         </section>
 
         <section className="rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">

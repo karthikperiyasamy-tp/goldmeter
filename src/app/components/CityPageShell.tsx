@@ -1,6 +1,8 @@
 import Link from "next/link";
 import RateCard from "./RateCard";
 import PriceChartWrapper from "./PriceChartWrapper";
+import Last10DaysTable from "./Last10DaysTable";
+import MonthStatistics from "./MonthStatistics";
 
 type LocalInfo = {
   title: string;
@@ -12,15 +14,29 @@ type FAQ = {
   answer: string;
 };
 
+// Price change per 10g (today - yesterday)
+export type PriceChange = {
+  gold22k: number;
+  gold24k: number;
+  gold18k: number;
+};
+
+export type HistoryRate = {
+  date: string;
+  gold22k: number;
+  gold24k: number;
+  gold18k: number;
+  timestamp: number;
+};
+
 type CityPageShellProps = {
   city: string;
   updated: string;
   gold22k: number;
   gold24k: number;
-  todayVsYesterday: {
-    gold22k: number;
-    gold24k: number;
-  };
+  gold18k?: number; // Optional for backward compatibility during migration
+  priceChange?: PriceChange; // Dynamic price change from DB
+  history?: HistoryRate[];
   localInfo: LocalInfo[];
   faqs: FAQ[];
   similarCities: string[];
@@ -36,21 +52,32 @@ const quickPresets = [
   { label: "8 gram", grams: 8 },
   { label: "10 gram", grams: 10 },
   { label: "100 gram", grams: 100 },
-];
+  ];
 
 export default function CityPageShell({
   city,
   updated,
   gold22k,
   gold24k,
-  todayVsYesterday,
+  gold18k,
+  priceChange = { gold22k: 0, gold24k: 0, gold18k: 0 },
+  history = [],
   localInfo,
   faqs,
   similarCities,
 }: CityPageShellProps) {
+  // Calculate 18K if not provided
+  const finalGold18k = gold18k || Math.round((gold24k * 18) / 24);
+
   // Calculate per gram prices
   const perGram22k = gold22k / 10;
   const perGram24k = gold24k / 10;
+  const perGram18k = finalGold18k / 10;
+
+  // Calculate change per gram from 10g price change
+  const changePerGram22k = priceChange.gold22k / 10;
+  const changePerGram24k = priceChange.gold24k / 10;
+  const changePerGram18k = (priceChange.gold18k || 0) / 10;
 
   return (
     <main className="min-h-screen bg-[#fffdf7] pb-12">
@@ -76,8 +103,8 @@ export default function CityPageShell({
                   <p className="text-3xl font-bold text-charcoal">
                     ₹{inr.format(gold22k)}
                   </p>
-                  <p className={`text-xs ${todayVsYesterday.gold22k >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                    {todayVsYesterday.gold22k >= 0 ? '+' : ''}₹{todayVsYesterday.gold22k} vs yesterday
+                  <p className={`text-xs ${priceChange.gold22k >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
+                    {priceChange.gold22k >= 0 ? '+' : ''}₹{priceChange.gold22k} vs yesterday
                   </p>
                 </div>
                 <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
@@ -87,8 +114,19 @@ export default function CityPageShell({
                   <p className="text-3xl font-bold text-charcoal">
                     ₹{inr.format(gold24k)}
                   </p>
-                  <p className={`text-xs ${todayVsYesterday.gold24k >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                    {todayVsYesterday.gold24k >= 0 ? '+' : ''}₹{todayVsYesterday.gold24k} vs yesterday
+                  <p className={`text-xs ${priceChange.gold24k >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
+                    {priceChange.gold24k >= 0 ? '+' : ''}₹{priceChange.gold24k} vs yesterday
+                  </p>
+                </div>
+                <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">
+                    18K Gold
+                  </p>
+                  <p className="text-3xl font-bold text-charcoal">
+                    ₹{inr.format(finalGold18k)}
+                  </p>
+                  <p className={`text-xs ${priceChange.gold18k >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
+                    {priceChange.gold18k >= 0 ? '+' : ''}₹{priceChange.gold18k} vs yesterday
                   </p>
                 </div>
               </div>
@@ -134,13 +172,13 @@ export default function CityPageShell({
             <p className="text-sm text-slate-500">{city} price</p>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
-            {quickPresets.map((preset, index) => (
+            {quickPresets.map((preset) => (
               <RateCard
                 key={`22k-${preset.label}`}
                 label={preset.label}
                 grams={preset.grams}
                 price={Math.round(perGram22k * preset.grams)}
-                change={index % 2 === 0 ? todayVsYesterday.gold22k : -Math.abs(todayVsYesterday.gold22k)}
+                change={Math.round(changePerGram22k * preset.grams)}
               />
             ))}
           </div>
@@ -153,16 +191,45 @@ export default function CityPageShell({
             <p className="text-sm text-slate-500">{city} price</p>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
-            {quickPresets.map((preset, index) => (
+            {quickPresets.map((preset) => (
               <RateCard
                 key={`24k-${preset.label}`}
                 label={preset.label}
                 grams={preset.grams}
                 price={Math.round(perGram24k * preset.grams)}
-                change={index % 2 === 0 ? -Math.abs(todayVsYesterday.gold24k) : todayVsYesterday.gold24k}
+                change={Math.round(changePerGram24k * preset.grams)}
               />
             ))}
           </div>
+        </section>
+
+        {/* 18K Quick Cards */}
+        <section className="mt-8">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">18K Gold - Quick Cards</h3>
+            <p className="text-sm text-slate-500">{city} price</p>
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {quickPresets.map((preset) => (
+              <RateCard
+                key={`18k-${preset.label}`}
+                label={preset.label}
+                grams={preset.grams}
+                price={Math.round(perGram18k * preset.grams)}
+                change={Math.round(changePerGram18k * preset.grams)}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Last 10 Days Table */}
+        <section className="mt-8">
+          <Last10DaysTable history={history} />
+        </section>
+
+        {/* Month Statistics */}
+        <section className="mt-8">
+          <MonthStatistics history={history} />
         </section>
 
         {/* Price Trend Section */}
@@ -218,4 +285,3 @@ export default function CityPageShell({
     </main>
   );
 }
-

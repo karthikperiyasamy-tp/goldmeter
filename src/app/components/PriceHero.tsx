@@ -6,6 +6,7 @@ type PriceHeroProps = {
   city: string;
   gold22k: number;
   gold24k: number;
+  gold18k?: number;
   updated: string;
 };
 
@@ -17,8 +18,11 @@ export default function PriceHero({
   city,
   gold22k,
   gold24k,
+  gold18k,
   updated,
 }: PriceHeroProps) {
+  const finalGold18k = gold18k || Math.round((gold24k * 18) / 24);
+
   return (
     <section className="border-y border-amber-100 bg-gradient-to-r from-white to-amber-50">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 md:flex-row md:items-center md:justify-between">
@@ -50,6 +54,15 @@ export default function PriceHero({
                 ₹{formatter.format(gold24k)}
               </p>
               <p className="text-xs text-rose-500">-₹30 vs yesterday</p>
+            </div>
+            <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
+              <p className="text-xs uppercase tracking-wide text-slate-500">
+                18K Gold
+              </p>
+              <p className="text-3xl font-bold text-charcoal">
+                ₹{formatter.format(finalGold18k)}
+              </p>
+              <p className="text-xs text-slate-500">Calculated</p>
             </div>
           </div>
           <div className="mt-6 flex flex-wrap gap-3 text-sm">

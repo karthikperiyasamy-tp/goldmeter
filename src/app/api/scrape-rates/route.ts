@@ -4,6 +4,7 @@ import * as cheerio from "cheerio";
 type GoldRate = {
   gold22k: number | null;
   gold24k: number | null;
+  gold18k: number | null;
   error?: string;
   timestamp: string;
 };
@@ -63,6 +64,7 @@ async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
 
     let gold22k: number | null = null;
     let gold24k: number | null = null;
+    let gold18k: number | null = null;
 
     // Strategy 1: Look for table with "Today 24 Carat Gold Rate Per Gram in India" and "10" gram row
     $("table").each((_, table) => {
@@ -155,15 +157,22 @@ async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
       }
     }
 
+    // Calculate 18K if not found but 24K is available
+    if (!gold18k && gold24k) {
+      gold18k = Math.round((gold24k * 18) / 24);
+    }
+
     return {
       gold22k,
       gold24k,
+      gold18k,
       timestamp: new Date().toISOString(),
     };
   } catch (error) {
     return {
       gold22k: null,
       gold24k: null,
+      gold18k: null,
       error: error instanceof Error ? error.message : "Unknown error",
       timestamp: new Date().toISOString(),
     };
@@ -191,6 +200,7 @@ async function scrapeGoodReturnsCity(citySlug: string): Promise<GoldRate> {
 
     let gold22k: number | null = null; // Will be per 10g
     let gold24k: number | null = null; // Will be per 10g
+    let gold18k: number | null = null; // Will be per 10g
 
     // Strategy 1: Find the main rate cards/boxes at the top of the page
     const elements = $("div, section, article").toArray();
@@ -296,15 +306,22 @@ async function scrapeGoodReturnsCity(citySlug: string): Promise<GoldRate> {
       }
     }
 
+    // Calculate 18K if not found but 24K is available
+    if (!gold18k && gold24k) {
+      gold18k = Math.round((gold24k * 18) / 24);
+    }
+
     return {
       gold22k,
       gold24k,
+      gold18k,
       timestamp: new Date().toISOString(),
     };
   } catch (error) {
     return {
       gold22k: null,
       gold24k: null,
+      gold18k: null,
       error: error instanceof Error ? error.message : "Unknown error",
       timestamp: new Date().toISOString(),
     };
@@ -342,7 +359,7 @@ export async function performScraping(): Promise<ScrapedRates> {
   };
 
   console.log("✅ [Scrape] Fresh data scraped");
-  console.log(`📊 [Scrape] India rates: 22K=₹${india.gold22k}, 24K=₹${india.gold24k}`);
+  console.log(`📊 [Scrape] India rates: 22K=₹${india.gold22k}, 24K=₹${india.gold24k}, 18K=₹${india.gold18k}`);
 
   return results;
 }

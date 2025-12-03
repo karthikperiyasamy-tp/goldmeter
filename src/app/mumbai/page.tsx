@@ -14,7 +14,8 @@ export default async function MumbaiPage() {
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}
-      todayVsYesterday={{ gold22k: -10, gold24k: 20 }}
+      priceChange={rates.priceChange}
+      history={rates.history}
       localInfo={[
         {
           title: "Hallmarking centers",

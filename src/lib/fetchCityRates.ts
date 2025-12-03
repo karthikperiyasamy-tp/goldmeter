@@ -1,4 +1,19 @@
-import { getLatestGoldRates } from './goldRatesDB';
+import { getLatestGoldRates, getHistoricalGoldRates } from './goldRatesDB';
+
+// Price change per 10g (today - yesterday)
+export type PriceChange = {
+  gold22k: number;
+  gold24k: number;
+  gold18k: number;
+};
+
+type RateHistory = {
+  date: string;
+  gold22k: number;
+  gold24k: number;
+  gold18k: number;
+  timestamp: number;
+};
 
 /**
  * Fetch city-specific gold rates
@@ -6,7 +21,7 @@ import { getLatestGoldRates } from './goldRatesDB';
  * 
  * @param cityName - Name of the city (e.g., "Chennai", "Mumbai")
  * @param host - Request host for API calls
- * @returns Object with gold22k and gold24k rates
+ * @returns Object with gold22k, gold24k and gold18k rates, plus price change from yesterday
  */
 export async function fetchCityRates(
   cityName: string,
@@ -14,9 +29,22 @@ export async function fetchCityRates(
 ): Promise<{
   gold22k: number;
   gold24k: number;
+  gold18k: number;
   source: 'db' | 'scrape' | 'mock';
   date: string;
+  priceChange: PriceChange;
+  history: RateHistory[];
 }> {
+  let history: RateHistory[] = [];
+
+  // Try to fetch history from DB (even if current rate comes from scrape/mock)
+  try {
+    history = await getHistoricalGoldRates(cityName, 30);
+    console.log(`📊 [FetchCityRates] Fetched ${history.length} historical records for ${cityName}`);
+  } catch (error) {
+    console.error(`❌ [FetchCityRates] Error fetching history for ${cityName}:`, error);
+  }
+
   // Try database first
   try {
     console.log(`📊 [FetchCityRates] Trying DB for ${cityName}...`);
@@ -24,11 +52,26 @@ export async function fetchCityRates(
     
     if (dbData.cities[cityName]) {
       console.log(`✅ [FetchCityRates] Found ${cityName} in DB`);
+      
+      // Calculate price change from yesterday
+      let priceChange: PriceChange = { gold22k: 0, gold24k: 0, gold18k: 0 };
+      if (dbData.yesterdayCities[cityName]) {
+        priceChange = {
+          gold22k: dbData.cities[cityName].gold22k - dbData.yesterdayCities[cityName].gold22k,
+          gold24k: dbData.cities[cityName].gold24k - dbData.yesterdayCities[cityName].gold24k,
+          gold18k: dbData.cities[cityName].gold18k - dbData.yesterdayCities[cityName].gold18k,
+        };
+        console.log(`📈 [FetchCityRates] ${cityName} price change: 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}, 18K=${priceChange.gold18k >= 0 ? '+' : ''}₹${priceChange.gold18k}`);
+      }
+      
       return {
         gold22k: dbData.cities[cityName].gold22k,
         gold24k: dbData.cities[cityName].gold24k,
+        gold18k: dbData.cities[cityName].gold18k || Math.round((dbData.cities[cityName].gold24k * 18) / 24),
         source: 'db',
         date: dbData.cities[cityName].date, // Already formatted as string
+        priceChange,
+        history,
       };
     }
     
@@ -50,11 +93,15 @@ export async function fetchCityRates(
       
       if (cityRates?.gold22k && cityRates?.gold24k) {
         console.log(`✅ [FetchCityRates] Scraped ${cityName} rates`);
+        const gold18k = cityRates.gold18k || Math.round((cityRates.gold24k * 18) / 24);
         return {
           gold22k: cityRates.gold22k,
           gold24k: cityRates.gold24k,
+          gold18k,
           source: 'scrape',
           date: new Date().toLocaleDateString('en-IN'),
+          priceChange: { gold22k: 0, gold24k: 0, gold18k: 0 }, // No historical data from scraping
+          history,
         };
       }
     }
@@ -66,7 +113,10 @@ export async function fetchCityRates(
   
   // Final fallback to mock data
   console.log(`⚠️  [FetchCityRates] Using mock data for ${cityName}`);
-  return getMockRates(cityName);
+  return {
+    ...getMockRates(cityName),
+    history,
+  };
 }
 
 /**
@@ -75,8 +125,10 @@ export async function fetchCityRates(
 function getMockRates(cityName: string): {
   gold22k: number;
   gold24k: number;
+  gold18k: number;
   source: 'mock';
   date: string;
+  priceChange: PriceChange;
 } {
   const mockRatesMap: Record<string, { gold22k: number; gold24k: number }> = {
     Chennai: { gold22k: 59680, gold24k: 64890 },
@@ -92,11 +144,14 @@ function getMockRates(cityName: string): {
   };
   
   const rates = mockRatesMap[cityName] || { gold22k: 59500, gold24k: 64700 };
+  const gold18k = Math.round((rates.gold24k * 18) / 24);
   
   return {
     ...rates,
+    gold18k,
     source: 'mock',
     date: new Date().toLocaleDateString('en-IN'),
+    priceChange: { gold22k: 0, gold24k: 0, gold18k: 0 }, // No historical data for mock
   };
 }
 

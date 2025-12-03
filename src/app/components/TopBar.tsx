@@ -112,7 +112,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
           )}
         </div>
 
-        <nav className="hidden items-center gap-4 text-sm font-medium text-slate-600 lg:flex">
+        <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 lg:flex">
           {navLinks.map((item) => {
             const isActive = item.label === "Gold Rate Today" 
               ? isGoldRatePage 
@@ -132,22 +132,6 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
               </Link>
             );
           })}
-          <div className="group relative">
-            <button className="text-slate-600 transition-colors hover:text-amber-600">
-              More ▾
-            </button>
-            <div className="invisible absolute right-0 top-full mt-2 w-40 rounded-xl border bg-white p-3 text-sm text-slate-500 opacity-0 shadow-soft transition group-hover:visible group-hover:opacity-100">
-              <Link href="/news" className="block py-1 hover:text-amber-600">
-                Charts & News
-              </Link>
-              <Link href="/calculator" className="block py-1 hover:text-amber-600">
-                Tools
-              </Link>
-              <Link href="/" className="block py-1 hover:text-amber-600">
-                Alerts
-              </Link>
-            </div>
-          </div>
         </nav>
 
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
@@ -169,14 +153,8 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
               </option>
             ))}
           </select>
-          <button className="hidden rounded-full bg-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-soft md:inline-block">
-            Install App
-          </button>
-          <button className="rounded-full border border-slate-200 p-1.5 sm:p-2 text-base sm:text-lg">
-            🔔
-          </button>
           <button 
-            className="rounded-full border border-slate-200 p-1.5 sm:p-2 text-base sm:text-lg md:hidden"
+            className="rounded-full border border-slate-200 p-1.5 sm:p-2 text-base sm:text-lg lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -187,9 +165,9 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="absolute left-0 right-0 top-full z-50 border-b border-slate-200 bg-white shadow-lg md:hidden">
+        <div className="absolute left-0 right-0 top-full z-50 border-b border-slate-200 bg-white shadow-lg lg:hidden">
           <nav className="mx-auto max-w-6xl px-4 py-4">
-            <div className="space-y-3">
+            <div className="space-y-1">
               {navLinks.map((item) => {
                 const isActive = item.label === "Gold Rate Today" 
                   ? isGoldRatePage 
@@ -210,27 +188,6 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                   </Link>
                 );
               })}
-              <div className="border-t border-slate-100 pt-3">
-                <Link 
-                  href="/calculator" 
-                  className="block rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-amber-50 hover:text-amber-600 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Tools
-                </Link>
-                <Link 
-                  href="/" 
-                  className="block rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-amber-50 hover:text-amber-600 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Alerts
-                </Link>
-              </div>
-              <div className="pt-2">
-                <button className="w-full rounded-full bg-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-soft">
-                  Install App
-                </button>
-              </div>
             </div>
           </nav>
         </div>

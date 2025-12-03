@@ -6,6 +6,7 @@ export type GoldRateDocument = {
   city: string;
   gold_22k: number;
   gold_24k: number;
+  gold_18k: number;
   source: string;
   created_at: Date;
   updated_at: Date;
@@ -15,6 +16,7 @@ export type CityRates = {
   [city: string]: {
     gold22k: number | null;
     gold24k: number | null;
+    gold18k: number | null;
     timestamp: string;
   };
 };
@@ -26,7 +28,7 @@ const COLLECTION_NAME = 'gold_prices';
  * Creates/updates a record for each city for the given date
  */
 export async function saveGoldRates(
-  indiaRates: { gold22k: number | null; gold24k: number | null },
+  indiaRates: { gold22k: number | null; gold24k: number | null; gold18k: number | null },
   cityRates: CityRates
 ): Promise<{ success: boolean; saved: number; errors: number }> {
   try {
@@ -49,6 +51,7 @@ export async function saveGoldRates(
             $set: {
               gold_22k: indiaRates.gold22k,
               gold_24k: indiaRates.gold24k,
+              gold_18k: indiaRates.gold18k || Math.round((indiaRates.gold24k * 18) / 24),
               source: 'GoodReturns',
               updated_at: now,
             },
@@ -78,6 +81,7 @@ export async function saveGoldRates(
               $set: {
                 gold_22k: rates.gold22k,
                 gold_24k: rates.gold24k,
+                gold_18k: rates.gold18k || Math.round((rates.gold24k * 18) / 24),
                 source: 'GoodReturns',
                 updated_at: now,
               },
@@ -109,43 +113,58 @@ export async function saveGoldRates(
 /**
  * Get latest gold rates for all cities (internal uncached version)
  * Returns dates as strings to work with Next.js cache serialization
+ * Also returns yesterday's rates for calculating price changes
  */
 async function getLatestGoldRatesUncached(): Promise<{
-  india: { gold22k: number; gold24k: number; date: string } | null;
-  cities: Record<string, { gold22k: number; gold24k: number; date: string }>;
+  india: { gold22k: number; gold24k: number; gold18k: number; date: string } | null;
+  cities: Record<string, { gold22k: number; gold24k: number; gold18k: number; date: string }>;
+  yesterdayIndia: { gold22k: number; gold24k: number; gold18k: number } | null;
+  yesterdayCities: Record<string, { gold22k: number; gold24k: number; gold18k: number }>;
 }> {
   try {
     const db = await getDatabase();
     const collection = db.collection<GoldRateDocument>(COLLECTION_NAME);
 
-    // Get the most recent date
-    const latestDoc = await collection
-      .find()
-      .sort({ date: -1 })
-      .limit(1)
+    // Get the two most recent distinct dates
+    const recentDates = await collection
+      .aggregate([
+        { $group: { _id: '$date' } },
+        { $sort: { _id: -1 } },
+        { $limit: 2 }
+      ])
       .toArray();
 
-    if (latestDoc.length === 0) {
+    if (recentDates.length === 0) {
       console.log('⚠️  [DB] No data found in database');
-      return { india: null, cities: {} };
+      return { india: null, cities: {}, yesterdayIndia: null, yesterdayCities: {} };
     }
 
-    const latestDate = latestDoc[0].date;
+    const latestDate = recentDates[0]._id;
+    const yesterdayDate = recentDates.length > 1 ? recentDates[1]._id : null;
+    
     console.log(`📅 [DB] Fetching rates for date: ${latestDate.toISOString().split('T')[0]}`);
+    if (yesterdayDate) {
+      console.log(`📅 [DB] Yesterday's date: ${yesterdayDate.toISOString().split('T')[0]}`);
+    }
 
-    // Get all rates for that date
-    const allRates = await collection
+    // Get all rates for today
+    const todayRates = await collection
       .find({ date: latestDate })
       .toArray();
 
-    let india = null;
-    const cities: Record<string, { gold22k: number; gold24k: number; date: string }> = {};
+    // Get all rates for yesterday (if available)
+    const yesterdayRates = yesterdayDate 
+      ? await collection.find({ date: yesterdayDate }).toArray()
+      : [];
 
-    for (const rate of allRates) {
-      // Convert Date to formatted string for cache serialization
+    let india = null;
+    const cities: Record<string, { gold22k: number; gold24k: number; gold18k: number; date: string }> = {};
+
+    for (const rate of todayRates) {
       const rateData = {
         gold22k: rate.gold_22k,
         gold24k: rate.gold_24k,
+        gold18k: rate.gold_18k || Math.round((rate.gold_24k * 18) / 24),
         date: rate.date.toLocaleDateString('en-IN'),
       };
 
@@ -156,22 +175,44 @@ async function getLatestGoldRatesUncached(): Promise<{
       }
     }
 
+    // Process yesterday's rates
+    let yesterdayIndia: { gold22k: number; gold24k: number; gold18k: number } | null = null;
+    const yesterdayCities: Record<string, { gold22k: number; gold24k: number; gold18k: number }> = {};
+
+    for (const rate of yesterdayRates) {
+      const rateData = {
+        gold22k: rate.gold_22k,
+        gold24k: rate.gold_24k,
+        gold18k: rate.gold_18k || Math.round((rate.gold_24k * 18) / 24),
+      };
+
+      if (rate.city === 'India') {
+        yesterdayIndia = rateData;
+      } else {
+        yesterdayCities[rate.city] = rateData;
+      }
+    }
+
     console.log(`✅ [DB] Fetched India rate and ${Object.keys(cities).length} city rates`);
+    if (yesterdayIndia) {
+      console.log(`✅ [DB] Also fetched yesterday's rates for change calculation`);
+    }
     
-    return { india, cities };
+    return { india, cities, yesterdayIndia, yesterdayCities };
   } catch (error) {
     console.error('❌ [DB] Error fetching rates:', error);
-    return { india: null, cities: {} };
+    return { india: null, cities: {}, yesterdayIndia: null, yesterdayCities: {} };
   }
 }
 
 /**
  * Get latest gold rates for all cities (cached version)
  * Cache duration: 5 minutes (300 seconds)
+ * Returns today's rates and yesterday's rates for calculating changes
  */
 export const getLatestGoldRates = unstable_cache(
   getLatestGoldRatesUncached,
-  ['latest-gold-rates'],
+  ['latest-gold-rates-v2'],
   {
     revalidate: 300, // Cache for 5 minutes
     tags: ['gold-rates'],
@@ -190,6 +231,7 @@ async function getHistoricalGoldRatesUncached(
   date: string;
   gold22k: number;
   gold24k: number;
+  gold18k: number;
   timestamp: number;
 }>> {
   try {
@@ -212,6 +254,7 @@ async function getHistoricalGoldRatesUncached(
       date: rate.date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }),
       gold22k: rate.gold_22k,
       gold24k: rate.gold_24k,
+      gold18k: rate.gold_18k || Math.round((rate.gold_24k * 18) / 24),
       timestamp: rate.date.getTime(),
     }));
 
@@ -236,6 +279,7 @@ export async function getHistoricalGoldRates(
   date: string;
   gold22k: number;
   gold24k: number;
+  gold18k: number;
   timestamp: number;
 }>> {
   // Create a cached version with city and days as cache key

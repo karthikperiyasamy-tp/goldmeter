@@ -14,8 +14,9 @@ export default async function KolkataPage() {
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}
-      todayVsYesterday={{ gold22k: 30, gold24k: 35 }}
-        localInfo={[
+      priceChange={rates.priceChange}
+      history={rates.history}
+      localInfo={[
           {
             title: "Hallmarking centers",
             description:

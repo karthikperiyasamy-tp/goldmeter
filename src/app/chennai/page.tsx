@@ -15,7 +15,8 @@ export default async function ChennaiPage() {
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}
-      todayVsYesterday={{ gold22k: 45, gold24k: -30 }}
+      priceChange={rates.priceChange}
+      history={rates.history}
       localInfo={[
         {
           title: "Hallmarking centers",

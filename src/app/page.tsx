@@ -3,8 +3,9 @@ import HomeClient, {
   type CityRate,
   type NewsItem,
   type RateResponse,
+  type PriceChange,
 } from "./components/HomeClient";
-import { getLatestGoldRates } from "@/lib/goldRatesDB";
+import { getLatestGoldRates, getHistoricalGoldRates } from "@/lib/goldRatesDB";
 import { getRecentNews } from "@/lib/newsDB";
 
 // Fetch scraped rates including India rate
@@ -96,9 +97,14 @@ export default async function HomePage() {
   
   // Try to fetch from database first
   let dbData = null;
+  let history = [];
   try {
     dbData = await getLatestGoldRates();
     console.log("📊 [HomePage] DB fetch result:", dbData.india ? "India data found" : "No India data", Object.keys(dbData.cities).length, "cities found");
+    
+    // Fetch historical data for India (last 30 days)
+    history = await getHistoricalGoldRates("India", 30);
+    console.log(`📊 [HomePage] Fetched ${history.length} historical records for India`);
   } catch (error) {
     console.error("❌ [HomePage] Database error:", error);
   }
@@ -129,6 +135,7 @@ export default async function HomePage() {
   // Prepare base rates (India)
   let baseRates: RateResponse;
   let cityRates: CityRate[] = mockCities;
+  let priceChange: PriceChange = { gold22k: 0, gold24k: 0 };
   
   if (dbData?.india) {
     // Use database data
@@ -140,14 +147,23 @@ export default async function HomePage() {
       city: "India",
     };
     
+    // Calculate price change from yesterday (per 10g)
+    if (dbData.yesterdayIndia) {
+      priceChange = {
+        gold22k: dbData.india.gold22k - dbData.yesterdayIndia.gold22k,
+        gold24k: dbData.india.gold24k - dbData.yesterdayIndia.gold24k,
+      };
+      console.log(`📈 [HomePage] Price change: 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}`);
+    }
+    
     // Convert DB city data to CityRate format
     if (Object.keys(dbData.cities).length > 0) {
       cityRates = Object.entries(dbData.cities).map(([name, rates]) => ({
         name,
         gold22k: rates.gold22k,
         gold24k: rates.gold24k,
-        updated: "Today", // Use simple label since date is already a formatted string
-        change: 0, // TODO: Calculate from historical data
+        updated: "Today",
+        change: 0,
       }));
       console.log(`✅ [HomePage] Using ${cityRates.length} city rates from MongoDB`);
     }
@@ -197,7 +213,7 @@ export default async function HomePage() {
     }
   }
 
-  return <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} />;
+  return <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} priceChange={priceChange} history={history} />;
 }
 
 // Cache this page for 5 minutes (300 seconds)

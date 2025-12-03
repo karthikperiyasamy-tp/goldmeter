@@ -14,8 +14,9 @@ export default async function AhmedabadPage() {
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}
-      todayVsYesterday={{ gold22k: -8, gold24k: 12 }}
-        localInfo={[
+      priceChange={rates.priceChange}
+      history={rates.history}
+      localInfo={[
           {
             title: "Hallmarking centers",
             description:
