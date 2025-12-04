@@ -132,7 +132,12 @@ export default function CityPageShell({
               </div>
               <div className="mt-6 flex flex-wrap gap-3 text-sm">
                 <Link 
-                  href="/" 
+                  href="/?noredirect=true" 
+                  onClick={() => {
+                     // Clear preference so user can actually stay on India page without redirecting back
+                     document.cookie = "preferredCity=; path=/; max-age=0";
+                     document.cookie = `geo_redirect_checked=true; path=/; max-age=${60 * 60 * 24}`;
+                  }}
                   className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                 >
                   ← Back to India

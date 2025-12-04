@@ -70,22 +70,29 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Check for saved city preference cookie (faster than geo detection)
+  const savedCity = request.cookies.get("preferredCity")?.value;
+  if (savedCity && CITY_SLUGS.includes(savedCity)) {
+    // Check if user specifically requested to stay on homepage
+    if (!request.nextUrl.searchParams.has("noredirect")) {
+      console.log(`🍪 [Middleware] Redirecting to preferred city from cookie: ${savedCity}`);
+      const response = NextResponse.redirect(new URL(`/${savedCity}`, request.url));
+      response.cookies.set("geo_redirect_checked", "true", {
+        maxAge: 60 * 60 * 24, // 24 hours
+        path: "/",
+      });
+      return response;
+    } else {
+      console.log(`🚫 [Middleware] User requested noredirect, ignoring preference: ${savedCity}`);
+    }
+  }
+
   // Skip if user has already been redirected (check cookie)
   // changed cookie name to break old stuck states
   const hasRedirectedCookie = request.cookies.get("geo_redirect_checked");
   if (hasRedirectedCookie) {
+    console.log("⏭️ [Middleware] Skipping detection (already checked/redirected in this session)");
     return NextResponse.next();
-  }
-
-  // Check for saved city preference cookie (faster than geo detection)
-  const savedCity = request.cookies.get("preferredCity")?.value;
-  if (savedCity && CITY_SLUGS.includes(savedCity)) {
-    const response = NextResponse.redirect(new URL(`/${savedCity}`, request.url));
-    response.cookies.set("geo_redirect_checked", "true", {
-      maxAge: 60 * 60 * 24, // 24 hours
-      path: "/",
-    });
-    return response;
   }
 
   // Use Vercel's built-in geo headers (instant, no API call!)
@@ -100,6 +107,7 @@ export function middleware(request: NextRequest) {
   // Step 1: Try exact city match from Vercel's city header
   if (vercelCity) {
     const decodedCity = decodeURIComponent(vercelCity);
+    console.log(`🌍 [Middleware] Vercel detected city header: ${decodedCity}`);
     detectedSlug = findCityByName(decodedCity);
   }
 
@@ -107,9 +115,11 @@ export function middleware(request: NextRequest) {
   if (!detectedSlug && vercelLatitude && vercelLongitude) {
     const lat = parseFloat(vercelLatitude);
     const lon = parseFloat(vercelLongitude);
+    console.log(`📍 [Middleware] Vercel detected coords: ${lat}, ${lon}`);
     if (!isNaN(lat) && !isNaN(lon)) {
       const nearest = findNearestCity(lat, lon);
       if (nearest) {
+        console.log(`📏 [Middleware] Nearest supported city: ${nearest.slug} (${nearest.distance}km)`);
         detectedSlug = nearest.slug;
       }
     }
@@ -120,6 +130,7 @@ export function middleware(request: NextRequest) {
   if (detectedSlug) {
     // Only redirect if in India or country unknown
     if (!vercelCountry || vercelCountry === "IN") {
+      console.log(`✅ [Middleware] Redirecting to detected city: ${detectedSlug}`);
       const response = NextResponse.redirect(new URL(`/${detectedSlug}`, request.url));
       // Set cookies to remember the city and prevent re-detection
       response.cookies.set("preferredCity", detectedSlug, {
@@ -131,7 +142,11 @@ export function middleware(request: NextRequest) {
         path: "/",
       });
       return response;
+    } else {
+      console.log(`🌍 [Middleware] Detected ${detectedSlug} but country is ${vercelCountry} (not IN), skipping redirect`);
     }
+  } else {
+    console.log("⚠️ [Middleware] No supported city detected from Vercel headers");
   }
 
   // No city detected or not in India - allow homepage to load normally

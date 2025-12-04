@@ -103,7 +103,7 @@ export default function HomeClient({
         const data = await res.json();
 
         if (data.success && data.detected && data.slug) {
-          console.log(`✅ Detected ${data.city}, redirecting...`);
+          console.log(`✅ [HomeClient] Detected ${data.city}, redirecting...`);
           
           // Set cookies to prevent re-detection loop
           document.cookie = `preferredCity=${data.slug}; path=/; max-age=${60 * 60 * 24 * 30}`;
@@ -112,6 +112,7 @@ export default function HomeClient({
           router.push(`/${data.slug}`);
         } else {
            // Mark as checked even if failed (for 1 hour) so we don't spam API on every refresh
+           console.log("⚠️ [HomeClient] Location detection failed or no city found.");
            document.cookie = `geo_redirect_checked=true; path=/; max-age=${3600}`;
         }
       } catch (error) {
@@ -255,6 +256,11 @@ export default function HomeClient({
                 </div>
                 <Link
                   href={`/${city.toLowerCase()}`}
+                  onClick={() => {
+                     const slug = city.toLowerCase();
+                     document.cookie = `preferredCity=${slug}; path=/; max-age=${60 * 60 * 24 * 30}`;
+                     document.cookie = `geo_redirect_checked=true; path=/; max-age=${60 * 60 * 24}`;
+                  }}
                   className="text-amber-600"
                 >
                   View →

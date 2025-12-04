@@ -50,8 +50,19 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
 
   const handleCitySelect = (citySlug: string, cityName: string) => {
     onCityChange(cityName);
-    // If India is selected, go to homepage, otherwise go to city page
-    router.push(citySlug === "" ? "/" : `/${citySlug}`);
+    
+    if (citySlug === "") {
+      // India selected: Clear preference and prevent auto-redirect
+      document.cookie = "preferredCity=; path=/; max-age=0";
+      document.cookie = `geo_redirect_checked=true; path=/; max-age=${60 * 60 * 24}`; // 24 hours
+      router.push("/");
+    } else {
+      // City selected: Save preference
+      document.cookie = `preferredCity=${citySlug}; path=/; max-age=${60 * 60 * 24 * 30}`; // 30 days
+      document.cookie = `geo_redirect_checked=true; path=/; max-age=${60 * 60 * 24}`; // 24 hours
+      router.push(`/${citySlug}`);
+    }
+    
     setSearchQuery("");
     setShowSearchResults(false);
   };
@@ -62,6 +73,9 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
         <button 
           onClick={() => {
             onCityChange("India");
+            // Clear preference when clicking logo to go to India
+            document.cookie = "preferredCity=; path=/; max-age=0";
+            document.cookie = `geo_redirect_checked=true; path=/; max-age=${60 * 60 * 24}`;
             router.push("/");
           }}
           className="flex items-center gap-2 sm:gap-3 hover:opacity-90 transition-opacity shrink-0 min-w-0"

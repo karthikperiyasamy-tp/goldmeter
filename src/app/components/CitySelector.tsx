@@ -44,6 +44,9 @@ export default function CitySelector({ cities }: CitySelectorProps) {
             className="text-left rounded-2xl border border-slate-100 bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-amber-200"
             onClick={() => {
               const slug = citySlugMap[city.name] || city.name.toLowerCase();
+              // Save preference so user doesn't have to rely on auto-detection
+              document.cookie = `preferredCity=${slug}; path=/; max-age=${60 * 60 * 24 * 30}`; // 30 days
+              document.cookie = `geo_redirect_checked=true; path=/; max-age=${60 * 60 * 24}`; // 24 hours
               router.push(`/${slug}`);
             }}
           >
