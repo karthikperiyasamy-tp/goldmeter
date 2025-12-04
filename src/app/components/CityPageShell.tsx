@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import RateCard from "./RateCard";
 import PriceChartWrapper from "./PriceChartWrapper";
