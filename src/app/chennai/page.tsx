@@ -60,6 +60,6 @@ export const metadata = {
     "Get today's Chennai gold rate per 10 grams for 22K and 24K gold. Check T Nagar prices, making charges, and top jewellery shops.",
 };
 
-// Cache this page for 5 minutes (300 seconds)
-export const revalidate = 300;
+// Disable caching for immediate updates
+export const revalidate = 0;
 

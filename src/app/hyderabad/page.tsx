@@ -59,5 +59,5 @@ export const metadata = {
     "Check today's Hyderabad gold rate per 10 grams for 22K and 24K gold. Get Abids and Sultan Bazaar prices, making charges info.",
 };
 
-// Cache this page for 5 minutes (300 seconds)
-export const revalidate = 300;
+// Disable caching for immediate updates
+export const revalidate = 0;

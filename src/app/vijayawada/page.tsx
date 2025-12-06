@@ -59,6 +59,6 @@ export const metadata = {
     "Today's Vijayawada gold rate for 22K and 24K gold per 10 grams. Check Governorpet prices, making charges, and trusted jewellers.",
 };
 
-// Cache this page for 5 minutes (300 seconds)
-export const revalidate = 300;
+// Disable caching for immediate updates
+export const revalidate = 0;
 

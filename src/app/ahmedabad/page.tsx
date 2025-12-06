@@ -59,6 +59,6 @@ export const metadata = {
     "Check Ahmedabad gold rate today for 22K and 24K gold per 10 grams. Get Manek Chowk prices, making charges, and best jewellers.",
 };
 
-// Cache this page for 5 minutes (300 seconds)
-export const revalidate = 300;
+// Disable caching for immediate updates
+export const revalidate = 0;
 

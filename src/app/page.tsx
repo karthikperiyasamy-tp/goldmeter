@@ -27,7 +27,7 @@ async function getScrapedRates() {
   
   try {
     const res = await fetch(`${protocol}://${host}/api/scrape-rates`, {
-      next: { revalidate: 1800 }, // Cache for 30 minutes
+      cache: 'no-store'
     });
 
     if (!res.ok) {
@@ -224,5 +224,5 @@ export default async function HomePage() {
   return <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} priceChange={priceChange} history={history} />;
 }
 
-// Cache this page for 5 minutes (300 seconds)
-export const revalidate = 300;
+// Disable caching for immediate updates
+export const revalidate = 0;
