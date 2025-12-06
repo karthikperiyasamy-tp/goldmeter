@@ -21,6 +21,7 @@ export type PriceChange = {
   gold22k: number;
   gold24k: number;
   gold18k: number;
+  silver1kg?: number;
 };
 
 export type HistoryRate = {
@@ -28,6 +29,7 @@ export type HistoryRate = {
   gold22k: number;
   gold24k: number;
   gold18k: number;
+  silver1kg?: number;
   timestamp: number;
 };
 
@@ -37,6 +39,7 @@ type CityPageShellProps = {
   gold22k: number;
   gold24k: number;
   gold18k?: number; // Optional for backward compatibility during migration
+  silver1kg?: number;
   priceChange?: PriceChange; // Dynamic price change from DB
   history?: HistoryRate[];
   localInfo: LocalInfo[];
@@ -54,7 +57,14 @@ const quickPresets = [
   { label: "8 gram", grams: 8 },
   { label: "10 gram", grams: 10 },
   { label: "100 gram", grams: 100 },
-  ];
+];
+
+const silverPresets = [
+  { label: "1 gram", grams: 1 },
+  { label: "10 gram", grams: 10 },
+  { label: "100 gram", grams: 100 },
+  { label: "1 kg", grams: 1000 },
+];
 
 export default function CityPageShell({
   city,
@@ -62,7 +72,8 @@ export default function CityPageShell({
   gold22k,
   gold24k,
   gold18k,
-  priceChange = { gold22k: 0, gold24k: 0, gold18k: 0 },
+  silver1kg,
+  priceChange = { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: 0 },
   history = [],
   localInfo,
   faqs,
@@ -75,11 +86,13 @@ export default function CityPageShell({
   const perGram22k = gold22k / 10;
   const perGram24k = gold24k / 10;
   const perGram18k = finalGold18k / 10;
+  const perGramSilver = silver1kg ? silver1kg / 1000 : 0;
 
   // Calculate change per gram from 10g price change
   const changePerGram22k = priceChange.gold22k / 10;
   const changePerGram24k = priceChange.gold24k / 10;
   const changePerGram18k = (priceChange.gold18k || 0) / 10;
+  const changePerGramSilver = (priceChange.silver1kg || 0) / 1000;
 
   return (
     <main className="min-h-screen bg-[#fffdf7] pb-12">
@@ -131,15 +144,23 @@ export default function CityPageShell({
                     {priceChange.gold18k >= 0 ? '+' : ''}₹{priceChange.gold18k} vs yesterday
                   </p>
                 </div>
+                {!!silver1kg && (
+                  <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
+                    <p className="text-xs uppercase tracking-wide text-slate-500">
+                      Silver (1kg)
+                    </p>
+                    <p className="text-3xl font-bold text-charcoal">
+                      ₹{inr.format(silver1kg)}
+                    </p>
+                    <p className={`text-xs ${(priceChange.silver1kg || 0) >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
+                      {(priceChange.silver1kg || 0) >= 0 ? '+' : ''}₹{priceChange.silver1kg || 0} vs yesterday
+                    </p>
+                  </div>
+                )}
               </div>
               <div className="mt-6 flex flex-wrap gap-3 text-sm">
                 <Link 
                   href="/?noredirect=true" 
-                  onClick={() => {
-                     // Clear preference so user can actually stay on India page without redirecting back
-                     document.cookie = "preferredCity=; path=/; max-age=0";
-                     document.cookie = `geo_redirect_checked=true; path=/; max-age=${60 * 60 * 24}`;
-                  }}
                   className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                 >
                   ← Back to India
@@ -234,6 +255,27 @@ export default function CityPageShell({
             ))}
           </div>
         </section>
+
+        {/* Silver Quick Cards */}
+        {!!silver1kg && (
+          <section id="silver-rate" className="mt-8">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Silver - Quick Cards</h3>
+              <p className="text-sm text-slate-500">{city} price</p>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+              {silverPresets.map((preset) => (
+                <RateCard
+                  key={`silver-${preset.label}`}
+                  label={preset.label}
+                  grams={preset.grams}
+                  price={Math.round(perGramSilver * preset.grams)}
+                  change={Math.round(changePerGramSilver * preset.grams)}
+                />
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Last 10 Days Table */}
         <section className="mt-8">

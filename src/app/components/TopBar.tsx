@@ -24,12 +24,6 @@ const cityOptions = [
   { name: "Vijayawada", slug: "vijayawada" },
 ];
 
-const navLinks = [
-  { label: "Gold Rate Today", href: "/" },
-  { label: "Calculator", href: "/calculator" },
-  { label: "News", href: "/news" },
-];
-
 export default function TopBar({ city, onCityChange }: TopBarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,6 +34,10 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   // List of city pages for highlighting "Gold Rate Today"
   const cityPages = ["chennai", "bangalore", "mumbai", "delhi", "hyderabad", "coimbatore", "pune", "kolkata", "ahmedabad", "vijayawada"];
   const isGoldRatePage = pathname === "/" || cityPages.some(city => pathname === `/${city}`);
+  const isSilverRoute = pathname.startsWith("/silver-rate");
+  const citySlug = city.toLowerCase();
+  const goldHref = city === "India" ? "/" : `/${citySlug}`;
+  const silverHref = city === "India" ? "/silver-rate" : `/silver-rate/${citySlug}`;
 
   // Filter cities based on search query
   const filteredCities = searchQuery
@@ -52,15 +50,16 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
     onCityChange(cityName);
     
     if (citySlug === "") {
-      // India selected: Clear preference and prevent auto-redirect
-      document.cookie = "preferredCity=; path=/; max-age=0";
-      document.cookie = `geo_redirect_checked=true; path=/; max-age=${60 * 60 * 24}`; // 24 hours
-      router.push("/");
+      // India selected: stay in current context (gold vs silver)
+      if (isSilverRoute) {
+        router.push("/silver-rate");
+      } else {
+        router.push("/?noredirect=true");
+      }
     } else {
-      // City selected: Save preference
-      document.cookie = `preferredCity=${citySlug}; path=/; max-age=${60 * 60 * 24 * 30}`; // 30 days
-      document.cookie = `geo_redirect_checked=true; path=/; max-age=${60 * 60 * 24}`; // 24 hours
-      router.push(`/${citySlug}`);
+      // City selected: route within the current context
+      const targetPath = isSilverRoute ? `/silver-rate/${citySlug}` : `/${citySlug}`;
+      router.push(targetPath);
     }
     
     setSearchQuery("");
@@ -127,10 +126,17 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
         </div>
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 lg:flex">
-          {navLinks.map((item) => {
+          {[
+            { label: "Gold Rate Today", href: goldHref },
+            { label: "Silver Rate", href: silverHref },
+            { label: "Calculator", href: "/calculator" },
+            { label: "News", href: "/news" },
+          ].map((item) => {
             const isActive = item.label === "Gold Rate Today" 
               ? isGoldRatePage 
-              : pathname === item.href;
+              : item.label === "Silver Rate"
+                ? isSilverRoute
+                : pathname === item.href;
             
             return (
               <Link
@@ -182,10 +188,17 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
         <div className="absolute left-0 right-0 top-full z-50 border-b border-slate-200 bg-white shadow-lg lg:hidden">
           <nav className="mx-auto max-w-6xl px-4 py-4">
             <div className="space-y-1">
-              {navLinks.map((item) => {
+              {[
+                { label: "Gold Rate Today", href: goldHref },
+                { label: "Silver Rate", href: silverHref },
+                { label: "Calculator", href: "/calculator" },
+                { label: "News", href: "/news" },
+              ].map((item) => {
                 const isActive = item.label === "Gold Rate Today" 
                   ? isGoldRatePage 
-                  : pathname === item.href;
+                  : item.label === "Silver Rate"
+                    ? isSilverRoute
+                    : pathname === item.href;
                 
                 return (
                   <Link

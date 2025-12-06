@@ -5,6 +5,7 @@ type GoldRate = {
   gold22k: number | null;
   gold24k: number | null;
   gold18k: number | null;
+  silver1kg: number | null;
   error?: string;
   timestamp: string;
 };
@@ -43,10 +44,13 @@ function extractPrice(text: string): number | null {
   return match ? parseInt(match[0], 10) : null;
 }
 
-// Scrape GoodReturns India-wide rate
-async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
+// Helper function to scrape silver rates specifically
+async function scrapeSilverRate(citySlug?: string): Promise<number | null> {
   try {
-    const url = "https://www.goodreturns.in/gold-rates/";
+    const url = citySlug 
+      ? `https://www.goodreturns.in/silver-rates/${citySlug}.html`
+      : "https://www.goodreturns.in/silver-rates/";
+      
     const response = await fetch(url, {
       headers: {
         "User-Agent":
@@ -55,16 +59,69 @@ async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
       cache: "no-store",
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
+    if (!response.ok) return null;
 
     const html = await response.text();
+    const $ = cheerio.load(html);
+    let silver1kg: number | null = null;
+
+    $("table").each((_, table) => {
+      $(table).find("tr").each((_, row) => {
+        const cells = $(row).find("td");
+        if (cells.length >= 2) {
+          const weight = $(cells[0]).text().trim().toLowerCase();
+          // Check for 1kg variants
+          if (weight === "1 kg" || weight === "1 kg" || weight === "1000 grams" || weight === "1000") {
+             const price = extractPrice($(cells[1]).text());
+             if (price) silver1kg = price;
+          }
+        }
+      });
+    });
+    
+    // Fallback strategy if table scrape fails: Look for text pattern
+    if (!silver1kg) {
+      const bodyText = $("body").text();
+      // Look for "1 kg" followed by price
+      const match = bodyText.match(/1\s*kg\s*Silver\s*Rate.*?₹\s*(\d{1,3}(?:,\d{3})*)/i);
+      if (match && match[1]) {
+        silver1kg = extractPrice(match[1]);
+      }
+    }
+
+    return silver1kg;
+  } catch (e) {
+    console.error(`Error scraping silver for ${citySlug || 'India'}:`, e);
+    return null;
+  }
+}
+
+// Scrape GoodReturns India-wide rate
+async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
+  try {
+    // Fetch gold and silver in parallel
+    const [goldResponse, silverPrice] = await Promise.all([
+      fetch("https://www.goodreturns.in/gold-rates/", {
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        },
+        cache: "no-store",
+      }),
+      scrapeSilverRate()
+    ]);
+
+    if (!goldResponse.ok) {
+      throw new Error(`HTTP ${goldResponse.status}`);
+    }
+
+    const html = await goldResponse.text();
     const $ = cheerio.load(html);
 
     let gold22k: number | null = null;
     let gold24k: number | null = null;
     let gold18k: number | null = null;
+    let silver1kg: number | null = silverPrice;
 
     // Strategy 1: Look for table with "Today 24 Carat Gold Rate Per Gram in India" and "10" gram row
     $("table").each((_, table) => {
@@ -103,10 +160,27 @@ async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
           }
         });
       }
+
+      // Check for Silver table (if scrapeSilverRate failed or wasn't called)
+      if (!silver1kg && tableContext.includes("Silver") && tableContext.includes("Rate") && tableContext.includes("India")) {
+        $(table).find("tr").each((_, row) => {
+          const cells = $(row).find("td");
+          if (cells.length >= 2) {
+            const weightCell = $(cells[0]).text().trim();
+            if (weightCell === "1 kg" || weightCell === "1 Kg" || weightCell === "1000 grams") {
+              const priceText = $(cells[1]).text();
+              const price = extractPrice(priceText);
+              if (price) {
+                silver1kg = price;
+              }
+            }
+          }
+        });
+      }
     });
 
     // Strategy 2: Look for the card display format (24K Gold /g, 22K Gold /g)
-    if (!gold24k || !gold22k) {
+    if (!gold24k || !gold22k || !silver1kg) {
       $("div, section").each((_, elem) => {
         const text = $(elem).text();
         
@@ -130,6 +204,23 @@ async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
               gold22k = perGram * 10; // Convert to per 10g
             }
           }
+        }
+
+        // Look for Silver Rate
+        if (text.includes("Silver Rate") && text.includes("India") && text.length < 200) {
+           const matches = text.match(/₹\s*(\d{1,2}),(\d{3})/);
+           if (matches && !silver1kg) {
+             // Usually displayed per 1kg or 10g, hard to say without context.
+             // But GoodReturns often shows 1kg price prominently.
+             // Let's assume if it's > 10000 it's likely 1kg silver (approx 70k-90k)
+             // If it's < 1000 it's likely 10g or 1g.
+             const price = parseInt(matches[1] + matches[2], 10);
+             if (price > 50000) {
+               silver1kg = price;
+             } else if (price > 50 && price < 200) { // 1g price approx 70-90
+               silver1kg = price * 1000;
+             }
+           }
         }
       });
     }
@@ -155,6 +246,15 @@ async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
           gold22k = price;
         }
       }
+
+      // Match pattern for Silver table with 1 kg row
+      const matchSilver = bodyHtml.match(/Silver.*Rate.*India[\s\S]{0,500}<td>1\s*kg<\/td>\s*<td>₹(\d{1,2}),(\d{3})/i);
+      if (matchSilver && !silver1kg) {
+        const price = parseInt(matchSilver[1] + matchSilver[2], 10);
+        if (price) {
+          silver1kg = price;
+        }
+      }
     }
 
     // Calculate 18K if not found but 24K is available
@@ -166,6 +266,7 @@ async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
       gold22k,
       gold24k,
       gold18k,
+      silver1kg,
       timestamp: new Date().toISOString(),
     };
   } catch (error) {
@@ -173,6 +274,7 @@ async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
       gold22k: null,
       gold24k: null,
       gold18k: null,
+      silver1kg: null,
       error: error instanceof Error ? error.message : "Unknown error",
       timestamp: new Date().toISOString(),
     };
@@ -182,25 +284,29 @@ async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
 // Scrape GoodReturns for a specific city
 async function scrapeGoodReturnsCity(citySlug: string): Promise<GoldRate> {
   try {
-    const url = `https://www.goodreturns.in/gold-rates/${citySlug}.html`;
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-      },
-      cache: "no-store",
-    });
+    // Fetch gold and silver in parallel
+    const [goldResponse, silverPrice] = await Promise.all([
+      fetch(`https://www.goodreturns.in/gold-rates/${citySlug}.html`, {
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        },
+        cache: "no-store",
+      }),
+      scrapeSilverRate(citySlug)
+    ]);
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+    if (!goldResponse.ok) {
+      throw new Error(`HTTP ${goldResponse.status}`);
     }
 
-    const html = await response.text();
+    const html = await goldResponse.text();
     const $ = cheerio.load(html);
 
     let gold22k: number | null = null; // Will be per 10g
     let gold24k: number | null = null; // Will be per 10g
     let gold18k: number | null = null; // Will be per 10g
+    let silver1kg: number | null = silverPrice; // Will be per 1kg
 
     // Strategy 1: Find the main rate cards/boxes at the top of the page
     const elements = $("div, section, article").toArray();
@@ -281,10 +387,35 @@ async function scrapeGoodReturnsCity(citySlug: string): Promise<GoldRate> {
           }
         }
       }
+
+      // Check for Silver table (if not already found from silver page)
+      if (!silver1kg && prevHeading.includes("Silver") && prevHeading.includes("Rate")) {
+         const rows = $table.find("tr");
+         rows.each((_, row) => {
+           const cells = $(row).find("td");
+           if (cells.length >= 2) {
+             const weightCell = $(cells[0]).text().trim();
+             // Usually looking for 1kg
+             if (weightCell === "1 kg" || weightCell === "1 Kg" || weightCell === "1000 grams") {
+               const price = extractPrice($(cells[1]).text());
+               if (price && !silver1kg) {
+                 silver1kg = price;
+               }
+             }
+             // Or calculate from 1g/10g if 1kg not found
+             if (!silver1kg && (weightCell === "1 gram" || weightCell === "1 g")) {
+               const price = extractPrice($(cells[1]).text());
+               if (price) {
+                 silver1kg = price * 1000;
+               }
+             }
+           }
+         });
+      }
     });
 
     // Strategy 3: Look for specific HTML patterns in raw HTML
-    if (!gold24k || !gold22k) {
+    if (!gold24k || !gold22k || !silver1kg) {
       const bodyText = $("body").html() || "";
       
       // Find 24K price
@@ -304,6 +435,20 @@ async function scrapeGoodReturnsCity(citySlug: string): Promise<GoldRate> {
           gold22k = price * 10;
         }
       }
+
+      // Find Silver price (1kg)
+      if (!silver1kg) {
+        const matchSilver = bodyText.match(/Silver\s+Rate[^₹]{0,100}₹\s*(\d{1,2}),?(\d{3})/i);
+        if (matchSilver) {
+           // We need to be careful about the unit.
+           // Usually prominently displayed silver price is for 1kg.
+           // Let's assume > 50k is 1kg.
+           const price = parseInt(matchSilver[1] + matchSilver[2], 10);
+           if (price > 50000) {
+             silver1kg = price;
+           }
+        }
+      }
     }
 
     // Calculate 18K if not found but 24K is available
@@ -315,6 +460,7 @@ async function scrapeGoodReturnsCity(citySlug: string): Promise<GoldRate> {
       gold22k,
       gold24k,
       gold18k,
+      silver1kg,
       timestamp: new Date().toISOString(),
     };
   } catch (error) {
@@ -322,6 +468,7 @@ async function scrapeGoodReturnsCity(citySlug: string): Promise<GoldRate> {
       gold22k: null,
       gold24k: null,
       gold18k: null,
+      silver1kg: null,
       error: error instanceof Error ? error.message : "Unknown error",
       timestamp: new Date().toISOString(),
     };
@@ -359,7 +506,7 @@ export async function performScraping(): Promise<ScrapedRates> {
   };
 
   console.log("✅ [Scrape] Fresh data scraped");
-  console.log(`📊 [Scrape] India rates: 22K=₹${india.gold22k}, 24K=₹${india.gold24k}, 18K=₹${india.gold18k}`);
+  console.log(`📊 [Scrape] India rates: 22K=₹${india.gold22k}, 24K=₹${india.gold24k}, 18K=₹${india.gold18k}, Silver=₹${india.silver1kg}`);
 
   return results;
 }

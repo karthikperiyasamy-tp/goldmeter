@@ -7,6 +7,7 @@ export type GoldRateDocument = {
   gold_22k: number;
   gold_24k: number;
   gold_18k: number;
+  silver_1kg?: number;
   source: string;
   created_at: Date;
   updated_at: Date;
@@ -17,6 +18,7 @@ export type CityRates = {
     gold22k: number | null;
     gold24k: number | null;
     gold18k: number | null;
+    silver1kg: number | null;
     timestamp: string;
   };
 };
@@ -28,7 +30,7 @@ const COLLECTION_NAME = 'gold_prices';
  * Creates/updates a record for each city for the given date
  */
 export async function saveGoldRates(
-  indiaRates: { gold22k: number | null; gold24k: number | null; gold18k: number | null },
+  indiaRates: { gold22k: number | null; gold24k: number | null; gold18k: number | null; silver1kg: number | null },
   cityRates: CityRates
 ): Promise<{ success: boolean; saved: number; errors: number }> {
   try {
@@ -42,6 +44,8 @@ export async function saveGoldRates(
     let saved = 0;
     let errors = 0;
 
+    const hasSilverValue = (value: number | null | undefined) => value !== null && value !== undefined;
+
     // Save India rate
     if (indiaRates.gold22k && indiaRates.gold24k) {
       try {
@@ -52,6 +56,7 @@ export async function saveGoldRates(
               gold_22k: indiaRates.gold22k,
               gold_24k: indiaRates.gold24k,
               gold_18k: indiaRates.gold18k || Math.round((indiaRates.gold24k * 18) / 24),
+              ...(hasSilverValue(indiaRates.silver1kg) ? { silver_1kg: indiaRates.silver1kg } : {}),
               source: 'GoodReturns',
               updated_at: now,
             },
@@ -64,7 +69,7 @@ export async function saveGoldRates(
           { upsert: true }
         );
         saved++;
-        console.log(`✅ [DB] Saved India rates: 22K=₹${indiaRates.gold22k}, 24K=₹${indiaRates.gold24k}`);
+        console.log(`✅ [DB] Saved India rates: 22K=₹${indiaRates.gold22k}, 24K=₹${indiaRates.gold24k}, Silver=₹${indiaRates.silver1kg}`);
       } catch (error) {
         console.error('❌ [DB] Error saving India rates:', error);
         errors++;
@@ -82,6 +87,7 @@ export async function saveGoldRates(
                 gold_22k: rates.gold22k,
                 gold_24k: rates.gold24k,
                 gold_18k: rates.gold18k || Math.round((rates.gold24k * 18) / 24),
+                ...(hasSilverValue(rates.silver1kg) ? { silver_1kg: rates.silver1kg } : {}),
                 source: 'GoodReturns',
                 updated_at: now,
               },
@@ -116,10 +122,10 @@ export async function saveGoldRates(
  * Also returns yesterday's rates for calculating price changes
  */
 async function getLatestGoldRatesUncached(): Promise<{
-  india: { gold22k: number; gold24k: number; gold18k: number; date: string } | null;
-  cities: Record<string, { gold22k: number; gold24k: number; gold18k: number; date: string }>;
-  yesterdayIndia: { gold22k: number; gold24k: number; gold18k: number } | null;
-  yesterdayCities: Record<string, { gold22k: number; gold24k: number; gold18k: number }>;
+  india: { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null; date: string } | null;
+  cities: Record<string, { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null; date: string }>;
+  yesterdayIndia: { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null } | null;
+  yesterdayCities: Record<string, { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null }>;
 }> {
   try {
     const db = await getDatabase();
@@ -158,13 +164,14 @@ async function getLatestGoldRatesUncached(): Promise<{
       : [];
 
     let india = null;
-    const cities: Record<string, { gold22k: number; gold24k: number; gold18k: number; date: string }> = {};
+    const cities: Record<string, { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null; date: string }> = {};
 
     for (const rate of todayRates) {
       const rateData = {
         gold22k: rate.gold_22k,
         gold24k: rate.gold_24k,
         gold18k: rate.gold_18k || Math.round((rate.gold_24k * 18) / 24),
+        silver1kg: rate.silver_1kg || null,
         date: rate.date.toLocaleDateString('en-IN'),
       };
 
@@ -176,14 +183,15 @@ async function getLatestGoldRatesUncached(): Promise<{
     }
 
     // Process yesterday's rates
-    let yesterdayIndia: { gold22k: number; gold24k: number; gold18k: number } | null = null;
-    const yesterdayCities: Record<string, { gold22k: number; gold24k: number; gold18k: number }> = {};
+    let yesterdayIndia: { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null } | null = null;
+    const yesterdayCities: Record<string, { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null }> = {};
 
     for (const rate of yesterdayRates) {
       const rateData = {
         gold22k: rate.gold_22k,
         gold24k: rate.gold_24k,
         gold18k: rate.gold_18k || Math.round((rate.gold_24k * 18) / 24),
+        silver1kg: rate.silver_1kg || null,
       };
 
       if (rate.city === 'India') {
@@ -212,7 +220,7 @@ async function getLatestGoldRatesUncached(): Promise<{
  */
 export const getLatestGoldRates = unstable_cache(
   getLatestGoldRatesUncached,
-  ['latest-gold-rates-v2'],
+  ['latest-gold-rates-v3'], // Incremented version to bust cache
   {
     revalidate: 300, // Cache for 5 minutes
     tags: ['gold-rates'],
@@ -232,6 +240,7 @@ async function getHistoricalGoldRatesUncached(
   gold22k: number;
   gold24k: number;
   gold18k: number;
+  silver1kg: number | null;
   timestamp: number;
 }>> {
   try {
@@ -255,6 +264,7 @@ async function getHistoricalGoldRatesUncached(
       gold22k: rate.gold_22k,
       gold24k: rate.gold_24k,
       gold18k: rate.gold_18k || Math.round((rate.gold_24k * 18) / 24),
+      silver1kg: rate.silver_1kg || null,
       timestamp: rate.date.getTime(),
     }));
 
@@ -280,6 +290,7 @@ export async function getHistoricalGoldRates(
   gold22k: number;
   gold24k: number;
   gold18k: number;
+  silver1kg: number | null;
   timestamp: number;
 }>> {
   // Create a cached version with city and days as cache key

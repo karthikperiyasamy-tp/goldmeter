@@ -7,6 +7,7 @@ type PriceHeroProps = {
   gold22k: number;
   gold24k: number;
   gold18k?: number;
+  silver1kg?: number;
   updated: string;
 };
 
@@ -19,6 +20,7 @@ export default function PriceHero({
   gold22k,
   gold24k,
   gold18k,
+  silver1kg,
   updated,
 }: PriceHeroProps) {
   const finalGold18k = gold18k || Math.round((gold24k * 18) / 24);
@@ -64,6 +66,17 @@ export default function PriceHero({
               </p>
               <p className="text-xs text-slate-500">Calculated</p>
             </div>
+            {!!silver1kg && (
+              <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
+                <p className="text-xs uppercase tracking-wide text-slate-500">
+                  Silver (1kg)
+                </p>
+                <p className="text-3xl font-bold text-charcoal">
+                  ₹{formatter.format(silver1kg)}
+                </p>
+                <p className="text-xs text-slate-500">Spot Price</p>
+              </div>
+            )}
           </div>
           <div className="mt-6 flex flex-wrap gap-3 text-sm">
             <Link

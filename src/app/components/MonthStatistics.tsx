@@ -6,6 +6,7 @@ type RateHistory = {
   gold22k: number;
   gold24k: number;
   gold18k?: number;
+  silver1kg?: number;
 };
 
 type Props = {

@@ -13,6 +13,7 @@ type HistoryRate = {
   gold22k: number;
   gold24k: number;
   gold18k: number;
+  silver1kg?: number;
   timestamp: number;
 };
 
@@ -143,7 +144,7 @@ export default async function HomePage() {
   // Prepare base rates (India)
   let baseRates: RateResponse;
   let cityRates: CityRate[] = mockCities;
-  let priceChange: PriceChange = { gold22k: 0, gold24k: 0 };
+  let priceChange: PriceChange = { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: 0 };
   
   if (dbData?.india) {
     // Use database data
@@ -152,6 +153,7 @@ export default async function HomePage() {
       date: dbData.india.date, // Already formatted as string
       gold_24k: dbData.india.gold24k,
       gold_22k: dbData.india.gold22k,
+      silver_1kg: dbData.india.silver1kg || 0,
       city: "India",
     };
     
@@ -160,8 +162,9 @@ export default async function HomePage() {
       priceChange = {
         gold22k: dbData.india.gold22k - dbData.yesterdayIndia.gold22k,
         gold24k: dbData.india.gold24k - dbData.yesterdayIndia.gold24k,
+        silver1kg: (dbData.india.silver1kg || 0) - (dbData.yesterdayIndia.silver1kg || 0),
       };
-      console.log(`📈 [HomePage] Price change: 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}`);
+      console.log(`📈 [HomePage] Price change: 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}, Silver=${(priceChange.silver1kg || 0) >= 0 ? '+' : ''}₹${priceChange.silver1kg}`);
     }
     
     // Convert DB city data to CityRate format
@@ -186,6 +189,7 @@ export default async function HomePage() {
         date: new Date().toLocaleDateString("en-IN"),
         gold_24k: scrapedData.data.india.gold24k || 64500,
         gold_22k: scrapedData.data.india.gold22k || 59200,
+        silver_1kg: scrapedData.data.india.silver1kg || 0,
         city: "India",
       };
       

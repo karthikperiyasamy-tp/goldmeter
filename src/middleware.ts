@@ -70,28 +70,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check for saved city preference cookie (faster than geo detection)
-  const savedCity = request.cookies.get("preferredCity")?.value;
-  if (savedCity && CITY_SLUGS.includes(savedCity)) {
-    // Check if user specifically requested to stay on homepage
-    if (!request.nextUrl.searchParams.has("noredirect")) {
-      console.log(`🍪 [Middleware] Redirecting to preferred city from cookie: ${savedCity}`);
-      const response = NextResponse.redirect(new URL(`/${savedCity}`, request.url));
-      response.cookies.set("geo_redirect_checked", "true", {
-        maxAge: 60 * 60 * 24, // 24 hours
-        path: "/",
-      });
-      return response;
-    } else {
-      console.log(`🚫 [Middleware] User requested noredirect, ignoring preference: ${savedCity}`);
-    }
-  }
-
-  // Skip if user has already been redirected (check cookie)
-  // changed cookie name to break old stuck states
-  const hasRedirectedCookie = request.cookies.get("geo_redirect_checked");
-  if (hasRedirectedCookie) {
-    console.log("⏭️ [Middleware] Skipping detection (already checked/redirected in this session)");
+  // Check if user specifically requested to stay on homepage (e.g. "Back to India" link)
+  if (request.nextUrl.searchParams.has("noredirect")) {
+    console.log("🚫 [Middleware] User requested noredirect, staying on India page");
     return NextResponse.next();
   }
 
@@ -131,17 +112,7 @@ export function middleware(request: NextRequest) {
     // Only redirect if in India or country unknown
     if (!vercelCountry || vercelCountry === "IN") {
       console.log(`✅ [Middleware] Redirecting to detected city: ${detectedSlug}`);
-      const response = NextResponse.redirect(new URL(`/${detectedSlug}`, request.url));
-      // Set cookies to remember the city and prevent re-detection
-      response.cookies.set("preferredCity", detectedSlug, {
-        maxAge: 60 * 60 * 24 * 30, // 30 days
-        path: "/",
-      });
-      response.cookies.set("geo_redirect_checked", "true", {
-        maxAge: 60 * 60 * 24, // 24 hours
-        path: "/",
-      });
-      return response;
+      return NextResponse.redirect(new URL(`/${detectedSlug}`, request.url));
     } else {
       console.log(`🌍 [Middleware] Detected ${detectedSlug} but country is ${vercelCountry} (not IN), skipping redirect`);
     }
@@ -150,12 +121,7 @@ export function middleware(request: NextRequest) {
   }
 
   // No city detected or not in India - allow homepage to load normally
-  // We do NOT set the geo_redirect_checked cookie here, so that we retry detection on the next visit.
-  // This helps if the user moves location or if headers were temporarily missing.
-  const response = NextResponse.next();
-  // If we are allowing the request to proceed without a city, 
-  // the client-side fallback in HomeClient will attempt detection if needed.
-  return response;
+  return NextResponse.next();
 }
 
 export const config = {

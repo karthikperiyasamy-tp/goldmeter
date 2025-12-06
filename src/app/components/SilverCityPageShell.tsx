@@ -1,0 +1,203 @@
+"use client";
+
+import Link from "next/link";
+import RateCard from "./RateCard";
+import SilverLast10DaysTable from "./SilverLast10DaysTable";
+import SimplePriceChart from "./SimplePriceChart";
+
+type LocalInfo = {
+  title: string;
+  description: string;
+};
+
+type FAQ = {
+  question: string;
+  answer: string;
+};
+
+type SilverCityPageShellProps = {
+  city: string;
+  updated: string;
+  silver1kg: number;
+  priceChange: number; // Change for 1kg
+  history: any[];
+  localInfo: LocalInfo[];
+  faqs: FAQ[];
+  similarCities: string[];
+};
+
+const inr = new Intl.NumberFormat("en-IN", {
+  maximumFractionDigits: 0,
+});
+
+const silverPresets = [
+  { label: "1 gram", grams: 1 },
+  { label: "10 gram", grams: 10 },
+  { label: "100 gram", grams: 100 },
+  { label: "1 kg", grams: 1000 },
+];
+
+export default function SilverCityPageShell({
+  city,
+  updated,
+  silver1kg,
+  priceChange = 0,
+  history = [],
+  localInfo,
+  faqs,
+  similarCities,
+}: SilverCityPageShellProps) {
+  const citySlug = city.toLowerCase();
+  const goldHref = city === 'India' ? '/' : `/${citySlug}`;
+
+  const perGramSilver = silver1kg / 1000;
+  const changePerGram = priceChange / 1000;
+
+  // Prepare chart data
+  // Filter out entries with no silver rate if any
+  const chartData = history
+    .filter(h => h.silver1kg && h.silver1kg > 0)
+    .map(h => ({
+      date: h.date,
+      price: h.silver1kg || 0,
+    }));
+
+  return (
+    <main className="min-h-screen bg-[#f8fafc] pb-12">
+      <div className="mx-auto max-w-6xl px-4 py-6">
+        {/* Hero Section */}
+        <section className="border-y border-slate-200 bg-gradient-to-r from-white to-slate-100 rounded-3xl p-6 shadow-soft">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-widest text-slate-500">
+                Updated {updated}
+              </p>
+              <h1 className="mt-2 text-3xl font-extrabold text-slate-800 md:text-4xl">
+                {city} Silver Rate Today
+              </h1>
+              <p className="mt-2 text-sm text-slate-600">
+                Spot price sourced from leading jewellers
+              </p>
+              <div className="mt-6 flex flex-wrap gap-4">
+                <div className="rounded-2xl bg-white px-6 py-4 shadow-soft border border-slate-100">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">
+                    Silver (1 gram)
+                  </p>
+                  <p className="text-3xl font-bold text-slate-800">
+                    ₹{inr.format(perGramSilver)}
+                  </p>
+                  <p className={`text-xs ${changePerGram >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
+                    {changePerGram >= 0 ? '+' : ''}₹{changePerGram.toFixed(1)} vs yesterday
+                  </p>
+                </div>
+                <div className="rounded-2xl bg-white px-6 py-4 shadow-soft border border-slate-100">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">
+                    Silver (1 kg)
+                  </p>
+                  <p className="text-3xl font-bold text-slate-800">
+                    ₹{inr.format(silver1kg)}
+                  </p>
+                  <p className={`text-xs ${priceChange >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
+                    {priceChange >= 0 ? '+' : ''}₹{priceChange} vs yesterday
+                  </p>
+                </div>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3 text-sm">
+                <Link 
+                  href={goldHref}
+                  className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  ← View Gold Rate
+                </Link>
+                <Link
+                  href="#price-chart"
+                  className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  View Charts
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Quick Cards */}
+        <section className="mt-8">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-slate-800">Silver Rate - Quick Cards</h3>
+            <p className="text-sm text-slate-500">{city} price</p>
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {silverPresets.map((preset) => (
+              <RateCard
+                key={`silver-${preset.label}`}
+                label={preset.label}
+                grams={preset.grams}
+                price={Math.round(perGramSilver * preset.grams)}
+                change={Math.round(changePerGram * preset.grams)}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Silver Historical Rates Table */}
+        <section className="mt-8">
+          <h3 className="mb-4 text-lg font-semibold text-slate-800">Historical Rates</h3>
+          <SilverLast10DaysTable history={history} />
+        </section>
+
+        {/* Price Trend Section */}
+        <section id="price-chart" className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-slate-800">Silver Price Trend</h3>
+            <p className="text-sm text-slate-500">Last 30 days (per 1kg)</p>
+          </div>
+          <div className="h-[300px] w-full">
+             <SimplePriceChart data={chartData} color="#64748b" />
+          </div>
+        </section>
+
+        <section className="mt-6 grid gap-4 md:grid-cols-3">
+          {localInfo.map((info) => (
+            <div
+              key={info.title}
+              className="rounded-3xl border border-slate-100 bg-white p-5 shadow-soft"
+            >
+              <p className="text-sm font-semibold text-charcoal">{info.title}</p>
+              <p className="mt-2 text-sm text-slate-600">{info.description}</p>
+            </div>
+          ))}
+        </section>
+
+        <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+          <h3 className="text-lg font-semibold">FAQs</h3>
+          <div className="mt-4 space-y-3 text-sm text-slate-600">
+            {faqs.map((faq) => (
+              <details key={faq.question} className="rounded-2xl border border-slate-100 p-4">
+                <summary className="cursor-pointer font-semibold text-charcoal">
+                  {faq.question}
+                </summary>
+                <p className="mt-2 text-slate-600">{faq.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+          <p className="text-sm font-semibold text-slate-500">Similar cities</p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            {similarCities.map((cityItem) => (
+              <Link
+                key={cityItem}
+                href={`/silver-rate/${cityItem.toLowerCase()}`}
+                className="rounded-full border border-slate-200 px-4 py-2 text-sm text-slate-600 hover:border-slate-400 hover:text-slate-800"
+              >
+                {cityItem}
+              </Link>
+            ))}
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
+

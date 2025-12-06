@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { saveGoldRates } from '@/lib/goldRatesDB';
 import { performScraping } from '../../scrape-rates/route';
 
@@ -38,6 +39,13 @@ export async function POST(request: NextRequest) {
       scrapedData.india,
       scrapedData.cities
     );
+
+    // Bust cached latest rates so fresh silver/gold values show up immediately
+    try {
+      revalidateTag('gold-rates');
+    } catch (e) {
+      console.warn('⚠️  [Admin] revalidateTag failed:', e);
+    }
     
     if (!saveResult.success) {
       throw new Error('Failed to save rates to database');

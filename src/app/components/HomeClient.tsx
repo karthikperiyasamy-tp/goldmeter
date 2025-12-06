@@ -15,6 +15,7 @@ export type RateResponse = {
   gold_24k: number;
   gold_22k: number;
   gold_18k?: number;
+  silver_1kg?: number;
   city: string;
 };
 
@@ -40,6 +41,7 @@ export type PriceChange = {
   gold22k: number;
   gold24k: number;
   gold18k?: number;
+  silver1kg?: number;
 };
 
 type HistoryRate = {
@@ -47,6 +49,7 @@ type HistoryRate = {
   gold22k: number;
   gold24k: number;
   gold18k: number;
+  silver1kg?: number;
   timestamp: number;
 };
 
@@ -64,6 +67,13 @@ const gramPresets = [
   { label: "8 gram", grams: 8 },
   { label: "10 gram", grams: 10 },
   { label: "100 gram", grams: 100 },
+];
+
+const silverPresets = [
+  { label: "1 gram", grams: 1 },
+  { label: "10 gram", grams: 10 },
+  { label: "100 gram", grams: 100 },
+  { label: "1 kg", grams: 1000 },
 ];
 
 const cityListBlock = [
@@ -105,10 +115,8 @@ export default function HomeClient({
         if (data.success && data.detected && data.slug) {
           console.log(`✅ [HomeClient] Detected ${data.city}, redirecting...`);
           
-          // Set cookies to prevent re-detection loop
-          document.cookie = `preferredCity=${data.slug}; path=/; max-age=${60 * 60 * 24 * 30}`;
-          document.cookie = `geo_redirect_checked=true; path=/; max-age=${60 * 60 * 24}`;
-          
+          // Redirect to the detected city
+          // No cookies are set here, so it re-detects every time unless session override is active
           router.push(`/${data.slug}`);
         } else {
            // Mark as checked even if failed (for 1 hour) so we don't spam API on every refresh
@@ -127,15 +135,18 @@ export default function HomeClient({
   const hero22k = baseRates.gold_22k;
   const hero24k = baseRates.gold_24k;
   const hero18k = baseRates.gold_18k || Math.round((hero24k * 18) / 24);
+  const heroSilver = baseRates.silver_1kg || 0;
 
   const perGram22k = hero22k / 10;
   const perGram24k = hero24k / 10;
   const perGram18k = hero18k / 10;
+  const perGramSilver = heroSilver / 1000;
 
   // Calculate change per gram from 10g price change
   const changePerGram22k = priceChange.gold22k / 10;
   const changePerGram24k = priceChange.gold24k / 10;
   const changePerGram18k = (priceChange.gold18k || 0) / 10;
+  const changePerGramSilver = (priceChange.silver1kg || 0) / 1000;
 
   return (
     <div className="min-h-screen bg-[#fffdf7] text-charcoal">
@@ -143,6 +154,7 @@ export default function HomeClient({
         city="India"
         gold22k={hero22k}
         gold24k={hero24k}
+        silver1kg={heroSilver}
         updated={baseRates.date}
       />
 
@@ -210,6 +222,29 @@ export default function HomeClient({
           </div>
         </section>
 
+        {/* Silver Quick Cards */}
+        {heroSilver > 0 && (
+          <section id="silver-rate">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Silver - Quick Cards</h3>
+              <p className="text-sm text-slate-500">
+                India reference price
+              </p>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+              {silverPresets.map((preset) => (
+                <RateCard
+                  key={`silver-${preset.label}`}
+                  label={preset.label}
+                  grams={preset.grams}
+                  price={Math.round(perGramSilver * preset.grams)}
+                  change={Math.round(changePerGramSilver * preset.grams)}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Last 10 Days Table */}
         <section>
           <Last10DaysTable history={history} />
@@ -256,11 +291,6 @@ export default function HomeClient({
                 </div>
                 <Link
                   href={`/${city.toLowerCase()}`}
-                  onClick={() => {
-                     const slug = city.toLowerCase();
-                     document.cookie = `preferredCity=${slug}; path=/; max-age=${60 * 60 * 24 * 30}`;
-                     document.cookie = `geo_redirect_checked=true; path=/; max-age=${60 * 60 * 24}`;
-                  }}
                   className="text-amber-600"
                 >
                   View →

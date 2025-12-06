@@ -5,6 +5,7 @@ export type PriceChange = {
   gold22k: number;
   gold24k: number;
   gold18k: number;
+  silver1kg: number;
 };
 
 type RateHistory = {
@@ -12,6 +13,7 @@ type RateHistory = {
   gold22k: number;
   gold24k: number;
   gold18k: number;
+  silver1kg: number | null;
   timestamp: number;
 };
 
@@ -30,6 +32,7 @@ export async function fetchCityRates(
   gold22k: number;
   gold24k: number;
   gold18k: number;
+  silver1kg: number;
   source: 'db' | 'scrape' | 'mock';
   date: string;
   priceChange: PriceChange;
@@ -54,20 +57,22 @@ export async function fetchCityRates(
       console.log(`✅ [FetchCityRates] Found ${cityName} in DB`);
       
       // Calculate price change from yesterday
-      let priceChange: PriceChange = { gold22k: 0, gold24k: 0, gold18k: 0 };
+      let priceChange: PriceChange = { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: 0 };
       if (dbData.yesterdayCities[cityName]) {
         priceChange = {
           gold22k: dbData.cities[cityName].gold22k - dbData.yesterdayCities[cityName].gold22k,
           gold24k: dbData.cities[cityName].gold24k - dbData.yesterdayCities[cityName].gold24k,
           gold18k: dbData.cities[cityName].gold18k - dbData.yesterdayCities[cityName].gold18k,
+          silver1kg: (dbData.cities[cityName].silver1kg || 0) - (dbData.yesterdayCities[cityName].silver1kg || 0),
         };
-        console.log(`📈 [FetchCityRates] ${cityName} price change: 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}, 18K=${priceChange.gold18k >= 0 ? '+' : ''}₹${priceChange.gold18k}`);
+        console.log(`📈 [FetchCityRates] ${cityName} price change: 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}, 18K=${priceChange.gold18k >= 0 ? '+' : ''}₹${priceChange.gold18k}, Silver=${priceChange.silver1kg >= 0 ? '+' : ''}₹${priceChange.silver1kg}`);
       }
       
       return {
         gold22k: dbData.cities[cityName].gold22k,
         gold24k: dbData.cities[cityName].gold24k,
         gold18k: dbData.cities[cityName].gold18k || Math.round((dbData.cities[cityName].gold24k * 18) / 24),
+        silver1kg: dbData.cities[cityName].silver1kg || 0,
         source: 'db',
         date: dbData.cities[cityName].date, // Already formatted as string
         priceChange,
@@ -98,9 +103,10 @@ export async function fetchCityRates(
           gold22k: cityRates.gold22k,
           gold24k: cityRates.gold24k,
           gold18k,
+          silver1kg: cityRates.silver1kg || 0,
           source: 'scrape',
           date: new Date().toLocaleDateString('en-IN'),
-          priceChange: { gold22k: 0, gold24k: 0, gold18k: 0 }, // No historical data from scraping
+          priceChange: { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: 0 }, // No historical data from scraping
           history,
         };
       }
@@ -126,24 +132,25 @@ function getMockRates(cityName: string): {
   gold22k: number;
   gold24k: number;
   gold18k: number;
+  silver1kg: number;
   source: 'mock';
   date: string;
   priceChange: PriceChange;
 } {
-  const mockRatesMap: Record<string, { gold22k: number; gold24k: number }> = {
-    Chennai: { gold22k: 59680, gold24k: 64890 },
-    Mumbai: { gold22k: 59410, gold24k: 64600 },
-    Bangalore: { gold22k: 59720, gold24k: 64980 },
-    Delhi: { gold22k: 59540, gold24k: 64720 },
-    Hyderabad: { gold22k: 59390, gold24k: 64580 },
-    Coimbatore: { gold22k: 59610, gold24k: 64810 },
-    Pune: { gold22k: 59450, gold24k: 64650 },
-    Kolkata: { gold22k: 59680, gold24k: 64890 },
-    Ahmedabad: { gold22k: 59520, gold24k: 64700 },
-    Vijayawada: { gold22k: 59620, gold24k: 64820 },
+  const mockRatesMap: Record<string, { gold22k: number; gold24k: number; silver1kg: number }> = {
+    Chennai: { gold22k: 59680, gold24k: 64890, silver1kg: 78000 },
+    Mumbai: { gold22k: 59410, gold24k: 64600, silver1kg: 76500 },
+    Bangalore: { gold22k: 59720, gold24k: 64980, silver1kg: 75000 },
+    Delhi: { gold22k: 59540, gold24k: 64720, silver1kg: 77000 },
+    Hyderabad: { gold22k: 59390, gold24k: 64580, silver1kg: 79000 },
+    Coimbatore: { gold22k: 59610, gold24k: 64810, silver1kg: 78500 },
+    Pune: { gold22k: 59450, gold24k: 64650, silver1kg: 76000 },
+    Kolkata: { gold22k: 59680, gold24k: 64890, silver1kg: 77500 },
+    Ahmedabad: { gold22k: 59520, gold24k: 64700, silver1kg: 75500 },
+    Vijayawada: { gold22k: 59620, gold24k: 64820, silver1kg: 78200 },
   };
   
-  const rates = mockRatesMap[cityName] || { gold22k: 59500, gold24k: 64700 };
+  const rates = mockRatesMap[cityName] || { gold22k: 59500, gold24k: 64700, silver1kg: 75000 };
   const gold18k = Math.round((rates.gold24k * 18) / 24);
   
   return {
@@ -151,7 +158,7 @@ function getMockRates(cityName: string): {
     gold18k,
     source: 'mock',
     date: new Date().toLocaleDateString('en-IN'),
-    priceChange: { gold22k: 0, gold24k: 0, gold18k: 0 }, // No historical data for mock
+    priceChange: { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: 0 }, // No historical data for mock
   };
 }
 

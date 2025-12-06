@@ -14,6 +14,7 @@ export default async function PunePage() {
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}
+      silver1kg={rates.silver1kg}
       priceChange={rates.priceChange}
       history={rates.history}
       localInfo={[

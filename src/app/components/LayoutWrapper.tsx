@@ -25,9 +25,18 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   
   // Derive city from URL path
   const getCityFromPath = (path: string): string => {
-    // Extract the first segment of the path (e.g., "/hyderabad" -> "hyderabad")
-    const slug = path.split("/")[1] || "";
-    return SLUG_TO_CITY[slug] || "India";
+    // Break path into segments to handle both gold (/city) and silver (/silver-rate/city)
+    const segments = path.split("/").filter(Boolean);
+
+    // Silver routes store city in the second segment
+    if (segments[0] === "silver-rate") {
+      const silverCitySlug = segments[1] || "";
+      return SLUG_TO_CITY[silverCitySlug] || "India";
+    }
+
+    // Gold routes keep city in the first segment
+    const goldCitySlug = segments[0] || "";
+    return SLUG_TO_CITY[goldCitySlug] || "India";
   };
 
   const [activeCity, setActiveCity] = useState(() => getCityFromPath(pathname));
