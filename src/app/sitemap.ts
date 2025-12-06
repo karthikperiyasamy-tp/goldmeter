@@ -1,6 +1,9 @@
 import { MetadataRoute } from 'next'
 import { getAllRecaps } from '@/lib/recapDB'
 
+// Regenerate the sitemap periodically so lastModified timestamps stay fresh.
+export const revalidate = 60 * 60 // 1 hour
+
 const baseUrl = 'https://goldmeter.in'
 
 // List of supported cities
@@ -22,6 +25,20 @@ const newsArticles = [
   'gold-price-increase-today',
   'gold-rate-prediction-2025',
   '22k-vs-24k-guide',
+]
+
+// Silver rate supported cities (aligned with silver-rate/[city] pages)
+const silverCities = [
+  'chennai',
+  'bangalore',
+  'mumbai',
+  'delhi',
+  'hyderabad',
+  'kolkata',
+  'ahmedabad',
+  'pune',
+  'coimbatore',
+  'vijayawada',
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -105,6 +122,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }))
 
+  // Silver rate index page
+  const silverRateIndex = {
+    url: `${baseUrl}/silver-rate`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: 0.8,
+  }
+
+  // Silver rate city pages
+  const silverRateCityPages = silverCities.map((city) => ({
+    url: `${baseUrl}/silver-rate/${city}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: 0.75,
+  }))
+
   return [
     homepage,
     calculator,
@@ -115,5 +148,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...newsPages,
     ...recapPages,
     ...cityPages,
+    silverRateIndex,
+    ...silverRateCityPages,
   ]
 }
