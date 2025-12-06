@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { getAllRecaps } from '@/lib/recapDB'
 
 // Regenerate the sitemap periodically so lastModified timestamps stay fresh.
-export const revalidate = 60 * 60 // 1 hour
+// export const revalidate = 60 * 60 // 1 hour
 
 const baseUrl = 'https://goldmeter.in'
 
