@@ -49,7 +49,7 @@ type HistoryRate = {
   gold22k: number;
   gold24k: number;
   gold18k: number;
-  silver1kg?: number;
+  silver1kg?: number | null;
   timestamp: number;
 };
 
@@ -147,6 +147,16 @@ export default function HomeClient({
   const changePerGram24k = priceChange.gold24k / 10;
   const changePerGram18k = (priceChange.gold18k || 0) / 10;
   const changePerGramSilver = (priceChange.silver1kg || 0) / 1000;
+
+  // Normalize history to ensure numbers (no nulls) for downstream components
+  const normalizedHistory = (history || []).map((h) => ({
+    date: h.date,
+    gold22k: h.gold22k,
+    gold24k: h.gold24k,
+    gold18k: h.gold18k,
+    silver1kg: h.silver1kg ?? 0,
+    timestamp: h.timestamp,
+  }));
 
   return (
     <div className="min-h-screen bg-[#fffdf7] text-charcoal">
@@ -247,12 +257,12 @@ export default function HomeClient({
 
         {/* Last 10 Days Table */}
         <section>
-          <Last10DaysTable history={history} />
+          <Last10DaysTable history={normalizedHistory} />
         </section>
 
         {/* Month Statistics */}
         <section>
-          <MonthStatistics history={history} />
+          <MonthStatistics history={normalizedHistory} />
         </section>
 
         <section id="price-chart" className="rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">

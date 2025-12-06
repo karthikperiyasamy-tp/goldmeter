@@ -13,7 +13,7 @@ type HistoryRate = {
   gold22k: number;
   gold24k: number;
   gold18k: number;
-  silver1kg?: number;
+  silver1kg?: number | null;
   timestamp: number;
 };
 
@@ -225,7 +225,16 @@ export default async function HomePage() {
     }
   }
 
-  return <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} priceChange={priceChange} history={history} />;
+  const normalizedHistory: HistoryRate[] = (history || []).map((h) => ({
+    date: h.date,
+    gold22k: h.gold22k,
+    gold24k: h.gold24k,
+    gold18k: h.gold18k,
+    silver1kg: h.silver1kg ?? 0,
+    timestamp: h.timestamp,
+  }));
+
+  return <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} priceChange={priceChange} history={normalizedHistory} />;
 }
 
 // Disable caching for immediate updates
