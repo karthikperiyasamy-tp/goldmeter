@@ -65,6 +65,13 @@ function findCityByName(cityName: string): string | null {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Skip geo-redirect for search engine bots so homepage returns 200.
+  const ua = request.headers.get("user-agent") || "";
+  const isBot = /bot|crawl|spider|slurp|bingpreview/i.test(ua);
+  if (isBot) {
+    return NextResponse.next();
+  }
+
   // Only run on homepage
   if (pathname !== "/") {
     return NextResponse.next();
