@@ -61,24 +61,36 @@ export default function StructuredData({
         "name": "India"
       },
       "offers": [
-        gold22k && {
+        gold22k && gold22k > 0 && {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Product",
             "name": "22 Karat Gold",
-            "description": `22K gold price per 10 grams in ${city || 'India'}`
+            "description": `22K gold price per 10 grams in ${city || 'India'}`,
+            "offers": {
+              "@type": "Offer",
+              "price": (gold22k / 10).toFixed(2),
+              "priceCurrency": "INR",
+              "availability": "https://schema.org/InStock"
+            }
           },
           "price": (gold22k / 10).toFixed(2),
           "priceCurrency": "INR",
           "priceValidUntil": new Date(Date.now() + 86400000).toISOString().split('T')[0],
           "availability": "https://schema.org/InStock"
         },
-        gold24k && {
+        gold24k && gold24k > 0 && {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Product",
             "name": "24 Karat Gold",
-            "description": `24K gold price per 10 grams in ${city || 'India'}`
+            "description": `24K gold price per 10 grams in ${city || 'India'}`,
+            "offers": {
+              "@type": "Offer",
+              "price": (gold24k / 10).toFixed(2),
+              "priceCurrency": "INR",
+              "availability": "https://schema.org/InStock"
+            }
           },
           "price": (gold24k / 10).toFixed(2),
           "priceCurrency": "INR",
@@ -147,6 +159,10 @@ export default function StructuredData({
     "name": "GoldRate",
     "url": "https://goldmeter.in",
     "logo": "https://goldmeter.in/logo.png",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "IN",
+    },
     "sameAs": [
       "https://twitter.com/goldrate",
       "https://facebook.com/goldrate"
