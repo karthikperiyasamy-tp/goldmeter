@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { saveGoldRates } from '@/lib/goldRatesDB';
 import { performScraping } from '../../scrape-rates/route';
+import { saveInternationalRates } from '@/lib/internationalRatesDB';
 
 /**
  * Manual trigger endpoint to scrape rates and save to MongoDB
@@ -39,6 +40,13 @@ export async function POST(request: NextRequest) {
       scrapedData.india,
       scrapedData.cities
     );
+
+    if (scrapedData.international) {
+      console.log('🌍 [Admin] Saving international rates...');
+      await saveInternationalRates(scrapedData.international);
+    } else {
+      console.warn('⚠️  [Admin] No international rates to save');
+    }
 
     // Bust cached latest rates so fresh silver/gold values show up immediately
     try {

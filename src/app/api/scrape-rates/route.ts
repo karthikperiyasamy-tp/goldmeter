@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import * as cheerio from "cheerio";
+import { getInternationalRates, type InternationalRates } from "@/lib/internationalRates";
 
 type GoldRate = {
   gold22k: number | null;
@@ -17,6 +18,7 @@ type CityRates = {
 type ScrapedRates = {
   india: GoldRate;
   cities: CityRates;
+  international?: InternationalRates | null;
 };
 
 // List of cities to scrape from GoodReturns
@@ -484,13 +486,18 @@ export async function performScraping(): Promise<ScrapedRates> {
   
   // Scrape India rate and all cities in parallel
   const indiaPromise = scrapeGoodReturnsIndia();
+  const internationalPromise = getInternationalRates().catch((error) => {
+    console.error("❌ [Scrape] International rates scrape failed:", error);
+    return null;
+  });
   const cityPromises = CITIES.map(async (city) => {
     const rates = await scrapeGoodReturnsCity(city.slug);
     return { name: city.name, rates };
   });
 
-  const [india, ...cityResults] = await Promise.all([
+  const [india, international, ...cityResults] = await Promise.all([
     indiaPromise,
+    internationalPromise,
     ...cityPromises,
   ]);
 
@@ -503,10 +510,18 @@ export async function performScraping(): Promise<ScrapedRates> {
   const results: ScrapedRates = {
     india,
     cities,
+    international,
   };
 
   console.log("✅ [Scrape] Fresh data scraped");
   console.log(`📊 [Scrape] India rates: 22K=₹${india.gold22k}, 24K=₹${india.gold24k}, 18K=₹${india.gold18k}, Silver=₹${india.silver1kg}`);
+  if (international) {
+    const totalCountries =
+      international.gold24k.length +
+      international.gold22k.length +
+      international.gold18k.length;
+    console.log(`🌍 [Scrape] International rows captured: ${totalCountries}`);
+  }
 
   return results;
 }

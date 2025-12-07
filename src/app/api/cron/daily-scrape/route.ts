@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { saveGoldRates } from '@/lib/goldRatesDB';
 import { performScraping } from '../../scrape-rates/route';
+import { saveInternationalRates } from '@/lib/internationalRatesDB';
 
 /**
  * Vercel Cron Job endpoint
@@ -45,6 +46,12 @@ export async function GET(request: NextRequest) {
       scrapedData.india,
       scrapedData.cities
     );
+    if (scrapedData.international) {
+      console.log('🌍 [Cron] Saving international rates...');
+      await saveInternationalRates(scrapedData.international);
+    } else {
+      console.warn('⚠️  [Cron] No international rates to save');
+    }
     
     if (!saveResult.success) {
       throw new Error('Failed to save rates to database');

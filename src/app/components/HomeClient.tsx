@@ -9,6 +9,7 @@ import RateCard from "./RateCard";
 import PriceChartWrapper from "./PriceChartWrapper";
 import Last10DaysTable from "./Last10DaysTable";
 import MonthStatistics from "./MonthStatistics";
+import { type InternationalRate, type InternationalRates } from "@/lib/internationalRates";
 
 export type RateResponse = {
   date: string;
@@ -44,6 +45,8 @@ export type PriceChange = {
   silver1kg?: number;
 };
 
+export type { InternationalRate, InternationalRates };
+
 type HistoryRate = {
   date: string;
   gold22k: number;
@@ -59,6 +62,7 @@ type HomeClientProps = {
   newsItems: NewsItem[];
   priceChange?: PriceChange;
   history?: HistoryRate[];
+  internationalRates?: InternationalRates | null;
 };
 
 // Gram presets for quick cards (just the gram quantities)
@@ -89,12 +93,17 @@ const formatINR = new Intl.NumberFormat("en-IN", {
   maximumFractionDigits: 0,
 });
 
+const formatNumber = new Intl.NumberFormat("en-IN", {
+  maximumFractionDigits: 2,
+});
+
 export default function HomeClient({
   baseRates,
   cities,
   newsItems,
   priceChange = { gold22k: 0, gold24k: 0 },
   history = [],
+  internationalRates = null,
 }: HomeClientProps) {
   const router = useRouter();
 
@@ -157,6 +166,70 @@ export default function HomeClient({
     silver1kg: h.silver1kg ?? 0,
     timestamp: h.timestamp,
   }));
+
+  const defaultInternational: InternationalRates = {
+    gold24k: [],
+    gold22k: [],
+    gold18k: [],
+    lastUpdated: "",
+    source: "",
+  };
+
+  const internationalData = internationalRates || defaultInternational;
+  const hasInternationalData =
+    internationalData.gold24k.length > 0 ||
+    internationalData.gold22k.length > 0 ||
+    internationalData.gold18k.length > 0;
+
+  const internationalUpdatedLabel = internationalData.lastUpdated
+    ? new Date(internationalData.lastUpdated).toLocaleTimeString("en-IN", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      })
+    : null;
+
+  const renderInternationalTable = (title: string, rates: InternationalRate[]) => (
+    <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-soft">
+      <div className="flex items-center justify-between border-b border-slate-100 bg-amber-50/60 px-4 py-3">
+        <p className="text-sm font-semibold text-charcoal">{title}</p>
+        <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+          1 gram
+        </span>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-slate-100 text-sm">
+          <thead className="bg-white text-xs uppercase tracking-wide text-slate-500">
+            <tr>
+              <th className="px-4 py-2 text-left font-semibold">Country</th>
+              <th className="px-4 py-2 text-left font-semibold">Price</th>
+              <th className="px-4 py-2 text-left font-semibold">Price (INR)</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {rates.map((row) => (
+              <tr key={`${row.country}-${title}`}>
+                <td className="px-4 py-3 font-semibold text-charcoal">{row.country}</td>
+                <td className="px-4 py-3 text-slate-700">
+                  {row.price !== null ? `${row.currencyCode} ${formatNumber.format(row.price)}` : "—"}
+                </td>
+                <td className="px-4 py-3 text-slate-700">
+                  {row.priceInr !== null ? `₹${formatINR.format(row.priceInr)}` : "—"}
+                </td>
+              </tr>
+            ))}
+            {rates.length === 0 && (
+              <tr>
+                <td className="px-4 py-3 text-sm text-slate-500" colSpan={3}>
+                  Data not available right now.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-[#fffdf7] text-charcoal">
@@ -271,6 +344,32 @@ export default function HomeClient({
             currentGold22k={hero22k}
             currentGold24k={hero24k}
           />
+        </section>
+
+        <section id="international-rates" className="rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-charcoal">International Gold Prices</h3>
+              <p className="text-sm text-slate-500">
+                {internationalData.source || "GoodReturns"} · 1 gram prices
+              </p>
+            </div>
+            <p className="text-xs text-slate-500">
+              Updated {internationalUpdatedLabel || "recently"}
+            </p>
+          </div>
+
+          {hasInternationalData ? (
+            <div className="mt-4 grid gap-4 lg:grid-cols-3">
+              {renderInternationalTable("24K Gold", internationalData.gold24k)}
+              {renderInternationalTable("22K Gold", internationalData.gold22k)}
+              {renderInternationalTable("18K Gold", internationalData.gold18k)}
+            </div>
+          ) : (
+            <p className="mt-4 text-sm text-slate-500">
+              International prices are temporarily unavailable. Please check back soon.
+            </p>
+          )}
         </section>
       </main>
 

@@ -1,12 +1,14 @@
 import { headers } from "next/headers";
 import HomeClient, {
   type CityRate,
+  type InternationalRates,
   type NewsItem,
   type RateResponse,
   type PriceChange,
 } from "./components/HomeClient";
 import { getLatestGoldRates, getHistoricalGoldRates } from "@/lib/goldRatesDB";
 import { getRecentNews } from "@/lib/newsDB";
+import { getInternationalRates } from "@/lib/internationalRates";
 
 type HistoryRate = {
   date: string;
@@ -140,6 +142,15 @@ export default async function HomePage() {
   } catch (error) {
     console.error("❌ [HomePage] News fetch error:", error);
   }
+
+  // International gold prices (1g)
+  let internationalRates: InternationalRates | null = null;
+  try {
+    internationalRates = await getInternationalRates();
+    console.log(`🌍 [HomePage] Loaded international rates: 24K=${internationalRates.gold24k.length}, 22K=${internationalRates.gold22k.length}, 18K=${internationalRates.gold18k.length}`);
+  } catch (error) {
+    console.error("❌ [HomePage] Failed to fetch international rates:", error);
+  }
   
   // Prepare base rates (India)
   let baseRates: RateResponse;
@@ -192,6 +203,11 @@ export default async function HomePage() {
         silver_1kg: scrapedData.data.india.silver1kg || 0,
         city: "India",
       };
+
+      // Reuse scraped international rates if cache helper failed
+      if (!internationalRates && scrapedData.data.international) {
+        internationalRates = scrapedData.data.international as InternationalRates;
+      }
       
       // Convert scraped city data
       if (scrapedData.data.cities) {
@@ -234,7 +250,7 @@ export default async function HomePage() {
     timestamp: h.timestamp,
   }));
 
-  return <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} priceChange={priceChange} history={normalizedHistory} />;
+  return <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} priceChange={priceChange} history={normalizedHistory} internationalRates={internationalRates ?? undefined} />;
 }
 
 // Disable caching for immediate updates
