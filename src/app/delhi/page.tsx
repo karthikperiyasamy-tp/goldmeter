@@ -11,6 +11,7 @@ export default async function DelhiPage() {
   return (
     <CityPageShell
       city="Delhi"
+      intro="Gold rate in Delhi today per gram: 22K & 24K live prices with Karol Bagh and Chandni Chowk trends, charts, and FAQs."
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}

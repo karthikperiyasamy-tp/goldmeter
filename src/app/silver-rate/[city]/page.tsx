@@ -96,6 +96,7 @@ export default async function SilverCityPage({ params }: Props) {
   return (
     <SilverCityPageShell
       city={cityName}
+      intro={`Silver rate in ${cityName} today per gram and per kg with charts and 30-day history. Compare with gold tools below.`}
       updated={updatedDate}
       silver1kg={silver1kg}
       priceChange={priceChange}

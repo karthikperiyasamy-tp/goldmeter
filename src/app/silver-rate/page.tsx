@@ -74,6 +74,7 @@ export default async function SilverIndiaPage() {
   return (
     <SilverCityPageShell
       city="India"
+      intro="Silver rate in India today per gram and per kg with 30-day history, daily changes, and links to calculators and gold prices."
       updated={date}
       silver1kg={silver1kg}
       priceChange={priceChange}

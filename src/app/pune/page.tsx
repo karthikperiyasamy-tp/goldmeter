@@ -11,6 +11,7 @@ export default async function PunePage() {
   return (
     <CityPageShell
       city="Pune"
+      intro="Gold rate in Pune today per gram: 22K & 24K live prices with Laxmi Road and Hadapsar trends, charts, and FAQs."
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}

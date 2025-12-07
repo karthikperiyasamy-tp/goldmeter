@@ -12,6 +12,7 @@ export default async function ChennaiPage() {
   return (
     <CityPageShell
       city="Chennai"
+      intro="Gold rate in Chennai today per gram: 22K & 24K live prices with T Nagar and Anna Nagar trends, charts, and FAQs."
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}

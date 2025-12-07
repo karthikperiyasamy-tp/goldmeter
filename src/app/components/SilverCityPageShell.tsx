@@ -24,6 +24,7 @@ type SilverCityPageShellProps = {
   localInfo: LocalInfo[];
   faqs: FAQ[];
   similarCities: string[];
+  intro?: string;
 };
 
 const inr = new Intl.NumberFormat("en-IN", {
@@ -46,12 +47,17 @@ export default function SilverCityPageShell({
   localInfo,
   faqs,
   similarCities,
+  intro,
 }: SilverCityPageShellProps) {
   const citySlug = city.toLowerCase();
   const goldHref = city === 'India' ? '/' : `/${citySlug}`;
 
   const perGramSilver = silver1kg / 1000;
   const changePerGram = priceChange / 1000;
+
+  const heroIntro =
+    intro ||
+    `Silver rate in ${city} today per gram: ₹${Math.round(perGramSilver)} (999 purity). Updated ${updated}. Track daily moves, view 30-day history, and compare with gold tools below.`;
 
   // Prepare chart data
   // Filter out entries with no silver rate if any
@@ -116,6 +122,9 @@ export default function SilverCityPageShell({
                   View Charts
                 </Link>
               </div>
+              <p className="mt-4 max-w-2xl text-sm text-slate-600">
+                {heroIntro}
+              </p>
             </div>
           </div>
         </section>
@@ -166,6 +175,36 @@ export default function SilverCityPageShell({
               <p className="mt-2 text-sm text-slate-600">{info.description}</p>
             </div>
           ))}
+        </section>
+
+        <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+          <h3 className="text-lg font-semibold">Tools & links</h3>
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            <Link href={goldHref} className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Gold rate in {city}</p>
+              <p className="text-sm text-slate-600 mt-1">22K / 24K per gram with charts.</p>
+            </Link>
+            <Link href="/calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Gold price calculator</p>
+              <p className="text-sm text-slate-600 mt-1">Enter grams → get cost with GST.</p>
+            </Link>
+            <Link href="/wastage-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Wastage & making</p>
+              <p className="text-sm text-slate-600 mt-1">Estimate making + wastage charges.</p>
+            </Link>
+            <Link href="/purity-converter" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Purity converter</p>
+              <p className="text-sm text-slate-600 mt-1">22K ↔ 24K instantly.</p>
+            </Link>
+            <Link href="/news" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Gold news</p>
+              <p className="text-sm text-slate-600 mt-1">Daily headlines and price movers.</p>
+            </Link>
+            <Link href="/news/recap" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Daily recap</p>
+              <p className="text-sm text-slate-600 mt-1">AI summary of market signals.</p>
+            </Link>
+          </div>
         </section>
 
         <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">

@@ -5,6 +5,7 @@ import RateCard from "./RateCard";
 import PriceChartWrapper from "./PriceChartWrapper";
 import Last10DaysTable from "./Last10DaysTable";
 import MonthStatistics from "./MonthStatistics";
+import StructuredData from "./StructuredData";
 
 type LocalInfo = {
   title: string;
@@ -56,6 +57,7 @@ type CityPageShellProps = {
   localInfo: LocalInfo[];
   faqs: FAQ[];
   similarCities: string[];
+  intro?: string;
 };
 
 const inr = new Intl.NumberFormat("en-IN", {
@@ -89,6 +91,7 @@ export default function CityPageShell({
   localInfo,
   faqs,
   similarCities,
+  intro,
 }: CityPageShellProps) {
   // Calculate 18K if not provided
   const safeGold24k = gold24k || 0;
@@ -116,8 +119,27 @@ export default function CityPageShell({
     timestamp: h.timestamp ?? Date.now(),
   }));
 
+  const enhancedFaqs: FAQ[] = [
+    {
+      question: `What is the gold rate in ${city} today per gram?`,
+      answer: `Today's ${city} gold rate per gram is ₹${Math.round(perGram22k)} for 22K and ₹${Math.round(perGram24k)} for 24K. Prices update daily from local jewellers.`,
+    },
+    ...faqs,
+  ];
+
+  const heroIntro =
+    intro ||
+    `Gold rate in ${city} today per gram: ₹${Math.round(perGram22k)} (22K) / ₹${Math.round(perGram24k)} (24K). Updated ${updated}. Track daily changes, compare charts, and use calculators below.`;
+
   return (
     <main className="min-h-screen bg-[#fffdf7] pb-12">
+      <StructuredData
+        type="city"
+        city={city}
+        gold22k={safeGold22k}
+        gold24k={safeGold24k}
+        faqs={enhancedFaqs}
+      />
       <div className="mx-auto max-w-6xl px-4 py-6">
         {/* Hero Section - Like India Page */}
         <section className="border-y border-amber-100 bg-gradient-to-r from-white to-amber-50 rounded-3xl p-6 shadow-soft">
@@ -200,6 +222,9 @@ export default function CityPageShell({
                   Calculate Price
                 </Link>
               </div>
+              <p className="mt-4 max-w-2xl text-sm text-slate-600">
+                {heroIntro}
+              </p>
             </div>
             {/* Quick Calculator Card */}
             <div className="w-full rounded-3xl border border-amber-100 bg-white p-5 shadow-soft md:w-1/3">
@@ -331,9 +356,39 @@ export default function CityPageShell({
         </section>
 
         <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+          <h3 className="text-lg font-semibold">Tools & links</h3>
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            <Link href="/silver-rate" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Silver rate India</p>
+              <p className="text-sm text-slate-600 mt-1">Track ₹/kg silver with history.</p>
+            </Link>
+            <Link href="/calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Gold price calculator</p>
+              <p className="text-sm text-slate-600 mt-1">Enter grams → get cost with GST.</p>
+            </Link>
+            <Link href="/wastage-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Wastage & making</p>
+              <p className="text-sm text-slate-600 mt-1">Estimate making + wastage charges.</p>
+            </Link>
+            <Link href="/purity-converter" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Purity converter</p>
+              <p className="text-sm text-slate-600 mt-1">22K ↔ 24K instantly.</p>
+            </Link>
+            <Link href="/news" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Gold news</p>
+              <p className="text-sm text-slate-600 mt-1">Daily headlines and price movers.</p>
+            </Link>
+            <Link href="/news/recap" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Daily recap</p>
+              <p className="text-sm text-slate-600 mt-1">AI summary of market signals.</p>
+            </Link>
+          </div>
+        </section>
+
+        <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
           <h3 className="text-lg font-semibold">FAQs</h3>
           <div className="mt-4 space-y-3 text-sm text-slate-600">
-            {faqs.map((faq) => (
+            {enhancedFaqs.map((faq) => (
               <details key={faq.question} className="rounded-2xl border border-slate-100 p-4">
                 <summary className="cursor-pointer font-semibold text-charcoal">
                   {faq.question}

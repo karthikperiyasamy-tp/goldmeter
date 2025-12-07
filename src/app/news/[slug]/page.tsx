@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getArticleBySlug, getRecentNews } from "@/lib/newsDB";
 import type { NewsArticle } from "@/lib/newsTypes";
 import type { Metadata } from "next";
+import StructuredData from "@/app/components/StructuredData";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -67,8 +68,25 @@ export default async function NewsArticlePage({ params }: Props) {
   const recentArticles = await getRecentNews(4);
   const relatedArticles = recentArticles.filter((a) => a.slug !== slug).slice(0, 3);
 
+  const articleUrl = `https://goldmeter.in/news/${slug}`;
+  const cityLinks = [
+    { name: "Chennai", href: "/chennai" },
+    { name: "Mumbai", href: "/mumbai" },
+    { name: "Delhi", href: "/delhi" },
+  ];
+
   return (
     <main className="min-h-screen bg-amber-50 pb-12">
+      <StructuredData
+        type="article"
+        headline={article.title}
+        description={article.summary}
+        url={articleUrl}
+        datePublished={article.publishedAt}
+        dateModified={article.publishedAt}
+        imageUrl={article.imageUrl}
+        authorName={article.sourceName || "GoldMeter"}
+      />
       <div className="mx-auto max-w-4xl px-4 py-8">
         <div className="flex items-center justify-between text-sm text-slate-500">
           <Link href="/news" className="text-amber-600 hover:text-amber-700">
@@ -129,6 +147,36 @@ export default async function NewsArticlePage({ params }: Props) {
               className="mt-3 inline-flex rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 transition-colors"
             >
               View live rates
+            </Link>
+          </div>
+
+          <div className="mt-6 grid gap-3 md:grid-cols-3">
+            {cityLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
+              >
+                Gold rate in {link.name} today → per gram, charts, FAQs
+              </Link>
+            ))}
+            <Link
+              href="/calculator"
+              className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
+            >
+              Gold price calculator → get cost with GST & making charges
+            </Link>
+            <Link
+              href="/wastage-calculator"
+              className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
+            >
+              Wastage & making calculator → compare jeweller quotes
+            </Link>
+            <Link
+              href="/silver-rate"
+              className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
+            >
+              Silver rate today → India & city history
             </Link>
           </div>
         </article>

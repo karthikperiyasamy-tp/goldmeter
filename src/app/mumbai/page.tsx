@@ -11,6 +11,7 @@ export default async function MumbaiPage() {
   return (
     <CityPageShell
       city="Mumbai"
+      intro="Gold rate in Mumbai today per gram: 22K & 24K live prices with Zaveri Bazaar and Dadar trends, charts, and FAQs."
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}

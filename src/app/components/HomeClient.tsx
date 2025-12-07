@@ -354,11 +354,11 @@ export default function HomeClient({
       )}
 
       <section className="mx-auto w-full max-w-6xl px-4 py-10">
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-4">
           <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-soft">
             <p className="text-sm font-semibold">Gold Price Calculator</p>
             <p className="text-sm text-slate-500">
-              Enter grams → get price with GST
+              Enter grams → get price with GST. Great before purchase.
             </p>
             <Link
               href="/calculator"
@@ -370,7 +370,7 @@ export default function HomeClient({
           <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-soft">
             <p className="text-sm font-semibold">Jewellery Wastage Tool</p>
             <p className="text-sm text-slate-500">
-              Estimate making + wastage charges
+              Estimate making + wastage charges; compare quotes.
             </p>
             <Link
               href="/wastage-calculator"
@@ -387,6 +387,18 @@ export default function HomeClient({
               className="mt-4 inline-flex rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white"
             >
               Open
+            </Link>
+          </div>
+          <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-soft">
+            <p className="text-sm font-semibold">Daily Recap (News)</p>
+            <p className="text-sm text-slate-500">
+              AI summary of gold headlines & market signals.
+            </p>
+            <Link
+              href="/news/recap"
+              className="mt-4 inline-flex rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white"
+            >
+              View recaps
             </Link>
           </div>
         </div>

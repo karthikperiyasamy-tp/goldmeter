@@ -3,22 +3,42 @@
  * Adds rich snippets for Google Search
  */
 
+type FAQItem = { question: string; answer: string };
+
 type StructuredDataProps = {
-  type: 'homepage' | 'city' | 'tool';
+  type: 'homepage' | 'city' | 'tool' | 'article';
   city?: string;
   gold22k?: number;
   gold24k?: number;
   toolName?: string;
   toolDescription?: string;
+  // Article data
+  headline?: string;
+  description?: string;
+  url?: string;
+  datePublished?: string | Date;
+  dateModified?: string | Date;
+  imageUrl?: string;
+  authorName?: string;
+  // FAQ data
+  faqs?: FAQItem[];
 };
 
 export default function StructuredData({ 
-  type, 
-  city, 
-  gold22k, 
+  type,
+  city,
+  gold22k,
   gold24k,
   toolName,
-  toolDescription 
+  toolDescription,
+  headline,
+  description,
+  url,
+  datePublished,
+  dateModified,
+  imageUrl,
+  authorName,
+  faqs,
 }: StructuredDataProps) {
   let structuredData: any = {
     "@context": "https://schema.org",
@@ -87,6 +107,37 @@ export default function StructuredData({
         "ratingCount": "150"
       }
     };
+  } else if (type === 'article') {
+    const published = datePublished
+      ? new Date(datePublished).toISOString()
+      : undefined;
+    const modified = dateModified
+      ? new Date(dateModified).toISOString()
+      : published;
+
+    structuredData = {
+      ...structuredData,
+      "@type": "NewsArticle",
+      "headline": headline,
+      "description": description,
+      "url": url,
+      "mainEntityOfPage": url,
+      "datePublished": published,
+      "dateModified": modified,
+      "image": imageUrl ? [imageUrl] : undefined,
+      "author": {
+        "@type": "Organization",
+        "name": authorName || "GoldMeter",
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "GoldMeter",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://goldmeter.in/logo.png",
+        },
+      },
+    };
   }
 
   // Add organization data
@@ -122,6 +173,23 @@ export default function StructuredData({
     ]
   } : null;
 
+  // Add FAQ structured data where FAQs exist
+  const faqData =
+    faqs && faqs.length
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": faqs.map((faq) => ({
+            "@type": "Question",
+            "name": faq.question,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": faq.answer,
+            },
+          })),
+        }
+      : null;
+
   return (
     <>
       <script
@@ -136,6 +204,12 @@ export default function StructuredData({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+        />
+      )}
+      {faqData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }}
         />
       )}
     </>

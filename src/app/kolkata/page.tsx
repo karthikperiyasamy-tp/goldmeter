@@ -11,6 +11,7 @@ export default async function KolkataPage() {
   return (
     <CityPageShell
       city="Kolkata"
+      intro="Gold rate in Kolkata today per gram: 22K & 24K live prices with Bowbazar and Burrabazar trends, charts, and FAQs."
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}

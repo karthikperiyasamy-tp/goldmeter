@@ -11,6 +11,7 @@ export default async function AhmedabadPage() {
   return (
     <CityPageShell
       city="Ahmedabad"
+      intro="Gold rate in Ahmedabad today per gram: live 22K & 24K prices with Manek Chowk and C.G. Road jeweller trends, charts, and FAQs."
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}

@@ -186,6 +186,45 @@ export default function CalculatorPage() {
             <CalculatorSwitcher />
           </div>
         </div>
+
+      <section className="mt-10 grid gap-3 md:grid-cols-3">
+        <Link
+          href="/silver-rate"
+          className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
+        >
+          Silver rate today → ₹/kg with 30-day history.
+        </Link>
+        <Link
+          href="/news"
+          className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
+        >
+          Gold news → daily headlines and market movers.
+        </Link>
+        <Link
+          href="/news/recap"
+          className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
+        >
+          Daily recap → quick AI summary of gold price signals.
+        </Link>
+        <Link
+          href="/chennai"
+          className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
+        >
+          Gold rate in Chennai today → per gram with charts.
+        </Link>
+        <Link
+          href="/mumbai"
+          className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
+        >
+          Gold rate in Mumbai today → 22K / 24K per gram.
+        </Link>
+        <Link
+          href="/delhi"
+          className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
+        >
+          Gold rate in Delhi today → compare trends & FAQs.
+        </Link>
+      </section>
       </div>
     </main>
   );

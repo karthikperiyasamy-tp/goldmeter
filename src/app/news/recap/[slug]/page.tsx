@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getRecapBySlug, getAllRecaps, formatDateForDisplay } from "@/lib/recapDB";
 import type { Metadata } from "next";
+import StructuredData from "@/app/components/StructuredData";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -47,9 +48,24 @@ export default async function RecapPage({ params }: Props) {
   }
 
   const displayDate = formatDateForDisplay(recap.date);
+  const recapUrl = `https://goldmeter.in/news/recap/${slug}`;
+  const cityLinks = [
+    { name: "Chennai", href: "/chennai" },
+    { name: "Mumbai", href: "/mumbai" },
+    { name: "Delhi", href: "/delhi" },
+  ];
 
   return (
     <main className="min-h-screen bg-amber-50 pb-12">
+      <StructuredData
+        type="article"
+        headline={recap.title}
+        description={recap.summary}
+        url={recapUrl}
+        datePublished={recap.publishedAt}
+        dateModified={recap.publishedAt}
+        authorName="GoldMeter"
+      />
       <article className="mx-auto max-w-3xl px-4 pt-6">
         {/* Back Navigation */}
         <Link
@@ -153,6 +169,36 @@ export default async function RecapPage({ params }: Props) {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 text-slate-700 text-sm font-semibold hover:border-amber-300 transition-colors"
           >
             More News →
+          </Link>
+        </div>
+
+        <div className="mt-6 grid gap-3 md:grid-cols-3">
+          {cityLinks.map((link) => (
+            <Link
+              key={link.name}
+              href={link.href}
+              className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
+            >
+              Gold rate in {link.name} today → per gram, charts, FAQs
+            </Link>
+          ))}
+          <Link
+            href="/calculator"
+            className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
+          >
+            Gold price calculator → get cost with GST & making charges
+          </Link>
+          <Link
+            href="/wastage-calculator"
+            className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover-border-amber-200"
+          >
+            Wastage & making calculator → compare jeweller quotes
+          </Link>
+          <Link
+            href="/silver-rate"
+            className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover-border-amber-200"
+          >
+            Silver rate today → India & city history
           </Link>
         </div>
       </article>

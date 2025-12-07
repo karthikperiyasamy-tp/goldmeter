@@ -11,6 +11,7 @@ export default async function BangalorePage() {
   return (
     <CityPageShell
       city="Bangalore"
+      intro="Gold rate in Bangalore today per gram: 22K & 24K live prices with Jayanagar and Commercial Street trends, charts, and FAQs."
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}

@@ -11,6 +11,7 @@ export default async function VijayawadaPage() {
   return (
     <CityPageShell
       city="Vijayawada"
+      intro="Gold rate in Vijayawada today per gram: 22K & 24K live prices with Governorpet and Autonagar trends, charts, and FAQs."
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}

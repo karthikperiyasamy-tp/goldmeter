@@ -11,6 +11,7 @@ export default async function HyderabadPage() {
   return (
     <CityPageShell
       city="Hyderabad"
+      intro="Gold rate in Hyderabad today per gram: 22K & 24K live prices with Abids and Banjara Hills trends, charts, and FAQs."
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}

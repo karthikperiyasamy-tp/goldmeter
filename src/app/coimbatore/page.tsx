@@ -11,6 +11,7 @@ export default async function CoimbatorePage() {
   return (
     <CityPageShell
       city="Coimbatore"
+      intro="Gold rate in Coimbatore today per gram: 22K & 24K live prices with RS Puram and Cross Cut Road trends, charts, and FAQs."
       updated={rates.date}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}

@@ -121,6 +121,36 @@ export default async function NewsPage() {
             totalCount={initialData.totalCount}
           />
         </div>
+
+        <div className="mt-10 rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">
+          <h3 className="text-lg font-semibold text-charcoal">Tools & links</h3>
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            <Link href="/calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Gold price calculator</p>
+              <p className="text-sm text-slate-600 mt-1">Enter grams → get cost with GST.</p>
+            </Link>
+            <Link href="/wastage-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Wastage & making</p>
+              <p className="text-sm text-slate-600 mt-1">Estimate making + wastage charges.</p>
+            </Link>
+            <Link href="/purity-converter" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Purity converter</p>
+              <p className="text-sm text-slate-600 mt-1">22K ↔ 24K instantly.</p>
+            </Link>
+            <Link href="/silver-rate" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Silver rate today</p>
+              <p className="text-sm text-slate-600 mt-1">₹/kg with 30-day history.</p>
+            </Link>
+            <Link href="/chennai" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Gold rate in Chennai</p>
+              <p className="text-sm text-slate-600 mt-1">Per gram, charts, FAQs.</p>
+            </Link>
+            <Link href="/mumbai" className="rounded-2xl border border-slate-100 p-4 hover-border-amber-200">
+              <p className="font-semibold text-charcoal">Gold rate in Mumbai</p>
+              <p className="text-sm text-slate-600 mt-1">22K / 24K per gram.</p>
+            </Link>
+          </div>
+        </div>
       </section>
     </main>
   );
