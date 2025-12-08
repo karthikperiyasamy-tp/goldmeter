@@ -40,20 +40,23 @@ export default function StructuredData({
   authorName,
   faqs,
 }: StructuredDataProps) {
+  const cityUrl = city ? `https://goldmeter.in/${city.toLowerCase()}` : undefined;
+
+  const toPrice = (value?: number | null) =>
+    typeof value === "number" && Number.isFinite(value) ? Number(value.toFixed(2)) : null;
+
   let structuredData: any = {
     "@context": "https://schema.org",
   };
 
   if (type === 'homepage' || type === 'city') {
-    // Financial service schema for gold price pages (no Product/Offer to avoid merchant listing warnings)
+    // Financial service schema for gold price pages
     structuredData = {
       ...structuredData,
       "@type": "FinancialService",
       "name": `GoldRate - ${city || 'India'} Gold Prices`,
       "description": `Live 22K and 24K gold rates in ${city || 'India'}. Updated daily with accurate pricing from leading jewellers.`,
-      "url": city 
-        ? `https://goldmeter.in/${city.toLowerCase()}` 
-        : "https://goldmeter.in",
+      "url": cityUrl || "https://goldmeter.in",
       "priceRange": "₹₹",
       "currenciesAccepted": "INR",
       "areaServed": {
@@ -119,6 +122,61 @@ export default function StructuredData({
     };
   }
 
+  // Product schema for gold rates (per 10g) on city pages to satisfy Google product snippet requirements
+  const productData =
+    type === "city" && city
+      ? [
+          (() => {
+            const price = toPrice(gold22k);
+            if (price === null) return null;
+            return {
+              "@context": "https://schema.org",
+              "@type": "Product",
+              name: `${city} 22K Gold Price (per 10g)`,
+              description: `Live 22 karat gold rate in ${city} per 10 grams with daily updates from local jewellers.`,
+              brand: {
+                "@type": "Brand",
+                name: "GoldMeter",
+              },
+              category: "Gold",
+              url: cityUrl,
+              offers: {
+                "@type": "Offer",
+                url: cityUrl,
+                priceCurrency: "INR",
+                price,
+                availability: "https://schema.org/InStock",
+                itemCondition: "https://schema.org/NewCondition",
+              },
+            };
+          })(),
+          (() => {
+            const price = toPrice(gold24k);
+            if (price === null) return null;
+            return {
+              "@context": "https://schema.org",
+              "@type": "Product",
+              name: `${city} 24K Gold Price (per 10g)`,
+              description: `Live 24 karat gold rate in ${city} per 10 grams with daily updates from local jewellers.`,
+              brand: {
+                "@type": "Brand",
+                name: "GoldMeter",
+              },
+              category: "Gold",
+              url: cityUrl,
+              offers: {
+                "@type": "Offer",
+                url: cityUrl,
+                priceCurrency: "INR",
+                price,
+                availability: "https://schema.org/InStock",
+                itemCondition: "https://schema.org/NewCondition",
+              },
+            };
+          })(),
+        ].filter(Boolean)
+      : [];
+
   // Add organization data
   const organizationData = {
     "@context": "https://schema.org",
@@ -151,7 +209,7 @@ export default function StructuredData({
         "@type": "ListItem",
         "position": 2,
         "name": `${city} Gold Rate`,
-        "item": `https://goldmeter.in/${city.toLowerCase()}`
+        "item": cityUrl
       }
     ]
   } : null;
@@ -183,6 +241,13 @@ export default function StructuredData({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
       />
+      {productData.map((product, index) => (
+        <script
+          key={`product-${index}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(product) }}
+        />
+      ))}
       {breadcrumbData && (
         <script
           type="application/ld+json"
