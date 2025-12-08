@@ -2,8 +2,8 @@
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-// Use Gemini 2.5 Pro (2 RPM free tier - sufficient for daily recap)
-const GEMINI_MODEL = 'gemini-2.5-pro';
+// Use a flash model to stay within free-tier quotas
+const GEMINI_MODEL = 'gemini-2.5-flash';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 interface GeminiResponse {
@@ -20,6 +20,50 @@ interface GeminiResponse {
   };
 }
 
+async function fetchWithRetry(prompt: string): Promise<Response> {
+  const maxAttempts = 3;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: prompt,
+              },
+            ],
+          },
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 4096,
+        },
+      }),
+    });
+
+    if (response.ok) {
+      return response;
+    }
+
+    // If rate-limited, backoff and retry
+    if (response.status === 429 && attempt < maxAttempts) {
+      const delay = 500 * attempt;
+      console.warn(`Gemini 429, retrying in ${delay}ms (attempt ${attempt}/${maxAttempts})`);
+      await new Promise(res => setTimeout(res, delay));
+      continue;
+    }
+
+    return response;
+  }
+
+  // Fallback; should not reach here
+  throw new Error('Gemini API retries exhausted');
+}
+
 export async function generateWithGemini(prompt: string): Promise<string> {
   if (!GEMINI_API_KEY) {
     throw new Error('GEMINI_API_KEY is not configured. Please add it to your environment variables.');
@@ -27,27 +71,7 @@ export async function generateWithGemini(prompt: string): Promise<string> {
 
   console.log(`🤖 Calling Gemini API (model: ${GEMINI_MODEL})...`);
 
-  const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      contents: [
-        {
-          parts: [
-            {
-              text: prompt,
-            },
-          ],
-        },
-      ],
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 4096,
-      },
-    }),
-  });
+  const response = await fetchWithRetry(prompt);
 
   if (!response.ok) {
     const errorText = await response.text();
