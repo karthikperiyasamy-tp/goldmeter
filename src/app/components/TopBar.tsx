@@ -69,13 +69,13 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 gap-4">
-        <button 
+        <Link 
+          href="/"
           onClick={() => {
             onCityChange("India");
             // Clear preference when clicking logo to go to India
             document.cookie = "preferredCity=; path=/; max-age=0";
             document.cookie = `geo_redirect_checked=true; path=/; max-age=${60 * 60 * 24}`;
-            router.push("/");
           }}
           className="flex items-center gap-2 sm:gap-3 hover:opacity-90 transition-opacity shrink-0 min-w-0"
         >
@@ -91,7 +91,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
             <div className="text-sm sm:text-base md:text-lg font-semibold text-charcoal truncate">GoldMeter</div>
             <p className="text-[9px] sm:text-[10px] md:text-xs text-slate-500 truncate">Live 22K · 24K prices</p>
           </div>
-        </button>
+        </Link>
 
         <div className="relative hidden flex-1 md:block">
           <div className="flex items-center gap-4 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-600">

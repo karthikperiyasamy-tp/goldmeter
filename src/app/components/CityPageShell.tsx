@@ -145,10 +145,16 @@ export default function CityPageShell({
         <section className="border-y border-amber-100 bg-gradient-to-r from-white to-amber-50 rounded-3xl p-6 shadow-soft">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-widest text-slate-500">
-                Updated {updated}
-              </p>
-              <h1 className="mt-2 text-3xl font-extrabold text-amber-700 md:text-4xl">
+              <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold text-slate-600 uppercase md:text-xs">
+                <Link 
+                  href="/?noredirect=true" 
+                  className="inline-flex items-center gap-1 rounded-full border border-slate-200 px-3 py-1 font-semibold text-slate-700 hover:bg-slate-50 transition-colors lowercase"
+                >
+                  ← Back to India
+                </Link>
+                <span className="normal-case text-slate-500">Updated {updated}</span>
+              </div>
+              <h1 className="mt-3 text-3xl font-extrabold text-amber-700 md:text-4xl">
                 {city} Gold Rate Today
               </h1>
               <p className="mt-2 text-sm text-slate-600">
@@ -203,12 +209,6 @@ export default function CityPageShell({
                 )}
               </div>
               <div className="mt-6 flex flex-wrap gap-3 text-sm">
-                <Link 
-                  href="/?noredirect=true" 
-                  className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
-                >
-                  ← Back to India
-                </Link>
                 <Link
                   href="#price-chart"
                   className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
