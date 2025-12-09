@@ -156,6 +156,6 @@ export default async function NewsPage() {
   );
 }
 
-// Fallback revalidation every 1 hour (on-demand revalidation handles freshness)
-// The /api/fetch-news endpoint triggers revalidatePath('/news') when new articles are saved
-export const revalidate = 3600;
+// Always fetch fresh news; rely on DB cache instead of ISR
+export const revalidate = 0;
+export const dynamic = "force-dynamic";

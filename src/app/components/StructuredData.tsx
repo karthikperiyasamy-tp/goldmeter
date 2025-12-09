@@ -41,6 +41,7 @@ export default function StructuredData({
   faqs,
 }: StructuredDataProps) {
   const cityUrl = city ? `https://goldmeter.in/${city.toLowerCase()}` : undefined;
+  const defaultImage = "https://goldmeter.in/og-image.png";
 
   const toPrice = (value?: number | null) =>
     typeof value === "number" && Number.isFinite(value) ? Number(value.toFixed(2)) : null;
@@ -122,6 +123,46 @@ export default function StructuredData({
     };
   }
 
+  const baseOffer = (price: number | null, url?: string) =>
+    price === null
+      ? null
+      : {
+          "@type": "Offer",
+          url,
+          priceCurrency: "INR",
+          price,
+          availability: "https://schema.org/InStock",
+          itemCondition: "https://schema.org/NewCondition",
+          shippingDetails: {
+            "@type": "OfferShippingDetails",
+            shippingRate: {
+              "@type": "MonetaryAmount",
+              currency: "INR",
+              value: 0,
+            },
+            deliveryTime: {
+              "@type": "ShippingDeliveryTime",
+              handlingTime: {
+                "@type": "QuantitativeValue",
+                minValue: 0,
+                maxValue: 1,
+                unitCode: "DAY",
+              },
+              transitTime: {
+                "@type": "QuantitativeValue",
+                minValue: 1,
+                maxValue: 3,
+                unitCode: "DAY",
+              },
+            },
+          },
+          hasMerchantReturnPolicy: {
+            "@type": "MerchantReturnPolicy",
+            applicableCountry: "IN",
+            returnPolicyCategory: "https://schema.org/NonRefundable",
+          },
+        };
+
   // Product schema for gold rates (per 10g) on city pages to satisfy Google product snippet requirements
   const productData =
     type === "city" && city
@@ -140,14 +181,8 @@ export default function StructuredData({
               },
               category: "Gold",
               url: cityUrl,
-              offers: {
-                "@type": "Offer",
-                url: cityUrl,
-                priceCurrency: "INR",
-                price,
-                availability: "https://schema.org/InStock",
-                itemCondition: "https://schema.org/NewCondition",
-              },
+              image: [defaultImage],
+              offers: baseOffer(price, cityUrl),
             };
           })(),
           (() => {
@@ -164,14 +199,8 @@ export default function StructuredData({
               },
               category: "Gold",
               url: cityUrl,
-              offers: {
-                "@type": "Offer",
-                url: cityUrl,
-                priceCurrency: "INR",
-                price,
-                availability: "https://schema.org/InStock",
-                itemCondition: "https://schema.org/NewCondition",
-              },
+              image: [defaultImage],
+              offers: baseOffer(price, cityUrl),
             };
           })(),
         ].filter(Boolean)
