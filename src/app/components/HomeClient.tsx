@@ -9,6 +9,7 @@ import RateCard from "./RateCard";
 import PriceChartWrapper from "./PriceChartWrapper";
 import Last10DaysTable from "./Last10DaysTable";
 import MonthStatistics from "./MonthStatistics";
+import GoldArticle from "./GoldArticle";
 import { type InternationalRate, type InternationalRates } from "@/lib/internationalRates";
 
 export type RateResponse = {
@@ -410,7 +411,7 @@ export default function HomeClient({
         </div>
       </section>
 
-      {/* Latest News - moved after Prices by City */}
+      {/* Latest News - moved above Featured Articles */}
       {newsItems.length > 0 && (
         <section className="mx-auto w-full max-w-6xl px-4 pt-10">
           <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
@@ -451,6 +452,9 @@ export default function HomeClient({
           </div>
         </section>
       )}
+
+      {/* Featured Article - Gold Origins */}
+      <GoldArticle />
 
       <section className="mx-auto w-full max-w-6xl px-4 py-10">
         <div className="grid gap-4 md:grid-cols-4">
