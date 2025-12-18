@@ -20,9 +20,6 @@ export const metadata: Metadata = {
   authors: [{ name: "GoldRate Team" }],
   creator: "GoldRate",
   publisher: "GoldRate",
-  alternates: {
-    canonical: "https://goldmeter.in",
-  },
   openGraph: {
     title: "GoldRate — Live Prices, City Insights & Calculators",
     description:

@@ -65,6 +65,8 @@ function findCityByName(cityName: string): string | null {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Note: www → non-www redirect is handled by Vercel domain settings (301 permanent)
+  
   // Skip geo-redirect for search engine bots so homepage returns 200.
   const ua = request.headers.get("user-agent") || "";
   const isBot = /bot|crawl|spider|slurp|bingpreview/i.test(ua);
@@ -134,8 +136,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match only the homepage
-     * Exclude API routes, static files, and _next paths
+     * Match only the homepage for geo-redirect
      */
     "/",
   ],

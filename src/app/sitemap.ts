@@ -50,10 +50,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Error fetching recaps for sitemap:', error)
   }
 
-  // Homepage
+  // Homepage (with https://goldmeter.in/ canonical)
   const homepage = {
     url: baseUrl,
-    lastModified: new Date(),
+    lastModified: new Date('2025-12-18'),
     changeFrequency: 'daily' as const,
     priority: 1,
   }
@@ -61,7 +61,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Calculator page
   const calculator = {
     url: `${baseUrl}/calculator`,
-    lastModified: new Date(),
+    lastModified: new Date('2025-12-18'),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }
@@ -69,7 +69,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Wastage calculator page
   const wastageCalculator = {
     url: `${baseUrl}/wastage-calculator`,
-    lastModified: new Date(),
+    lastModified: new Date('2025-12-18'),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }
@@ -85,7 +85,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // News index page
   const news = {
     url: `${baseUrl}/news`,
-    lastModified: new Date(),
+    lastModified: new Date('2025-12-18'),
     changeFrequency: 'daily' as const,
     priority: 0.8,
   }
@@ -117,7 +117,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // City pages
   const cityPages = cities.map((city) => ({
     url: `${baseUrl}/${city}`,
-    lastModified: new Date(),
+    lastModified: new Date('2025-12-18'),
     changeFrequency: 'daily' as const,
     priority: 0.9,
   }))
@@ -133,7 +133,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Silver rate city pages
   const silverRateCityPages = silverCities.map((city) => ({
     url: `${baseUrl}/silver-rate/${city}`,
-    lastModified: new Date(),
+    lastModified: new Date('2025-12-18'),
     changeFrequency: 'daily' as const,
     priority: 0.75,
   }))
