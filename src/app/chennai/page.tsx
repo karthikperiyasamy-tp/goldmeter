@@ -57,9 +57,12 @@ export default async function ChennaiPage() {
 }
 
 export const metadata = {
-  title: "Chennai Gold Rate Today - Live 22K & 24K Prices | GoldRate",
+  title: "Chennai Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
   description:
     "Get today's Chennai gold rate per 10 grams for 22K and 24K gold. Check T Nagar prices, making charges, and top jewellery shops.",
+  alternates: {
+    canonical: "https://goldmeter.in/chennai",
+  },
 };
 
 // Cache page for 5 minutes - combined with DB-level caching

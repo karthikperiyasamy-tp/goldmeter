@@ -82,6 +82,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }
 
+  // Investment calculator page
+  const investmentCalculator = {
+    url: `${baseUrl}/investment-calculator`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }
+
+  // Gold loan calculator page
+  const goldLoanCalculator = {
+    url: `${baseUrl}/gold-loan-calculator`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }
+
+  // Wedding gold planner page
+  const weddingGoldPlanner = {
+    url: `${baseUrl}/wedding-gold-planner`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }
+
   // News index page
   const news = {
     url: `${baseUrl}/news`,
@@ -143,6 +167,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     calculator,
     wastageCalculator,
     purityConverter,
+    investmentCalculator,
+    goldLoanCalculator,
+    weddingGoldPlanner,
     news,
     recapListing,
     ...newsPages,

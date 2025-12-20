@@ -56,9 +56,12 @@ export default async function BangalorePage() {
 }
 
 export const metadata = {
-  title: "Bangalore Gold Rate Today - Live 22K & 24K Prices | GoldRate",
+  title: "Bangalore Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
   description:
     "Check today's Bangalore gold rate per 10 grams for 22K and 24K gold. Get real-time prices, making charges info, and top jewellery stores.",
+  alternates: {
+    canonical: "https://goldmeter.in/bangalore",
+  },
 };
 
 // Cache page for 5 minutes - combined with DB-level caching

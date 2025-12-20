@@ -240,6 +240,7 @@ export default function HomeClient({
         gold24k={hero24k}
         silver1kg={heroSilver}
         updated={baseRates.date}
+        priceChange={priceChange}
       />
 
       <main className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-8">
@@ -382,32 +383,52 @@ export default function HomeClient({
         }))}
       />
 
+      {/* City Comparison Table */}
       <section className="mx-auto w-full max-w-6xl px-4">
         <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-          <h3 className="text-lg font-semibold">Gold Rates by City</h3>
-          <div className="mt-4 divide-y divide-slate-100">
-            {cityListBlock.map((city) => (
-              <div
-                key={city}
-                className="flex items-center justify-between py-3 text-sm"
-              >
-                <div>
-                  <p className="font-semibold text-charcoal">
-                    Gold rate in {city}
-                  </p>
-                  <p className="text-slate-500">
-                    ₹{formatINR.format(hero22k)} · Updated today
-                  </p>
-                </div>
-                <Link
-                  href={`/${city.toLowerCase()}`}
-                  className="text-amber-600"
-                >
-                  View →
-                </Link>
-              </div>
-            ))}
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">🏙️ City-wise Gold Rate Comparison</h3>
+            <p className="text-xs text-slate-500">Per 10 grams</p>
           </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-slate-200 text-left">
+                  <th className="pb-3 font-semibold text-slate-700">City</th>
+                  <th className="pb-3 font-semibold text-slate-700 text-right">22K Gold</th>
+                  <th className="pb-3 font-semibold text-slate-700 text-right">24K Gold</th>
+                  <th className="pb-3 font-semibold text-slate-700 text-right hidden sm:table-cell">Difference</th>
+                  <th className="pb-3 text-right"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {cities.slice(0, 10).map((city) => {
+                  const diff22k = city.gold22k - hero22k;
+                  return (
+                    <tr key={city.name} className="hover:bg-amber-50/50 transition-colors">
+                      <td className="py-3 font-medium text-charcoal">{city.name}</td>
+                      <td className="py-3 text-right font-semibold">₹{formatINR.format(city.gold22k)}</td>
+                      <td className="py-3 text-right font-semibold">₹{formatINR.format(city.gold24k)}</td>
+                      <td className={`py-3 text-right hidden sm:table-cell ${diff22k > 0 ? 'text-rose-500' : diff22k < 0 ? 'text-emerald-600' : 'text-slate-500'}`}>
+                        {diff22k === 0 ? '—' : `${diff22k > 0 ? '+' : ''}₹${formatINR.format(diff22k)}`}
+                      </td>
+                      <td className="py-3 text-right">
+                        <Link
+                          href={`/${city.name.toLowerCase()}`}
+                          className="text-amber-600 hover:text-amber-700 font-medium"
+                        >
+                          View →
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-4 text-xs text-slate-500">
+            💡 Difference shown is compared to India average. Prices vary due to local demand, logistics, and taxes.
+          </p>
         </div>
       </section>
 
@@ -456,81 +477,102 @@ export default function HomeClient({
       {/* Featured Article - Gold Origins */}
       <GoldArticle />
 
-      <section className="mx-auto w-full max-w-6xl px-4 py-10">
-        <div className="grid gap-4 md:grid-cols-4">
-          <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-soft">
-            <p className="text-sm font-semibold">Gold Price Calculator</p>
-            <p className="text-sm text-slate-500">
-              Enter grams → get price with GST. Great before purchase.
-            </p>
-            <Link
-              href="/calculator"
-              className="mt-4 inline-flex rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white"
-            >
-              Open
-            </Link>
+      {/* Festive Gold Rate Predictions */}
+      <section className="mx-auto w-full max-w-6xl px-4 py-6">
+        <div className="rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 via-white to-amber-50 p-6 shadow-soft">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-3xl">🎉</span>
+            <div>
+              <h3 className="text-lg font-semibold text-amber-800">Festive Season Gold Rate Outlook</h3>
+              <p className="text-sm text-slate-600">What to expect during upcoming festivals</p>
+            </div>
           </div>
-          <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-soft">
-            <p className="text-sm font-semibold">Jewellery Wastage Tool</p>
-            <p className="text-sm text-slate-500">
-              Estimate making + wastage charges; compare quotes.
-            </p>
-            <Link
-              href="/wastage-calculator"
-              className="mt-4 inline-flex rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white"
-            >
-              Open
-            </Link>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl bg-white p-4 border border-amber-100">
+              <p className="text-xs text-amber-600 font-semibold uppercase">Pongal / Sankranti</p>
+              <p className="text-sm font-medium text-charcoal mt-1">January 2026</p>
+              <p className="text-xs text-slate-500 mt-1">Traditionally stable prices. Good for buying as demand is moderate.</p>
+              <p className="text-xs text-emerald-600 mt-2">💡 Expected: Stable to +2%</p>
+            </div>
+            <div className="rounded-2xl bg-white p-4 border border-amber-100">
+              <p className="text-xs text-amber-600 font-semibold uppercase">Akshaya Tritiya</p>
+              <p className="text-sm font-medium text-charcoal mt-1">May 2026</p>
+              <p className="text-xs text-slate-500 mt-1">Peak buying season. Prices typically rise 3-5% before the date.</p>
+              <p className="text-xs text-rose-500 mt-2">⚠️ Expected: +3-5% spike</p>
+            </div>
+            <div className="rounded-2xl bg-white p-4 border border-amber-100">
+              <p className="text-xs text-amber-600 font-semibold uppercase">Dhanteras / Diwali</p>
+              <p className="text-sm font-medium text-charcoal mt-1">October 2026</p>
+              <p className="text-xs text-slate-500 mt-1">Highest demand period. Book early for better making charges.</p>
+              <p className="text-xs text-rose-500 mt-2">⚠️ Expected: +4-6% spike</p>
+            </div>
           </div>
-          <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-soft">
-            <p className="text-sm font-semibold">Purity Converter</p>
-            <p className="text-sm text-slate-500">22K ↔ 24K in one tap</p>
-            <Link
-              href="/purity-converter"
-              className="mt-4 inline-flex rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white"
-            >
-              Open
-            </Link>
-          </div>
-          <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-soft">
-            <p className="text-sm font-semibold">Daily Recap (News)</p>
-            <p className="text-sm text-slate-500">
-              AI summary of gold headlines & market signals.
-            </p>
-            <Link
-              href="/news/recap"
-              className="mt-4 inline-flex rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white"
-            >
-              View recaps
-            </Link>
-          </div>
+          <p className="text-xs text-slate-500 mt-4">
+            💡 <strong>Tip:</strong> Buy gold 2-3 weeks before major festivals for better prices. Avoid last-minute purchases during peak demand.
+          </p>
         </div>
       </section>
 
       <section className="mx-auto w-full max-w-6xl px-4 py-10">
+        <h3 className="text-lg font-semibold mb-4">🧮 Gold Calculators & Tools</h3>
+        <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
+          <Link href="/calculator" className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft hover:border-amber-200 transition-colors">
+            <span className="text-2xl">🧮</span>
+            <p className="text-sm font-semibold mt-2">Price Calculator</p>
+            <p className="text-xs text-slate-500">Get price with GST</p>
+          </Link>
+          <Link href="/wastage-calculator" className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft hover:border-amber-200 transition-colors">
+            <span className="text-2xl">💎</span>
+            <p className="text-sm font-semibold mt-2">Wastage Tool</p>
+            <p className="text-xs text-slate-500">Making charges</p>
+          </Link>
+          <Link href="/purity-converter" className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft hover:border-amber-200 transition-colors">
+            <span className="text-2xl">⚖️</span>
+            <p className="text-sm font-semibold mt-2">Purity Converter</p>
+            <p className="text-xs text-slate-500">22K ↔ 24K</p>
+          </Link>
+          <Link href="/investment-calculator" className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft hover:border-amber-200 transition-colors">
+            <span className="text-2xl">📈</span>
+            <p className="text-sm font-semibold mt-2">Investment SIP</p>
+            <p className="text-xs text-slate-500">Gold returns</p>
+          </Link>
+          <Link href="/gold-loan-calculator" className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft hover:border-amber-200 transition-colors">
+            <span className="text-2xl">🏦</span>
+            <p className="text-sm font-semibold mt-2">Loan Calculator</p>
+            <p className="text-xs text-slate-500">Loan against gold</p>
+          </Link>
+          <Link href="/wedding-gold-planner" className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft hover:border-amber-200 transition-colors">
+            <span className="text-2xl">💍</span>
+            <p className="text-sm font-semibold mt-2">Wedding Planner</p>
+            <p className="text-xs text-slate-500">Plan wedding gold</p>
+          </Link>
+        </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-6xl px-4 py-6">
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-3xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-6 shadow-soft">
+          <Link href="/gold-loan-calculator" className="rounded-3xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-6 shadow-soft hover:shadow-md transition-shadow">
             <p className="text-sm font-semibold text-amber-700">
-              Gold Loan Offers
+              🏦 Gold Loan Calculator
             </p>
             <p className="mt-2 text-sm text-slate-600">
-              Compare low-interest gold loans from trusted NBFCs.
+              Check how much loan you can get against your gold jewellery.
             </p>
-            <button className="mt-4 rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white">
-              Explore offers
-            </button>
-          </div>
-          <div className="rounded-3xl border border-amber-100 bg-gradient-to-br from-white to-amber-50 p-6 shadow-soft">
+            <span className="mt-4 inline-flex rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white">
+              Calculate now
+            </span>
+          </Link>
+          <Link href="/wedding-gold-planner" className="rounded-3xl border border-amber-100 bg-gradient-to-br from-white to-amber-50 p-6 shadow-soft hover:shadow-md transition-shadow">
             <p className="text-sm font-semibold text-amber-700">
-              Nearby Jewellery Shops
+              💍 Wedding Gold Planner
             </p>
             <p className="mt-2 text-sm text-slate-600">
-              Discover hallmark-certified stores rated by locals.
+              Plan gold jewellery for bride & groom with budget estimates.
             </p>
-            <button className="mt-4 rounded-full border border-white bg-white/70 px-4 py-2 text-sm font-semibold text-amber-700">
-              View shops
-            </button>
-          </div>
+            <span className="mt-4 inline-flex rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white">
+              Start planning
+            </span>
+          </Link>
         </div>
       </section>
     </div>

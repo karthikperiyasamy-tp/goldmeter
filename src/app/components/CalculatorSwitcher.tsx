@@ -22,6 +22,24 @@ const calculators = [
     icon: "⚖️",
     description: "22K ↔ 24K conversion",
   },
+  {
+    name: "Investment Calculator",
+    href: "/investment-calculator",
+    icon: "📈",
+    description: "Gold SIP returns",
+  },
+  {
+    name: "Gold Loan Calculator",
+    href: "/gold-loan-calculator",
+    icon: "🏦",
+    description: "Loan against gold",
+  },
+  {
+    name: "Wedding Planner",
+    href: "/wedding-gold-planner",
+    icon: "💍",
+    description: "Plan wedding gold",
+  },
 ];
 
 export default function CalculatorSwitcher() {

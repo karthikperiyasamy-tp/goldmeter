@@ -103,6 +103,27 @@ export default function CityPageShell({
     router.push("/");
   };
 
+  // Handle share
+  const handleShare = async () => {
+    const shareData = {
+      title: `${city} Gold Rate Today - GoldMeter`,
+      text: `${city} Gold Rate Today: 22K ₹${gold22k?.toLocaleString('en-IN')}/10g, 24K ₹${gold24k?.toLocaleString('en-IN')}/10g. Check live prices!`,
+      url: window.location.href,
+    };
+    
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else {
+      navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
+      alert('Link copied to clipboard!');
+    }
+  };
+
+  // Handle print
+  const handlePrint = () => {
+    window.print();
+  };
+
   // Calculate 18K if not provided
   const safeGold24k = gold24k || 0;
   const safeGold22k = gold22k || 0;
@@ -218,7 +239,7 @@ export default function CityPageShell({
                   </div>
                 )}
               </div>
-              <div className="mt-6 flex flex-wrap gap-3 text-sm">
+              <div className="mt-6 flex flex-wrap gap-3 text-sm print:hidden">
                 <Link
                   href="#price-chart"
                   className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
@@ -231,6 +252,18 @@ export default function CityPageShell({
                 >
                   Calculate Price
                 </Link>
+                <button
+                  onClick={handleShare}
+                  className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  📤 Share
+                </button>
+                <button
+                  onClick={handlePrint}
+                  className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  🖨️ Print
+                </button>
               </div>
               <p className="mt-4 max-w-2xl text-sm text-slate-600">
                 {heroIntro}
@@ -365,32 +398,52 @@ export default function CityPageShell({
           ))}
         </section>
 
-        <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-          <h3 className="text-lg font-semibold">Tools & links</h3>
+        <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft print:hidden">
+          <h3 className="text-lg font-semibold">Tools & Calculators</h3>
           <div className="mt-4 grid gap-3 md:grid-cols-3">
-            <Link href="/silver-rate" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+            <Link href="/calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
+              <span className="text-xl">🧮</span>
+              <p className="font-semibold text-charcoal mt-1">Price calculator</p>
+              <p className="text-sm text-slate-600">Get cost with GST.</p>
+            </Link>
+            <Link href="/wastage-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
+              <span className="text-xl">💎</span>
+              <p className="font-semibold text-charcoal mt-1">Wastage & making</p>
+              <p className="text-sm text-slate-600">Compare jeweller quotes.</p>
+            </Link>
+            <Link href="/purity-converter" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
+              <span className="text-xl">⚖️</span>
+              <p className="font-semibold text-charcoal mt-1">Purity converter</p>
+              <p className="text-sm text-slate-600">22K ↔ 24K instantly.</p>
+            </Link>
+            <Link href="/investment-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
+              <span className="text-xl">📈</span>
+              <p className="font-semibold text-charcoal mt-1">Investment SIP</p>
+              <p className="text-sm text-slate-600">Plan gold SIP returns.</p>
+            </Link>
+            <Link href="/gold-loan-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
+              <span className="text-xl">🏦</span>
+              <p className="font-semibold text-charcoal mt-1">Loan calculator</p>
+              <p className="text-sm text-slate-600">Check loan eligibility.</p>
+            </Link>
+            <Link href="/wedding-gold-planner" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
+              <span className="text-xl">💍</span>
+              <p className="font-semibold text-charcoal mt-1">Wedding planner</p>
+              <p className="text-sm text-slate-600">Plan wedding gold.</p>
+            </Link>
+          </div>
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            <Link href="/silver-rate" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
               <p className="font-semibold text-charcoal">Silver rate India</p>
-              <p className="text-sm text-slate-600 mt-1">Track ₹/kg silver with history.</p>
+              <p className="text-sm text-slate-600">Track ₹/kg silver.</p>
             </Link>
-            <Link href="/calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
-              <p className="font-semibold text-charcoal">Gold price calculator</p>
-              <p className="text-sm text-slate-600 mt-1">Enter grams → get cost with GST.</p>
-            </Link>
-            <Link href="/wastage-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
-              <p className="font-semibold text-charcoal">Wastage & making</p>
-              <p className="text-sm text-slate-600 mt-1">Estimate making + wastage charges.</p>
-            </Link>
-            <Link href="/purity-converter" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
-              <p className="font-semibold text-charcoal">Purity converter</p>
-              <p className="text-sm text-slate-600 mt-1">22K ↔ 24K instantly.</p>
-            </Link>
-            <Link href="/news" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+            <Link href="/news" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
               <p className="font-semibold text-charcoal">Gold news</p>
-              <p className="text-sm text-slate-600 mt-1">Daily headlines and price movers.</p>
+              <p className="text-sm text-slate-600">Daily headlines.</p>
             </Link>
-            <Link href="/news/recap" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+            <Link href="/news/recap" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
               <p className="font-semibold text-charcoal">Daily recap</p>
-              <p className="text-sm text-slate-600 mt-1">AI summary of market signals.</p>
+              <p className="text-sm text-slate-600">AI market summary.</p>
             </Link>
           </div>
         </section>

@@ -56,9 +56,12 @@ export default async function AhmedabadPage() {
 }
 
 export const metadata = {
-  title: "Ahmedabad Gold Rate Today - Live 22K & 24K Prices | GoldRate",
+  title: "Ahmedabad Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
   description:
     "Check Ahmedabad gold rate today for 22K and 24K gold per 10 grams. Get Manek Chowk prices, making charges, and best jewellers.",
+  alternates: {
+    canonical: "https://goldmeter.in/ahmedabad",
+  },
 };
 
 // Cache page for 5 minutes - combined with DB-level caching

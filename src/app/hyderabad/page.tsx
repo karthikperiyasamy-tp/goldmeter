@@ -56,9 +56,12 @@ export default async function HyderabadPage() {
 }
 
 export const metadata = {
-  title: "Hyderabad Gold Rate Today - Live 22K & 24K Prices | GoldRate",
+  title: "Hyderabad Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
   description:
     "Check today's Hyderabad gold rate per 10 grams for 22K and 24K gold. Get Abids and Sultan Bazaar prices, making charges info.",
+  alternates: {
+    canonical: "https://goldmeter.in/hyderabad",
+  },
 };
 
 // Cache page for 5 minutes - combined with DB-level caching

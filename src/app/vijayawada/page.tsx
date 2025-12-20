@@ -56,9 +56,12 @@ export default async function VijayawadaPage() {
 }
 
 export const metadata = {
-  title: "Vijayawada Gold Rate Today - Live 22K & 24K Prices | GoldRate",
+  title: "Vijayawada Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
   description:
     "Today's Vijayawada gold rate for 22K and 24K gold per 10 grams. Check Governorpet prices, making charges, and trusted jewellers.",
+  alternates: {
+    canonical: "https://goldmeter.in/vijayawada",
+  },
 };
 
 // Cache page for 5 minutes - combined with DB-level caching

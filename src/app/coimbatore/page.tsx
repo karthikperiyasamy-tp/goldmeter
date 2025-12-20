@@ -56,9 +56,12 @@ export default async function CoimbatorePage() {
 }
 
 export const metadata = {
-  title: "Coimbatore Gold Rate Today - Live 22K & 24K Prices | GoldRate",
+  title: "Coimbatore Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
   description:
     "Today's Coimbatore gold rate for 22K and 24K gold per 10 grams. Check RS Puram prices, making charges, and best jewellery shops.",
+  alternates: {
+    canonical: "https://goldmeter.in/coimbatore",
+  },
 };
 
 // Cache page for 5 minutes - combined with DB-level caching

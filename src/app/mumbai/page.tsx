@@ -56,9 +56,12 @@ export default async function MumbaiPage() {
 }
 
 export const metadata = {
-  title: "Mumbai Gold Rate Today - Live 22K & 24K Prices | GoldRate",
+  title: "Mumbai Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
   description:
     "Get today's Mumbai gold rate per 10 grams for 22K and 24K gold. Compare prices, check making charges, and find best jewellery shops in Mumbai.",
+  alternates: {
+    canonical: "https://goldmeter.in/mumbai",
+  },
 };
 
 // Cache page for 5 minutes - combined with DB-level caching

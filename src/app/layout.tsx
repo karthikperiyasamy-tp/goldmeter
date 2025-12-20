@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   description:
     "Track live 22K & 24K gold prices across Indian cities, compare trends, and calculate jewellery costs with GoldRate.",
   metadataBase: new URL("https://goldmeter.in"),
+  alternates: {
+    canonical: "/",
+  },
   keywords: [
     "gold rate",
     "india gold price",

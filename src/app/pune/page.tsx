@@ -56,9 +56,12 @@ export default async function PunePage() {
 }
 
 export const metadata = {
-  title: "Pune Gold Rate Today - Live 22K & 24K Prices | GoldRate",
+  title: "Pune Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
   description:
     "Check Pune gold rate today for 22K and 24K gold per 10 grams. Get Laxmi Road prices, making charges, and trusted jewellers list.",
+  alternates: {
+    canonical: "https://goldmeter.in/pune",
+  },
 };
 
 // Cache page for 5 minutes - combined with DB-level caching

@@ -108,9 +108,12 @@ export default async function SilverIndiaPage() {
 }
 
 export const metadata = {
-  title: "Silver Rate Today in India - 1kg, 10g, 1g Silver Price",
+  title: "Silver Rate Today in India - 1kg, 10g, 1g Silver Price | GoldMeter",
   description:
     "Check the latest Silver rate in India today. Live 1kg, 10g and 1g silver prices with historical trends.",
+  alternates: {
+    canonical: "https://goldmeter.in/silver-rate",
+  },
 };
 
 // Cache page for 5 minutes - combined with DB-level caching

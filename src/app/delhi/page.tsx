@@ -56,9 +56,12 @@ export default async function DelhiPage() {
 }
 
 export const metadata = {
-  title: "Delhi Gold Rate Today - Live 22K & 24K Prices | GoldRate",
+  title: "Delhi Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
   description:
     "Today's Delhi gold rate for 22K and 24K gold per 10 grams. Check Chandni Chowk prices, making charges, and best jewellery shops.",
+  alternates: {
+    canonical: "https://goldmeter.in/delhi",
+  },
 };
 
 // Cache page for 5 minutes - combined with DB-level caching

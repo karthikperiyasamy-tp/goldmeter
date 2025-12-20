@@ -22,6 +22,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${recap.title} | GoldMeter`,
     description: recap.summary,
+    alternates: {
+      canonical: `https://goldmeter.in/news/recap/${slug}`,
+    },
     openGraph: {
       title: recap.title,
       description: recap.summary,

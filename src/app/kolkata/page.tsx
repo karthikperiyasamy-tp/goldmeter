@@ -56,9 +56,12 @@ export default async function KolkataPage() {
 }
 
 export const metadata = {
-  title: "Kolkata Gold Rate Today - Live 22K & 24K Prices | GoldRate",
+  title: "Kolkata Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
   description:
     "Today's Kolkata gold rate for 22K and 24K gold per 10 grams. Check Bowbazar prices, Bengali jewellery making charges, and trusted shops.",
+  alternates: {
+    canonical: "https://goldmeter.in/kolkata",
+  },
 };
 
 // Cache page for 5 minutes - combined with DB-level caching
