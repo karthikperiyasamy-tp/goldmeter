@@ -79,10 +79,21 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check if user specifically requested to stay on homepage (e.g. "Back to India" link)
+  // Check if user specifically requested to stay on homepage (e.g. "Back to India" button)
+  // Support both query param and cookie-based approach for robustness
   if (request.nextUrl.searchParams.has("noredirect")) {
-    console.log("🚫 [Middleware] User requested noredirect, staying on India page");
+    console.log("🚫 [Middleware] User requested noredirect via param, staying on India page");
     return NextResponse.next();
+  }
+
+  // Check for skipGeoRedirect cookie (set by "Back to India" button)
+  const skipCookie = request.cookies.get("skipGeoRedirect");
+  if (skipCookie?.value === "true") {
+    console.log("🚫 [Middleware] User has skipGeoRedirect cookie, staying on India page");
+    // Clear the cookie after use by setting expired response
+    const response = NextResponse.next();
+    response.cookies.delete("skipGeoRedirect");
+    return response;
   }
 
   // Use Vercel's built-in geo headers (instant, no API call!)

@@ -140,5 +140,6 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export const revalidate = 0;
+// Cache page for 5 minutes - combined with DB-level caching
+export const revalidate = 300;
 

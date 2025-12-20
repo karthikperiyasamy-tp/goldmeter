@@ -45,24 +45,25 @@ function RecapCard({ recap }: { recap: DailyRecap }) {
 
 // Server component that fetches initial data
 export default async function NewsPage() {
-  let initialData: { groups: GroupedNews[]; totalCount: number; hasMore: boolean } = { 
-    groups: [], 
-    totalCount: 0, 
-    hasMore: false 
-  };
+  // Fetch news and recaps in parallel for faster page load
+  const [newsResult, recapsResult] = await Promise.allSettled([
+    getGroupedNews(15, 0),
+    getRecentRecaps(2), // Show max 2 recaps on news page
+  ]);
+
+  const initialData = newsResult.status === 'fulfilled' 
+    ? newsResult.value 
+    : { groups: [], totalCount: 0, hasMore: false };
   
-  let recaps: DailyRecap[] = [];
-  
-  try {
-    initialData = await getGroupedNews(15, 0);
-  } catch (error) {
-    console.error("Error fetching news:", error);
+  const recaps = recapsResult.status === 'fulfilled' 
+    ? recapsResult.value 
+    : [];
+
+  if (newsResult.status === 'rejected') {
+    console.error("Error fetching news:", newsResult.reason);
   }
-  
-  try {
-    recaps = await getRecentRecaps(2); // Show max 2 recaps on news page
-  } catch (error) {
-    console.error("Error fetching recaps:", error);
+  if (recapsResult.status === 'rejected') {
+    console.error("Error fetching recaps:", recapsResult.reason);
   }
 
   return (
@@ -156,6 +157,5 @@ export default async function NewsPage() {
   );
 }
 
-// Always fetch fresh news; rely on DB cache instead of ISR
-export const revalidate = 0;
-export const dynamic = "force-dynamic";
+// Cache page for 5 minutes (300 seconds) - combined with DB-level caching
+export const revalidate = 300;

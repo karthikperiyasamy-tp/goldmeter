@@ -1,4 +1,5 @@
 import { getDatabase } from './mongodb';
+import { unstable_cache } from 'next/cache';
 import type { DailyRecap } from './recapTypes';
 import type { NewsArticle } from './newsTypes';
 
@@ -161,8 +162,8 @@ export async function getRecapBySlug(slug: string): Promise<DailyRecap | null> {
   };
 }
 
-// Get all recaps (for sitemap and listing)
-export async function getAllRecaps(limit: number = 30): Promise<DailyRecap[]> {
+// Get all recaps (for sitemap and listing) - internal uncached version
+async function getAllRecapsUncached(limit: number = 30): Promise<DailyRecap[]> {
   const db = await getDatabase();
   const collection = db.collection<DailyRecap>(RECAP_COLLECTION);
   
@@ -178,7 +179,34 @@ export async function getAllRecaps(limit: number = 30): Promise<DailyRecap[]> {
   }));
 }
 
-// Get recent recaps for display
+/**
+ * Get all recaps with caching
+ * Cache duration: 5 minutes (300 seconds)
+ */
+export async function getAllRecaps(limit: number = 30): Promise<DailyRecap[]> {
+  const cachedFn = unstable_cache(
+    () => getAllRecapsUncached(limit),
+    [`all-recaps-${limit}`],
+    {
+      revalidate: 300, // Cache for 5 minutes
+      tags: ['recaps'],
+    }
+  );
+  
+  const recaps = await cachedFn();
+  
+  // Convert date strings back to Date objects after cache retrieval
+  return recaps.map(recap => ({
+    ...recap,
+    generatedAt: new Date(recap.generatedAt),
+    publishedAt: new Date(recap.publishedAt),
+  }));
+}
+
+/**
+ * Get recent recaps for display with caching
+ * Cache duration: 5 minutes (300 seconds)
+ */
 export async function getRecentRecaps(limit: number = 5): Promise<DailyRecap[]> {
   return getAllRecaps(limit);
 }

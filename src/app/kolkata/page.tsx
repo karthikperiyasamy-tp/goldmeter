@@ -61,6 +61,6 @@ export const metadata = {
     "Today's Kolkata gold rate for 22K and 24K gold per 10 grams. Check Bowbazar prices, Bengali jewellery making charges, and trusted shops.",
 };
 
-// Disable caching for immediate updates
-export const revalidate = 0;
+// Cache page for 5 minutes - combined with DB-level caching
+export const revalidate = 300;
 

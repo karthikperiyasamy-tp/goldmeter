@@ -38,20 +38,24 @@ export async function fetchCityRates(
   priceChange: PriceChange;
   history: RateHistory[];
 }> {
-  let history: RateHistory[] = [];
+  // Fetch history and current rates in parallel for better performance
+  console.log(`📊 [FetchCityRates] Fetching data for ${cityName}...`);
+  const [historyResult, dbDataResult] = await Promise.allSettled([
+    getHistoricalGoldRates(cityName, 30),
+    getLatestGoldRates(),
+  ]);
 
-  // Try to fetch history from DB (even if current rate comes from scrape/mock)
-  try {
-    history = await getHistoricalGoldRates(cityName, 30);
+  // Process history
+  const history: RateHistory[] = historyResult.status === 'fulfilled' ? historyResult.value : [];
+  if (historyResult.status === 'fulfilled') {
     console.log(`📊 [FetchCityRates] Fetched ${history.length} historical records for ${cityName}`);
-  } catch (error) {
-    console.error(`❌ [FetchCityRates] Error fetching history for ${cityName}:`, error);
+  } else {
+    console.error(`❌ [FetchCityRates] Error fetching history for ${cityName}:`, historyResult.reason);
   }
 
   // Try database first
-  try {
-    console.log(`📊 [FetchCityRates] Trying DB for ${cityName}...`);
-    const dbData = await getLatestGoldRates();
+  if (dbDataResult.status === 'fulfilled') {
+    const dbData = dbDataResult.value;
     
     if (dbData.cities[cityName]) {
       console.log(`✅ [FetchCityRates] Found ${cityName} in DB`);
@@ -81,8 +85,8 @@ export async function fetchCityRates(
     }
     
     console.log(`⚠️  [FetchCityRates] ${cityName} not found in DB, trying scrape...`);
-  } catch (error) {
-    console.error(`❌ [FetchCityRates] DB error for ${cityName}:`, error);
+  } else {
+    console.error(`❌ [FetchCityRates] DB error for ${cityName}:`, dbDataResult.reason);
   }
   
   // Fallback to scraping API

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import RateCard from "./RateCard";
 import PriceChartWrapper from "./PriceChartWrapper";
 import Last10DaysTable from "./Last10DaysTable";
@@ -93,6 +94,15 @@ export default function CityPageShell({
   similarCities,
   intro,
 }: CityPageShellProps) {
+  const router = useRouter();
+
+  // Handle "Back to India" click - sets cookie to prevent geo-redirect
+  const handleBackToIndia = () => {
+    // Set a cookie that expires in 1 hour to skip geo-redirect
+    document.cookie = "skipGeoRedirect=true; path=/; max-age=3600";
+    router.push("/");
+  };
+
   // Calculate 18K if not provided
   const safeGold24k = gold24k || 0;
   const safeGold22k = gold22k || 0;
@@ -146,12 +156,12 @@ export default function CityPageShell({
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold text-slate-600 uppercase md:text-xs">
-                <Link 
-                  href="/?noredirect=true" 
-                  className="inline-flex items-center gap-1 rounded-full border border-slate-200 px-3 py-1 font-semibold text-slate-700 hover:bg-slate-50 transition-colors lowercase"
+                <button 
+                  onClick={handleBackToIndia}
+                  className="inline-flex items-center gap-1 rounded-full border border-slate-200 px-3 py-1 font-semibold text-slate-700 hover:bg-slate-50 transition-colors lowercase cursor-pointer"
                 >
-                  ← Back to India
-                </Link>
+                  ← back to india
+                </button>
                 <span className="normal-case text-slate-500">Updated {updated}</span>
               </div>
               <h1 className="mt-3 text-3xl font-extrabold text-amber-700 md:text-4xl">

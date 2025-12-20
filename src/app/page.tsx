@@ -106,50 +106,56 @@ const fallbackNews: NewsItem[] = [
 export default async function HomePage() {
   console.log("🏠 [HomePage] Loading gold rates and news...");
   
-  // Try to fetch from database first
-  let dbData = null;
-  let history: HistoryRate[] = [];
-  try {
-    dbData = await getLatestGoldRates();
+  // Fetch all data in parallel for faster page load
+  const [dbDataResult, historyResult, newsResult, intlRatesResult] = await Promise.allSettled([
+    getLatestGoldRates(),
+    getHistoricalGoldRates("India", 30),
+    getRecentNews(3),
+    getInternationalRates(),
+  ]);
+
+  // Process database rates
+  const dbData = dbDataResult.status === 'fulfilled' ? dbDataResult.value : null;
+  if (dbData) {
     console.log("📊 [HomePage] DB fetch result:", dbData.india ? "India data found" : "No India data", Object.keys(dbData.cities).length, "cities found");
-    
-    // Fetch historical data for India (last 30 days)
-    history = await getHistoricalGoldRates("India", 30);
-    console.log(`📊 [HomePage] Fetched ${history.length} historical records for India`);
-  } catch (error) {
-    console.error("❌ [HomePage] Database error:", error);
-  }
-  
-  // Fetch actual news from database
-  let newsItems: NewsItem[] = fallbackNews;
-  try {
-    const recentNews = await getRecentNews(3);
-    if (recentNews.length > 0) {
-      newsItems = recentNews.map((article, index) => ({
-        id: index + 1,
-        title: article.title,
-        date: article.publishedAt.toLocaleDateString("en-IN", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        }),
-        summary: article.summary,
-        city: article.sourceName,
-        slug: article.slug,
-      }));
-      console.log(`📰 [HomePage] Loaded ${newsItems.length} news articles`);
-    }
-  } catch (error) {
-    console.error("❌ [HomePage] News fetch error:", error);
+  } else if (dbDataResult.status === 'rejected') {
+    console.error("❌ [HomePage] Database error:", dbDataResult.reason);
   }
 
-  // International gold prices (1g)
-  let internationalRates: InternationalRates | null = null;
-  try {
-    internationalRates = await getInternationalRates();
+  // Process historical data
+  const history: HistoryRate[] = historyResult.status === 'fulfilled' ? historyResult.value : [];
+  if (historyResult.status === 'fulfilled') {
+    console.log(`📊 [HomePage] Fetched ${history.length} historical records for India`);
+  } else {
+    console.error("❌ [HomePage] History fetch error:", historyResult.reason);
+  }
+
+  // Process news
+  let newsItems: NewsItem[] = fallbackNews;
+  if (newsResult.status === 'fulfilled' && newsResult.value.length > 0) {
+    newsItems = newsResult.value.map((article, index) => ({
+      id: index + 1,
+      title: article.title,
+      date: article.publishedAt.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }),
+      summary: article.summary,
+      city: article.sourceName,
+      slug: article.slug,
+    }));
+    console.log(`📰 [HomePage] Loaded ${newsItems.length} news articles`);
+  } else if (newsResult.status === 'rejected') {
+    console.error("❌ [HomePage] News fetch error:", newsResult.reason);
+  }
+
+  // Process international rates
+  let internationalRates: InternationalRates | null = intlRatesResult.status === 'fulfilled' ? intlRatesResult.value : null;
+  if (internationalRates) {
     console.log(`🌍 [HomePage] Loaded international rates: 24K=${internationalRates.gold24k.length}, 22K=${internationalRates.gold22k.length}, 18K=${internationalRates.gold18k.length}`);
-  } catch (error) {
-    console.error("❌ [HomePage] Failed to fetch international rates:", error);
+  } else if (intlRatesResult.status === 'rejected') {
+    console.error("❌ [HomePage] Failed to fetch international rates:", intlRatesResult.reason);
   }
   
   // Prepare base rates (India)
@@ -253,5 +259,5 @@ export default async function HomePage() {
   return <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} priceChange={priceChange} history={normalizedHistory} internationalRates={internationalRates ?? undefined} />;
 }
 
-// Disable caching for immediate updates
-export const revalidate = 0;
+// Cache page for 5 minutes - combined with DB-level caching for optimal performance
+export const revalidate = 300;

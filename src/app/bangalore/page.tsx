@@ -61,6 +61,6 @@ export const metadata = {
     "Check today's Bangalore gold rate per 10 grams for 22K and 24K gold. Get real-time prices, making charges info, and top jewellery stores.",
 };
 
-// Disable caching for immediate updates
-export const revalidate = 0;
+// Cache page for 5 minutes - combined with DB-level caching
+export const revalidate = 300;
 

@@ -1,4 +1,5 @@
 import { getDatabase } from './mongodb';
+import { unstable_cache } from 'next/cache';
 import type { NewsArticle, GroupedNews } from './newsTypes';
 
 const COLLECTION_NAME = 'news';
@@ -63,24 +64,24 @@ function getDateKey(date: Date): string {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate()).toISOString();
 }
 
-// Fetch news from database with grouping
-export async function getGroupedNews(
+// Fetch news from database with grouping (internal uncached version)
+async function getGroupedNewsUncached(
   limit: number = 10,
   offset: number = 0
 ): Promise<{ groups: GroupedNews[]; totalCount: number; hasMore: boolean }> {
   const db = await getDatabase();
   const collection = db.collection<NewsArticle>(COLLECTION_NAME);
 
-  // Get total count
-  const totalCount = await collection.countDocuments();
-
-  // Fetch articles sorted by published date
-  const articles = await collection
-    .find({})
-    .sort({ publishedAt: -1 })
-    .skip(offset)
-    .limit(limit)
-    .toArray();
+  // Run count and find queries in parallel for better performance
+  const [totalCount, articles] = await Promise.all([
+    collection.countDocuments(),
+    collection
+      .find({})
+      .sort({ publishedAt: -1 })
+      .skip(offset)
+      .limit(limit)
+      .toArray()
+  ]);
 
   // Group by date
   const groupMap = new Map<string, GroupedNews>();
@@ -97,7 +98,7 @@ export async function getGroupedNews(
       });
     }
 
-    // Convert MongoDB document to plain object
+    // Convert MongoDB document to plain object (with serializable dates for caching)
     const plainArticle: NewsArticle = {
       ...article,
       _id: article._id?.toString(),
@@ -118,8 +119,41 @@ export async function getGroupedNews(
   return { groups, totalCount, hasMore };
 }
 
-// Get recent news for homepage (flat list, limited)
-export async function getRecentNews(limit: number = 5): Promise<NewsArticle[]> {
+/**
+ * Get grouped news with caching
+ * Cache duration: 5 minutes (300 seconds)
+ */
+export async function getGroupedNews(
+  limit: number = 10,
+  offset: number = 0
+): Promise<{ groups: GroupedNews[]; totalCount: number; hasMore: boolean }> {
+  const cachedFn = unstable_cache(
+    () => getGroupedNewsUncached(limit, offset),
+    [`grouped-news-${limit}-${offset}`],
+    {
+      revalidate: 300, // Cache for 5 minutes
+      tags: ['news'],
+    }
+  );
+  
+  const result = await cachedFn();
+  
+  // Convert date strings back to Date objects after cache retrieval
+  return {
+    ...result,
+    groups: result.groups.map(group => ({
+      ...group,
+      articles: group.articles.map(article => ({
+        ...article,
+        publishedAt: new Date(article.publishedAt),
+        fetchedAt: new Date(article.fetchedAt),
+      })),
+    })),
+  };
+}
+
+// Get recent news for homepage (flat list, limited) - internal uncached version
+async function getRecentNewsUncached(limit: number = 5): Promise<NewsArticle[]> {
   const db = await getDatabase();
   const collection = db.collection<NewsArticle>(COLLECTION_NAME);
 
@@ -132,6 +166,30 @@ export async function getRecentNews(limit: number = 5): Promise<NewsArticle[]> {
   return articles.map(article => ({
     ...article,
     _id: article._id?.toString(),
+    publishedAt: new Date(article.publishedAt),
+    fetchedAt: new Date(article.fetchedAt),
+  }));
+}
+
+/**
+ * Get recent news with caching
+ * Cache duration: 5 minutes (300 seconds)
+ */
+export async function getRecentNews(limit: number = 5): Promise<NewsArticle[]> {
+  const cachedFn = unstable_cache(
+    () => getRecentNewsUncached(limit),
+    [`recent-news-${limit}`],
+    {
+      revalidate: 300, // Cache for 5 minutes
+      tags: ['news'],
+    }
+  );
+  
+  const articles = await cachedFn();
+  
+  // Convert date strings back to Date objects after cache retrieval
+  return articles.map(article => ({
+    ...article,
     publishedAt: new Date(article.publishedAt),
     fetchedAt: new Date(article.fetchedAt),
   }));

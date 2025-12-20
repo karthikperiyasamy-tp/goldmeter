@@ -113,5 +113,6 @@ export const metadata = {
     "Check the latest Silver rate in India today. Live 1kg, 10g and 1g silver prices with historical trends.",
 };
 
-export const revalidate = 0;
+// Cache page for 5 minutes - combined with DB-level caching
+export const revalidate = 300;
 
