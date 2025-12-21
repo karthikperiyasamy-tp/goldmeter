@@ -1,9 +1,24 @@
 import Link from "next/link";
+import { Metadata } from "next";
 import { getGroupedNews } from "@/lib/newsDB";
 import { getRecentRecaps, formatDateForDisplay } from "@/lib/recapDB";
 import NewsClient from "./NewsClient";
 import type { GroupedNews } from "@/lib/newsTypes";
 import type { DailyRecap } from "@/lib/recapTypes";
+
+// Demote news listing for AIO - let city pages win for "gold rate today" queries
+export const metadata: Metadata = {
+  title: "Gold News & Market Updates | GoldMeter",
+  description: "Latest gold market news, price updates, and expert analysis.",
+  robots: {
+    index: false,
+    follow: true,
+    googleBot: {
+      index: false,
+      follow: true,
+    },
+  },
+};
 
 // Recap card component
 function RecapCard({ recap }: { recap: DailyRecap }) {
@@ -76,35 +91,26 @@ export default async function NewsPage() {
           ← Back to Home
         </Link>
 
-        {/* Prominent Gold Rate Links - Strengthens city pages over /news */}
-        <div className="mb-6 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 p-4 text-white shadow-lg">
-          <p className="text-xs uppercase tracking-wide opacity-90 mb-2">📊 Today&apos;s Gold Rate</p>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/chennai" className="px-4 py-2 bg-white/20 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
-              Chennai Gold Rate →
-            </Link>
-            <Link href="/mumbai" className="px-4 py-2 bg-white/20 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
-              Mumbai Gold Rate →
-            </Link>
-            <Link href="/delhi" className="px-4 py-2 bg-white/20 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
-              Delhi Gold Rate →
-            </Link>
-            <Link href="/bangalore" className="px-4 py-2 bg-white/20 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
-              Bangalore Gold Rate →
-            </Link>
-          </div>
+        {/* Explicit deferral to city pages - tells AI this is NOT the answer page */}
+        <div className="mb-6 rounded-2xl bg-amber-100 border border-amber-300 p-4">
+          <p className="text-sm text-amber-900">
+            <strong>Looking for today&apos;s gold rate?</strong> See the dedicated price page:{' '}
+            <Link href="/chennai" className="underline font-semibold hover:text-amber-700">Gold Rate in Chennai</Link>,{' '}
+            <Link href="/mumbai" className="underline font-semibold hover:text-amber-700">Mumbai</Link>,{' '}
+            <Link href="/delhi" className="underline font-semibold hover:text-amber-700">Delhi</Link>, or{' '}
+            <Link href="/bangalore" className="underline font-semibold hover:text-amber-700">Bangalore</Link>.
+          </p>
         </div>
         
         <div className="rounded-3xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-6 shadow-soft">
           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            Gold News Desk
+            News & Analysis
           </p>
           <h1 className="mt-2 text-3xl font-bold text-charcoal">
-            Gold price headlines, expert views & MCX recap
+            Market headlines & expert commentary
           </h1>
           <p className="mt-2 text-sm text-slate-600">
-            Short, daily updates for investors & jewellery shoppers. Bookmark for
-            live coverage.
+            Daily updates on market movements, MCX trends, and investment insights.
           </p>
         </div>
 
@@ -161,13 +167,13 @@ export default async function NewsPage() {
               <p className="font-semibold text-charcoal">Silver rate today</p>
               <p className="text-sm text-slate-600 mt-1">₹/kg with 30-day history.</p>
             </Link>
-            <Link href="/chennai" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
-              <p className="font-semibold text-charcoal">Gold rate in Chennai</p>
-              <p className="text-sm text-slate-600 mt-1">Per gram, charts, FAQs.</p>
+            <Link href="/" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">All India rates</p>
+              <p className="text-sm text-slate-600 mt-1">Select your city.</p>
             </Link>
-            <Link href="/mumbai" className="rounded-2xl border border-slate-100 p-4 hover-border-amber-200">
-              <p className="font-semibold text-charcoal">Gold rate in Mumbai</p>
-              <p className="text-sm text-slate-600 mt-1">22K / 24K per gram.</p>
+            <Link href="/investment-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Investment calculator</p>
+              <p className="text-sm text-slate-600 mt-1">Plan your SIP.</p>
             </Link>
           </div>
         </div>

@@ -25,6 +25,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: {
       canonical: `https://goldmeter.in/news/recap/${slug}`,
     },
+    // Demote recap pages for AIO - let city pages win for "gold rate today" queries
+    robots: {
+      index: false,
+      follow: true,
+      googleBot: {
+        index: false,
+        follow: true,
+      },
+    },
     openGraph: {
       title: recap.title,
       description: recap.summary,
@@ -73,16 +82,24 @@ export default async function RecapPage({ params }: Props) {
         {/* Back Navigation */}
         <Link
           href="/news"
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors mb-4"
         >
           ← Back to News
         </Link>
+
+        {/* Explicit deferral - tells AI this is NOT the answer page for gold rate queries */}
+        <div className="mb-6 rounded-xl bg-amber-100 border border-amber-300 p-3 text-sm text-amber-900">
+          <strong>Looking for today&apos;s gold rate?</strong> See:{' '}
+          <Link href="/chennai" className="underline font-semibold">Chennai</Link>,{' '}
+          <Link href="/mumbai" className="underline font-semibold">Mumbai</Link>,{' '}
+          <Link href="/delhi" className="underline font-semibold">Delhi</Link>
+        </div>
 
         {/* Article Header */}
         <header className="mb-8">
           <div className="flex items-center gap-2 mb-3">
             <span className="px-3 py-1 rounded-full bg-amber-500 text-white text-xs font-semibold">
-              Daily Recap
+              Market Recap
             </span>
             <span className="text-sm text-slate-500">{displayDate}</span>
           </div>

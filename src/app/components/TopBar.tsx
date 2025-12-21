@@ -87,9 +87,9 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
             className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain shrink-0"
             priority
           />
-          <div className="min-w-0 text-left">
+          <div className="min-w-0 text-left" aria-hidden="true">
             <div className="text-sm sm:text-base md:text-lg font-semibold text-charcoal truncate">GoldMeter</div>
-            <p className="text-[9px] sm:text-[10px] md:text-xs text-slate-500 truncate">Live 22K · 24K prices</p>
+            <p className="text-[9px] sm:text-[10px] md:text-xs text-slate-500 truncate">Gold Price Tracker</p>
           </div>
         </button>
 

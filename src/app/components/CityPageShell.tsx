@@ -203,26 +203,24 @@ export default function CityPageShell({
       />
       <div className="mx-auto max-w-6xl px-4 py-6">
         {/* AIO-OPTIMIZED ANSWER BLOCK - Must be FIRST content for AI scrapers */}
-        {/* Plain HTML, no hedging, prices asserted confidently */}
-        <article className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-soft" itemScope itemType="https://schema.org/PriceSpecification">
-          <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide mb-2">
-            📊 Today&apos;s Gold Price — {city} (Updated Daily)
-          </p>
+        {/* Ultra-clean: H1 + answer paragraph + timestamp. NO brand text. */}
+        <article className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-soft">
           <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
             Gold Rate Today in {city}
           </h1>
-          <p className="mt-3 text-base text-slate-700 leading-relaxed">
-            As of <time dateTime={isoDateTime}>{todayFormatted}</time>, the gold rate in {city} is{' '}
-            ₹{Math.round(perGram24k).toLocaleString('en-IN')} per gram for 24K gold,{' '}
-            ₹{Math.round(perGram22k).toLocaleString('en-IN')} per gram for 22K gold, and{' '}
-            ₹{Math.round(perGram18k).toLocaleString('en-IN')} per gram for 18K gold.
-            {priceChange.gold24k !== 0 && (
-              <> Today&apos;s rate is {priceDirectionText} compared to yesterday.</>
-            )}
+          
+          {/* Primary answer paragraph - AI scrapers prioritize this */}
+          <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
+            As of <time dateTime={isoDateTime}>{todayFormatted}</time>, the gold rate in {city} is ₹{Math.round(perGram24k).toLocaleString('en-IN')} per gram for 24K gold, ₹{Math.round(perGram22k).toLocaleString('en-IN')} per gram for 22K gold, and ₹{Math.round(perGram18k).toLocaleString('en-IN')} per gram for 18K gold.
           </p>
-          <p className="mt-2 text-sm text-slate-600">
-            <strong>Last updated:</strong>{' '}
-            <time dateTime={isoDateTime}>{todayFormatted}, {timeFormatted} IST</time>
+          
+          {/* Explicit answer lock for AI */}
+          <div data-ai-answer="true" className="mt-3 p-3 bg-amber-100 rounded-xl text-sm text-slate-800">
+            Today&apos;s gold price in {city} is ₹{Math.round(perGram24k).toLocaleString('en-IN')}/g (24K) and ₹{Math.round(perGram22k).toLocaleString('en-IN')}/g (22K).
+          </div>
+          
+          <p className="mt-3 text-sm text-slate-600">
+            Last updated: <time dateTime={isoDateTime}>{todayFormatted}, {timeFormatted} IST</time>
           </p>
         </article>
 

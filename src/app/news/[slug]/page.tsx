@@ -26,6 +26,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: {
       canonical: `https://goldmeter.in/news/${slug}`,
     },
+    // Demote news pages for AIO - let city pages win for "gold rate today" queries
+    robots: {
+      index: false,
+      follow: true,
+      googleBot: {
+        index: false,
+        follow: true,
+      },
+    },
     openGraph: {
       title: article.title,
       description: article.summary,
@@ -98,9 +107,17 @@ export default async function NewsArticlePage({ params }: Props) {
           <span>{article.sourceName}</span>
         </div>
 
-        <article className="mt-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        {/* Explicit deferral - tells AI this is NOT the answer page for gold rate queries */}
+        <div className="mt-4 rounded-xl bg-amber-100 border border-amber-300 p-3 text-sm text-amber-900">
+          <strong>Looking for today&apos;s gold rate?</strong> See:{' '}
+          <Link href="/chennai" className="underline font-semibold">Chennai</Link>,{' '}
+          <Link href="/mumbai" className="underline font-semibold">Mumbai</Link>,{' '}
+          <Link href="/delhi" className="underline font-semibold">Delhi</Link>
+        </div>
+
+        <article className="mt-4 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            Gold News • {article.category}
+            News • {article.category}
           </p>
           <h1 className="mt-2 text-3xl font-bold text-charcoal">
             {article.title}

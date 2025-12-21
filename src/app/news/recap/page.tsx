@@ -6,6 +6,15 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Daily Gold Market Recaps | GoldMeter",
   description: "Browse our daily gold market recaps. Get comprehensive summaries of gold price movements, market trends, and expert insights from multiple news sources.",
+  // Demote recap listing for AIO - let city pages win for "gold rate today" queries
+  robots: {
+    index: false,
+    follow: true,
+    googleBot: {
+      index: false,
+      follow: true,
+    },
+  },
   openGraph: {
     title: "Daily Gold Market Recaps",
     description: "Comprehensive summaries of daily gold market news and trends",
@@ -96,23 +105,15 @@ export default async function RecapsPage() {
           ← Back to News
         </Link>
 
-        {/* Prominent Gold Rate Links - Strengthens city pages */}
-        <div className="mb-6 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 p-4 text-white shadow-lg">
-          <p className="text-xs uppercase tracking-wide opacity-90 mb-2">📊 Today&apos;s Gold Rate</p>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/chennai" className="px-4 py-2 bg-white/20 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
-              Chennai Gold Rate →
-            </Link>
-            <Link href="/mumbai" className="px-4 py-2 bg-white/20 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
-              Mumbai Gold Rate →
-            </Link>
-            <Link href="/delhi" className="px-4 py-2 bg-white/20 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
-              Delhi Gold Rate →
-            </Link>
-            <Link href="/bangalore" className="px-4 py-2 bg-white/20 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
-              Bangalore Gold Rate →
-            </Link>
-          </div>
+        {/* Explicit deferral to city pages - tells AI this is NOT the answer page */}
+        <div className="mb-6 rounded-2xl bg-amber-100 border border-amber-300 p-4">
+          <p className="text-sm text-amber-900">
+            <strong>Looking for today&apos;s gold rate?</strong> See the dedicated price page:{' '}
+            <Link href="/chennai" className="underline font-semibold hover:text-amber-700">Gold Rate in Chennai</Link>,{' '}
+            <Link href="/mumbai" className="underline font-semibold hover:text-amber-700">Mumbai</Link>,{' '}
+            <Link href="/delhi" className="underline font-semibold hover:text-amber-700">Delhi</Link>, or{' '}
+            <Link href="/bangalore" className="underline font-semibold hover:text-amber-700">Bangalore</Link>.
+          </p>
         </div>
         
         {/* Header */}
@@ -120,15 +121,15 @@ export default async function RecapsPage() {
           <div className="flex items-center gap-3 mb-2">
             <span className="text-3xl">📊</span>
             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-              Daily Market Insights
+              Market Analysis
             </p>
           </div>
           <h1 className="text-3xl font-bold text-charcoal">
-            Daily Gold Market Recaps
+            Daily Market Recaps
           </h1>
           <p className="mt-2 text-sm text-slate-600">
-            Comprehensive daily summaries of gold market news, price movements, and expert insights.
-            Each recap analyzes 10+ news sources using AI to bring you the day&apos;s highlights.
+            Comprehensive summaries of market news and expert insights.
+            Each recap analyzes 10+ news sources using AI.
           </p>
         </div>
 
