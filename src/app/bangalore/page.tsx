@@ -1,6 +1,30 @@
 import { headers } from "next/headers";
+import { Metadata } from "next";
 import CityPageShell from "../components/CityPageShell";
 import { fetchCityRates } from "@/lib/fetchCityRates";
+
+// Dynamic metadata with date for AIO freshness signals
+export async function generateMetadata(): Promise<Metadata> {
+  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  
+  return {
+    title: `Bangalore Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices | GoldMeter`,
+    description: `As of ${todayFormatted}, get today's Bangalore gold rate per gram for 22K and 24K gold. Get real-time prices, making charges info, and top jewellery stores.`,
+    alternates: {
+      canonical: "https://goldmeter.in/bangalore",
+    },
+    openGraph: {
+      title: `Bangalore Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices`,
+      description: `As of ${todayFormatted}, get today's Bangalore gold rate per gram. Updated daily from Bangalore bullion market.`,
+      type: 'website',
+      url: 'https://goldmeter.in/bangalore',
+    },
+  };
+}
 
 export default async function BangalorePage() {
   const headersList = await headers();
@@ -13,6 +37,7 @@ export default async function BangalorePage() {
       city="Bangalore"
       intro="Gold rate in Bangalore today per gram: 22K & 24K live prices with Jayanagar and Commercial Street trends, charts, and FAQs."
       updated={rates.date}
+      dateISO={rates.dateISO}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}
       silver1kg={rates.silver1kg}
@@ -54,15 +79,6 @@ export default async function BangalorePage() {
       />
   );
 }
-
-export const metadata = {
-  title: "Bangalore Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
-  description:
-    "Check today's Bangalore gold rate per 10 grams for 22K and 24K gold. Get real-time prices, making charges info, and top jewellery stores.",
-  alternates: {
-    canonical: "https://goldmeter.in/bangalore",
-  },
-};
 
 // Cache page for 5 minutes - combined with DB-level caching
 export const revalidate = 300;

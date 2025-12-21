@@ -59,6 +59,7 @@ type CityPageShellProps = {
   faqs: FAQ[];
   similarCities: string[];
   intro?: string;
+  dateISO?: string; // ISO date for structured data freshness
 };
 
 const inr = new Intl.NumberFormat("en-IN", {
@@ -93,6 +94,7 @@ export default function CityPageShell({
   faqs,
   similarCities,
   intro,
+  dateISO,
 }: CityPageShellProps) {
   const router = useRouter();
 
@@ -160,6 +162,24 @@ export default function CityPageShell({
     intro ||
     `Gold rate in ${city} today per gram: ₹${Math.round(perGram22k)} (22K) / ₹${Math.round(perGram24k)} (24K). Updated ${updated}. Track daily changes, compare charts, and use calculators below.`;
 
+  // Generate today's date in readable format for AIO
+  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  
+  // ISO date for structured data freshness signal
+  const isoDate = dateISO || new Date().toISOString().split('T')[0];
+
+  // Price direction indicator for freshness
+  const priceDirection = priceChange.gold24k > 0 ? '↑' : priceChange.gold24k < 0 ? '↓' : '→';
+  const priceDirectionText = priceChange.gold24k > 0 
+    ? `up ₹${Math.abs(priceChange.gold24k)}` 
+    : priceChange.gold24k < 0 
+      ? `down ₹${Math.abs(priceChange.gold24k)}` 
+      : 'unchanged';
+
   return (
     <main className="min-h-screen bg-[#fffdf7] pb-12">
       <StructuredData
@@ -167,9 +187,29 @@ export default function CityPageShell({
         city={city}
         gold22k={safeGold22k}
         gold24k={safeGold24k}
+        gold18k={finalGold18k}
         faqs={enhancedFaqs}
+        dateISO={isoDate}
       />
       <div className="mx-auto max-w-6xl px-4 py-6">
+        {/* AIO-OPTIMIZED ANSWER BLOCK - Critical for AI search results */}
+        <section className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-soft" itemScope itemType="https://schema.org/PriceSpecification">
+          <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
+            Gold Rate Today in {city} ({todayFormatted})
+          </h1>
+          <p className="mt-3 text-base text-slate-700 leading-relaxed">
+            As of {todayFormatted}, the <strong>gold price in {city}</strong> is{' '}
+            <strong>₹{Math.round(perGram24k).toLocaleString('en-IN')} per gram</strong> for 24-karat gold (99.9% purity),{' '}
+            <strong>₹{Math.round(perGram22k).toLocaleString('en-IN')} per gram</strong> for 22-karat gold (91.6% purity), and{' '}
+            <strong>₹{Math.round(perGram18k).toLocaleString('en-IN')} per gram</strong> for 18-karat gold (75% purity).
+            {' '}Today&apos;s rate is {priceDirectionText} compared to yesterday.
+            Prices are updated daily based on {city} bullion market rates.
+          </p>
+          <p className="mt-2 text-sm text-slate-500">
+            <strong>Last updated:</strong> {updated} • <strong>Source:</strong> {city} bullion market & leading jewellers
+          </p>
+        </section>
+
         {/* Hero Section - Like India Page */}
         <section className="border-y border-amber-100 bg-gradient-to-r from-white to-amber-50 rounded-3xl p-6 shadow-soft">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -457,6 +497,119 @@ export default function CityPageShell({
                 <p className="mt-2 text-slate-600">{faq.answer}</p>
               </details>
             ))}
+          </div>
+        </section>
+
+        {/* AIO Content Sections - Adds depth for AI search */}
+        <section className="mt-8 grid gap-6 md:grid-cols-2">
+          {/* Why Prices Change */}
+          <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+            <h3 className="text-lg font-semibold text-charcoal">Why Gold Prices Change in {city}</h3>
+            <p className="mt-3 text-sm text-slate-600 leading-relaxed">
+              Gold prices in {city} fluctuate based on several key factors:
+            </p>
+            <ul className="mt-3 space-y-2 text-sm text-slate-600">
+              <li className="flex items-start gap-2">
+                <span className="text-amber-500">•</span>
+                <span><strong>International spot price</strong> – London gold fix and COMEX futures directly influence local rates</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-amber-500">•</span>
+                <span><strong>USD/INR exchange rate</strong> – A weaker rupee makes gold imports costlier</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-amber-500">•</span>
+                <span><strong>MCX gold futures</strong> – India&apos;s Multi Commodity Exchange sets domestic benchmarks</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-amber-500">•</span>
+                <span><strong>Local demand</strong> – Wedding season and festivals like Akshaya Tritiya spike {city} demand</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-amber-500">•</span>
+                <span><strong>Import duties & GST</strong> – Government levies (currently ~18.5% total) affect final prices</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Is Today Good to Buy */}
+          <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+            <h3 className="text-lg font-semibold text-charcoal">Is Today a Good Day to Buy Gold in {city}?</h3>
+            <div className="mt-3 text-sm text-slate-600 leading-relaxed">
+              <p>
+                Today&apos;s {city} gold rate is{' '}
+                <span className={priceChange.gold24k >= 0 ? 'text-emerald-600 font-semibold' : 'text-rose-500 font-semibold'}>
+                  {priceDirection} {priceDirectionText}
+                </span>
+                {' '}from yesterday.
+              </p>
+              <div className="mt-4 rounded-xl bg-amber-50 p-4">
+                <p className="font-semibold text-amber-800">Quick market analysis:</p>
+                <ul className="mt-2 space-y-1 text-slate-700">
+                  {priceChange.gold24k > 50 && (
+                    <li>• Prices rising – consider buying before further increase</li>
+                  )}
+                  {priceChange.gold24k < -50 && (
+                    <li>• Prices falling – good opportunity if dip continues</li>
+                  )}
+                  {Math.abs(priceChange.gold24k) <= 50 && (
+                    <li>• Prices stable – favorable for planned purchases</li>
+                  )}
+                  <li>• Check 30-day trend in chart above for pattern</li>
+                  <li>• Wedding/festival seasons typically see higher prices</li>
+                </ul>
+              </div>
+              <p className="mt-3 text-xs text-slate-500">
+                Note: This is informational only, not financial advice. Gold prices can be volatile.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 22K vs 24K Explanation */}
+        <section className="mt-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+          <h3 className="text-lg font-semibold text-charcoal">Difference Between 22K and 24K Gold</h3>
+          <div className="mt-4 grid gap-4 md:grid-cols-3 text-sm">
+            <div className="rounded-2xl bg-amber-50 p-4">
+              <p className="font-semibold text-amber-800">24K Gold (99.9% pure)</p>
+              <p className="mt-2 text-slate-600">
+                Purest form of gold. Ideal for investment, coins, and bars. Too soft for daily-wear jewellery.
+                Current {city} rate: <strong>₹{Math.round(perGram24k).toLocaleString('en-IN')}/gram</strong>
+              </p>
+            </div>
+            <div className="rounded-2xl bg-amber-50 p-4">
+              <p className="font-semibold text-amber-800">22K Gold (91.6% pure)</p>
+              <p className="mt-2 text-slate-600">
+                Most popular for jewellery in India. Mixed with copper/silver for durability. Standard for wedding ornaments.
+                Current {city} rate: <strong>₹{Math.round(perGram22k).toLocaleString('en-IN')}/gram</strong>
+              </p>
+            </div>
+            <div className="rounded-2xl bg-amber-50 p-4">
+              <p className="font-semibold text-amber-800">18K Gold (75% pure)</p>
+              <p className="mt-2 text-slate-600">
+                Stronger and more affordable. Common for studded jewellery and international designs.
+                Current {city} rate: <strong>₹{Math.round(perGram18k).toLocaleString('en-IN')}/gram</strong>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* E-E-A-T: How We Calculate Prices */}
+        <section className="mt-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+          <h3 className="text-lg font-semibold text-charcoal">How GoldMeter Calculates {city} Gold Rates</h3>
+          <div className="mt-4 text-sm text-slate-600 leading-relaxed">
+            <p>
+              GoldMeter provides accurate, real-time gold prices for {city} through a multi-source verification process:
+            </p>
+            <ol className="mt-3 space-y-2 list-decimal list-inside">
+              <li><strong>Primary data:</strong> We aggregate rates from {city}&apos;s leading bullion markets and jewellery associations</li>
+              <li><strong>Cross-verification:</strong> Prices are validated against MCX futures and international spot rates</li>
+              <li><strong>Daily updates:</strong> Rates refresh multiple times daily to reflect market movements</li>
+              <li><strong>Historical tracking:</strong> We maintain 30+ days of historical data for trend analysis</li>
+            </ol>
+            <p className="mt-4 text-xs text-slate-500">
+              <strong>Disclaimer:</strong> Prices shown are indicative based on market data. Actual jeweller prices may vary due to making charges, wastage, and GST. Always confirm with your local jeweller before purchase.
+            </p>
           </div>
         </section>
 

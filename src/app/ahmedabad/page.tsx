@@ -1,6 +1,30 @@
 import { headers } from "next/headers";
+import { Metadata } from "next";
 import CityPageShell from "../components/CityPageShell";
 import { fetchCityRates } from "@/lib/fetchCityRates";
+
+// Dynamic metadata with date for AIO freshness signals
+export async function generateMetadata(): Promise<Metadata> {
+  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  
+  return {
+    title: `Ahmedabad Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices | GoldMeter`,
+    description: `As of ${todayFormatted}, get today's Ahmedabad gold rate per gram for 22K and 24K gold. Check Manek Chowk prices, making charges, and best jewellers.`,
+    alternates: {
+      canonical: "https://goldmeter.in/ahmedabad",
+    },
+    openGraph: {
+      title: `Ahmedabad Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices`,
+      description: `As of ${todayFormatted}, get today's Ahmedabad gold rate per gram. Updated daily from Ahmedabad bullion market.`,
+      type: 'website',
+      url: 'https://goldmeter.in/ahmedabad',
+    },
+  };
+}
 
 export default async function AhmedabadPage() {
   const headersList = await headers();
@@ -13,6 +37,7 @@ export default async function AhmedabadPage() {
       city="Ahmedabad"
       intro="Gold rate in Ahmedabad today per gram: live 22K & 24K prices with Manek Chowk and C.G. Road jeweller trends, charts, and FAQs."
       updated={rates.date}
+      dateISO={rates.dateISO}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}
       silver1kg={rates.silver1kg}
@@ -54,15 +79,6 @@ export default async function AhmedabadPage() {
       />
     );
 }
-
-export const metadata = {
-  title: "Ahmedabad Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
-  description:
-    "Check Ahmedabad gold rate today for 22K and 24K gold per 10 grams. Get Manek Chowk prices, making charges, and best jewellers.",
-  alternates: {
-    canonical: "https://goldmeter.in/ahmedabad",
-  },
-};
 
 // Cache page for 5 minutes - combined with DB-level caching
 export const revalidate = 300;

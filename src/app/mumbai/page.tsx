@@ -1,6 +1,30 @@
 import { headers } from "next/headers";
+import { Metadata } from "next";
 import CityPageShell from "../components/CityPageShell";
 import { fetchCityRates } from "@/lib/fetchCityRates";
+
+// Dynamic metadata with date for AIO freshness signals
+export async function generateMetadata(): Promise<Metadata> {
+  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  
+  return {
+    title: `Mumbai Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices | GoldMeter`,
+    description: `As of ${todayFormatted}, get today's Mumbai gold rate per gram for 22K and 24K gold. Compare prices, check making charges, and find best jewellery shops in Mumbai.`,
+    alternates: {
+      canonical: "https://goldmeter.in/mumbai",
+    },
+    openGraph: {
+      title: `Mumbai Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices`,
+      description: `As of ${todayFormatted}, get today's Mumbai gold rate per gram. Updated daily from Mumbai bullion market.`,
+      type: 'website',
+      url: 'https://goldmeter.in/mumbai',
+    },
+  };
+}
 
 export default async function MumbaiPage() {
   const headersList = await headers();
@@ -13,6 +37,7 @@ export default async function MumbaiPage() {
       city="Mumbai"
       intro="Gold rate in Mumbai today per gram: 22K & 24K live prices with Zaveri Bazaar and Dadar trends, charts, and FAQs."
       updated={rates.date}
+      dateISO={rates.dateISO}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}
       silver1kg={rates.silver1kg}
@@ -54,15 +79,6 @@ export default async function MumbaiPage() {
     />
   );
 }
-
-export const metadata = {
-  title: "Mumbai Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
-  description:
-    "Get today's Mumbai gold rate per 10 grams for 22K and 24K gold. Compare prices, check making charges, and find best jewellery shops in Mumbai.",
-  alternates: {
-    canonical: "https://goldmeter.in/mumbai",
-  },
-};
 
 // Cache page for 5 minutes - combined with DB-level caching
 export const revalidate = 300;

@@ -1,6 +1,30 @@
 import { headers } from "next/headers";
+import { Metadata } from "next";
 import CityPageShell from "../components/CityPageShell";
 import { fetchCityRates } from "@/lib/fetchCityRates";
+
+// Dynamic metadata with date for AIO freshness signals
+export async function generateMetadata(): Promise<Metadata> {
+  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  
+  return {
+    title: `Pune Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices | GoldMeter`,
+    description: `As of ${todayFormatted}, get today's Pune gold rate per gram for 22K and 24K gold. Check Laxmi Road prices, making charges, and trusted jewellers list.`,
+    alternates: {
+      canonical: "https://goldmeter.in/pune",
+    },
+    openGraph: {
+      title: `Pune Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices`,
+      description: `As of ${todayFormatted}, get today's Pune gold rate per gram. Updated daily from Pune bullion market.`,
+      type: 'website',
+      url: 'https://goldmeter.in/pune',
+    },
+  };
+}
 
 export default async function PunePage() {
   const headersList = await headers();
@@ -13,6 +37,7 @@ export default async function PunePage() {
       city="Pune"
       intro="Gold rate in Pune today per gram: 22K & 24K live prices with Laxmi Road and Hadapsar trends, charts, and FAQs."
       updated={rates.date}
+      dateISO={rates.dateISO}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}
       silver1kg={rates.silver1kg}
@@ -54,15 +79,6 @@ export default async function PunePage() {
       />
     );
 }
-
-export const metadata = {
-  title: "Pune Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
-  description:
-    "Check Pune gold rate today for 22K and 24K gold per 10 grams. Get Laxmi Road prices, making charges, and trusted jewellers list.",
-  alternates: {
-    canonical: "https://goldmeter.in/pune",
-  },
-};
 
 // Cache page for 5 minutes - combined with DB-level caching
 export const revalidate = 300;

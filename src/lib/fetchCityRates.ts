@@ -35,6 +35,7 @@ export async function fetchCityRates(
   silver1kg: number;
   source: 'db' | 'scrape' | 'mock';
   date: string;
+  dateISO: string; // ISO format for structured data freshness
   priceChange: PriceChange;
   history: RateHistory[];
 }> {
@@ -79,6 +80,7 @@ export async function fetchCityRates(
         silver1kg: dbData.cities[cityName].silver1kg || 0,
         source: 'db',
         date: dbData.cities[cityName].date, // Already formatted as string
+        dateISO: new Date().toISOString().split('T')[0], // ISO format for structured data
         priceChange,
         history,
       };
@@ -110,6 +112,7 @@ export async function fetchCityRates(
           silver1kg: cityRates.silver1kg || 0,
           source: 'scrape',
           date: new Date().toLocaleDateString('en-IN'),
+          dateISO: new Date().toISOString().split('T')[0],
           priceChange: { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: 0 }, // No historical data from scraping
           history,
         };
@@ -139,6 +142,7 @@ function getMockRates(cityName: string): {
   silver1kg: number;
   source: 'mock';
   date: string;
+  dateISO: string;
   priceChange: PriceChange;
 } {
   const mockRatesMap: Record<string, { gold22k: number; gold24k: number; silver1kg: number }> = {
@@ -162,6 +166,7 @@ function getMockRates(cityName: string): {
     gold18k,
     source: 'mock',
     date: new Date().toLocaleDateString('en-IN'),
+    dateISO: new Date().toISOString().split('T')[0],
     priceChange: { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: 0 }, // No historical data for mock
   };
 }

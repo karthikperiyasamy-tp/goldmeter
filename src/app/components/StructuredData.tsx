@@ -10,6 +10,7 @@ type StructuredDataProps = {
   city?: string;
   gold22k?: number;
   gold24k?: number;
+  gold18k?: number;
   toolName?: string;
   toolDescription?: string;
   // Article data
@@ -22,6 +23,8 @@ type StructuredDataProps = {
   authorName?: string;
   // FAQ data
   faqs?: FAQItem[];
+  // Freshness signal for AIO
+  dateISO?: string;
 };
 
 export default function StructuredData({ 
@@ -29,6 +32,7 @@ export default function StructuredData({
   city,
   gold22k,
   gold24k,
+  gold18k,
   toolName,
   toolDescription,
   headline,
@@ -39,6 +43,7 @@ export default function StructuredData({
   imageUrl,
   authorName,
   faqs,
+  dateISO,
 }: StructuredDataProps) {
   const cityUrl = city ? `https://goldmeter.in/${city.toLowerCase()}` : undefined;
   const defaultImage = "https://goldmeter.in/og-image.png";
@@ -206,6 +211,47 @@ export default function StructuredData({
         ].filter(Boolean)
       : [];
 
+  // AIO-optimized FinancialProduct schema with offers and dateModified (critical for AI search)
+  const financialProductData = type === "city" && city && dateISO ? {
+    "@context": "https://schema.org",
+    "@type": "FinancialProduct",
+    "name": `Gold Rate in ${city}`,
+    "description": `Today's gold price in ${city} for 24K, 22K and 18K gold per gram and per 10 grams`,
+    "areaServed": {
+      "@type": "City",
+      "name": city
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "GoldMeter",
+      "url": "https://goldmeter.in"
+    },
+    "offers": [
+      gold24k ? {
+        "@type": "Offer",
+        "price": String(Math.round(gold24k / 10)),
+        "priceCurrency": "INR",
+        "name": "24K Gold per gram",
+        "description": "24 karat pure gold (99.9% purity)"
+      } : null,
+      gold22k ? {
+        "@type": "Offer",
+        "price": String(Math.round(gold22k / 10)),
+        "priceCurrency": "INR",
+        "name": "22K Gold per gram",
+        "description": "22 karat gold (91.6% purity)"
+      } : null,
+      gold18k ? {
+        "@type": "Offer",
+        "price": String(Math.round(gold18k / 10)),
+        "priceCurrency": "INR",
+        "name": "18K Gold per gram",
+        "description": "18 karat gold (75% purity)"
+      } : null
+    ].filter(Boolean),
+    "dateModified": dateISO
+  } : null;
+
   // Add organization data
   const organizationData = {
     "@context": "https://schema.org",
@@ -277,6 +323,12 @@ export default function StructuredData({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(product) }}
         />
       ))}
+      {financialProductData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(financialProductData) }}
+        />
+      )}
       {breadcrumbData && (
         <script
           type="application/ld+json"

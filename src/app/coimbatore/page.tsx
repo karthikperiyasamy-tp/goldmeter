@@ -1,6 +1,30 @@
 import { headers } from "next/headers";
+import { Metadata } from "next";
 import CityPageShell from "../components/CityPageShell";
 import { fetchCityRates } from "@/lib/fetchCityRates";
+
+// Dynamic metadata with date for AIO freshness signals
+export async function generateMetadata(): Promise<Metadata> {
+  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  
+  return {
+    title: `Coimbatore Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices | GoldMeter`,
+    description: `As of ${todayFormatted}, get today's Coimbatore gold rate per gram for 22K and 24K gold. Check RS Puram prices, making charges, and best jewellery shops.`,
+    alternates: {
+      canonical: "https://goldmeter.in/coimbatore",
+    },
+    openGraph: {
+      title: `Coimbatore Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices`,
+      description: `As of ${todayFormatted}, get today's Coimbatore gold rate per gram. Updated daily from Coimbatore bullion market.`,
+      type: 'website',
+      url: 'https://goldmeter.in/coimbatore',
+    },
+  };
+}
 
 export default async function CoimbatorePage() {
   const headersList = await headers();
@@ -13,6 +37,7 @@ export default async function CoimbatorePage() {
       city="Coimbatore"
       intro="Gold rate in Coimbatore today per gram: 22K & 24K live prices with RS Puram and Cross Cut Road trends, charts, and FAQs."
       updated={rates.date}
+      dateISO={rates.dateISO}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}
       silver1kg={rates.silver1kg}
@@ -54,15 +79,6 @@ export default async function CoimbatorePage() {
       />
     );
 }
-
-export const metadata = {
-  title: "Coimbatore Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
-  description:
-    "Today's Coimbatore gold rate for 22K and 24K gold per 10 grams. Check RS Puram prices, making charges, and best jewellery shops.",
-  alternates: {
-    canonical: "https://goldmeter.in/coimbatore",
-  },
-};
 
 // Cache page for 5 minutes - combined with DB-level caching
 export const revalidate = 300;

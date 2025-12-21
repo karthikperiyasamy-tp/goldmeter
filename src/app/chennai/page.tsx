@@ -1,6 +1,30 @@
 import { headers } from "next/headers";
+import { Metadata } from "next";
 import CityPageShell from "../components/CityPageShell";
 import { fetchCityRates } from "@/lib/fetchCityRates";
+
+// Dynamic metadata with date for AIO freshness signals
+export async function generateMetadata(): Promise<Metadata> {
+  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  
+  return {
+    title: `Chennai Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices | GoldMeter`,
+    description: `As of ${todayFormatted}, get today's Chennai gold rate per gram for 22K and 24K gold. Check T Nagar prices, making charges, and top jewellery shops. Updated daily.`,
+    alternates: {
+      canonical: "https://goldmeter.in/chennai",
+    },
+    openGraph: {
+      title: `Chennai Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices`,
+      description: `As of ${todayFormatted}, get today's Chennai gold rate per gram for 22K and 24K gold. Updated daily from Chennai bullion market.`,
+      type: 'website',
+      url: 'https://goldmeter.in/chennai',
+    },
+  };
+}
 
 export default async function ChennaiPage() {
   const headersList = await headers();
@@ -14,6 +38,7 @@ export default async function ChennaiPage() {
       city="Chennai"
       intro="Gold rate in Chennai today per gram: 22K & 24K live prices with T Nagar and Anna Nagar trends, charts, and FAQs."
       updated={rates.date}
+      dateISO={rates.dateISO}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}
       silver1kg={rates.silver1kg}
@@ -55,15 +80,6 @@ export default async function ChennaiPage() {
     />
   );
 }
-
-export const metadata = {
-  title: "Chennai Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
-  description:
-    "Get today's Chennai gold rate per 10 grams for 22K and 24K gold. Check T Nagar prices, making charges, and top jewellery shops.",
-  alternates: {
-    canonical: "https://goldmeter.in/chennai",
-  },
-};
 
 // Cache page for 5 minutes - combined with DB-level caching
 export const revalidate = 300;

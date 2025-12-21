@@ -1,6 +1,30 @@
 import { headers } from "next/headers";
+import { Metadata } from "next";
 import CityPageShell from "../components/CityPageShell";
 import { fetchCityRates } from "@/lib/fetchCityRates";
+
+// Dynamic metadata with date for AIO freshness signals
+export async function generateMetadata(): Promise<Metadata> {
+  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  
+  return {
+    title: `Kolkata Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices | GoldMeter`,
+    description: `As of ${todayFormatted}, get today's Kolkata gold rate per gram for 22K and 24K gold. Check Bowbazar prices, Bengali jewellery making charges, and trusted shops.`,
+    alternates: {
+      canonical: "https://goldmeter.in/kolkata",
+    },
+    openGraph: {
+      title: `Kolkata Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices`,
+      description: `As of ${todayFormatted}, get today's Kolkata gold rate per gram. Updated daily from Kolkata bullion market.`,
+      type: 'website',
+      url: 'https://goldmeter.in/kolkata',
+    },
+  };
+}
 
 export default async function KolkataPage() {
   const headersList = await headers();
@@ -13,6 +37,7 @@ export default async function KolkataPage() {
       city="Kolkata"
       intro="Gold rate in Kolkata today per gram: 22K & 24K live prices with Bowbazar and Burrabazar trends, charts, and FAQs."
       updated={rates.date}
+      dateISO={rates.dateISO}
       gold22k={rates.gold22k}
       gold24k={rates.gold24k}
       silver1kg={rates.silver1kg}
@@ -54,15 +79,6 @@ export default async function KolkataPage() {
       />
     );
 }
-
-export const metadata = {
-  title: "Kolkata Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
-  description:
-    "Today's Kolkata gold rate for 22K and 24K gold per 10 grams. Check Bowbazar prices, Bengali jewellery making charges, and trusted shops.",
-  alternates: {
-    canonical: "https://goldmeter.in/kolkata",
-  },
-};
 
 // Cache page for 5 minutes - combined with DB-level caching
 export const revalidate = 300;
