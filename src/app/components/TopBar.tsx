@@ -57,7 +57,9 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
         router.push("/?noredirect=true");
       }
     } else {
-      // City selected: route within the current context
+      // City selected: clear stayOnIndia cookie so geo-redirect can work on future visits
+      document.cookie = "stayOnIndia=; path=/; max-age=0";
+      // Route within the current context
       const targetPath = isSilverRoute ? `/silver-rate/${citySlug}` : `/${citySlug}`;
       router.push(targetPath);
     }

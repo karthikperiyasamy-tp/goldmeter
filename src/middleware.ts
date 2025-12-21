@@ -80,8 +80,25 @@ export function middleware(request: NextRequest) {
   }
 
   // Check if user specifically requested to stay on homepage (e.g. "Back to India" button or logo click)
+  // This can come from either:
+  // 1. ?noredirect query param (initial click)
+  // 2. stayOnIndia cookie (persists preference)
+  const stayOnIndiaCookie = request.cookies.get("stayOnIndia");
+  
   if (request.nextUrl.searchParams.has("noredirect")) {
-    console.log("🚫 [Middleware] User requested noredirect, staying on India page");
+    console.log("🚫 [Middleware] User requested noredirect via param, setting session cookie and staying on India page");
+    // Set a session cookie (no maxAge = expires when browser closes)
+    const response = NextResponse.redirect(new URL("/", request.url));
+    response.cookies.set("stayOnIndia", "true", { 
+      path: "/", 
+      sameSite: "lax"
+      // No maxAge = session cookie, deleted when browser closes
+    });
+    return response;
+  }
+  
+  if (stayOnIndiaCookie?.value === "true") {
+    console.log("🚫 [Middleware] User has stayOnIndia cookie, staying on India page");
     return NextResponse.next();
   }
 
