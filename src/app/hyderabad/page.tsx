@@ -1,0 +1,68 @@
+import { headers } from "next/headers";
+import CityPageShell from "../components/CityPageShell";
+import { fetchCityRates } from "@/lib/fetchCityRates";
+
+export default async function HyderabadPage() {
+  const headersList = await headers();
+  const host = headersList.get("host") ?? "localhost:3000";
+  
+  const rates = await fetchCityRates("Hyderabad", host);
+
+  return (
+    <CityPageShell
+      city="Hyderabad"
+      intro="Gold rate in Hyderabad today per gram: 22K & 24K live prices with Abids and Banjara Hills trends, charts, and FAQs."
+      updated={rates.date}
+      gold22k={rates.gold22k}
+      gold24k={rates.gold24k}
+      silver1kg={rates.silver1kg}
+      priceChange={rates.priceChange}
+      history={rates.history}
+      localInfo={[
+          {
+            title: "Hallmarking centers",
+            description:
+              "Telangana State Hallmarking Center and Regional Assay Office (Hyderabad).",
+          },
+          {
+            title: "Making charges",
+            description: "₹180 – ₹500 per gram for 22K ornaments in Old City.",
+          },
+          {
+            title: "Top jewellery hubs",
+            description: "Abids, Sultan Bazaar, and Begum Bazaar flagship stores.",
+          },
+        ]}
+        faqs={[
+          {
+            question: "Why is Hyderabad gold rate competitive?",
+            answer:
+              "Lower state taxes and local competition keep Hyderabad rates among the most competitive in South India.",
+          },
+          {
+            question: "Best place to buy gold in Hyderabad?",
+            answer:
+              "Abids and Sultan Bazaar offer a wide range of jewellers with competitive prices and traditional designs.",
+          },
+          {
+            question: "What affects Hyderabad gold price?",
+            answer:
+              "International gold prices, rupee exchange rate, and local demand during festivals like Ugadi.",
+          },
+        ]}
+        similarCities={["Vijayawada", "Bangalore", "Chennai", "Visakhapatnam"]}
+      />
+    );
+}
+
+export const metadata = {
+  title: "Hyderabad Gold Rate Today - Live 22K & 24K Prices | GoldMeter",
+  description:
+    "Check today's Hyderabad gold rate per 10 grams for 22K and 24K gold. Get Abids and Sultan Bazaar prices, making charges info.",
+  alternates: {
+    canonical: "https://goldmeter.in/hyderabad",
+  },
+};
+
+// Cache page for 5 minutes - combined with DB-level caching
+export const revalidate = 300;

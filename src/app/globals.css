@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fffdf7;
+  --foreground: #1f1f2b;
+  --card: #ffffff;
+  --accent: #d4af37;
+}
+
+@layer base {
+  * {
+    @apply border-slate-200;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", 
+      system-ui, sans-serif;
+    @apply antialiased;
+  }
+
+  ::selection {
+    background-color: rgba(244, 179, 72, 0.4);
+  }
+}
+
+/* Print styles - using @media print for custom styles */
+/* Tailwind's print: utilities handle most cases automatically */
+@media print {
+  body {
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  /* Hide navigation, footer, and other non-essential elements */
+  nav,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+  
+  /* Ensure page breaks work properly */
+  section {
+    page-break-inside: avoid;
+  }
+  
+  /* Make sure tables print properly */
+  table {
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+}
