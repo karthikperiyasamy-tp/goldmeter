@@ -75,6 +75,25 @@ export default async function NewsPage() {
         >
           ← Back to Home
         </Link>
+
+        {/* Prominent Gold Rate Links - Strengthens city pages over /news */}
+        <div className="mb-6 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 p-4 text-white shadow-lg">
+          <p className="text-xs uppercase tracking-wide opacity-90 mb-2">📊 Today&apos;s Gold Rate</p>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/chennai" className="px-4 py-2 bg-white/20 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
+              Chennai Gold Rate →
+            </Link>
+            <Link href="/mumbai" className="px-4 py-2 bg-white/20 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
+              Mumbai Gold Rate →
+            </Link>
+            <Link href="/delhi" className="px-4 py-2 bg-white/20 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
+              Delhi Gold Rate →
+            </Link>
+            <Link href="/bangalore" className="px-4 py-2 bg-white/20 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
+              Bangalore Gold Rate →
+            </Link>
+          </div>
+        </div>
         
         <div className="rounded-3xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-6 shadow-soft">
           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">

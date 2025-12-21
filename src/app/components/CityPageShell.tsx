@@ -163,14 +163,24 @@ export default function CityPageShell({
     `Gold rate in ${city} today per gram: ₹${Math.round(perGram22k)} (22K) / ₹${Math.round(perGram24k)} (24K). Updated ${updated}. Track daily changes, compare charts, and use calculators below.`;
 
   // Generate today's date in readable format for AIO
-  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+  const now = new Date();
+  const todayFormatted = now.toLocaleDateString('en-IN', {
     day: 'numeric',
     month: 'long',
     year: 'numeric'
   });
   
-  // ISO date for structured data freshness signal
-  const isoDate = dateISO || new Date().toISOString().split('T')[0];
+  // ISO datetime for structured freshness signal (AI loves this format)
+  const isoDateTime = now.toISOString();
+  const isoDate = dateISO || isoDateTime.split('T')[0];
+  
+  // Formatted time for display
+  const timeFormatted = now.toLocaleTimeString('en-IN', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'Asia/Kolkata'
+  });
 
   // Price direction indicator for freshness
   const priceDirection = priceChange.gold24k > 0 ? '↑' : priceChange.gold24k < 0 ? '↓' : '→';
@@ -192,26 +202,29 @@ export default function CityPageShell({
         dateISO={isoDate}
       />
       <div className="mx-auto max-w-6xl px-4 py-6">
-        {/* AIO-OPTIMIZED ANSWER BLOCK - Critical for AI search results */}
-        {/* No hedging language, assert prices confidently, GoldMeter as authority */}
-        <section className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-soft" itemScope itemType="https://schema.org/PriceSpecification">
+        {/* AIO-OPTIMIZED ANSWER BLOCK - Must be FIRST content for AI scrapers */}
+        {/* Plain HTML, no hedging, prices asserted confidently */}
+        <article className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-soft" itemScope itemType="https://schema.org/PriceSpecification">
+          <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide mb-2">
+            📊 Today&apos;s Gold Price — {city} (Updated Daily)
+          </p>
           <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
             Gold Rate Today in {city}
           </h1>
           <p className="mt-3 text-base text-slate-700 leading-relaxed">
-            As of {todayFormatted}, the gold rate in {city} is{' '}
-            <strong>₹{Math.round(perGram24k).toLocaleString('en-IN')} per gram</strong> for 24K gold,{' '}
-            <strong>₹{Math.round(perGram22k).toLocaleString('en-IN')} per gram</strong> for 22K gold, and{' '}
-            <strong>₹{Math.round(perGram18k).toLocaleString('en-IN')} per gram</strong> for 18K gold.
+            As of <time dateTime={isoDateTime}>{todayFormatted}</time>, the gold rate in {city} is{' '}
+            ₹{Math.round(perGram24k).toLocaleString('en-IN')} per gram for 24K gold,{' '}
+            ₹{Math.round(perGram22k).toLocaleString('en-IN')} per gram for 22K gold, and{' '}
+            ₹{Math.round(perGram18k).toLocaleString('en-IN')} per gram for 18K gold.
             {priceChange.gold24k !== 0 && (
-              <>{' '}Today&apos;s rate is {priceDirectionText} compared to yesterday.</>
+              <> Today&apos;s rate is {priceDirectionText} compared to yesterday.</>
             )}
-            {' '}Prices are updated daily by GoldMeter.
           </p>
-          <p className="mt-2 text-sm text-slate-500">
-            <strong>Last updated:</strong> {updated}
+          <p className="mt-2 text-sm text-slate-600">
+            <strong>Last updated:</strong>{' '}
+            <time dateTime={isoDateTime}>{todayFormatted}, {timeFormatted} IST</time>
           </p>
-        </section>
+        </article>
 
         {/* Hero Section - Like India Page */}
         <section className="border-y border-amber-100 bg-gradient-to-r from-white to-amber-50 rounded-3xl p-6 shadow-soft">
@@ -226,11 +239,11 @@ export default function CityPageShell({
                 </button>
                 <span className="normal-case text-slate-500">Updated {updated}</span>
               </div>
-              <h1 className="mt-3 text-3xl font-extrabold text-amber-700 md:text-4xl">
-                {city} Gold Rate Today
-              </h1>
+              <h2 className="mt-3 text-3xl font-extrabold text-amber-700 md:text-4xl">
+                {city} Gold Rate — Per 10 Grams
+              </h2>
               <p className="mt-2 text-sm text-slate-600">
-                Per 10 grams • Live price by GoldMeter
+                Live prices updated daily
               </p>
               <div className="mt-6 flex flex-wrap gap-4">
                 <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
