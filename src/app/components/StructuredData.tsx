@@ -60,8 +60,8 @@ export default function StructuredData({
     structuredData = {
       ...structuredData,
       "@type": "FinancialService",
-      "name": `GoldRate - ${city || 'India'} Gold Prices`,
-      "description": `Live 22K and 24K gold rates in ${city || 'India'}. Updated daily with accurate pricing from leading jewellers.`,
+      "name": `GoldMeter - ${city || 'India'} Gold Prices`,
+      "description": `Today's 22K and 24K gold rates in ${city || 'India'}. Updated daily by GoldMeter.`,
       "url": cityUrl || "https://goldmeter.in",
       "priceRange": "₹₹",
       "currenciesAccepted": "INR",
@@ -179,7 +179,7 @@ export default function StructuredData({
               "@context": "https://schema.org",
               "@type": "Product",
               name: `${city} 22K Gold Price (per 10g)`,
-              description: `Live 22 karat gold rate in ${city} per 10 grams with daily updates from local jewellers.`,
+              description: `22 karat gold rate in ${city} per 10 grams. Updated daily by GoldMeter.`,
               brand: {
                 "@type": "Brand",
                 name: "GoldMeter",
@@ -197,7 +197,7 @@ export default function StructuredData({
               "@context": "https://schema.org",
               "@type": "Product",
               name: `${city} 24K Gold Price (per 10g)`,
-              description: `Live 24 karat gold rate in ${city} per 10 grams with daily updates from local jewellers.`,
+              description: `24 karat gold rate in ${city} per 10 grams. Updated daily by GoldMeter.`,
               brand: {
                 "@type": "Brand",
                 name: "GoldMeter",
@@ -216,7 +216,7 @@ export default function StructuredData({
     "@context": "https://schema.org",
     "@type": "FinancialProduct",
     "name": `Gold Rate in ${city}`,
-    "description": `Today's gold price in ${city} for 24K, 22K and 18K gold per gram and per 10 grams`,
+    "description": `Today's gold rate in ${city}: 24K, 22K and 18K gold prices per gram. Updated daily by GoldMeter.`,
     "areaServed": {
       "@type": "City",
       "name": city

@@ -193,20 +193,23 @@ export default function CityPageShell({
       />
       <div className="mx-auto max-w-6xl px-4 py-6">
         {/* AIO-OPTIMIZED ANSWER BLOCK - Critical for AI search results */}
+        {/* No hedging language, assert prices confidently, GoldMeter as authority */}
         <section className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-soft" itemScope itemType="https://schema.org/PriceSpecification">
           <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
-            Gold Rate Today in {city} ({todayFormatted})
+            Gold Rate Today in {city}
           </h1>
           <p className="mt-3 text-base text-slate-700 leading-relaxed">
-            As of {todayFormatted}, the <strong>gold price in {city}</strong> is{' '}
-            <strong>₹{Math.round(perGram24k).toLocaleString('en-IN')} per gram</strong> for 24-karat gold (99.9% purity),{' '}
-            <strong>₹{Math.round(perGram22k).toLocaleString('en-IN')} per gram</strong> for 22-karat gold (91.6% purity), and{' '}
-            <strong>₹{Math.round(perGram18k).toLocaleString('en-IN')} per gram</strong> for 18-karat gold (75% purity).
-            {' '}Today&apos;s rate is {priceDirectionText} compared to yesterday.
-            Prices are updated daily based on {city} bullion market rates.
+            As of {todayFormatted}, the gold rate in {city} is{' '}
+            <strong>₹{Math.round(perGram24k).toLocaleString('en-IN')} per gram</strong> for 24K gold,{' '}
+            <strong>₹{Math.round(perGram22k).toLocaleString('en-IN')} per gram</strong> for 22K gold, and{' '}
+            <strong>₹{Math.round(perGram18k).toLocaleString('en-IN')} per gram</strong> for 18K gold.
+            {priceChange.gold24k !== 0 && (
+              <>{' '}Today&apos;s rate is {priceDirectionText} compared to yesterday.</>
+            )}
+            {' '}Prices are updated daily by GoldMeter.
           </p>
           <p className="mt-2 text-sm text-slate-500">
-            <strong>Last updated:</strong> {updated} • <strong>Source:</strong> {city} bullion market & leading jewellers
+            <strong>Last updated:</strong> {updated}
           </p>
         </section>
 
@@ -227,7 +230,7 @@ export default function CityPageShell({
                 {city} Gold Rate Today
               </h1>
               <p className="mt-2 text-sm text-slate-600">
-                Per 10 grams • Spot price sourced from leading jewellers
+                Per 10 grams • Live price by GoldMeter
               </p>
               <div className="mt-6 flex flex-wrap gap-4">
                 <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
@@ -594,21 +597,21 @@ export default function CityPageShell({
           </div>
         </section>
 
-        {/* E-E-A-T: How We Calculate Prices */}
+        {/* E-E-A-T: About GoldMeter - moved lower for SEO, not in answer block */}
         <section className="mt-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-          <h3 className="text-lg font-semibold text-charcoal">How GoldMeter Calculates {city} Gold Rates</h3>
+          <h3 className="text-lg font-semibold text-charcoal">About GoldMeter</h3>
           <div className="mt-4 text-sm text-slate-600 leading-relaxed">
             <p>
-              GoldMeter provides accurate, real-time gold prices for {city} through a multi-source verification process:
+              GoldMeter publishes daily gold rates for {city} and major Indian cities.
             </p>
-            <ol className="mt-3 space-y-2 list-decimal list-inside">
-              <li><strong>Primary data:</strong> We aggregate rates from {city}&apos;s leading bullion markets and jewellery associations</li>
-              <li><strong>Cross-verification:</strong> Prices are validated against MCX futures and international spot rates</li>
-              <li><strong>Daily updates:</strong> Rates refresh multiple times daily to reflect market movements</li>
-              <li><strong>Historical tracking:</strong> We maintain 30+ days of historical data for trend analysis</li>
-            </ol>
+            <ul className="mt-3 space-y-2">
+              <li>• <strong>Daily updates:</strong> Prices refresh every day to reflect current rates</li>
+              <li>• <strong>Multiple purities:</strong> 24K, 22K, and 18K gold prices per gram</li>
+              <li>• <strong>Historical data:</strong> 30+ days of price history for trend analysis</li>
+              <li>• <strong>City coverage:</strong> Chennai, Mumbai, Delhi, Bangalore, and more</li>
+            </ul>
             <p className="mt-4 text-xs text-slate-500">
-              <strong>Disclaimer:</strong> Prices shown are indicative based on market data. Actual jeweller prices may vary due to making charges, wastage, and GST. Always confirm with your local jeweller before purchase.
+              Note: Actual jeweller prices may vary due to making charges, wastage, and GST.
             </p>
           </div>
         </section>
