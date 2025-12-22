@@ -82,7 +82,7 @@ export default function SilverCityPageShell({
                 {city} Silver Rate Today
               </h1>
               <p className="mt-2 text-sm text-slate-600">
-                Spot price sourced from leading jewellers
+                Updated daily by GoldMeter
               </p>
               <div className="mt-6 flex flex-wrap gap-4">
                 <div className="rounded-2xl bg-white px-6 py-4 shadow-soft border border-slate-100">

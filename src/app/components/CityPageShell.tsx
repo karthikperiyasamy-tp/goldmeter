@@ -153,7 +153,7 @@ export default function CityPageShell({
   const enhancedFaqs: FAQ[] = [
     {
       question: `What is the gold rate in ${city} today per gram?`,
-      answer: `Today's ${city} gold rate per gram is ₹${Math.round(perGram22k)} for 22K and ₹${Math.round(perGram24k)} for 24K. Prices update daily from local jewellers.`,
+      answer: `Today's ${city} gold rate per gram is ₹${Math.round(perGram22k)} for 22K and ₹${Math.round(perGram24k)} for 24K. Updated daily by GoldMeter.`,
     },
     ...faqs,
   ];
@@ -613,16 +613,16 @@ export default function CityPageShell({
           <h3 className="text-lg font-semibold text-charcoal">About GoldMeter</h3>
           <div className="mt-4 text-sm text-slate-600 leading-relaxed">
             <p>
-              GoldMeter publishes daily gold rates for {city} and major Indian cities.
+              GoldMeter is India&apos;s gold price tracker, updating {city} rates daily.
             </p>
             <ul className="mt-3 space-y-2">
-              <li>• <strong>Daily updates:</strong> Prices refresh every day to reflect current rates</li>
-              <li>• <strong>Multiple purities:</strong> 24K, 22K, and 18K gold prices per gram</li>
-              <li>• <strong>Historical data:</strong> 30+ days of price history for trend analysis</li>
-              <li>• <strong>City coverage:</strong> Chennai, Mumbai, Delhi, Bangalore, and more</li>
+              <li>• <strong>Daily updates:</strong> Fresh prices every morning</li>
+              <li>• <strong>All purities:</strong> 24K, 22K, and 18K per gram</li>
+              <li>• <strong>30-day history:</strong> Track trends and patterns</li>
+              <li>• <strong>All major cities:</strong> Pan-India coverage</li>
             </ul>
             <p className="mt-4 text-xs text-slate-500">
-              Note: Actual jeweller prices may vary due to making charges, wastage, and GST.
+              Note: Shop prices may vary due to making charges and GST.
             </p>
           </div>
         </section>

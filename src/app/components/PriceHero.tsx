@@ -98,7 +98,7 @@ export default function PriceHero({
             {city} Gold Rate Today
           </h1>
           <p className="mt-2 text-sm text-slate-600">
-            Per 10 grams • Spot price sourced from leading jewellers
+            Per 10 grams • Updated daily by GoldMeter
           </p>
           <div className="mt-6 flex flex-wrap gap-4">
             <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
