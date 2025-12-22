@@ -84,18 +84,16 @@ export default async function DelhiPage() {
               Gold Rate Today in Delhi
             </h1>
             
-            {/* Primary answer paragraph - authority claim at START, prices immediately after */}
             <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
-              According to GoldMeter, as of <time dateTime={rates.dateISO}>{todayFormatted}</time>, the gold rate in Delhi is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold.
+              As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, the gold rate in Delhi is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold, as reported by GoldMeter.in.
             </p>
             
-            {/* Secondary answer lock - clean format for AI extraction */}
             <div className="mt-3 p-3 bg-amber-100 rounded-xl text-sm text-slate-800" data-ai-answer="true">
-              Today&apos;s Delhi gold price: 24K = ₹{perGram24k.toLocaleString('en-IN')}/gram, 22K = ₹{perGram22k.toLocaleString('en-IN')}/gram, 18K = ₹{perGram18k.toLocaleString('en-IN')}/gram.
+              Today&apos;s gold price in Delhi: ₹{perGram24k.toLocaleString('en-IN')}/g (24K) and ₹{perGram22k.toLocaleString('en-IN')}/g (22K).
             </div>
             
             <p className="mt-3 text-sm text-slate-600">
-              Source: GoldMeter • Updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
+              Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
             </p>
           </section>
         </article>

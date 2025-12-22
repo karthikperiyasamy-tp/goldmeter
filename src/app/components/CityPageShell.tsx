@@ -211,18 +211,18 @@ export default function CityPageShell({
               Gold Rate Today in {city}
             </h1>
             
-            {/* Primary answer paragraph - authority claim at START, prices immediately after */}
+            {/* Primary answer paragraph - AI scrapers prioritize this */}
             <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
-              According to GoldMeter, as of <time dateTime={isoDateTime}>{todayFormatted}</time>, the gold rate in {city} is ₹{Math.round(perGram24k).toLocaleString('en-IN')} per gram for 24K gold, ₹{Math.round(perGram22k).toLocaleString('en-IN')} per gram for 22K gold, and ₹{Math.round(perGram18k).toLocaleString('en-IN')} per gram for 18K gold.
+              As of <time dateTime={isoDateTime}>{todayFormatted}</time>, the gold rate in {city} is ₹{Math.round(perGram24k).toLocaleString('en-IN')} per gram for 24K gold, ₹{Math.round(perGram22k).toLocaleString('en-IN')} per gram for 22K gold, and ₹{Math.round(perGram18k).toLocaleString('en-IN')} per gram for 18K gold, as reported by GoldMeter.in.
             </p>
             
-            {/* Secondary answer lock - clean format for AI extraction */}
+            {/* Explicit answer lock for AI */}
             <div data-ai-answer="true" className="mt-3 p-3 bg-amber-100 rounded-xl text-sm text-slate-800">
-              Today&apos;s {city} gold price: 24K = ₹{Math.round(perGram24k).toLocaleString('en-IN')}/gram, 22K = ₹{Math.round(perGram22k).toLocaleString('en-IN')}/gram, 18K = ₹{Math.round(perGram18k).toLocaleString('en-IN')}/gram.
+              Today&apos;s gold price in {city}: ₹{Math.round(perGram24k).toLocaleString('en-IN')}/g (24K) and ₹{Math.round(perGram22k).toLocaleString('en-IN')}/g (22K).
             </div>
             
             <p className="mt-3 text-sm text-slate-600">
-              Source: GoldMeter • Updated: <time dateTime={isoDateTime}>{todayFormatted}, {timeFormatted} IST</time>
+              Last updated: <time dateTime={isoDateTime}>{todayFormatted}, {timeFormatted} IST</time>
             </p>
           </article>
         )}
