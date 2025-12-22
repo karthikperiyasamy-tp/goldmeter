@@ -32,18 +32,54 @@ export default async function PunePage() {
   
   const rates = await fetchCityRates("Pune", host);
 
+  // Calculate per-gram prices for AIO answer block
+  const perGram24k = Math.round((rates.gold24k || 0) / 10);
+  const perGram22k = Math.round((rates.gold22k || 0) / 10);
+  const perGram18k = Math.round(((rates.gold24k || 0) * 18) / 24 / 10);
+  
+  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
   return (
-    <CityPageShell
-      city="Pune"
-      intro="Gold rate in Pune today per gram: 22K & 24K live prices with Laxmi Road and Hadapsar trends, charts, and FAQs."
-      updated={rates.date}
-      dateISO={rates.dateISO}
-      gold22k={rates.gold22k}
-      gold24k={rates.gold24k}
-      silver1kg={rates.silver1kg}
-      priceChange={rates.priceChange}
-      history={rates.history}
-      localInfo={[
+    <>
+      {/* 🔥 AIO ANSWER BLOCK - Server-rendered plain HTML for AI scrapers */}
+      <main className="min-h-screen bg-[#fffdf7]">
+        <article className="mx-auto max-w-6xl px-4 pt-6">
+          <section className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
+            <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
+              Gold Rate Today in Pune
+            </h1>
+            
+            <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
+              As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, the gold rate in Pune is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold.
+            </p>
+            
+            <div className="mt-3 p-3 bg-amber-100 rounded-xl text-sm text-slate-800" data-ai-answer="true">
+              Today&apos;s gold price in Pune: ₹{perGram24k.toLocaleString('en-IN')}/g (24K) and ₹{perGram22k.toLocaleString('en-IN')}/g (22K).
+            </div>
+            
+            <p className="mt-3 text-sm text-slate-600">
+              Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
+            </p>
+          </section>
+        </article>
+      </main>
+
+      <CityPageShell
+        city="Pune"
+        intro="Gold rate in Pune today per gram: 22K & 24K live prices with Laxmi Road and Hadapsar trends, charts, and FAQs."
+        updated={rates.date}
+        dateISO={rates.dateISO}
+        gold22k={rates.gold22k}
+        gold24k={rates.gold24k}
+        silver1kg={rates.silver1kg}
+        priceChange={rates.priceChange}
+        history={rates.history}
+        hideAnswerBlock={true}
+        localInfo={[
           {
             title: "Hallmarking centers",
             description:
@@ -55,7 +91,7 @@ export default async function PunePage() {
           },
           {
             title: "Top jewellery hubs",
-            description: "Laxmi Road, FC Road, and Deccan Gymkhana jewellery stores.",
+            description: "Laxmi Road, FC Road, and Deccan Gymkhana stores.",
           },
         ]}
         faqs={[
@@ -70,14 +106,15 @@ export default async function PunePage() {
               "Gudi Padwa, Akshaya Tritiya, and Diwali offer good buying opportunities with festive discounts.",
           },
           {
-            question: "Trusted jewellers in Pune?",
+            question: "Trusted places in Pune?",
             answer:
-              "Laxmi Road has established jewellers with BIS hallmarked gold and competitive making charges.",
+              "Laxmi Road has established stores with BIS hallmarked gold and competitive making charges.",
           },
         ]}
         similarCities={["Mumbai", "Nashik", "Aurangabad", "Kolhapur"]}
       />
-    );
+    </>
+  );
 }
 
 // Cache page for 5 minutes - combined with DB-level caching

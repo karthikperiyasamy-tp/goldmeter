@@ -26,15 +26,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: {
       canonical: `https://goldmeter.in/news/${slug}`,
     },
-    // Demote news pages for AIO - let city pages win for "gold rate today" queries
-    robots: {
-      index: false,
-      follow: true,
-      googleBot: {
-        index: false,
-        follow: true,
-      },
-    },
     openGraph: {
       title: article.title,
       description: article.summary,

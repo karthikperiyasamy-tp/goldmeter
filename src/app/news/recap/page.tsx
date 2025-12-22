@@ -6,14 +6,8 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Daily Gold Market Recaps | GoldMeter",
   description: "Browse our daily gold market recaps. Get comprehensive summaries of gold price movements, market trends, and expert insights from multiple news sources.",
-  // Demote recap listing for AIO - let city pages win for "gold rate today" queries
-  robots: {
-    index: false,
-    follow: true,
-    googleBot: {
-      index: false,
-      follow: true,
-    },
+  alternates: {
+    canonical: "https://goldmeter.in/news/recap",
   },
   openGraph: {
     title: "Daily Gold Market Recaps",

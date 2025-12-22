@@ -32,18 +32,54 @@ export default async function BangalorePage() {
   
   const rates = await fetchCityRates("Bangalore", host);
 
+  // Calculate per-gram prices for AIO answer block
+  const perGram24k = Math.round((rates.gold24k || 0) / 10);
+  const perGram22k = Math.round((rates.gold22k || 0) / 10);
+  const perGram18k = Math.round(((rates.gold24k || 0) * 18) / 24 / 10);
+  
+  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
   return (
-    <CityPageShell
-      city="Bangalore"
-      intro="Gold rate in Bangalore today per gram: 22K & 24K live prices with Jayanagar and Commercial Street trends, charts, and FAQs."
-      updated={rates.date}
-      dateISO={rates.dateISO}
-      gold22k={rates.gold22k}
-      gold24k={rates.gold24k}
-      silver1kg={rates.silver1kg}
-      priceChange={rates.priceChange}
-      history={rates.history}
-      localInfo={[
+    <>
+      {/* 🔥 AIO ANSWER BLOCK - Server-rendered plain HTML for AI scrapers */}
+      <main className="min-h-screen bg-[#fffdf7]">
+        <article className="mx-auto max-w-6xl px-4 pt-6">
+          <section className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
+            <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
+              Gold Rate Today in Bangalore
+            </h1>
+            
+            <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
+              As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, the gold rate in Bangalore is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold.
+            </p>
+            
+            <div className="mt-3 p-3 bg-amber-100 rounded-xl text-sm text-slate-800" data-ai-answer="true">
+              Today&apos;s gold price in Bangalore: ₹{perGram24k.toLocaleString('en-IN')}/g (24K) and ₹{perGram22k.toLocaleString('en-IN')}/g (22K).
+            </div>
+            
+            <p className="mt-3 text-sm text-slate-600">
+              Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
+            </p>
+          </section>
+        </article>
+      </main>
+
+      <CityPageShell
+        city="Bangalore"
+        intro="Gold rate in Bangalore today per gram: 22K & 24K live prices with Jayanagar and Commercial Street trends, charts, and FAQs."
+        updated={rates.date}
+        dateISO={rates.dateISO}
+        gold22k={rates.gold22k}
+        gold24k={rates.gold24k}
+        silver1kg={rates.silver1kg}
+        priceChange={rates.priceChange}
+        history={rates.history}
+        hideAnswerBlock={true}
+        localInfo={[
           {
             title: "Hallmarking centers",
             description:
@@ -62,21 +98,22 @@ export default async function BangalorePage() {
           {
             question: "Why is Bangalore gold rate higher than other cities?",
             answer:
-              "Bangalore has high demand from IT professionals and premium jewellery stores, leading to slightly higher prices.",
+              "Bangalore has high demand from IT professionals and premium stores, leading to slightly higher prices.",
           },
           {
-            question: "Best jewellery shops in Bangalore?",
+            question: "Best places to buy gold in Bangalore?",
             answer:
-              "Commercial Street and Brigade Road have numerous trusted jewellers with BIS hallmarked gold.",
+              "Commercial Street and Brigade Road have numerous trusted stores with BIS hallmarked gold.",
           },
           {
             question: "Making charges in Bangalore?",
             answer:
-              "Typically ₹180-₹450 per gram depending on the design intricacy and jeweller reputation.",
+              "Typically ₹180-₹450 per gram depending on the design intricacy.",
           },
         ]}
         similarCities={["Chennai", "Hyderabad", "Mysore", "Mangalore"]}
       />
+    </>
   );
 }
 

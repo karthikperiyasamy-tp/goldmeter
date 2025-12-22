@@ -60,6 +60,7 @@ type CityPageShellProps = {
   similarCities: string[];
   intro?: string;
   dateISO?: string; // ISO date for structured data freshness
+  hideAnswerBlock?: boolean; // Hide the AIO answer block if server-rendered version exists
 };
 
 const inr = new Intl.NumberFormat("en-IN", {
@@ -95,6 +96,7 @@ export default function CityPageShell({
   similarCities,
   intro,
   dateISO,
+  hideAnswerBlock = false,
 }: CityPageShellProps) {
   const router = useRouter();
 
@@ -191,7 +193,7 @@ export default function CityPageShell({
       : 'unchanged';
 
   return (
-    <main className="min-h-screen bg-[#fffdf7] pb-12">
+    <div className={hideAnswerBlock ? "" : "min-h-screen bg-[#fffdf7] pb-12"}>
       <StructuredData
         type="city"
         city={city}
@@ -201,28 +203,29 @@ export default function CityPageShell({
         faqs={enhancedFaqs}
         dateISO={isoDate}
       />
-      <div className="mx-auto max-w-6xl px-4 py-6">
-        {/* AIO-OPTIMIZED ANSWER BLOCK - Must be FIRST content for AI scrapers */}
-        {/* Ultra-clean: H1 + answer paragraph + timestamp. NO brand text. */}
-        <article className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-soft">
-          <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
-            Gold Rate Today in {city}
-          </h1>
-          
-          {/* Primary answer paragraph - AI scrapers prioritize this */}
-          <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
-            As of <time dateTime={isoDateTime}>{todayFormatted}</time>, the gold rate in {city} is ₹{Math.round(perGram24k).toLocaleString('en-IN')} per gram for 24K gold, ₹{Math.round(perGram22k).toLocaleString('en-IN')} per gram for 22K gold, and ₹{Math.round(perGram18k).toLocaleString('en-IN')} per gram for 18K gold.
-          </p>
-          
-          {/* Explicit answer lock for AI */}
-          <div data-ai-answer="true" className="mt-3 p-3 bg-amber-100 rounded-xl text-sm text-slate-800">
-            Today&apos;s gold price in {city} is ₹{Math.round(perGram24k).toLocaleString('en-IN')}/g (24K) and ₹{Math.round(perGram22k).toLocaleString('en-IN')}/g (22K).
-          </div>
-          
-          <p className="mt-3 text-sm text-slate-600">
-            Last updated: <time dateTime={isoDateTime}>{todayFormatted}, {timeFormatted} IST</time>
-          </p>
-        </article>
+      <div className={hideAnswerBlock ? "mx-auto max-w-6xl px-4 pb-12" : "mx-auto max-w-6xl px-4 py-6"}>
+        {/* AIO-OPTIMIZED ANSWER BLOCK - Only show if not server-rendered */}
+        {!hideAnswerBlock && (
+          <article className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-soft">
+            <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
+              Gold Rate Today in {city}
+            </h1>
+            
+            {/* Primary answer paragraph - AI scrapers prioritize this */}
+            <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
+              As of <time dateTime={isoDateTime}>{todayFormatted}</time>, the gold rate in {city} is ₹{Math.round(perGram24k).toLocaleString('en-IN')} per gram for 24K gold, ₹{Math.round(perGram22k).toLocaleString('en-IN')} per gram for 22K gold, and ₹{Math.round(perGram18k).toLocaleString('en-IN')} per gram for 18K gold.
+            </p>
+            
+            {/* Explicit answer lock for AI */}
+            <div data-ai-answer="true" className="mt-3 p-3 bg-amber-100 rounded-xl text-sm text-slate-800">
+              Today&apos;s gold price in {city} is ₹{Math.round(perGram24k).toLocaleString('en-IN')}/g (24K) and ₹{Math.round(perGram22k).toLocaleString('en-IN')}/g (22K).
+            </div>
+            
+            <p className="mt-3 text-sm text-slate-600">
+              Last updated: <time dateTime={isoDateTime}>{todayFormatted}, {timeFormatted} IST</time>
+            </p>
+          </article>
+        )}
 
         {/* Hero Section - Like India Page */}
         <section className="border-y border-amber-100 bg-gradient-to-r from-white to-amber-50 rounded-3xl p-6 shadow-soft">
@@ -642,6 +645,6 @@ export default function CityPageShell({
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

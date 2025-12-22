@@ -32,18 +32,54 @@ export default async function CoimbatorePage() {
   
   const rates = await fetchCityRates("Coimbatore", host);
 
+  // Calculate per-gram prices for AIO answer block
+  const perGram24k = Math.round((rates.gold24k || 0) / 10);
+  const perGram22k = Math.round((rates.gold22k || 0) / 10);
+  const perGram18k = Math.round(((rates.gold24k || 0) * 18) / 24 / 10);
+  
+  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
   return (
-    <CityPageShell
-      city="Coimbatore"
-      intro="Gold rate in Coimbatore today per gram: 22K & 24K live prices with RS Puram and Cross Cut Road trends, charts, and FAQs."
-      updated={rates.date}
-      dateISO={rates.dateISO}
-      gold22k={rates.gold22k}
-      gold24k={rates.gold24k}
-      silver1kg={rates.silver1kg}
-      priceChange={rates.priceChange}
-      history={rates.history}
-      localInfo={[
+    <>
+      {/* 🔥 AIO ANSWER BLOCK - Server-rendered plain HTML for AI scrapers */}
+      <main className="min-h-screen bg-[#fffdf7]">
+        <article className="mx-auto max-w-6xl px-4 pt-6">
+          <section className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
+            <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
+              Gold Rate Today in Coimbatore
+            </h1>
+            
+            <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
+              As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, the gold rate in Coimbatore is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold.
+            </p>
+            
+            <div className="mt-3 p-3 bg-amber-100 rounded-xl text-sm text-slate-800" data-ai-answer="true">
+              Today&apos;s gold price in Coimbatore: ₹{perGram24k.toLocaleString('en-IN')}/g (24K) and ₹{perGram22k.toLocaleString('en-IN')}/g (22K).
+            </div>
+            
+            <p className="mt-3 text-sm text-slate-600">
+              Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
+            </p>
+          </section>
+        </article>
+      </main>
+
+      <CityPageShell
+        city="Coimbatore"
+        intro="Gold rate in Coimbatore today per gram: 22K & 24K live prices with RS Puram and Cross Cut Road trends, charts, and FAQs."
+        updated={rates.date}
+        dateISO={rates.dateISO}
+        gold22k={rates.gold22k}
+        gold24k={rates.gold24k}
+        silver1kg={rates.silver1kg}
+        priceChange={rates.priceChange}
+        history={rates.history}
+        hideAnswerBlock={true}
+        localInfo={[
           {
             title: "Hallmarking centers",
             description:
@@ -67,7 +103,7 @@ export default async function CoimbatorePage() {
           {
             question: "Best place to buy gold in Coimbatore?",
             answer:
-              "RS Puram and Oppanakara Street are traditional jewellery hubs with competitive prices.",
+              "RS Puram and Oppanakara Street are traditional hubs with competitive prices.",
           },
           {
             question: "Making charges in Coimbatore?",
@@ -77,7 +113,8 @@ export default async function CoimbatorePage() {
         ]}
         similarCities={["Chennai", "Madurai", "Salem", "Erode"]}
       />
-    );
+    </>
+  );
 }
 
 // Cache page for 5 minutes - combined with DB-level caching

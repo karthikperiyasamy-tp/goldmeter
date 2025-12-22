@@ -6,17 +6,11 @@ import NewsClient from "./NewsClient";
 import type { GroupedNews } from "@/lib/newsTypes";
 import type { DailyRecap } from "@/lib/recapTypes";
 
-// Demote news listing for AIO - let city pages win for "gold rate today" queries
 export const metadata: Metadata = {
   title: "Gold News & Market Updates | GoldMeter",
   description: "Latest gold market news, price updates, and expert analysis.",
-  robots: {
-    index: false,
-    follow: true,
-    googleBot: {
-      index: false,
-      follow: true,
-    },
+  alternates: {
+    canonical: "https://goldmeter.in/news",
   },
 };
 
