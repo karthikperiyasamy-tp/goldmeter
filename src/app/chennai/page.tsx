@@ -102,18 +102,18 @@ export default async function ChennaiPage() {
               Gold Rate Today in Chennai
             </h1>
             
-            {/* Primary answer paragraph - claims GoldMeter as data authority */}
+            {/* Primary answer paragraph - authority claim at START, prices immediately after */}
             <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
-              As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, according to GoldMeter&apos;s live Chennai bullion tracking, 24K gold is priced at ₹{perGram24k.toLocaleString('en-IN')} per gram and 22K gold at ₹{perGram22k.toLocaleString('en-IN')} per gram. 18K gold is approximately ₹{perGram18k.toLocaleString('en-IN')} per gram.
+              According to GoldMeter, as of <time dateTime={rates.dateISO}>{todayFormatted}</time>, the gold rate in Chennai is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold.
             </p>
             
-            {/* Secondary answer lock for AI */}
+            {/* Secondary answer lock - clean format for AI extraction */}
             <div className="mt-3 p-3 bg-amber-100 rounded-xl text-sm text-slate-800" data-ai-answer="true">
-              <strong>GoldMeter Chennai Rate:</strong> ₹{perGram24k.toLocaleString('en-IN')}/g (24K) | ₹{perGram22k.toLocaleString('en-IN')}/g (22K) — Updated {todayFormatted}
+              Today&apos;s Chennai gold price: 24K = ₹{perGram24k.toLocaleString('en-IN')}/gram, 22K = ₹{perGram22k.toLocaleString('en-IN')}/gram, 18K = ₹{perGram18k.toLocaleString('en-IN')}/gram.
             </div>
             
             <p className="mt-3 text-sm text-slate-600">
-              Source: <strong>GoldMeter</strong> • Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
+              Source: GoldMeter • Updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
             </p>
           </section>
         </article>
