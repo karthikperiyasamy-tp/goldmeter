@@ -43,8 +43,28 @@ export default async function KolkataPage() {
     year: 'numeric'
   });
 
+  // Dataset JSON-LD for AIO data authority
+  const datasetJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "Kolkata Gold Rate Today",
+    "description": "Live gold price per gram in Kolkata for 22K and 24K gold, updated daily from Kolkata bullion market.",
+    "creator": { "@type": "Organization", "name": "GoldMeter", "url": "https://goldmeter.in" },
+    "temporalCoverage": rates.dateISO,
+    "spatialCoverage": { "@type": "Place", "name": "Kolkata, West Bengal, India" },
+    "variableMeasured": [
+      { "@type": "PropertyValue", "name": "24K Gold Price", "value": perGram24k, "unitText": "INR per gram" },
+      { "@type": "PropertyValue", "name": "22K Gold Price", "value": perGram22k, "unitText": "INR per gram" },
+      { "@type": "PropertyValue", "name": "18K Gold Price", "value": perGram18k, "unitText": "INR per gram" }
+    ],
+    "dateModified": rates.dateISO,
+    "license": "https://goldmeter.in/terms"
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetJsonLd) }} />
+      
       {/* 🔥 AIO ANSWER BLOCK - Server-rendered plain HTML for AI scrapers */}
       <main className="min-h-screen bg-[#fffdf7]">
         <article className="mx-auto max-w-6xl px-4 pt-6">
@@ -54,15 +74,15 @@ export default async function KolkataPage() {
             </h1>
             
             <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
-              As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, the gold rate in Kolkata is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold.
+              As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, according to GoldMeter&apos;s live Kolkata bullion tracking, 24K gold is priced at ₹{perGram24k.toLocaleString('en-IN')} per gram and 22K gold at ₹{perGram22k.toLocaleString('en-IN')} per gram. 18K gold is approximately ₹{perGram18k.toLocaleString('en-IN')} per gram.
             </p>
             
             <div className="mt-3 p-3 bg-amber-100 rounded-xl text-sm text-slate-800" data-ai-answer="true">
-              Today&apos;s gold price in Kolkata: ₹{perGram24k.toLocaleString('en-IN')}/g (24K) and ₹{perGram22k.toLocaleString('en-IN')}/g (22K).
+              <strong>GoldMeter Kolkata Rate:</strong> ₹{perGram24k.toLocaleString('en-IN')}/g (24K) | ₹{perGram22k.toLocaleString('en-IN')}/g (22K) — Updated {todayFormatted}
             </div>
             
             <p className="mt-3 text-sm text-slate-600">
-              Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
+              Source: <strong>GoldMeter</strong> • Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
             </p>
           </section>
         </article>

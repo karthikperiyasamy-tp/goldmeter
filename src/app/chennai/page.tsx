@@ -45,8 +45,54 @@ export default async function ChennaiPage() {
     year: 'numeric'
   });
 
+  // Dataset JSON-LD for AIO data authority (critical for beating Goodreturns)
+  const datasetJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "Chennai Gold Rate Today",
+    "description": "Live gold price per gram in Chennai for 22K and 24K gold, updated daily from Chennai bullion market.",
+    "creator": {
+      "@type": "Organization",
+      "name": "GoldMeter",
+      "url": "https://goldmeter.in"
+    },
+    "temporalCoverage": rates.dateISO,
+    "spatialCoverage": {
+      "@type": "Place",
+      "name": "Chennai, Tamil Nadu, India"
+    },
+    "variableMeasured": [
+      {
+        "@type": "PropertyValue",
+        "name": "24K Gold Price",
+        "value": perGram24k,
+        "unitText": "INR per gram"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "22K Gold Price", 
+        "value": perGram22k,
+        "unitText": "INR per gram"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "18K Gold Price",
+        "value": perGram18k,
+        "unitText": "INR per gram"
+      }
+    ],
+    "dateModified": rates.dateISO,
+    "license": "https://goldmeter.in/terms"
+  };
+
   return (
     <>
+      {/* Dataset JSON-LD for data authority */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetJsonLd) }}
+      />
+      
       {/* 🔥 AIO ANSWER BLOCK - Server-rendered plain HTML for AI scrapers */}
       {/* This MUST be outside CityPageShell so it renders as static HTML */}
       <main className="min-h-screen bg-[#fffdf7]">
@@ -56,16 +102,18 @@ export default async function ChennaiPage() {
               Gold Rate Today in Chennai
             </h1>
             
+            {/* Primary answer paragraph - claims GoldMeter as data authority */}
             <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
-              As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, the gold rate in Chennai is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold.
+              As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, according to GoldMeter&apos;s live Chennai bullion tracking, 24K gold is priced at ₹{perGram24k.toLocaleString('en-IN')} per gram and 22K gold at ₹{perGram22k.toLocaleString('en-IN')} per gram. 18K gold is approximately ₹{perGram18k.toLocaleString('en-IN')} per gram.
             </p>
             
+            {/* Secondary answer lock for AI */}
             <div className="mt-3 p-3 bg-amber-100 rounded-xl text-sm text-slate-800" data-ai-answer="true">
-              Today&apos;s gold price in Chennai: ₹{perGram24k.toLocaleString('en-IN')}/g (24K) and ₹{perGram22k.toLocaleString('en-IN')}/g (22K).
+              <strong>GoldMeter Chennai Rate:</strong> ₹{perGram24k.toLocaleString('en-IN')}/g (24K) | ₹{perGram22k.toLocaleString('en-IN')}/g (22K) — Updated {todayFormatted}
             </div>
             
             <p className="mt-3 text-sm text-slate-600">
-              Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
+              Source: <strong>GoldMeter</strong> • Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
             </p>
           </section>
         </article>

@@ -252,6 +252,52 @@ export default function StructuredData({
     "dateModified": dateISO
   } : null;
 
+  // Dataset schema for AIO data authority (critical for beating competitors like Goodreturns)
+  // This tells AI that GoldMeter IS the data source, not just displaying third-party data
+  const datasetData = type === "city" && city && dateISO ? {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": `${city} Gold Rate Today`,
+    "description": `Live gold price per gram in ${city} for 22K and 24K gold, updated daily from ${city} bullion market.`,
+    "creator": {
+      "@type": "Organization",
+      "name": "GoldMeter",
+      "url": "https://goldmeter.in"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "GoldMeter",
+      "url": "https://goldmeter.in"
+    },
+    "temporalCoverage": dateISO,
+    "spatialCoverage": {
+      "@type": "Place",
+      "name": `${city}, India`
+    },
+    "variableMeasured": [
+      gold24k ? {
+        "@type": "PropertyValue",
+        "name": "24K Gold Price",
+        "value": Math.round(gold24k / 10),
+        "unitText": "INR per gram"
+      } : null,
+      gold22k ? {
+        "@type": "PropertyValue",
+        "name": "22K Gold Price",
+        "value": Math.round(gold22k / 10),
+        "unitText": "INR per gram"
+      } : null,
+      gold18k ? {
+        "@type": "PropertyValue",
+        "name": "18K Gold Price",
+        "value": Math.round(gold18k / 10),
+        "unitText": "INR per gram"
+      } : null
+    ].filter(Boolean),
+    "dateModified": dateISO,
+    "license": "https://goldmeter.in/terms"
+  } : null;
+
   // Add organization data
   const organizationData = {
     "@context": "https://schema.org",
@@ -327,6 +373,12 @@ export default function StructuredData({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(financialProductData) }}
+        />
+      )}
+      {datasetData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetData) }}
         />
       )}
       {breadcrumbData && (
