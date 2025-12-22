@@ -74,8 +74,7 @@ export default async function HyderabadPage() {
             </h1>
             
             <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
-              As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, the gold rate in Hyderabad is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold, as reported by GoldMeter.in.
-              <span> Data updated on <time dateTime={rates.dateISO}>{rates.date}</time> by GoldMeter&apos;s live bullion price tracking.</span>
+              As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, the gold rate in Hyderabad is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold. For more details, visit GoldMeter.in.
             </p>
             <meta name="author" content="GoldMeter" />
             
