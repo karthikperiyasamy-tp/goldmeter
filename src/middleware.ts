@@ -95,13 +95,14 @@ export function middleware(request: NextRequest) {
   const stayOnIndiaCookie = request.cookies.get("stayOnIndia");
   
   if (request.nextUrl.searchParams.has("noredirect")) {
-    console.log("🚫 [Middleware] User requested noredirect via param, setting session cookie and staying on India page");
-    // Set a session cookie (no maxAge = expires when browser closes)
-    const response = NextResponse.redirect(new URL("/", request.url));
+    console.log("🚫 [Middleware] User requested noredirect via param, setting cookie and staying on India page");
+    // Use NextResponse.next() instead of redirect to avoid race condition
+    // The cookie is set and the homepage loads immediately without another redirect
+    const response = NextResponse.next();
     response.cookies.set("stayOnIndia", "true", { 
       path: "/", 
-      sameSite: "lax"
-      // No maxAge = session cookie, deleted when browser closes
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24, // 24 hours - persists even if browser is closed/reopened
     });
     return response;
   }

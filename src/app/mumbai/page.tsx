@@ -77,16 +77,18 @@ export default async function MumbaiPage() {
       />
       
       {/* 🔥 AIO ANSWER BLOCK - Server-rendered plain HTML for AI scrapers */}
-      <main className="min-h-screen bg-[#fffdf7]">
+      <div className="bg-[#fffdf7]">
         <article className="mx-auto max-w-6xl px-4 pt-6">
-          <section className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
+          <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
             <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
               Gold Rate Today in Mumbai
             </h1>
             
             <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
               As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, the gold rate in Mumbai is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold, as reported by GoldMeter.in.
+              <span> Data updated on <time dateTime={rates.dateISO}>{rates.date}</time> by GoldMeter&apos;s live bullion price tracking.</span>
             </p>
+            <meta name="author" content="GoldMeter" />
             
             <div className="mt-3 p-3 bg-amber-100 rounded-xl text-sm text-slate-800" data-ai-answer="true">
               Today&apos;s gold price in Mumbai: ₹{perGram24k.toLocaleString('en-IN')}/g (24K) and ₹{perGram22k.toLocaleString('en-IN')}/g (22K).
@@ -97,7 +99,7 @@ export default async function MumbaiPage() {
             </p>
           </section>
         </article>
-      </main>
+      </div>
 
       <CityPageShell
         city="Mumbai"
