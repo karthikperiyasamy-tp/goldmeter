@@ -85,6 +85,25 @@ export default async function HyderabadPage() {
             <p className="mt-3 text-sm text-slate-600">
               Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
             </p>
+
+            {/* SEO: Expanded intro paragraph */}
+            <div className="mt-4 pt-4 border-t border-amber-200 text-sm text-slate-600 leading-relaxed">
+              <p>
+                The gold rate in Hyderabad is updated daily based on international market rates, USD/INR exchange movements, 
+                and Telangana Bullion Association pricing. Hyderabad is known for competitive gold rates due to lower state 
+                taxes and strong local competition. These prices exclude making charges (₹180-500/gram) and 3% GST.
+              </p>
+              <p className="mt-2">
+                Hyderabad&apos;s gold markets in Abids, Sultan Bazaar, and Begum Bazaar offer traditional Telugu and Hyderabadi 
+                designs at competitive prices. The city is famous for uncut diamond (Polki) and traditional temple jewellery. 
+                Gold demand peaks during Ugadi, Bonalu, and wedding season (November-February).
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3">
+                <a href="/calculator" className="text-amber-600 hover:text-amber-700 font-medium">Calculate jewellery cost →</a>
+                <a href="/wastage-calculator" className="text-amber-600 hover:text-amber-700 font-medium">Making charges calculator →</a>
+                <a href="/news" className="text-amber-600 hover:text-amber-700 font-medium">Latest gold news →</a>
+              </div>
+            </div>
           </section>
         </article>
       </div>
@@ -117,19 +136,34 @@ export default async function HyderabadPage() {
         ]}
         faqs={[
           {
-            question: "Why is Hyderabad gold rate competitive?",
+            question: "What is the gold rate in Hyderabad today?",
             answer:
-              "Lower state taxes and local competition keep Hyderabad rates among the most competitive in South India.",
+              `Today's gold rate in Hyderabad is ₹${perGram24k.toLocaleString('en-IN')} per gram for 24K gold and ₹${perGram22k.toLocaleString('en-IN')} per gram for 22K gold. Prices are updated daily from Telangana bullion market.`,
           },
           {
-            question: "Best place to buy gold in Hyderabad?",
+            question: "Why does Hyderabad gold rate change daily?",
             answer:
-              "Abids and Sultan Bazaar offer competitive prices and traditional designs.",
+              "Hyderabad gold prices fluctuate based on London spot prices, USD/INR exchange rate, and local demand during festivals like Ugadi and Bonalu. Lower state taxes keep prices competitive.",
           },
           {
-            question: "What affects Hyderabad gold price?",
+            question: "How is 22K different from 24K gold?",
             answer:
-              "International gold prices, rupee exchange rate, and local demand during festivals like Ugadi.",
+              "24K gold is 99.9% pure (for investment), while 22K gold is 91.6% pure with alloy for durability. Hyderabad jewellers prefer 22K for traditional Telugu and temple jewellery designs.",
+          },
+          {
+            question: "Does making charge affect final jewellery price?",
+            answer:
+              "Yes, making charges in Hyderabad range from ₹180-500 per gram. Traditional Polki work costs more. Final price = Gold Rate × Weight + Making Charges + 3% GST.",
+          },
+          {
+            question: "Are Hyderabad gold rates lower than other cities?",
+            answer:
+              "Yes, Hyderabad offers competitive rates due to lower state taxes and strong competition in Abids. Prices are typically ₹20-40 lower than Chennai or Bangalore.",
+          },
+          {
+            question: "Which is the best place to buy gold in Hyderabad?",
+            answer:
+              "Abids (largest market), Sultan Bazaar, and Begum Bazaar for traditional designs. For branded jewellery, visit Manepally, GRT, or Tanishq showrooms.",
           },
         ]}
         similarCities={["Vijayawada", "Bangalore", "Chennai", "Visakhapatnam"]}

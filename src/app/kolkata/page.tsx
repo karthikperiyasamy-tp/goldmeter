@@ -85,6 +85,26 @@ export default async function KolkataPage() {
             <p className="mt-3 text-sm text-slate-600">
               Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
             </p>
+
+            {/* SEO: Expanded intro paragraph */}
+            <div className="mt-4 pt-4 border-t border-amber-200 text-sm text-slate-600 leading-relaxed">
+              <p>
+                The gold rate in Kolkata is updated daily based on international market prices, USD/INR currency movements, 
+                and West Bengal Bullion Association rates. Kolkata, being East India&apos;s largest gold market, has unique 
+                pricing influenced by traditional Bengali jewellery demand. These rates exclude making charges (₹200-550/gram) 
+                and 3% GST.
+              </p>
+              <p className="mt-2">
+                Bowbazar is Kolkata&apos;s historic gold hub with century-old jewellers specializing in traditional Bengali 
+                designs like Shakha-Pola and temple jewellery. Gold demand peaks during Durga Puja, Dhanteras, and Bengali 
+                wedding season. The city is known for intricate filigree work and lightweight contemporary designs.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3">
+                <a href="/calculator" className="text-amber-600 hover:text-amber-700 font-medium">Calculate jewellery cost →</a>
+                <a href="/wastage-calculator" className="text-amber-600 hover:text-amber-700 font-medium">Making charges calculator →</a>
+                <a href="/news" className="text-amber-600 hover:text-amber-700 font-medium">Latest gold news →</a>
+              </div>
+            </div>
           </section>
         </article>
       </div>
@@ -117,19 +137,34 @@ export default async function KolkataPage() {
         ]}
         faqs={[
           {
-            question: "Why is Kolkata gold rate different?",
+            question: "What is the gold rate in Kolkata today?",
             answer:
-              "Kolkata has unique demand during Durga Puja and traditional Bengali preferences affect pricing.",
+              `Today's gold rate in Kolkata is ₹${perGram24k.toLocaleString('en-IN')} per gram for 24K gold and ₹${perGram22k.toLocaleString('en-IN')} per gram for 22K gold. Prices are updated daily from West Bengal bullion market.`,
           },
           {
-            question: "Best place to buy gold in Kolkata?",
+            question: "Why does Kolkata gold rate change daily?",
             answer:
-              "Bowbazar is the traditional gold hub with century-old stores and competitive prices.",
+              "Kolkata gold prices fluctuate based on London spot prices, USD/INR exchange rate, and local demand during Durga Puja and wedding season. Bengali jewellery traditions influence premium designs.",
           },
           {
-            question: "Making charges in Kolkata?",
+            question: "How is 22K different from 24K gold?",
             answer:
-              "Ranges from ₹200-₹550 per gram, with traditional Bengali designs commanding premium charges.",
+              "24K gold is 99.9% pure (for investment), while 22K gold is 91.6% pure with alloy. Kolkata jewellers use 22K for traditional Bengali designs like Shakha-Pola and filigree work.",
+          },
+          {
+            question: "Does making charge affect final jewellery price?",
+            answer:
+              "Yes, making charges in Kolkata range from ₹200-550 per gram. Traditional Bengali designs cost more. Final price = Gold Rate × Weight + Making Charges + 3% GST.",
+          },
+          {
+            question: "Are Kolkata gold rates competitive?",
+            answer:
+              "Kolkata rates are competitive with Mumbai and Delhi. Prices are typically ₹20-40 lower than South Indian cities. Bowbazar offers the best wholesale rates.",
+          },
+          {
+            question: "Which is the best place to buy gold in Kolkata?",
+            answer:
+              "Bowbazar (oldest market), Bagree Market, New Market, and Gariahat. For branded jewellery, visit Senco, PC Chandra, or Tanishq showrooms across the city.",
           },
         ]}
         similarCities={["Siliguri", "Asansol", "Durgapur", "Patna"]}

@@ -96,6 +96,26 @@ export default async function BangalorePage() {
             <p className="mt-3 text-sm text-slate-600">
               Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
             </p>
+
+            {/* SEO: Expanded intro paragraph */}
+            <div className="mt-4 pt-4 border-t border-amber-200 text-sm text-slate-600 leading-relaxed">
+              <p>
+                The gold rate in Bangalore is updated daily based on international market rates, USD/INR exchange movements, 
+                and Karnataka Bullion Merchants Association pricing. Bangalore&apos;s gold prices are influenced by strong demand 
+                from IT professionals and the city&apos;s growing affluent population. These rates reflect spot metal prices and 
+                exclude making charges (typically ₹180-450/gram) and 3% GST.
+              </p>
+              <p className="mt-2">
+                Commercial Street and Jayanagar are Bangalore&apos;s premier gold jewellery destinations, offering both traditional 
+                South Indian designs and contemporary styles. The city follows Karnataka state gold rates, which are competitive 
+                with Chennai and Hyderabad. For investment-grade gold, look for BIS hallmarked products from established jewellers.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3">
+                <a href="/calculator" className="text-amber-600 hover:text-amber-700 font-medium">Calculate jewellery cost →</a>
+                <a href="/wastage-calculator" className="text-amber-600 hover:text-amber-700 font-medium">Making charges calculator →</a>
+                <a href="/news" className="text-amber-600 hover:text-amber-700 font-medium">Latest gold news →</a>
+              </div>
+            </div>
           </section>
         </article>
       </div>
@@ -128,19 +148,34 @@ export default async function BangalorePage() {
         ]}
         faqs={[
           {
-            question: "Why is Bangalore gold rate higher than other cities?",
+            question: "What is the gold rate in Bangalore today?",
             answer:
-              "Bangalore has high demand from IT professionals and premium stores, leading to slightly higher prices.",
+              `Today's gold rate in Bangalore is ₹${perGram24k.toLocaleString('en-IN')} per gram for 24K gold and ₹${perGram22k.toLocaleString('en-IN')} per gram for 22K gold. Prices are updated daily from Karnataka bullion market.`,
           },
           {
-            question: "Best places to buy gold in Bangalore?",
+            question: "Why does Bangalore gold rate change daily?",
             answer:
-              "Commercial Street and Brigade Road have numerous trusted stores with BIS hallmarked gold.",
+              "Bangalore gold prices fluctuate based on London spot prices, USD/INR exchange rate, and local demand especially from IT professionals and wedding seasons. Karnataka follows South India pricing trends.",
           },
           {
-            question: "Making charges in Bangalore?",
+            question: "How is 22K different from 24K gold?",
             answer:
-              "Typically ₹180-₹450 per gram depending on the design intricacy.",
+              "24K gold is 99.9% pure (ideal for coins/bars), while 22K gold is 91.6% pure with alloy for strength. Bangalore jewellers prefer 22K for traditional Karnataka-style jewellery.",
+          },
+          {
+            question: "Does making charge affect final jewellery price?",
+            answer:
+              "Yes, making charges in Bangalore range from ₹180-450 per gram. Final price = Gold Rate × Weight + Making Charges + 3% GST. Compare rates across Commercial Street stores.",
+          },
+          {
+            question: "Are Bangalore gold rates higher than other cities?",
+            answer:
+              "Bangalore rates are similar to Chennai, typically ₹20-50 higher than Mumbai due to strong South Indian gold buying tradition and demand from affluent IT population.",
+          },
+          {
+            question: "Which is the best place to buy gold in Bangalore?",
+            answer:
+              "Commercial Street, Brigade Road, and Jayanagar are popular. For branded jewellery, visit C. Krishniah Chetty, Bhima, or Tanishq showrooms across the city.",
           },
         ]}
         similarCities={["Chennai", "Hyderabad", "Mysore", "Mangalore"]}

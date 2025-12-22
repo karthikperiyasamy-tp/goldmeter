@@ -244,6 +244,36 @@ export default function HomeClient({
       />
 
       <main className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-8">
+        {/* SEO: Explanatory Text Block for AI/Search Context */}
+        <section className="rounded-3xl border border-amber-100 bg-gradient-to-r from-amber-50 to-white p-6 shadow-soft">
+          <h2 className="text-xl font-bold text-amber-800 mb-3">Understanding Gold Prices in India</h2>
+          <div className="space-y-3 text-sm text-slate-700 leading-relaxed">
+            <p>
+              <strong>What do these prices mean?</strong> The gold rates shown above represent the current market price for 10 grams of gold in India. 
+              22K gold (91.6% purity) is most commonly used for jewellery, while 24K gold (99.9% purity) is considered investment-grade pure gold. 
+              18K gold (75% purity) is often used for diamond-studded jewellery due to its durability.
+            </p>
+            <p>
+              <strong>How are prices determined?</strong> Indian gold prices are influenced by international spot prices (London Bullion Market), 
+              USD/INR exchange rates, import duties (currently 15%), GST (3%), and local demand. Prices can vary ₹50-200 between cities due to 
+              transportation costs and regional demand patterns.
+            </p>
+            <p>
+              <strong>How often are prices updated?</strong> GoldMeter updates gold rates daily, tracking morning opening prices from major bullion 
+              markets. Intraday fluctuations may occur based on international market movements. For buying decisions, always confirm with your 
+              jeweller as retail prices include making charges (8-25%) and GST.
+            </p>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link href="/calculator" className="text-sm font-semibold text-amber-600 hover:text-amber-700">
+              Calculate jewellery cost →
+            </Link>
+            <Link href="/news" className="text-sm font-semibold text-amber-600 hover:text-amber-700">
+              Latest gold news →
+            </Link>
+          </div>
+        </section>
+
         {/* 22K Quick Cards */}
         <section>
           <div className="flex items-center justify-between">
@@ -476,6 +506,69 @@ export default function HomeClient({
 
       {/* Featured Article - Gold Origins */}
       <GoldArticle />
+
+      {/* Homepage FAQ Section for SEO */}
+      <section className="mx-auto w-full max-w-6xl px-4 py-6">
+        <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+          <h3 className="text-lg font-semibold mb-4">❓ Frequently Asked Questions</h3>
+          <div className="space-y-4">
+            <details className="group rounded-2xl border border-slate-100 bg-slate-50 p-4">
+              <summary className="cursor-pointer font-semibold text-charcoal flex justify-between items-center">
+                Why do gold prices change daily?
+                <span className="text-amber-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="mt-3 text-sm text-slate-600">
+                Gold prices fluctuate based on international spot prices (set in London), USD/INR exchange rates, 
+                central bank policies, inflation expectations, and geopolitical events. In India, import duties and 
+                local demand (especially during wedding/festival seasons) also impact prices.
+              </p>
+            </details>
+            <details className="group rounded-2xl border border-slate-100 bg-slate-50 p-4">
+              <summary className="cursor-pointer font-semibold text-charcoal flex justify-between items-center">
+                What is the difference between 22K and 24K gold?
+                <span className="text-amber-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="mt-3 text-sm text-slate-600">
+                24K gold is 99.9% pure gold, ideal for investment (coins, bars). 22K gold is 91.6% pure with 8.4% 
+                alloy metals for strength, making it perfect for jewellery. 22K is more durable for daily wear while 
+                24K is softer and can scratch easily.
+              </p>
+            </details>
+            <details className="group rounded-2xl border border-slate-100 bg-slate-50 p-4">
+              <summary className="cursor-pointer font-semibold text-charcoal flex justify-between items-center">
+                How is jewellery price calculated from gold rate?
+                <span className="text-amber-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="mt-3 text-sm text-slate-600">
+                Final jewellery price = (Gold Rate × Weight) + Making Charges + 3% GST. Making charges range from 
+                8-25% depending on design complexity. Use our <Link href="/calculator" className="text-amber-600 hover:underline">Price Calculator</Link> for accurate estimates.
+              </p>
+            </details>
+            <details className="group rounded-2xl border border-slate-100 bg-slate-50 p-4">
+              <summary className="cursor-pointer font-semibold text-charcoal flex justify-between items-center">
+                Is gold rate same across all cities in India?
+                <span className="text-amber-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="mt-3 text-sm text-slate-600">
+                No, gold prices vary ₹50-200 per 10g between cities due to transportation costs, local taxes, 
+                jeweller associations, and regional demand. Southern cities (Chennai, Bangalore) often have slightly 
+                higher rates due to stronger gold buying traditions.
+              </p>
+            </details>
+            <details className="group rounded-2xl border border-slate-100 bg-slate-50 p-4">
+              <summary className="cursor-pointer font-semibold text-charcoal flex justify-between items-center">
+                What is the best time to buy gold in India?
+                <span className="text-amber-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="mt-3 text-sm text-slate-600">
+                Gold prices typically dip during monsoon season (July-August) when demand is lower. Avoid buying 
+                during peak festival seasons (Dhanteras, Akshaya Tritiya) when prices spike 3-6%. Track prices for 
+                2-3 weeks before making large purchases.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
 
       {/* Festive Gold Rate Predictions */}
       <section className="mx-auto w-full max-w-6xl px-4 py-6">

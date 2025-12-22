@@ -114,6 +114,28 @@ export default async function ChennaiPage() {
             <p className="mt-3 text-sm text-slate-600">
               Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
             </p>
+
+            {/* SEO: Expanded intro paragraph (150-200 words) */}
+            <div className="mt-4 pt-4 border-t border-amber-200 text-sm text-slate-600 leading-relaxed">
+              <p>
+                The gold rate in Chennai is updated daily based on international market rates, USD/INR currency fluctuations, 
+                and local bullion market demand. Chennai&apos;s gold prices may vary slightly from national averages due to 
+                transport costs, regional demand during festivals like Pongal and weddings, and jeweller pricing policies. 
+                These rates reflect the spot metal price and do not include making charges (typically ₹150-450/gram in T Nagar) 
+                or 3% GST, which vary by retailer.
+              </p>
+              <p className="mt-2">
+                Chennai is one of India&apos;s largest gold markets, with major jewellery hubs in T Nagar (Usman Road), 
+                Pondy Bazaar, and Anna Nagar. The city follows Tamil Nadu Bullion Merchants Association rates, which are 
+                among the most competitive in South India. For accurate buying decisions, compare rates across multiple 
+                jewellers and factor in making charges for your chosen design.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3">
+                <a href="/calculator" className="text-amber-600 hover:text-amber-700 font-medium">Calculate jewellery cost →</a>
+                <a href="/wastage-calculator" className="text-amber-600 hover:text-amber-700 font-medium">Making charges calculator →</a>
+                <a href="/news" className="text-amber-600 hover:text-amber-700 font-medium">Latest gold news →</a>
+              </div>
+            </div>
           </section>
         </article>
       </div>
@@ -147,19 +169,34 @@ export default async function ChennaiPage() {
         ]}
         faqs={[
           {
-            question: "Why is Chennai gold rate high today?",
+            question: "What is the gold rate in Chennai today?",
             answer:
-              "Festive jewellery orders and a weaker rupee pushed spot prices up by ₹45 per 10g.",
+              `Today's gold rate in Chennai is ₹${perGram24k.toLocaleString('en-IN')} per gram for 24K gold and ₹${perGram22k.toLocaleString('en-IN')} per gram for 22K gold. Prices are updated daily from Chennai bullion market.`,
           },
           {
-            question: "Is Chennai gold rate different from Mumbai?",
+            question: "Why does Chennai gold rate change daily?",
             answer:
-              "Yes, local demand, logistics, and making charges create a ₹40–₹60 spread vs Mumbai.",
+              "Chennai gold prices fluctuate based on London spot prices, USD/INR exchange rate, MCX futures, import duties, and local demand during wedding and festival seasons like Pongal.",
           },
           {
-            question: "What affects Chennai gold price daily?",
+            question: "How is 22K different from 24K gold?",
             answer:
-              "London spot prices, USD/INR, MCX futures and local marriage season demand.",
+              "24K gold is 99.9% pure (ideal for investment), while 22K gold is 91.6% pure with 8.4% alloy metals for durability. 22K is preferred for jewellery in Chennai as it's stronger for daily wear.",
+          },
+          {
+            question: "Does making charge affect final jewellery price?",
+            answer:
+              "Yes, making charges in Chennai range from ₹150-450 per gram depending on design complexity. Final price = Gold Rate × Weight + Making Charges + 3% GST. Always ask for a detailed bill breakdown.",
+          },
+          {
+            question: "Are Chennai gold rates different from other cities?",
+            answer:
+              "Yes, Chennai gold rates are typically ₹40-100 higher than Mumbai due to stronger demand in Tamil Nadu, transportation costs, and local jeweller association pricing. South India traditionally has higher gold consumption.",
+          },
+          {
+            question: "Which is the best jewellery market in Chennai?",
+            answer:
+              "T Nagar (Usman Road) is Chennai's largest jewellery hub with stores like GRT, Lalitha, and Saravana. Other popular areas include Pondy Bazaar, Anna Nagar, and Mylapore for traditional designs.",
           },
         ]}
         similarCities={["Trichy", "Coimbatore", "Madurai", "Hyderabad"]}

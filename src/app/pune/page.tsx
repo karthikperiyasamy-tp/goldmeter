@@ -85,6 +85,25 @@ export default async function PunePage() {
             <p className="mt-3 text-sm text-slate-600">
               Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
             </p>
+
+            {/* SEO: Expanded intro paragraph */}
+            <div className="mt-4 pt-4 border-t border-amber-200 text-sm text-slate-600 leading-relaxed">
+              <p>
+                The gold rate in Pune is updated daily based on international market rates, USD/INR currency movements, 
+                and Maharashtra Bullion Association pricing. Pune, being close to Mumbai, enjoys competitive gold rates 
+                with lower overhead costs. These prices exclude making charges (₹190-480/gram) and 3% GST.
+              </p>
+              <p className="mt-2">
+                Laxmi Road is Pune&apos;s premier jewellery destination, with established stores offering traditional 
+                Maharashtrian designs and contemporary styles. The city&apos;s IT and manufacturing workforce creates 
+                steady demand. Gold prices typically follow Mumbai trends but are ₹10-20 lower due to reduced logistics costs.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3">
+                <a href="/calculator" className="text-amber-600 hover:text-amber-700 font-medium">Calculate jewellery cost →</a>
+                <a href="/wastage-calculator" className="text-amber-600 hover:text-amber-700 font-medium">Making charges calculator →</a>
+                <a href="/news" className="text-amber-600 hover:text-amber-700 font-medium">Latest gold news →</a>
+              </div>
+            </div>
           </section>
         </article>
       </div>
@@ -117,19 +136,34 @@ export default async function PunePage() {
         ]}
         faqs={[
           {
-            question: "Is Pune gold rate same as Mumbai?",
+            question: "What is the gold rate in Pune today?",
             answer:
-              "Pune rates are typically ₹10-₹20 lower than Mumbai due to lower demand and logistics costs.",
+              `Today's gold rate in Pune is ₹${perGram24k.toLocaleString('en-IN')} per gram for 24K gold and ₹${perGram22k.toLocaleString('en-IN')} per gram for 22K gold. Prices are updated daily following Maharashtra bullion market.`,
           },
           {
-            question: "Best time to buy gold in Pune?",
+            question: "Why does Pune gold rate change daily?",
             answer:
-              "Gudi Padwa, Akshaya Tritiya, and Diwali offer good buying opportunities with festive discounts.",
+              "Pune gold prices fluctuate based on London spot prices, USD/INR exchange rate, and follow Mumbai market trends. Local demand during Gudi Padwa and wedding season also impacts prices.",
           },
           {
-            question: "Trusted places in Pune?",
+            question: "How is 22K different from 24K gold?",
             answer:
-              "Laxmi Road has established stores with BIS hallmarked gold and competitive making charges.",
+              "24K gold is 99.9% pure (for investment), while 22K gold is 91.6% pure with alloy. Pune jewellers prefer 22K for traditional Maharashtrian designs like Thushi and Vajratik.",
+          },
+          {
+            question: "Does making charge affect final jewellery price?",
+            answer:
+              "Yes, making charges in Pune range from ₹190-480 per gram. Final price = Gold Rate × Weight + Making Charges + 3% GST. Laxmi Road offers competitive rates.",
+          },
+          {
+            question: "Are Pune gold rates lower than Mumbai?",
+            answer:
+              "Yes, Pune rates are typically ₹10-20 lower than Mumbai due to lower overhead costs and reduced logistics expenses from being an inland city.",
+          },
+          {
+            question: "Which is the best place to buy gold in Pune?",
+            answer:
+              "Laxmi Road (main market), FC Road, and Deccan area. For branded jewellery, visit PNG, Tanishq, or Waman Hari Pethe showrooms across Pune.",
           },
         ]}
         similarCities={["Mumbai", "Nashik", "Aurangabad", "Kolhapur"]}

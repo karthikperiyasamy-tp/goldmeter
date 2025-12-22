@@ -85,6 +85,26 @@ export default async function AhmedabadPage() {
             <p className="mt-3 text-sm text-slate-600">
               Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
             </p>
+
+            {/* SEO: Expanded intro paragraph */}
+            <div className="mt-4 pt-4 border-t border-amber-200 text-sm text-slate-600 leading-relaxed">
+              <p>
+                The gold rate in Ahmedabad is updated daily based on international market rates, USD/INR currency movements, 
+                and Gujarat Bullion Association pricing. Ahmedabad benefits from proximity to Surat&apos;s diamond and gold 
+                wholesale market, making it one of the most competitive gold markets in India. These prices exclude making 
+                charges (₹170-420/gram) and 3% GST.
+              </p>
+              <p className="mt-2">
+                Manek Chowk is Ahmedabad&apos;s iconic jewellery market, known for traditional Gujarati designs and competitive 
+                wholesale prices. The city&apos;s strong business community creates steady demand for gold as investment and 
+                jewellery. Gold buying peaks during Dhanteras, Diwali, and wedding season (November-February).
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3">
+                <a href="/calculator" className="text-amber-600 hover:text-amber-700 font-medium">Calculate jewellery cost →</a>
+                <a href="/wastage-calculator" className="text-amber-600 hover:text-amber-700 font-medium">Making charges calculator →</a>
+                <a href="/news" className="text-amber-600 hover:text-amber-700 font-medium">Latest gold news →</a>
+              </div>
+            </div>
           </section>
         </article>
       </div>
@@ -117,19 +137,34 @@ export default async function AhmedabadPage() {
         ]}
         faqs={[
           {
-            question: "Is Ahmedabad gold rate lower than other cities?",
+            question: "What is the gold rate in Ahmedabad today?",
             answer:
-              "Yes, Ahmedabad typically has competitive rates due to proximity to Surat diamond and gold market.",
+              `Today's gold rate in Ahmedabad is ₹${perGram24k.toLocaleString('en-IN')} per gram for 24K gold and ₹${perGram22k.toLocaleString('en-IN')} per gram for 22K gold. Prices are updated daily from Gujarat bullion market.`,
           },
           {
-            question: "Best gold market in Ahmedabad?",
+            question: "Why does Ahmedabad gold rate change daily?",
             answer:
-              "Manek Chowk is the premier gold market with trusted stores and wholesale prices.",
+              "Ahmedabad gold prices fluctuate based on London spot prices, USD/INR exchange rate, and influence from Surat's wholesale market. Local demand during Dhanteras and wedding season also impacts prices.",
           },
           {
-            question: "Making charges in Ahmedabad?",
+            question: "How is 22K different from 24K gold?",
             answer:
-              "Generally ₹170-₹420 per gram, with Gujarati designs often having moderate making charges.",
+              "24K gold is 99.9% pure (for investment), while 22K gold is 91.6% pure with alloy. Ahmedabad jewellers prefer 22K for traditional Gujarati designs and daily-wear jewellery.",
+          },
+          {
+            question: "Does making charge affect final jewellery price?",
+            answer:
+              "Yes, making charges in Ahmedabad range from ₹170-420 per gram. Final price = Gold Rate × Weight + Making Charges + 3% GST. Manek Chowk offers competitive rates.",
+          },
+          {
+            question: "Are Ahmedabad gold rates lower than other cities?",
+            answer:
+              "Yes, Ahmedabad has competitive rates due to proximity to Surat's wholesale market. Prices are typically ₹20-40 lower than Mumbai and significantly lower than South Indian cities.",
+          },
+          {
+            question: "Which is the best place to buy gold in Ahmedabad?",
+            answer:
+              "Manek Chowk (iconic market), Relief Road, and CG Road. For branded jewellery, visit Tribhovandas Bhimji Zaveri, Tanishq, or Kalyan showrooms across the city.",
           },
         ]}
         similarCities={["Surat", "Rajkot", "Vadodara", "Gandhinagar"]}

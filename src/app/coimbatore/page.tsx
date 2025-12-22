@@ -85,6 +85,25 @@ export default async function CoimbatorePage() {
             <p className="mt-3 text-sm text-slate-600">
               Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
             </p>
+
+            {/* SEO: Expanded intro paragraph */}
+            <div className="mt-4 pt-4 border-t border-amber-200 text-sm text-slate-600 leading-relaxed">
+              <p>
+                The gold rate in Coimbatore is updated daily based on international market rates, USD/INR currency movements, 
+                and Tamil Nadu Bullion Association pricing. Coimbatore, known as the &quot;Manchester of South India,&quot; 
+                offers competitive gold rates compared to Chennai. These prices exclude making charges (₹140-400/gram) and 3% GST.
+              </p>
+              <p className="mt-2">
+                RS Puram and Oppanakara Street are Coimbatore&apos;s main jewellery markets, offering traditional South Indian 
+                designs at competitive prices. The city&apos;s textile industry creates a wealthy consumer base with strong gold 
+                demand. Prices typically follow Chennai trends but are ₹20-40 lower due to lower overhead costs.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3">
+                <a href="/calculator" className="text-amber-600 hover:text-amber-700 font-medium">Calculate jewellery cost →</a>
+                <a href="/wastage-calculator" className="text-amber-600 hover:text-amber-700 font-medium">Making charges calculator →</a>
+                <a href="/news" className="text-amber-600 hover:text-amber-700 font-medium">Latest gold news →</a>
+              </div>
+            </div>
           </section>
         </article>
       </div>
@@ -117,19 +136,34 @@ export default async function CoimbatorePage() {
         ]}
         faqs={[
           {
-            question: "Is Coimbatore gold rate different from Chennai?",
+            question: "What is the gold rate in Coimbatore today?",
             answer:
-              "Coimbatore rates are usually ₹20-₹40 lower than Chennai due to lower demand and local competition.",
+              `Today's gold rate in Coimbatore is ₹${perGram24k.toLocaleString('en-IN')} per gram for 24K gold and ₹${perGram22k.toLocaleString('en-IN')} per gram for 22K gold. Prices are updated daily from Tamil Nadu bullion market.`,
           },
           {
-            question: "Best place to buy gold in Coimbatore?",
+            question: "Why does Coimbatore gold rate change daily?",
             answer:
-              "RS Puram and Oppanakara Street are traditional hubs with competitive prices.",
+              "Coimbatore gold prices fluctuate based on London spot prices, USD/INR exchange rate, and follow Chennai market trends. Local demand during Pongal and wedding season also impacts prices.",
           },
           {
-            question: "Making charges in Coimbatore?",
+            question: "How is 22K different from 24K gold?",
             answer:
-              "Generally ₹140-₹400 per gram, often lower than metro cities.",
+              "24K gold is 99.9% pure (for investment), while 22K gold is 91.6% pure with alloy. Coimbatore jewellers prefer 22K for traditional Tamil designs and temple jewellery.",
+          },
+          {
+            question: "Does making charge affect final jewellery price?",
+            answer:
+              "Yes, making charges in Coimbatore range from ₹140-400 per gram - lower than Chennai. Final price = Gold Rate × Weight + Making Charges + 3% GST.",
+          },
+          {
+            question: "Are Coimbatore gold rates lower than Chennai?",
+            answer:
+              "Yes, Coimbatore rates are typically ₹20-40 lower than Chennai due to lower overhead costs, making it attractive for bulk purchases.",
+          },
+          {
+            question: "Which is the best place to buy gold in Coimbatore?",
+            answer:
+              "RS Puram (main market), Oppanakara Street, and Gandhipuram. For branded jewellery, visit GRT, Kalyan, or Tanishq showrooms across the city.",
           },
         ]}
         similarCities={["Chennai", "Madurai", "Salem", "Erode"]}

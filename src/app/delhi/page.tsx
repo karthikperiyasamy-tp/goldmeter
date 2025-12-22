@@ -96,6 +96,27 @@ export default async function DelhiPage() {
             <p className="mt-3 text-sm text-slate-600">
               Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
             </p>
+
+            {/* SEO: Expanded intro paragraph */}
+            <div className="mt-4 pt-4 border-t border-amber-200 text-sm text-slate-600 leading-relaxed">
+              <p>
+                The gold rate in Delhi NCR is updated daily based on international spot prices, USD/INR currency movements, 
+                and Chandni Chowk bullion market rates. Delhi, being India&apos;s capital and a major import hub, has some of 
+                the most competitive gold prices in North India. These rates reflect spot metal prices and exclude making 
+                charges (typically ₹220-600/gram) and 3% GST.
+              </p>
+              <p className="mt-2">
+                Chandni Chowk is India&apos;s largest traditional gold market, with over 3,000 jewellery shops. Other popular 
+                destinations include Karol Bagh, Connaught Place, and South Extension. Delhi gold rates often see spikes 
+                during wedding season (November-February) and festivals like Dhanteras. The city offers both North Indian 
+                Kundan and Polki styles as well as modern designs.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3">
+                <a href="/calculator" className="text-amber-600 hover:text-amber-700 font-medium">Calculate jewellery cost →</a>
+                <a href="/wastage-calculator" className="text-amber-600 hover:text-amber-700 font-medium">Making charges calculator →</a>
+                <a href="/news" className="text-amber-600 hover:text-amber-700 font-medium">Latest gold news →</a>
+              </div>
+            </div>
           </section>
         </article>
       </div>
@@ -128,19 +149,34 @@ export default async function DelhiPage() {
         ]}
         faqs={[
           {
-            question: "Why is Delhi gold rate different?",
+            question: "What is the gold rate in Delhi today?",
             answer:
-              "Delhi rates include local taxes, high demand during wedding season, and proximity to import hubs.",
+              `Today's gold rate in Delhi is ₹${perGram24k.toLocaleString('en-IN')} per gram for 24K gold and ₹${perGram22k.toLocaleString('en-IN')} per gram for 22K gold. Prices are updated daily from Chandni Chowk bullion market.`,
           },
           {
-            question: "Is Chandni Chowk good for gold buying?",
+            question: "Why does Delhi gold rate change daily?",
             answer:
-              "Yes, Chandni Chowk is India's largest gold market with competitive prices and wide variety.",
+              "Delhi gold prices fluctuate based on London spot prices, USD/INR exchange rate, and high wedding season demand. Being an import hub, Delhi responds quickly to international price changes.",
           },
           {
-            question: "What are making charges in Delhi?",
+            question: "How is 22K different from 24K gold?",
             answer:
-              "Making charges range from ₹220-₹600 per gram based on design.",
+              "24K gold is 99.9% pure (ideal for investment), while 22K gold is 91.6% pure with alloy for durability. Delhi jewellers use 22K for traditional Kundan and Polki work.",
+          },
+          {
+            question: "Does making charge affect final jewellery price?",
+            answer:
+              "Yes, making charges in Delhi range from ₹220-600 per gram depending on design. Kundan work costs more. Final price = Gold Rate × Weight + Making Charges + 3% GST.",
+          },
+          {
+            question: "Are Delhi gold rates competitive?",
+            answer:
+              "Yes, Delhi has competitive rates due to proximity to import hubs and wholesale trading in Chandni Chowk. Prices are typically similar to Mumbai and ₹30-50 lower than South Indian cities.",
+          },
+          {
+            question: "Which is the best place to buy gold in Delhi?",
+            answer:
+              "Chandni Chowk (India's largest gold market), Karol Bagh, Connaught Place, and South Extension. For branded stores, visit PC Jeweller, Tanishq, or Kalyan across Delhi NCR.",
           },
         ]}
         similarCities={["Noida", "Gurgaon", "Faridabad", "Mumbai"]}
