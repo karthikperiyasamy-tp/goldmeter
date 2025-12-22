@@ -64,8 +64,17 @@ function findCityByName(cityName: string): string | null {
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const host = request.headers.get("host") || "";
 
-  // Note: www → non-www redirect is handled by Vercel domain settings (301 permanent)
+  // CRITICAL: Force www → non-www redirect for SEO consistency
+  // This ensures Google indexes only the non-www version (https://goldmeter.in)
+  if (host.startsWith("www.")) {
+    const newHost = host.replace("www.", "");
+    const newUrl = new URL(request.url);
+    newUrl.host = newHost;
+    console.log(`🔄 [Middleware] Redirecting www → non-www: ${host} → ${newHost}`);
+    return NextResponse.redirect(newUrl, 301); // 301 = permanent redirect
+  }
   
   // Skip geo-redirect for search engine bots so homepage returns 200.
   const ua = request.headers.get("user-agent") || "";
@@ -153,9 +162,10 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match only the homepage for geo-redirect
+     * Match all paths for www redirect, and homepage for geo-redirect
+     * Excludes static files, images, and Next.js internals
      */
-    "/",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };
 
