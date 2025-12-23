@@ -256,29 +256,7 @@ export default async function HomePage() {
     timestamp: h.timestamp,
   }));
 
-  // Homepage FAQ data for schema
-  const homepageFaqs = [
-    { question: "Why do gold prices change daily?", answer: "Gold prices fluctuate based on international spot prices (set in London), USD/INR exchange rates, central bank policies, inflation expectations, and geopolitical events. In India, import duties and local demand (especially during wedding/festival seasons) also impact prices." },
-    { question: "What is the difference between 22K and 24K gold?", answer: "24K gold is 99.9% pure gold, ideal for investment (coins, bars). 22K gold is 91.6% pure with 8.4% alloy metals for strength, making it perfect for jewellery. 22K is more durable for daily wear while 24K is softer and can scratch easily." },
-    { question: "How is jewellery price calculated from gold rate?", answer: "Final jewellery price = (Gold Rate × Weight) + Making Charges + 3% GST. Making charges range from 8-25% depending on design complexity." },
-    { question: "Is gold rate same across all cities in India?", answer: "No, gold prices vary ₹50-200 per 10g between cities due to transportation costs, local taxes, jeweller associations, and regional demand." },
-    { question: "What is the best time to buy gold in India?", answer: "Gold prices typically dip during monsoon season (July-August) when demand is lower. Avoid buying during peak festival seasons (Dhanteras, Akshaya Tritiya) when prices spike 3-6%." },
-  ];
-
-  // Homepage structured data
-  const homepageFaqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": homepageFaqs.map((faq) => ({
-      "@type": "Question",
-      "name": faq.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": faq.answer,
-      },
-    })),
-  };
-
+  // Homepage structured data - WebSite schema for search
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -292,15 +270,26 @@ export default async function HomePage() {
     }
   };
 
+  // Organization schema for brand recognition
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "GoldMeter",
+    "url": "https://goldmeter.in",
+    "logo": "https://goldmeter.in/logo.png",
+    "description": "India's trusted source for live gold and silver prices across major cities.",
+    "sameAs": []
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(homepageFaqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
       />
       <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} priceChange={priceChange} history={normalizedHistory} internationalRates={internationalRates ?? undefined} />
     </>

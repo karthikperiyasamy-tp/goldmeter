@@ -302,7 +302,7 @@ export default function StructuredData({
   const organizationData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "GoldRate",
+    "name": "GoldMeter",
     "url": "https://goldmeter.in",
     "logo": "https://goldmeter.in/logo.png",
     "address": {
@@ -310,8 +310,8 @@ export default function StructuredData({
       "addressCountry": "IN",
     },
     "sameAs": [
-      "https://twitter.com/goldrate",
-      "https://facebook.com/goldrate"
+      "https://twitter.com/goldmeter",
+      "https://facebook.com/goldmeter"
     ]
   };
 

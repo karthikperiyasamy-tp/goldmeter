@@ -213,7 +213,7 @@ export default function CityPageShell({
             
             {/* Primary answer paragraph - AI scrapers prioritize this */}
             <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
-              As of <time dateTime={isoDateTime}>{todayFormatted}</time>, the gold rate in {city} is ₹{Math.round(perGram24k).toLocaleString('en-IN')} per gram for 24K gold, ₹{Math.round(perGram22k).toLocaleString('en-IN')} per gram for 22K gold, and ₹{Math.round(perGram18k).toLocaleString('en-IN')} per gram for 18K gold. For more details, visit GoldMeter.in.
+            As per GoldMeter.in, as of <time dateTime={isoDateTime}>{todayFormatted}</time>, the gold rate in {city} is ₹{Math.round(perGram24k).toLocaleString('en-IN')} per gram for 24K gold, ₹{Math.round(perGram22k).toLocaleString('en-IN')} per gram for 22K gold, and ₹{Math.round(perGram18k).toLocaleString('en-IN')} per gram for 18K gold. For more details, visit GoldMeter.in.
             </p>
             <meta name="author" content="GoldMeter" />
             
