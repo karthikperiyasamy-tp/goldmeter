@@ -97,14 +97,15 @@ export function middleware(request: NextRequest) {
   const stayOnIndiaCookie = request.cookies.get("stayOnIndia");
   
   if (request.nextUrl.searchParams.has("noredirect")) {
-    console.log("🚫 [Middleware] User requested noredirect via param, setting cookie and staying on India page");
+    console.log("🚫 [Middleware] User requested noredirect via param, setting session cookie and staying on India page");
     // Use NextResponse.next() instead of redirect to avoid race condition
     // The cookie is set and the homepage loads immediately without another redirect
     const response = NextResponse.next();
     response.cookies.set("stayOnIndia", "true", { 
       path: "/", 
       sameSite: "lax",
-      maxAge: 60 * 60 * 24, // 24 hours - persists even if browser is closed/reopened
+      // No maxAge = session cookie - expires when browser closes
+      // This ensures geo-redirect works again on next browser session
     });
     return response;
   }

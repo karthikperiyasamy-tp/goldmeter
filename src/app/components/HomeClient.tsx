@@ -124,8 +124,9 @@ export default function HomeClient({
       
       // If ?noredirect=true is in URL, set the cookie and skip redirect
       if (urlParams.has("noredirect")) {
-        console.log("🚫 [HomeClient] noredirect param detected, setting cookie and skipping redirect");
-        document.cookie = `stayOnIndia=true; path=/; max-age=${60 * 60 * 24}; SameSite=Lax`;
+        console.log("🚫 [HomeClient] noredirect param detected, setting session cookie and skipping redirect");
+        // No max-age = session cookie - expires when browser closes
+        document.cookie = `stayOnIndia=true; path=/; SameSite=Lax`;
         // Clean up URL without reload
         window.history.replaceState({}, '', '/');
         return;
