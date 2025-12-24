@@ -111,8 +111,27 @@ export default function HomeClient({
   // Client-side fallback for city detection (when middleware IP headers are missing)
   useEffect(() => {
     const checkLocation = async () => {
-      // Check if we've already checked location in this session/period
+      // Check if user explicitly chose to stay on India page
+      // This happens when user clicks "Back to India" or GoldMeter logo from a city page
       const cookies = document.cookie;
+      const urlParams = new URLSearchParams(window.location.search);
+      
+      // IMPORTANT: If user has stayOnIndia cookie OR came via ?noredirect=true, DO NOT redirect
+      if (cookies.includes("stayOnIndia=true")) {
+        console.log("🚫 [HomeClient] User has stayOnIndia cookie, skipping redirect");
+        return;
+      }
+      
+      // If ?noredirect=true is in URL, set the cookie and skip redirect
+      if (urlParams.has("noredirect")) {
+        console.log("🚫 [HomeClient] noredirect param detected, setting cookie and skipping redirect");
+        document.cookie = `stayOnIndia=true; path=/; max-age=${60 * 60 * 24}; SameSite=Lax`;
+        // Clean up URL without reload
+        window.history.replaceState({}, '', '/');
+        return;
+      }
+      
+      // Also skip if we've already checked location recently
       if (cookies.includes("geo_redirect_checked=true") || cookies.includes("preferredCity")) {
         return;
       }
@@ -124,9 +143,6 @@ export default function HomeClient({
 
         if (data.success && data.detected && data.slug) {
           console.log(`✅ [HomeClient] Detected ${data.city}, redirecting...`);
-          
-          // Redirect to the detected city
-          // No cookies are set here, so it re-detects every time unless session override is active
           router.push(`/${data.slug}`);
         } else {
            // Mark as checked even if failed (for 1 hour) so we don't spam API on every refresh

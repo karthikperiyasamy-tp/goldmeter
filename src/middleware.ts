@@ -77,8 +77,10 @@ export function middleware(request: NextRequest) {
   }
   
   // Skip geo-redirect for search engine bots so homepage returns 200.
+  // This ensures Google sees the homepage, not city-specific redirected content.
+  // Includes: Googlebot, Bingbot, Google's Rich Results Test, Lighthouse, etc.
   const ua = request.headers.get("user-agent") || "";
-  const isBot = /bot|crawl|spider|slurp|bingpreview/i.test(ua);
+  const isBot = /bot|crawl|spider|slurp|bingpreview|lighthouse|pagespeed|google|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegram/i.test(ua);
   if (isBot) {
     return NextResponse.next();
   }

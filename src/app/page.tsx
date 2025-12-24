@@ -281,53 +281,10 @@ export default async function HomePage() {
     "sameAs": []
   };
 
-  // FAQPage schema for homepage FAQs - must be single instance per page
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Why do gold prices change daily?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Gold prices fluctuate based on international spot prices (set in London), USD/INR exchange rates, central bank policies, inflation expectations, and geopolitical events. In India, import duties and local demand (especially during wedding/festival seasons) also impact prices."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the difference between 22K and 24K gold?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "24K gold is 99.9% pure gold, ideal for investment (coins, bars). 22K gold is 91.6% pure with 8.4% alloy metals for strength, making it perfect for jewellery. 22K is more durable for daily wear while 24K is softer and can scratch easily."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How is jewellery price calculated from gold rate?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Final jewellery price = (Gold Rate × Weight) + Making Charges + 3% GST. Making charges range from 8-25% depending on design complexity."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is gold rate same across all cities in India?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No, gold prices vary ₹50-200 per 10g between cities due to transportation costs, local taxes, jeweller associations, and regional demand. Southern cities (Chennai, Bangalore) often have slightly higher rates due to stronger gold buying traditions."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the best time to buy gold in India?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Gold prices typically dip during monsoon season (July-August) when demand is lower. Avoid buying during peak festival seasons (Dhanteras, Akshaya Tritiya) when prices spike 3-6%. Track prices for 2-3 weeks before making large purchases."
-        }
-      }
-    ]
-  };
+  // Note: No FAQPage schema on homepage
+  // - Regular users get geo-redirected to city pages (which have FAQPage via StructuredData)
+  // - Bots see the homepage which is a landing page, not FAQ content
+  // - Adding FAQPage here causes "Duplicate field FAQPage" errors in Search Console
 
   return (
     <>
@@ -338,10 +295,6 @@ export default async function HomePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} priceChange={priceChange} history={normalizedHistory} internationalRates={internationalRates ?? undefined} />
     </>
