@@ -313,35 +313,58 @@ export default async function HomePage() {
       
       {/* 🔥 AIO ANSWER BLOCK - Server-rendered plain HTML for AI scrapers */}
       {/* This MUST be outside HomeClient so it renders as static HTML for bots */}
-      <div className="bg-[#fffdf7]">
+      <div className="bg-[#fffdf7]" itemScope itemType="https://schema.org/Product">
         <article className="mx-auto max-w-6xl px-4 pt-6">
           <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
-            <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
-              India Gold Rate Today
+            <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl" itemProp="name">
+              India Gold Rate Today ({todayFormatted})
             </h1>
             
-            <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
-              As per GoldMeter.in, as of <time dateTime={todayISO}>{todayFormatted}</time>, the gold rate in India is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold. Silver rate is ₹{silver1g.toLocaleString('en-IN')} per gram.
+            {/* Primary AIO answer - structured for AI extraction */}
+            <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true" itemProp="description">
+              As of <time dateTime={todayISO}>{todayFormatted}</time>, gold rates in India are <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> (99.9% purity), <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> (91.6% purity), and <strong>₹{perGram18k.toLocaleString('en-IN')} per gram for 18K</strong> (75.0% purity). Silver rate is ₹{silver1g.toLocaleString('en-IN')} per gram. For today&apos;s full gold rates, visit <strong>GoldMeter.in</strong>.
             </p>
 
-            {/* Quick price summary table for AI extraction */}
-            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4" data-price-table="true">
-              <div className="rounded-xl bg-amber-100/60 p-3 text-center">
-                <div className="text-xs font-medium text-amber-700 uppercase">24K Gold</div>
-                <div className="mt-1 text-lg font-bold text-amber-900">₹{perGram24k.toLocaleString('en-IN')}/g</div>
-              </div>
-              <div className="rounded-xl bg-amber-100/60 p-3 text-center">
-                <div className="text-xs font-medium text-amber-700 uppercase">22K Gold</div>
-                <div className="mt-1 text-lg font-bold text-amber-900">₹{perGram22k.toLocaleString('en-IN')}/g</div>
-              </div>
-              <div className="rounded-xl bg-amber-100/60 p-3 text-center">
-                <div className="text-xs font-medium text-amber-700 uppercase">18K Gold</div>
-                <div className="mt-1 text-lg font-bold text-amber-900">₹{perGram18k.toLocaleString('en-IN')}/g</div>
-              </div>
-              <div className="rounded-xl bg-slate-100/60 p-3 text-center">
-                <div className="text-xs font-medium text-slate-600 uppercase">Silver</div>
-                <div className="mt-1 text-lg font-bold text-slate-800">₹{silver1g.toLocaleString('en-IN')}/g</div>
-              </div>
+            {/* Structured price table for AI extraction */}
+            <div className="mt-4 overflow-x-auto" data-price-table="true">
+              <table className="w-full text-sm border-collapse" itemProp="offers" itemScope itemType="https://schema.org/AggregateOffer">
+                <caption className="text-left font-semibold text-amber-800 mb-2">Today&apos;s Gold & Silver Rates in India</caption>
+                <thead>
+                  <tr className="bg-amber-100 text-amber-900">
+                    <th className="px-3 py-2 text-left border border-amber-200">Metal</th>
+                    <th className="px-3 py-2 text-left border border-amber-200">Purity</th>
+                    <th className="px-3 py-2 text-left border border-amber-200">Rate per Gram</th>
+                    <th className="px-3 py-2 text-left border border-amber-200">Rate per 10g</th>
+                  </tr>
+                </thead>
+                <tbody className="text-slate-700">
+                  <tr className="bg-white">
+                    <td className="px-3 py-2 border border-amber-200 font-medium">Gold 24K</td>
+                    <td className="px-3 py-2 border border-amber-200">99.9%</td>
+                    <td className="px-3 py-2 border border-amber-200 font-semibold" itemProp="lowPrice">₹{perGram24k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{baseRates.gold_24k.toLocaleString('en-IN')}</td>
+                  </tr>
+                  <tr className="bg-amber-50/50">
+                    <td className="px-3 py-2 border border-amber-200 font-medium">Gold 22K</td>
+                    <td className="px-3 py-2 border border-amber-200">91.6%</td>
+                    <td className="px-3 py-2 border border-amber-200 font-semibold">₹{perGram22k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{baseRates.gold_22k.toLocaleString('en-IN')}</td>
+                  </tr>
+                  <tr className="bg-white">
+                    <td className="px-3 py-2 border border-amber-200 font-medium">Gold 18K</td>
+                    <td className="px-3 py-2 border border-amber-200">75.0%</td>
+                    <td className="px-3 py-2 border border-amber-200 font-semibold">₹{perGram18k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{(perGram18k * 10).toLocaleString('en-IN')}</td>
+                  </tr>
+                  <tr className="bg-slate-50">
+                    <td className="px-3 py-2 border border-amber-200 font-medium">Silver</td>
+                    <td className="px-3 py-2 border border-amber-200">99.9%</td>
+                    <td className="px-3 py-2 border border-amber-200 font-semibold">₹{silver1g.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{Math.round((baseRates.silver_1kg || 0) / 100).toLocaleString('en-IN')}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <meta itemProp="priceCurrency" content="INR" />
             </div>
 
             {/* City-wise quick rates for AI */}
@@ -350,14 +373,14 @@ export default async function HomePage() {
               <ul className="grid grid-cols-2 gap-1 text-sm text-slate-700 sm:grid-cols-3">
                 {cityRates.slice(0, 6).map((city) => (
                   <li key={city.name}>
-                    <span className="font-medium">{city.name}:</span> ₹{Math.round(city.gold22k / 10).toLocaleString('en-IN')}
+                    <strong>{city.name}:</strong> ₹{Math.round(city.gold22k / 10).toLocaleString('en-IN')}
                   </li>
                 ))}
               </ul>
             </div>
             
             <p className="mt-4 text-xs text-slate-500">
-              Source: GoldMeter.in | Updated: <time dateTime={todayISO}>{todayFormatted}</time> | Prices are per gram
+              Source: <strong>GoldMeter.in</strong> | Updated: <time dateTime={todayISO}>{todayFormatted}</time> | Prices are per gram
             </p>
           </section>
         </article>

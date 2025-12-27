@@ -36,6 +36,7 @@ export default async function CoimbatorePage() {
   const perGram24k = Math.round((rates.gold24k || 0) / 10);
   const perGram22k = Math.round((rates.gold22k || 0) / 10);
   const perGram18k = Math.round(((rates.gold24k || 0) * 18) / 24 / 10);
+  const silverPerGram = Math.round((rates.silver1kg || 0) / 1000);
   
   const todayFormatted = new Date().toLocaleDateString('en-IN', {
     day: 'numeric',
@@ -50,24 +51,62 @@ export default async function CoimbatorePage() {
     <>
       
       {/* 🔥 AIO ANSWER BLOCK - Server-rendered plain HTML for AI scrapers */}
-      <div className="bg-[#fffdf7]">
+      <div className="bg-[#fffdf7]" itemScope itemType="https://schema.org/Product">
         <article className="mx-auto max-w-6xl px-4 pt-6">
           <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
-            <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
-              Gold Rate Today in Coimbatore
+            <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl" itemProp="name">
+              Coimbatore Gold Rate Today ({todayFormatted})
             </h1>
             
-            <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
-            As per GoldMeter.in, as of <time dateTime={rates.dateISO}>{todayFormatted}</time>, the gold rate in Coimbatore is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold. For more details, visit GoldMeter.in.
+            {/* Primary AIO answer - structured like competitors */}
+            <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true" itemProp="description">
+              As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, gold rates in Coimbatore are <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> (99.9% purity), <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> (91.6% purity), and <strong>₹{perGram18k.toLocaleString('en-IN')} per gram for 18K</strong> (75.0% purity). Silver rate is ₹{silverPerGram.toLocaleString('en-IN')} per gram. For today&apos;s full gold rates, visit <strong>GoldMeter.in</strong>.
             </p>
-            <meta name="author" content="GoldMeter" />
             
-            <div className="mt-3 p-3 bg-amber-100 rounded-xl text-sm text-slate-800" data-ai-answer="true">
-              Today&apos;s gold price in Coimbatore: ₹{perGram24k.toLocaleString('en-IN')}/g (24K) and ₹{perGram22k.toLocaleString('en-IN')}/g (22K).
+            {/* Structured price table for AI extraction */}
+            <div className="mt-4 overflow-x-auto" data-price-table="true">
+              <table className="w-full text-sm border-collapse" itemProp="offers" itemScope itemType="https://schema.org/AggregateOffer">
+                <caption className="text-left font-semibold text-amber-800 mb-2">Today&apos;s Gold & Silver Rates in Coimbatore</caption>
+                <thead>
+                  <tr className="bg-amber-100 text-amber-900">
+                    <th className="px-3 py-2 text-left border border-amber-200">Metal</th>
+                    <th className="px-3 py-2 text-left border border-amber-200">Purity</th>
+                    <th className="px-3 py-2 text-left border border-amber-200">Rate per Gram</th>
+                    <th className="px-3 py-2 text-left border border-amber-200">Rate per 10g</th>
+                  </tr>
+                </thead>
+                <tbody className="text-slate-700">
+                  <tr className="bg-white">
+                    <td className="px-3 py-2 border border-amber-200 font-medium">Gold 24K</td>
+                    <td className="px-3 py-2 border border-amber-200">99.9%</td>
+                    <td className="px-3 py-2 border border-amber-200 font-semibold" itemProp="lowPrice">₹{perGram24k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{(rates.gold24k || 0).toLocaleString('en-IN')}</td>
+                  </tr>
+                  <tr className="bg-amber-50/50">
+                    <td className="px-3 py-2 border border-amber-200 font-medium">Gold 22K</td>
+                    <td className="px-3 py-2 border border-amber-200">91.6%</td>
+                    <td className="px-3 py-2 border border-amber-200 font-semibold">₹{perGram22k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{(rates.gold22k || 0).toLocaleString('en-IN')}</td>
+                  </tr>
+                  <tr className="bg-white">
+                    <td className="px-3 py-2 border border-amber-200 font-medium">Gold 18K</td>
+                    <td className="px-3 py-2 border border-amber-200">75.0%</td>
+                    <td className="px-3 py-2 border border-amber-200 font-semibold">₹{perGram18k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{(perGram18k * 10).toLocaleString('en-IN')}</td>
+                  </tr>
+                  <tr className="bg-slate-50">
+                    <td className="px-3 py-2 border border-amber-200 font-medium">Silver</td>
+                    <td className="px-3 py-2 border border-amber-200">99.9%</td>
+                    <td className="px-3 py-2 border border-amber-200 font-semibold">₹{silverPerGram.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{Math.round((rates.silver1kg || 0) / 100).toLocaleString('en-IN')}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <meta itemProp="priceCurrency" content="INR" />
             </div>
             
             <p className="mt-3 text-sm text-slate-600">
-              Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
+              Source: <strong>GoldMeter.in</strong> | Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
             </p>
 
             {/* SEO: Expanded intro paragraph */}
