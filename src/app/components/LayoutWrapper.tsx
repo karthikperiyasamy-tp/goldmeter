@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import TopBar from "./TopBar";
 import Footer from "./Footer";
+import PriceTicker from "./PriceTicker";
 
 // Map URL slugs to city display names
 const SLUG_TO_CITY: Record<string, string> = {
@@ -51,6 +52,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
   return (
     <>
+      <PriceTicker />
       <TopBar city={activeCity} onCityChange={setActiveCity} />
       {children}
       <Footer />
