@@ -10,27 +10,36 @@ type RateHistory = {
 
 type Props = {
   history: RateHistory[];
+  city?: string; // Optional city name - if not provided, shows "India"
 };
 
 const inr = new Intl.NumberFormat('en-IN', {
   maximumFractionDigits: 0,
 });
 
-export default function Last10DaysTable({ history }: Props) {
-  // Ensure history is sorted by date descending (newest first)
-  // Note: Input date string format might vary, assuming standard sortable or passing timestamp would be better.
-  // But the DB returns "dd MMM" format which is not easily sortable.
-  // Assuming the parent passes it in correct order (descending) or we rely on index.
-  // If the DB returns ascending, we should reverse it.
-  // Let's assume we receive it sorted or we reverse it if we know it's ascending.
+// Get today's date in "DD Mon" format to match against history dates
+function getTodayFormatted(): string {
+  const now = new Date();
+  const day = now.getDate();
+  const month = now.toLocaleString('en-US', { month: 'short' });
+  return `${day} ${month}`;
+}
+
+export default function Last10DaysTable({ history, city }: Props) {
   // DB `getHistoricalGoldRates` returns ascending (oldest to newest).
-  // So we reverse it for display.
-  const sortedHistory = [...history].reverse();
+  // Reverse for display (newest first) and limit to 10 days
+  const sortedHistory = [...history].reverse().slice(0, 10);
+  
+  // Get today's formatted date for comparison
+  const todayFormatted = getTodayFormatted();
+  
+  // Location name for the title
+  const locationName = city || 'India';
 
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="bg-slate-50 px-4 py-3 border-b border-slate-100">
-        <h3 className="font-semibold text-slate-700">Gold Rate in India for Last 10 Days (1 gram)</h3>
+        <h3 className="font-semibold text-slate-700">Gold Rate in {locationName} for Last 10 Days (1 gram)</h3>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
@@ -70,9 +79,15 @@ export default function Last10DaysTable({ history }: Props) {
                 </div>
               );
 
+              // Check if this date is today
+              const isToday = day.date === todayFormatted;
+              
               return (
                 <tr key={`${day.date}-${index}`} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="whitespace-nowrap px-4 py-3 text-slate-600">{day.date}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-slate-600">
+                    {day.date}
+                    {isToday && <span className="ml-1 text-amber-600 font-medium">(Today)</span>}
+                  </td>
                   <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-700">
                     {renderPrice(day.gold24k, change24k)}
                   </td>

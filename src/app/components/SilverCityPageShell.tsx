@@ -151,7 +151,7 @@ export default function SilverCityPageShell({
         {/* Silver Historical Rates Table */}
         <section className="mt-8">
           <h3 className="mb-4 text-lg font-semibold text-slate-800">Historical Rates</h3>
-          <SilverLast10DaysTable history={history} />
+          <SilverLast10DaysTable history={history} city={city} />
         </section>
 
         {/* Price Trend Section */}

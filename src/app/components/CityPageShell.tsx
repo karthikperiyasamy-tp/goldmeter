@@ -425,7 +425,7 @@ export default function CityPageShell({
 
         {/* Last 10 Days Table */}
         <section className="mt-8">
-          <Last10DaysTable history={normalizedHistory} />
+          <Last10DaysTable history={normalizedHistory} city={city} />
         </section>
 
         {/* Month Statistics */}

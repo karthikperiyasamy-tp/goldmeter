@@ -10,20 +10,35 @@ type RateHistory = {
 
 type Props = {
   history: RateHistory[];
+  city?: string; // Optional city name
 };
 
 const inr = new Intl.NumberFormat('en-IN', {
   maximumFractionDigits: 0,
 });
 
-export default function SilverLast10DaysTable({ history }: Props) {
-  // Reverse to show newest first (DB returns ascending)
-  const sortedHistory = [...history].reverse();
+// Get today's date in "DD Mon" format to match against history dates
+function getTodayFormatted(): string {
+  const now = new Date();
+  const day = now.getDate();
+  const month = now.toLocaleString('en-US', { month: 'short' });
+  return `${day} ${month}`;
+}
+
+export default function SilverLast10DaysTable({ history, city }: Props) {
+  // Reverse to show newest first (DB returns ascending) and limit to 10 days
+  const sortedHistory = [...history].reverse().slice(0, 10);
+  
+  // Get today's formatted date for comparison
+  const todayFormatted = getTodayFormatted();
+  
+  // Location name for the title
+  const locationName = city ? `in ${city} ` : '';
 
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <div className="bg-slate-50 px-4 py-3 border-b border-slate-100">
-        <h3 className="font-semibold text-slate-700">Silver Rate for Last 10 Days</h3>
+        <h3 className="font-semibold text-slate-700">Silver Rate {locationName}for Last 10 Days</h3>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
@@ -75,9 +90,15 @@ export default function SilverLast10DaysTable({ history }: Props) {
                 </div>
               );
 
+              // Check if this date is today
+              const isToday = day.date === todayFormatted;
+              
               return (
                 <tr key={`${day.date}-${index}`} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="whitespace-nowrap px-4 py-3 text-slate-600">{day.date}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-slate-600">
+                    {day.date}
+                    {isToday && <span className="ml-1 text-amber-600 font-medium">(Today)</span>}
+                  </td>
                   <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-700">
                     {silver1kg > 0 ? renderPrice(silver1g, change1g) : '-'}
                   </td>

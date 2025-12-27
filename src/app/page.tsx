@@ -286,6 +286,20 @@ export default async function HomePage() {
   // - Bots see the homepage which is a landing page, not FAQ content
   // - Adding FAQPage here causes "Duplicate field FAQPage" errors in Search Console
 
+  // Calculate per-gram prices for AIO answer block
+  const perGram24k = Math.round(baseRates.gold_24k / 10);
+  const perGram22k = Math.round(baseRates.gold_22k / 10);
+  const perGram18k = Math.round((baseRates.gold_24k * 18) / 24 / 10);
+  const silver1g = Math.round((baseRates.silver_1kg || 0) / 1000);
+  
+  // Format today's date for display
+  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  const todayISO = new Date().toISOString().split('T')[0];
+
   return (
     <>
       <script
@@ -296,6 +310,59 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
       />
+      
+      {/* 🔥 AIO ANSWER BLOCK - Server-rendered plain HTML for AI scrapers */}
+      {/* This MUST be outside HomeClient so it renders as static HTML for bots */}
+      <div className="bg-[#fffdf7]">
+        <article className="mx-auto max-w-6xl px-4 pt-6">
+          <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
+            <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
+              India Gold Rate Today
+            </h1>
+            
+            <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
+              As per GoldMeter.in, as of <time dateTime={todayISO}>{todayFormatted}</time>, the gold rate in India is ₹{perGram24k.toLocaleString('en-IN')} per gram for 24K gold, ₹{perGram22k.toLocaleString('en-IN')} per gram for 22K gold, and ₹{perGram18k.toLocaleString('en-IN')} per gram for 18K gold. Silver rate is ₹{silver1g.toLocaleString('en-IN')} per gram.
+            </p>
+
+            {/* Quick price summary table for AI extraction */}
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4" data-price-table="true">
+              <div className="rounded-xl bg-amber-100/60 p-3 text-center">
+                <div className="text-xs font-medium text-amber-700 uppercase">24K Gold</div>
+                <div className="mt-1 text-lg font-bold text-amber-900">₹{perGram24k.toLocaleString('en-IN')}/g</div>
+              </div>
+              <div className="rounded-xl bg-amber-100/60 p-3 text-center">
+                <div className="text-xs font-medium text-amber-700 uppercase">22K Gold</div>
+                <div className="mt-1 text-lg font-bold text-amber-900">₹{perGram22k.toLocaleString('en-IN')}/g</div>
+              </div>
+              <div className="rounded-xl bg-amber-100/60 p-3 text-center">
+                <div className="text-xs font-medium text-amber-700 uppercase">18K Gold</div>
+                <div className="mt-1 text-lg font-bold text-amber-900">₹{perGram18k.toLocaleString('en-IN')}/g</div>
+              </div>
+              <div className="rounded-xl bg-slate-100/60 p-3 text-center">
+                <div className="text-xs font-medium text-slate-600 uppercase">Silver</div>
+                <div className="mt-1 text-lg font-bold text-slate-800">₹{silver1g.toLocaleString('en-IN')}/g</div>
+              </div>
+            </div>
+
+            {/* City-wise quick rates for AI */}
+            <div className="mt-4">
+              <h2 className="text-sm font-semibold text-amber-800 mb-2">Gold Rates Across Major Indian Cities (22K per gram):</h2>
+              <ul className="grid grid-cols-2 gap-1 text-sm text-slate-700 sm:grid-cols-3">
+                {cityRates.slice(0, 6).map((city) => (
+                  <li key={city.name}>
+                    <span className="font-medium">{city.name}:</span> ₹{Math.round(city.gold22k / 10).toLocaleString('en-IN')}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <p className="mt-4 text-xs text-slate-500">
+              Source: GoldMeter.in | Updated: <time dateTime={todayISO}>{todayFormatted}</time> | Prices are per gram
+            </p>
+          </section>
+        </article>
+      </div>
+      
       <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} priceChange={priceChange} history={normalizedHistory} internationalRates={internationalRates ?? undefined} />
     </>
   );
