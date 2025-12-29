@@ -3,6 +3,91 @@ import { notFound } from "next/navigation";
 import { getRecapBySlug, getAllRecaps, formatDateForDisplay } from "@/lib/recapDB";
 import type { Metadata } from "next";
 import StructuredData from "@/app/components/StructuredData";
+import type { GoldRateSnapshot } from "@/lib/recapTypes";
+
+// Gold Rate Card Component for displaying historical prices
+function GoldRateCard({ 
+  goldRates, 
+  displayDate 
+}: { 
+  goldRates: GoldRateSnapshot; 
+  displayDate: string;
+}) {
+  const perGram22k = Math.round(goldRates.gold22k / 10);
+  const perGram24k = Math.round(goldRates.gold24k / 10);
+  const perGram18k = goldRates.gold18k ? Math.round(goldRates.gold18k / 10) : Math.round(perGram24k * 18 / 24);
+  
+  const change22k = goldRates.priceChange?.gold22k || 0;
+  const change24k = goldRates.priceChange?.gold24k || 0;
+
+  const formatChange = (change: number) => {
+    if (change === 0) return <span className="text-slate-500">—</span>;
+    const isUp = change > 0;
+    return (
+      <span className={isUp ? "text-green-600" : "text-red-600"}>
+        {isUp ? "↑" : "↓"} ₹{Math.abs(Math.round(change / 10))}
+      </span>
+    );
+  };
+
+  return (
+    <section 
+      className="mb-8 rounded-2xl border-2 border-amber-200 bg-gradient-to-br from-amber-50 via-white to-amber-50 p-5 shadow-sm"
+      itemScope 
+      itemType="https://schema.org/PriceSpecification"
+    >
+      <h2 className="text-lg font-semibold text-charcoal mb-3 flex items-center gap-2">
+        💰 India Gold Rate on {displayDate}
+      </h2>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-slate-600 border-b border-amber-200">
+              <th className="text-left py-2 font-medium">Purity</th>
+              <th className="text-right py-2 font-medium">Per Gram</th>
+              <th className="text-right py-2 font-medium">Per 10g</th>
+              <th className="text-right py-2 font-medium">Change</th>
+            </tr>
+          </thead>
+          <tbody className="text-slate-700">
+            <tr className="border-b border-amber-100">
+              <td className="py-2 font-medium">24K Gold</td>
+              <td className="py-2 text-right font-semibold text-amber-700">
+                <span itemProp="price">₹{perGram24k.toLocaleString('en-IN')}</span>
+                <meta itemProp="priceCurrency" content="INR" />
+              </td>
+              <td className="py-2 text-right">₹{goldRates.gold24k.toLocaleString('en-IN')}</td>
+              <td className="py-2 text-right text-sm">{formatChange(change24k)}</td>
+            </tr>
+            <tr className="border-b border-amber-100">
+              <td className="py-2 font-medium">22K Gold</td>
+              <td className="py-2 text-right font-semibold text-amber-700">₹{perGram22k.toLocaleString('en-IN')}</td>
+              <td className="py-2 text-right">₹{goldRates.gold22k.toLocaleString('en-IN')}</td>
+              <td className="py-2 text-right text-sm">{formatChange(change22k)}</td>
+            </tr>
+            <tr>
+              <td className="py-2 font-medium">18K Gold</td>
+              <td className="py-2 text-right font-semibold text-amber-700">₹{perGram18k.toLocaleString('en-IN')}</td>
+              <td className="py-2 text-right">₹{(perGram18k * 10).toLocaleString('en-IN')}</td>
+              <td className="py-2 text-right text-sm text-slate-400">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-3 text-xs text-slate-500">
+        Source: <strong>GoldMeter.in</strong> • Historical data for reference only
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <Link 
+          href="/" 
+          className="text-xs text-amber-600 hover:text-amber-700 font-medium underline"
+        >
+          See today&apos;s live rates →
+        </Link>
+      </div>
+    </section>
+  );
+}
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -19,15 +104,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
+  // Enhance description with price data if available (SEO boost)
+  let description = recap.summary;
+  if (recap.goldRates) {
+    const perGram24k = Math.round(recap.goldRates.gold24k / 10);
+    const perGram22k = Math.round(recap.goldRates.gold22k / 10);
+    description = `Gold rate on this day: 24K ₹${perGram24k.toLocaleString('en-IN')}/g, 22K ₹${perGram22k.toLocaleString('en-IN')}/g. ${recap.summary}`;
+  }
+
   return {
     title: `${recap.title} | GoldMeter`,
-    description: recap.summary,
+    description,
     alternates: {
       canonical: `https://goldmeter.in/news/recap/${slug}`,
     },
     openGraph: {
       title: recap.title,
-      description: recap.summary,
+      description,
       type: "article",
       publishedTime: recap.publishedAt.toISOString(),
     },
@@ -58,6 +151,34 @@ export default async function RecapPage({ params }: Props) {
     { name: "Delhi", href: "/delhi" },
   ];
 
+  // Generate price structured data for SEO
+  const priceStructuredData = recap.goldRates ? {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": `India Gold Rate on ${displayDate}`,
+    "description": `Historical gold prices in India on ${displayDate}. 24K: ₹${Math.round(recap.goldRates.gold24k / 10).toLocaleString('en-IN')}/gram, 22K: ₹${Math.round(recap.goldRates.gold22k / 10).toLocaleString('en-IN')}/gram.`,
+    "temporalCoverage": recap.date,
+    "creator": {
+      "@type": "Organization",
+      "name": "GoldMeter",
+      "url": "https://goldmeter.in"
+    },
+    "variableMeasured": [
+      {
+        "@type": "PropertyValue",
+        "name": "24K Gold Price",
+        "value": Math.round(recap.goldRates.gold24k / 10),
+        "unitText": "INR per gram"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "22K Gold Price",
+        "value": Math.round(recap.goldRates.gold22k / 10),
+        "unitText": "INR per gram"
+      }
+    ]
+  } : null;
+
   return (
     <main className="min-h-screen bg-amber-50 pb-12">
       <StructuredData
@@ -69,6 +190,13 @@ export default async function RecapPage({ params }: Props) {
         dateModified={recap.publishedAt}
         authorName="GoldMeter"
       />
+      {/* Historical price structured data for SEO */}
+      {priceStructuredData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(priceStructuredData) }}
+        />
+      )}
       <article className="mx-auto max-w-3xl px-4 pt-6">
         {/* Back Navigation */}
         <Link
@@ -108,6 +236,11 @@ export default async function RecapPage({ params }: Props) {
             <span>📊 Daily summary</span>
           </div>
         </header>
+
+        {/* Gold Rate Card - Only shown if rates are available (SEO boost) */}
+        {recap.goldRates && (
+          <GoldRateCard goldRates={recap.goldRates} displayDate={displayDate} />
+        )}
 
         {/* Key Highlights */}
         <section className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">

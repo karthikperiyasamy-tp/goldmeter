@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next'
 import { getAllRecaps } from '@/lib/recapDB'
 
-// Regenerate the sitemap periodically so lastModified timestamps stay fresh.
-// export const revalidate = 60 * 60 // 1 hour
+// Regenerate the sitemap periodically so lastModified timestamps stay fresh
+// and new recap pages appear promptly for search engines.
+export const revalidate = 3600 // 1 hour
 
 const baseUrl = 'https://goldmeter.in'
 

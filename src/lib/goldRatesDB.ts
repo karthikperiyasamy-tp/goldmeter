@@ -324,3 +324,64 @@ export async function createIndexes(): Promise<void> {
   }
 }
 
+/**
+ * Get India gold rates for a specific date (for recap pages)
+ * Returns rates and price change from previous day
+ * @param dateString Date string in format "YYYY-MM-DD"
+ */
+export async function getGoldRatesForDate(dateString: string): Promise<{
+  gold22k: number;
+  gold24k: number;
+  gold18k: number;
+  silver1kg: number | null;
+  priceChange: { gold22k: number; gold24k: number };
+} | null> {
+  try {
+    const db = await getDatabase();
+    const collection = db.collection<GoldRateDocument>(COLLECTION_NAME);
+
+    // Parse the date string and normalize to start of day
+    const targetDate = new Date(dateString);
+    targetDate.setHours(0, 0, 0, 0);
+
+    // Get the previous day
+    const previousDate = new Date(targetDate);
+    previousDate.setDate(previousDate.getDate() - 1);
+
+    // Fetch rates for target date (India)
+    const targetRate = await collection.findOne({
+      city: 'India',
+      date: targetDate,
+    });
+
+    if (!targetRate) {
+      console.log(`⚠️ [DB] No India rate found for ${dateString}`);
+      return null;
+    }
+
+    // Fetch rates for previous day
+    const previousRate = await collection.findOne({
+      city: 'India',
+      date: previousDate,
+    });
+
+    const priceChange = {
+      gold22k: previousRate ? targetRate.gold_22k - previousRate.gold_22k : 0,
+      gold24k: previousRate ? targetRate.gold_24k - previousRate.gold_24k : 0,
+    };
+
+    console.log(`✅ [DB] Fetched India rate for ${dateString}: 22K=₹${targetRate.gold_22k}, 24K=₹${targetRate.gold_24k}`);
+
+    return {
+      gold22k: targetRate.gold_22k,
+      gold24k: targetRate.gold_24k,
+      gold18k: targetRate.gold_18k || Math.round((targetRate.gold_24k * 18) / 24),
+      silver1kg: targetRate.silver_1kg || null,
+      priceChange,
+    };
+  } catch (error) {
+    console.error(`❌ [DB] Error fetching rates for ${dateString}:`, error);
+    return null;
+  }
+}
+

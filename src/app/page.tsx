@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import type { Metadata } from "next";
 import HomeClient, {
   type CityRate,
   type InternationalRates,
@@ -9,6 +10,43 @@ import HomeClient, {
 import { getLatestGoldRates, getHistoricalGoldRates } from "@/lib/goldRatesDB";
 import { getRecentNews } from "@/lib/newsDB";
 import { getInternationalRates } from "@/lib/internationalRates";
+
+// Dynamic metadata for SEO - updates with today's date for freshness signals
+export async function generateMetadata(): Promise<Metadata> {
+  const today = new Date();
+  const todayFormatted = today.toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
+  
+  return {
+    title: `Gold Rate Today (${todayFormatted}) - 22K & 24K Price in India | GoldMeter`,
+    description: `Today's gold rate in India (${todayFormatted}): Check live 24K and 22K gold prices per gram. Compare rates across Mumbai, Chennai, Delhi, Bangalore. Updated daily on GoldMeter.`,
+    openGraph: {
+      title: `Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices | GoldMeter`,
+      description: `Today's gold rate in India: Live 24K and 22K gold prices per gram across major cities. Updated ${todayFormatted}.`,
+      url: "https://goldmeter.in",
+      siteName: "GoldMeter",
+      locale: "en_IN",
+      type: "website",
+      images: [
+        {
+          url: "https://goldmeter.in/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: `Gold Rate Today in India - ${todayFormatted}`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `Gold Rate Today (${todayFormatted}) - India Gold Prices`,
+      description: `Live 22K & 24K gold rates in India. Updated ${todayFormatted}.`,
+      images: ["https://goldmeter.in/og-image.png"],
+    },
+  };
+}
 
 type HistoryRate = {
   date: string;
@@ -256,6 +294,20 @@ export default async function HomePage() {
     timestamp: h.timestamp,
   }));
 
+  // Calculate per-gram prices for AIO answer block and schema
+  const perGram24k = Math.round(baseRates.gold_24k / 10);
+  const perGram22k = Math.round(baseRates.gold_22k / 10);
+  const perGram18k = Math.round((baseRates.gold_24k * 18) / 24 / 10);
+  const silver1g = Math.round((baseRates.silver_1kg || 0) / 1000);
+  
+  // Format today's date for display
+  const todayFormatted = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  const todayISO = new Date().toISOString().split('T')[0];
+
   // Homepage structured data - WebSite schema for search
   const websiteSchema = {
     "@context": "https://schema.org",
@@ -281,24 +333,55 @@ export default async function HomePage() {
     "sameAs": []
   };
 
+  // WebPage schema with dateModified - critical for freshness signals in Google AI Overview
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": `Gold Rate Today in India (${todayFormatted}) - Live 22K & 24K Price`,
+    "description": `Today's gold rate in India: ₹${perGram24k.toLocaleString('en-IN')}/gram for 24K, ₹${perGram22k.toLocaleString('en-IN')}/gram for 22K. Updated ${todayFormatted}.`,
+    "url": "https://goldmeter.in",
+    "datePublished": "2024-01-01",
+    "dateModified": new Date().toISOString(),
+    "inLanguage": "en-IN",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "GoldMeter",
+      "url": "https://goldmeter.in"
+    },
+    "about": {
+      "@type": "Thing",
+      "name": "Gold Price in India"
+    },
+    "mainEntity": {
+      "@type": "Dataset",
+      "name": "India Gold Rate Today",
+      "description": `Live gold prices in India as of ${todayFormatted}`,
+      "temporalCoverage": todayISO,
+      "variableMeasured": [
+        {
+          "@type": "PropertyValue",
+          "name": "24K Gold Price per gram",
+          "value": perGram24k,
+          "unitText": "INR"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "22K Gold Price per gram",
+          "value": perGram22k,
+          "unitText": "INR"
+        }
+      ]
+    },
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": ["[data-ai-answer]", "h1"]
+    }
+  };
+
   // Note: No FAQPage schema on homepage
   // - Regular users get geo-redirected to city pages (which have FAQPage via StructuredData)
   // - Bots see the homepage which is a landing page, not FAQ content
   // - Adding FAQPage here causes "Duplicate field FAQPage" errors in Search Console
-
-  // Calculate per-gram prices for AIO answer block
-  const perGram24k = Math.round(baseRates.gold_24k / 10);
-  const perGram22k = Math.round(baseRates.gold_22k / 10);
-  const perGram18k = Math.round((baseRates.gold_24k * 18) / 24 / 10);
-  const silver1g = Math.round((baseRates.silver_1kg || 0) / 1000);
-  
-  // Format today's date for display
-  const todayFormatted = new Date().toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
-  const todayISO = new Date().toISOString().split('T')[0];
 
   return (
     <>
@@ -310,6 +393,10 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+      />
       
       {/* 🔥 AIO ANSWER BLOCK - Server-rendered plain HTML for AI scrapers */}
       {/* This MUST be outside HomeClient so it renders as static HTML for bots */}
@@ -317,7 +404,7 @@ export default async function HomePage() {
         <article className="mx-auto max-w-6xl px-4 pt-6">
           <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
             <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl" itemProp="name">
-              India Gold Rate Today ({todayFormatted})
+              Gold Rate Today in India ({todayFormatted}) – Live 22K &amp; 24K Price
             </h1>
             
             {/* Primary AIO answer - structured for AI extraction */}

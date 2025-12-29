@@ -9,6 +9,8 @@ import {
   formatDateForDisplay,
   ensureRecapIndexes,
 } from '@/lib/recapDB';
+import { getGoldRatesForDate } from '@/lib/goldRatesDB';
+import type { GoldRateSnapshot } from '@/lib/recapTypes';
 
 // Generate slug from date
 function generateSlug(date: string): string {
@@ -64,6 +66,26 @@ export async function POST(request: Request) {
     const generated = await generateDailyRecap(headlines, displayDate);
     console.log(`✅ Generated recap: "${generated.title}"`);
 
+    // Fetch gold rates for the recap date (SEO enhancement)
+    let goldRates: GoldRateSnapshot | undefined;
+    try {
+      const ratesData = await getGoldRatesForDate(targetDate);
+      if (ratesData) {
+        goldRates = {
+          gold22k: ratesData.gold22k,
+          gold24k: ratesData.gold24k,
+          gold18k: ratesData.gold18k,
+          silver1kg: ratesData.silver1kg,
+          priceChange: ratesData.priceChange,
+        };
+        console.log(`💰 Fetched gold rates for ${targetDate}: 22K=₹${ratesData.gold22k}, 24K=₹${ratesData.gold24k}`);
+      } else {
+        console.log(`⚠️ No gold rates found for ${targetDate} - recap will be saved without prices`);
+      }
+    } catch (ratesError) {
+      console.error('⚠️ Error fetching gold rates (continuing without prices):', ratesError);
+    }
+
     // Save to database
     const recap = await saveRecap({
       date: targetDate,
@@ -73,11 +95,12 @@ export async function POST(request: Request) {
       content: generated.content,
       highlights: generated.highlights,
       sourcesCount: articles.length,
+      goldRates,
       generatedAt: new Date(),
       publishedAt: new Date(),
     });
 
-    console.log(`💾 ${existingRecap ? 'Updated' : 'Saved'} recap to database`);
+    console.log(`💾 ${existingRecap ? 'Updated' : 'Saved'} recap to database${goldRates ? ' (with gold rates)' : ''}`);
 
     // Revalidate news page and recap page
     revalidatePath('/news');

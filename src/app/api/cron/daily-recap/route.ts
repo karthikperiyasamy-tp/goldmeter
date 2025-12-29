@@ -11,6 +11,8 @@ import {
   formatDateForDisplay,
   ensureRecapIndexes,
 } from '@/lib/recapDB';
+import { getGoldRatesForDate } from '@/lib/goldRatesDB';
+import type { GoldRateSnapshot } from '@/lib/recapTypes';
 
 // Generate slug from date
 function generateSlug(date: string): string {
@@ -124,6 +126,24 @@ export async function GET(request: NextRequest) {
           const displayDate = formatDateForDisplay(yesterdayDate);
           const generated = await generateDailyRecap(headlines, displayDate);
 
+          // Fetch gold rates for the recap date (SEO enhancement)
+          let goldRates: GoldRateSnapshot | undefined;
+          try {
+            const ratesData = await getGoldRatesForDate(yesterdayDate);
+            if (ratesData) {
+              goldRates = {
+                gold22k: ratesData.gold22k,
+                gold24k: ratesData.gold24k,
+                gold18k: ratesData.gold18k,
+                silver1kg: ratesData.silver1kg,
+                priceChange: ratesData.priceChange,
+              };
+              console.log(`💰 Fetched gold rates: 22K=₹${ratesData.gold22k}, 24K=₹${ratesData.gold24k}`);
+            }
+          } catch (ratesError) {
+            console.warn('⚠️ Could not fetch gold rates for recap:', ratesError);
+          }
+
           // Save recap
           const recap = await saveRecap({
             date: yesterdayDate,
@@ -133,16 +153,17 @@ export async function GET(request: NextRequest) {
             content: generated.content,
             highlights: generated.highlights,
             sourcesCount: articles.length,
+            goldRates,
             generatedAt: new Date(),
             publishedAt: new Date(),
           });
 
           results.recapGeneration = {
             success: true,
-            message: `Generated recap for ${displayDate}`,
+            message: `Generated recap for ${displayDate}${goldRates ? ' (with gold rates)' : ''}`,
             title: recap.title,
           };
-          console.log(`✅ Recap generated: "${recap.title}"`);
+          console.log(`✅ Recap generated: "${recap.title}"${goldRates ? ' (with gold rates)' : ''}`);
 
           // Revalidate pages
           revalidatePath('/news');
