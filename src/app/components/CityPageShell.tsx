@@ -7,6 +7,7 @@ import PriceChartWrapper from "./PriceChartWrapper";
 import Last10DaysTable from "./Last10DaysTable";
 import MonthStatistics from "./MonthStatistics";
 import StructuredData from "./StructuredData";
+import { GOLD_RATE_CITIES, SILVER_RATE_CITIES } from "@/lib/cities";
 
 type LocalInfo = {
   title: string;
@@ -57,7 +58,7 @@ type CityPageShellProps = {
   history?: HistoryRateInput[];
   localInfo: LocalInfo[];
   faqs: FAQ[];
-  similarCities: string[];
+  similarCities?: string[]; // Deprecated - now using shared GOLD_RATE_CITIES config
   intro?: string;
   dateISO?: string; // ISO date for structured data freshness
   hideAnswerBlock?: boolean; // Hide the AIO answer block if server-rendered version exists
@@ -93,7 +94,7 @@ export default function CityPageShell({
   history = [],
   localInfo,
   faqs,
-  similarCities,
+  similarCities: _similarCities, // Deprecated - kept for backward compatibility
   intro,
   dateISO,
   hideAnswerBlock = false,
@@ -192,6 +193,58 @@ export default function CityPageShell({
       ? `down ₹${Math.abs(priceChange.gold24k)}` 
       : 'unchanged';
 
+  // Sidebar component for Top Cities (reusable)
+  const TopCitiesSidebar = () => (
+    <aside className="space-y-6">
+      {/* Gold Rate in Top Cities - Like goodreturns.in sidebar */}
+      <section className="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-5 shadow-soft">
+        <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wide flex items-center gap-2">
+          <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
+          Gold Rate in Top Cities of India
+        </h3>
+        <ul className="mt-4 space-y-1">
+          {GOLD_RATE_CITIES.map((cityItem) => {
+            const isCurrentCity = cityItem.toLowerCase() === city.toLowerCase();
+            return (
+              <li key={cityItem}>
+                <Link
+                  href={`/gold-rate/${cityItem.toLowerCase()}`}
+                  className={`block py-1.5 text-sm transition-colors ${
+                    isCurrentCity 
+                      ? 'text-amber-700 font-semibold' 
+                      : 'text-slate-600 hover:text-amber-600'
+                  }`}
+                >
+                  Gold rate in {cityItem} {isCurrentCity && '←'}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+
+      {/* Silver Rate in Top Cities */}
+      <section className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-5 shadow-soft">
+        <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wide flex items-center gap-2">
+          <span className="w-1 h-4 bg-slate-400 rounded-full"></span>
+          Silver Rate in Top Cities of India
+        </h3>
+        <ul className="mt-4 space-y-1">
+          {SILVER_RATE_CITIES.map((cityItem) => (
+            <li key={cityItem}>
+              <Link
+                href={`/silver-rate/${cityItem.toLowerCase()}`}
+                className="block py-1.5 text-sm text-slate-500 hover:text-slate-700 transition-colors"
+              >
+                Silver price in {cityItem}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </aside>
+  );
+
   return (
     <div className={hideAnswerBlock ? "" : "min-h-screen bg-[#fffdf7] pb-12"}>
       <StructuredData
@@ -203,7 +256,11 @@ export default function CityPageShell({
         faqs={enhancedFaqs}
         dateISO={isoDate}
       />
-      <div className={hideAnswerBlock ? "mx-auto max-w-6xl px-4 pb-12" : "mx-auto max-w-6xl px-4 py-6"}>
+      {/* Two-column layout: Main content + Sidebar (like goodreturns) */}
+      <div className={hideAnswerBlock ? "mx-auto max-w-7xl px-4 pb-12" : "mx-auto max-w-7xl px-4 py-6"}>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
+          {/* Main Content */}
+          <main>
         {/* AIO-OPTIMIZED ANSWER BLOCK - Only show if not server-rendered */}
         {!hideAnswerBlock && (
           <article className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-soft">
@@ -630,21 +687,11 @@ export default function CityPageShell({
             </p>
           </div>
         </section>
+          </main>
 
-        <section className="mt-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-          <p className="text-sm font-semibold text-slate-500">Similar cities</p>
-          <div className="mt-3 flex flex-wrap gap-3">
-            {similarCities.map((cityItem) => (
-              <Link
-                key={cityItem}
-                href={`/${cityItem.toLowerCase()}`}
-                className="rounded-full border border-slate-200 px-4 py-2 text-sm text-slate-600 hover:border-amber-200 hover:text-amber-600"
-              >
-                {cityItem}
-              </Link>
-            ))}
-          </div>
-        </section>
+          {/* Right Sidebar - Top Cities (visible on desktop, below content on mobile) */}
+          <TopCitiesSidebar />
+        </div>
       </div>
     </div>
   );

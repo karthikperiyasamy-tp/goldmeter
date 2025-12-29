@@ -12,16 +12,34 @@ type TopBarProps = {
 
 const cityOptions = [
   { name: "India", slug: "" }, // Homepage
-  { name: "Chennai", slug: "chennai" },
+  { name: "Ahmedabad", slug: "ahmedabad" },
+  { name: "Ayodhya", slug: "ayodhya" },
   { name: "Bangalore", slug: "bangalore" },
-  { name: "Mumbai", slug: "mumbai" },
+  { name: "Bhubaneswar", slug: "bhubaneswar" },
+  { name: "Chandigarh", slug: "chandigarh" },
+  { name: "Chennai", slug: "chennai" },
+  { name: "Coimbatore", slug: "coimbatore" },
   { name: "Delhi", slug: "delhi" },
   { name: "Hyderabad", slug: "hyderabad" },
-  { name: "Coimbatore", slug: "coimbatore" },
-  { name: "Pune", slug: "pune" },
+  { name: "Jaipur", slug: "jaipur" },
+  { name: "Kerala", slug: "kerala" },
   { name: "Kolkata", slug: "kolkata" },
-  { name: "Ahmedabad", slug: "ahmedabad" },
+  { name: "Lucknow", slug: "lucknow" },
+  { name: "Madurai", slug: "madurai" },
+  { name: "Mangalore", slug: "mangalore" },
+  { name: "Mumbai", slug: "mumbai" },
+  { name: "Mysore", slug: "mysore" },
+  { name: "Nagpur", slug: "nagpur" },
+  { name: "Nashik", slug: "nashik" },
+  { name: "Patna", slug: "patna" },
+  { name: "Pune", slug: "pune" },
+  { name: "Rajkot", slug: "rajkot" },
+  { name: "Salem", slug: "salem" },
+  { name: "Surat", slug: "surat" },
+  { name: "Trichy", slug: "trichy" },
+  { name: "Vadodara", slug: "vadodara" },
   { name: "Vijayawada", slug: "vijayawada" },
+  { name: "Visakhapatnam", slug: "visakhapatnam" },
 ];
 
 export default function TopBar({ city, onCityChange }: TopBarProps) {
@@ -32,11 +50,11 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   const pathname = usePathname();
   
   // List of city pages for highlighting "Gold Rate Today"
-  const cityPages = ["chennai", "bangalore", "mumbai", "delhi", "hyderabad", "coimbatore", "pune", "kolkata", "ahmedabad", "vijayawada"];
-  const isGoldRatePage = pathname === "/" || cityPages.some(city => pathname === `/${city}`);
+  const cityPages = ["ahmedabad", "ayodhya", "bangalore", "bhubaneswar", "chandigarh", "chennai", "coimbatore", "delhi", "hyderabad", "jaipur", "kerala", "kolkata", "lucknow", "madurai", "mangalore", "mumbai", "mysore", "nagpur", "nashik", "patna", "pune", "rajkot", "salem", "surat", "trichy", "vadodara", "vijayawada", "visakhapatnam"];
+  const isGoldRatePage = pathname === "/" || pathname.startsWith("/gold-rate") || cityPages.some(city => pathname === `/${city}`);
   const isSilverRoute = pathname.startsWith("/silver-rate");
   const citySlug = city.toLowerCase();
-  const goldHref = city === "India" ? "/" : `/${citySlug}`;
+  const goldHref = city === "India" ? "/" : `/gold-rate/${citySlug}`;
   const silverHref = city === "India" ? "/silver-rate" : `/silver-rate/${citySlug}`;
 
   // Filter cities based on search query
@@ -59,8 +77,8 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
     } else {
       // City selected: clear stayOnIndia cookie so geo-redirect can work on future visits
       document.cookie = "stayOnIndia=; path=/; max-age=0";
-      // Route within the current context
-      const targetPath = isSilverRoute ? `/silver-rate/${citySlug}` : `/${citySlug}`;
+      // Route within the current context - use /gold-rate/{city} for gold pages
+      const targetPath = isSilverRoute ? `/silver-rate/${citySlug}` : `/gold-rate/${citySlug}`;
       router.push(targetPath);
     }
     

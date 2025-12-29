@@ -13,16 +13,34 @@ type CitySelectorProps = {
 };
 
 const citySlugMap: Record<string, string> = {
-  "Chennai": "chennai",
+  "Ahmedabad": "ahmedabad",
+  "Ayodhya": "ayodhya",
   "Bangalore": "bangalore",
-  "Mumbai": "mumbai",
+  "Bhubaneswar": "bhubaneswar",
+  "Chandigarh": "chandigarh",
+  "Chennai": "chennai",
+  "Coimbatore": "coimbatore",
   "Delhi": "delhi",
   "Hyderabad": "hyderabad",
-  "Coimbatore": "coimbatore",
-  "Pune": "pune",
+  "Jaipur": "jaipur",
+  "Kerala": "kerala",
   "Kolkata": "kolkata",
-  "Ahmedabad": "ahmedabad",
+  "Lucknow": "lucknow",
+  "Madurai": "madurai",
+  "Mangalore": "mangalore",
+  "Mumbai": "mumbai",
+  "Mysore": "mysore",
+  "Nagpur": "nagpur",
+  "Nashik": "nashik",
+  "Patna": "patna",
+  "Pune": "pune",
+  "Rajkot": "rajkot",
+  "Salem": "salem",
+  "Surat": "surat",
+  "Trichy": "trichy",
+  "Vadodara": "vadodara",
   "Vijayawada": "vijayawada",
+  "Visakhapatnam": "visakhapatnam",
 };
 
 export default function CitySelector({ cities }: CitySelectorProps) {
@@ -44,9 +62,8 @@ export default function CitySelector({ cities }: CitySelectorProps) {
             className="text-left rounded-2xl border border-slate-100 bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-amber-200"
             onClick={() => {
               const slug = citySlugMap[city.name] || city.name.toLowerCase();
-              // Navigate to city page
-              // We don't set preferredCity anymore, relying on manual navigation
-              router.push(`/${slug}`);
+              // Navigate to city gold rate page
+              router.push(`/gold-rate/${slug}`);
             }}
           >
             <p className="text-sm text-slate-500">{city.name}</p>

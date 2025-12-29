@@ -460,7 +460,7 @@ export default async function GoldRateTodayPage() {
               <ul className="grid grid-cols-2 gap-1 text-sm text-slate-700 sm:grid-cols-3">
                 {cityRates.slice(0, 6).map((city) => (
                   <li key={city.name}>
-                    <Link href={`/${city.name.toLowerCase()}`} className="hover:text-amber-600">
+                    <Link href={`/gold-rate/${city.name.toLowerCase()}`} className="hover:text-amber-600">
                       <strong>{city.name}:</strong> ₹{Math.round(city.gold22k / 10).toLocaleString('en-IN')}
                     </Link>
                   </li>
@@ -491,26 +491,26 @@ export default async function GoldRateTodayPage() {
           <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft">
             <h3 className="text-sm font-semibold text-slate-700 mb-3">🔍 Popular Gold Rate Searches</h3>
             <div className="flex flex-wrap gap-2">
-              <Link href="/chennai" className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700 hover:bg-amber-100 transition-colors">
+              <Link href="/gold-rate/chennai" className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700 hover:bg-amber-100 transition-colors">
                 Gold rate today Chennai
               </Link>
-              <Link href="/mumbai" className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700 hover:bg-amber-100 transition-colors">
+              <Link href="/gold-rate/mumbai" className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700 hover:bg-amber-100 transition-colors">
                 Gold rate today Mumbai
               </Link>
-              <Link href="/delhi" className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700 hover:bg-amber-100 transition-colors">
+              <Link href="/gold-rate/delhi" className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700 hover:bg-amber-100 transition-colors">
                 Gold rate today Delhi
               </Link>
-              <Link href="/bangalore" className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700 hover:bg-amber-100 transition-colors">
+              <Link href="/gold-rate/bangalore" className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700 hover:bg-amber-100 transition-colors">
                 Gold rate today Bangalore
               </Link>
-              <Link href="/hyderabad" className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700 hover:bg-amber-100 transition-colors">
+              <Link href="/gold-rate/hyderabad" className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700 hover:bg-amber-100 transition-colors">
                 Gold rate today Hyderabad
               </Link>
               <Link href="/calculator" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
                 1 gram gold rate today
               </Link>
-              <Link href="/news/22k-vs-24k-guide" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
-                22K vs 24K gold
+              <Link href="/purity-converter" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                22K vs 24K converter
               </Link>
               <Link href="/silver-rate" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
                 Silver rate today

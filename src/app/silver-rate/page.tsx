@@ -102,7 +102,7 @@ export default async function SilverIndiaPage() {
             "No, it varies slightly by state due to local taxes and transportation costs, though less variance than gold.",
         },
       ]}
-      similarCities={["Chennai", "Bangalore", "Mumbai", "Delhi", "Hyderabad", "Kolkata"]}
+      similarCities={["Chennai", "Bangalore", "Mumbai", "Delhi", "Hyderabad", "Kolkata", "Jaipur", "Lucknow", "Kerala", "Pune"]}
     />
   );
 }

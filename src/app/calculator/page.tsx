@@ -207,19 +207,19 @@ export default function CalculatorPage() {
           Daily recap → quick AI summary of gold price signals.
         </Link>
         <Link
-          href="/chennai"
+          href="/gold-rate/chennai"
           className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
         >
           Gold rate in Chennai today → per gram with charts.
         </Link>
         <Link
-          href="/mumbai"
+          href="/gold-rate/mumbai"
           className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
         >
           Gold rate in Mumbai today → 22K / 24K per gram.
         </Link>
         <Link
-          href="/delhi"
+          href="/gold-rate/delhi"
           className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
         >
           Gold rate in Delhi today → compare trends & FAQs.

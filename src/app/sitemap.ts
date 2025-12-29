@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { getAllRecaps } from '@/lib/recapDB'
+import { GOLD_RATE_CITIES, SILVER_RATE_CITIES, getCitySlug } from '@/lib/cities'
 
 // Regenerate the sitemap periodically so lastModified timestamps stay fresh
 // and new recap pages appear promptly for search engines.
@@ -7,40 +8,14 @@ export const revalidate = 3600 // 1 hour
 
 const baseUrl = 'https://goldmeter.in'
 
-// List of supported cities
-const cities = [
-  'ahmedabad',
-  'bangalore',
-  'chennai',
-  'coimbatore',
-  'delhi',
-  'hyderabad',
-  'kolkata',
-  'mumbai',
-  'pune',
-  'vijayawada',
-]
+// Use shared city config (converted to lowercase slugs)
+const cities = GOLD_RATE_CITIES.map(getCitySlug)
+const silverCities = SILVER_RATE_CITIES.map(getCitySlug)
 
 // List of static news article slugs
-const newsArticles = [
-  'gold-price-increase-today',
-  'gold-rate-prediction-2025',
-  '22k-vs-24k-guide',
-]
-
-// Silver rate supported cities (aligned with silver-rate/[city] pages)
-const silverCities = [
-  'chennai',
-  'bangalore',
-  'mumbai',
-  'delhi',
-  'hyderabad',
-  'kolkata',
-  'ahmedabad',
-  'pune',
-  'coimbatore',
-  'vijayawada',
-]
+// Note: Only include articles that actually exist to avoid 404 errors
+// Removed: 'gold-price-increase-today', 'gold-rate-prediction-2025', '22k-vs-24k-guide' (404)
+const newsArticles: string[] = []
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch all recaps for sitemap
@@ -148,8 +123,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   // City pages - high priority with hourly updates for freshness signals
+  // URL structure: /gold-rate/{city} for consistency with /silver-rate/{city}
   const cityPages = cities.map((city) => ({
-    url: `${baseUrl}/${city}`,
+    url: `${baseUrl}/gold-rate/${city}`,
     lastModified: new Date(),
     changeFrequency: 'hourly' as const,
     priority: 0.95,
@@ -171,6 +147,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }))
 
+  // Footer/Legal pages
+  const footerPages = [
+    { url: `${baseUrl}/about`, priority: 0.5 },
+    { url: `${baseUrl}/contact`, priority: 0.5 },
+    { url: `${baseUrl}/privacy`, priority: 0.3 },
+    { url: `${baseUrl}/terms`, priority: 0.3 },
+    { url: `${baseUrl}/disclaimer`, priority: 0.3 },
+  ].map((page) => ({
+    ...page,
+    lastModified: new Date('2024-12-29'),
+    changeFrequency: 'yearly' as const,
+  }))
+
   return [
     homepage,
     goldRateToday,
@@ -187,5 +176,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...recapPages,
     silverRateIndex,
     ...silverRateCityPages,
+    ...footerPages,
   ]
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import RateCard from "./RateCard";
 import SilverLast10DaysTable from "./SilverLast10DaysTable";
 import SimplePriceChart from "./SimplePriceChart";
+import { GOLD_RATE_CITIES, SILVER_RATE_CITIES } from "@/lib/cities";
 
 type LocalInfo = {
   title: string;
@@ -23,7 +24,7 @@ type SilverCityPageShellProps = {
   history: any[];
   localInfo: LocalInfo[];
   faqs: FAQ[];
-  similarCities: string[];
+  similarCities?: string[]; // Deprecated - now using shared SILVER_RATE_CITIES config
   intro?: string;
 };
 
@@ -46,7 +47,7 @@ export default function SilverCityPageShell({
   history = [],
   localInfo,
   faqs,
-  similarCities,
+  similarCities: _similarCities, // Deprecated - kept for backward compatibility
   intro,
 }: SilverCityPageShellProps) {
   const citySlug = city.toLowerCase();
@@ -68,9 +69,65 @@ export default function SilverCityPageShell({
       price: h.silver1kg || 0,
     }));
 
+  // Sidebar component for Top Cities (reusable)
+  const TopCitiesSidebar = () => (
+    <aside className="space-y-6">
+      {/* Silver Rate in Top Cities */}
+      <section className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-5 shadow-soft">
+        <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wide flex items-center gap-2">
+          <span className="w-1 h-4 bg-slate-400 rounded-full"></span>
+          Silver Rate in Top Cities of India
+        </h3>
+        <ul className="mt-4 space-y-1">
+          {SILVER_RATE_CITIES.map((cityItem) => {
+            const isCurrentCity = cityItem.toLowerCase() === city.toLowerCase();
+            return (
+              <li key={cityItem}>
+                <Link
+                  href={`/silver-rate/${cityItem.toLowerCase()}`}
+                  className={`block py-1.5 text-sm transition-colors ${
+                    isCurrentCity 
+                      ? 'text-slate-700 font-semibold' 
+                      : 'text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  Silver price in {cityItem} {isCurrentCity && '←'}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+
+      {/* Gold Rate in Top Cities */}
+      <section className="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-5 shadow-soft">
+        <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wide flex items-center gap-2">
+          <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
+          Gold Rate in Top Cities of India
+        </h3>
+        <ul className="mt-4 space-y-1">
+          {GOLD_RATE_CITIES.map((cityItem) => (
+            <li key={cityItem}>
+              <Link
+                href={`/gold-rate/${cityItem.toLowerCase()}`}
+                className="block py-1.5 text-sm text-slate-600 hover:text-amber-600 transition-colors"
+              >
+                Gold rate in {cityItem}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </aside>
+  );
+
   return (
     <main className="min-h-screen bg-[#f8fafc] pb-12">
-      <div className="mx-auto max-w-6xl px-4 py-6">
+      {/* Two-column layout: Main content + Sidebar (like goodreturns) */}
+      <div className="mx-auto max-w-7xl px-4 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
+          {/* Main Content */}
+          <div>
         {/* Hero Section */}
         <section className="border-y border-slate-200 bg-gradient-to-r from-white to-slate-100 rounded-3xl p-6 shadow-soft">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -220,21 +277,11 @@ export default function SilverCityPageShell({
             ))}
           </div>
         </section>
-
-        <section className="mt-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-          <p className="text-sm font-semibold text-slate-500">Similar cities</p>
-          <div className="mt-3 flex flex-wrap gap-3">
-            {similarCities.map((cityItem) => (
-              <Link
-                key={cityItem}
-                href={`/silver-rate/${cityItem.toLowerCase()}`}
-                className="rounded-full border border-slate-200 px-4 py-2 text-sm text-slate-600 hover:border-slate-400 hover:text-slate-800"
-              >
-                {cityItem}
-              </Link>
-            ))}
           </div>
-        </section>
+
+          {/* Right Sidebar - Top Cities (visible on desktop, below content on mobile) */}
+          <TopCitiesSidebar />
+        </div>
       </div>
     </main>
   );

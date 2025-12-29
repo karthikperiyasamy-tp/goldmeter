@@ -89,10 +89,10 @@ export default async function NewsPage() {
         <div className="mb-6 rounded-2xl bg-amber-100 border border-amber-300 p-4">
           <p className="text-sm text-amber-900">
             <strong>Looking for today&apos;s gold rate?</strong> See the dedicated price page:{' '}
-            <Link href="/chennai" className="underline font-semibold hover:text-amber-700">Gold Rate in Chennai</Link>,{' '}
-            <Link href="/mumbai" className="underline font-semibold hover:text-amber-700">Mumbai</Link>,{' '}
-            <Link href="/delhi" className="underline font-semibold hover:text-amber-700">Delhi</Link>, or{' '}
-            <Link href="/bangalore" className="underline font-semibold hover:text-amber-700">Bangalore</Link>.
+            <Link href="/gold-rate/chennai" className="underline font-semibold hover:text-amber-700">Gold Rate in Chennai</Link>,{' '}
+            <Link href="/gold-rate/mumbai" className="underline font-semibold hover:text-amber-700">Mumbai</Link>,{' '}
+            <Link href="/gold-rate/delhi" className="underline font-semibold hover:text-amber-700">Delhi</Link>, or{' '}
+            <Link href="/gold-rate/bangalore" className="underline font-semibold hover:text-amber-700">Bangalore</Link>.
           </p>
         </div>
         

@@ -461,7 +461,7 @@ export default function HomeClient({
                       </td>
                       <td className="py-3 text-right">
                         <Link
-                          href={`/${city.name.toLowerCase()}`}
+                          href={`/gold-rate/${city.name.toLowerCase()}`}
                           className="text-amber-600 hover:text-amber-700 font-medium"
                         >
                           View →

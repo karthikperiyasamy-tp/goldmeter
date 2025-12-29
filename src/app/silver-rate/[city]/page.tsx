@@ -23,16 +23,34 @@ function dedupeHistory(history: HistoryEntry[]) {
 
 // List of supported cities for silver rate pages
 const supportedCities = [
-  "Chennai",
+  "Ahmedabad",
+  "Ayodhya",
   "Bangalore",
-  "Mumbai",
+  "Bhubaneswar",
+  "Chandigarh",
+  "Chennai",
+  "Coimbatore",
   "Delhi",
   "Hyderabad",
+  "Jaipur",
+  "Kerala",
   "Kolkata",
-  "Ahmedabad",
+  "Lucknow",
+  "Madurai",
+  "Mangalore",
+  "Mumbai",
+  "Mysore",
+  "Nagpur",
+  "Nashik",
+  "Patna",
   "Pune",
-  "Coimbatore",
+  "Rajkot",
+  "Salem",
+  "Surat",
+  "Trichy",
+  "Vadodara",
   "Vijayawada",
+  "Visakhapatnam",
 ];
 
 type Props = {

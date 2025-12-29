@@ -12,6 +12,25 @@ const SUPPORTED_CITIES = [
   { name: "Kolkata", slug: "kolkata", lat: 22.5726, lon: 88.3639, aliases: ["calcutta"] },
   { name: "Ahmedabad", slug: "ahmedabad", lat: 23.0225, lon: 72.5714, aliases: [] },
   { name: "Vijayawada", slug: "vijayawada", lat: 16.5062, lon: 80.6480, aliases: [] },
+  // New cities added
+  { name: "Ayodhya", slug: "ayodhya", lat: 26.7922, lon: 82.1998, aliases: ["faizabad"] },
+  { name: "Bhubaneswar", slug: "bhubaneswar", lat: 20.2961, lon: 85.8245, aliases: [] },
+  { name: "Chandigarh", slug: "chandigarh", lat: 30.7333, lon: 76.7794, aliases: [] },
+  { name: "Jaipur", slug: "jaipur", lat: 26.9124, lon: 75.7873, aliases: [] },
+  { name: "Kerala", slug: "kerala", lat: 9.9312, lon: 76.2673, aliases: ["kochi", "cochin", "trivandrum", "thiruvananthapuram", "thrissur"] },
+  { name: "Lucknow", slug: "lucknow", lat: 26.8467, lon: 80.9462, aliases: [] },
+  { name: "Madurai", slug: "madurai", lat: 9.9252, lon: 78.1198, aliases: [] },
+  { name: "Mangalore", slug: "mangalore", lat: 12.9141, lon: 74.8560, aliases: ["mangaluru"] },
+  { name: "Mysore", slug: "mysore", lat: 12.2958, lon: 76.6394, aliases: ["mysuru"] },
+  { name: "Nagpur", slug: "nagpur", lat: 21.1458, lon: 79.0882, aliases: [] },
+  { name: "Nashik", slug: "nashik", lat: 19.9975, lon: 73.7898, aliases: ["nasik"] },
+  { name: "Patna", slug: "patna", lat: 25.5941, lon: 85.1376, aliases: [] },
+  { name: "Rajkot", slug: "rajkot", lat: 22.3039, lon: 70.8022, aliases: [] },
+  { name: "Salem", slug: "salem", lat: 11.6643, lon: 78.1460, aliases: [] },
+  { name: "Surat", slug: "surat", lat: 21.1702, lon: 72.8311, aliases: [] },
+  { name: "Trichy", slug: "trichy", lat: 10.7905, lon: 78.7047, aliases: ["tiruchirappalli", "tiruchi"] },
+  { name: "Vadodara", slug: "vadodara", lat: 22.3072, lon: 73.1812, aliases: ["baroda"] },
+  { name: "Visakhapatnam", slug: "visakhapatnam", lat: 17.6868, lon: 83.2185, aliases: ["vizag", "vishakhapatnam"] },
 ];
 
 // Calculate distance between two coordinates using Haversine formula

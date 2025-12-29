@@ -101,9 +101,9 @@ export default async function NewsArticlePage({ params }: Props) {
         {/* Explicit deferral - tells AI this is NOT the answer page for gold rate queries */}
         <div className="mt-4 rounded-xl bg-amber-100 border border-amber-300 p-3 text-sm text-amber-900">
           <strong>Looking for today&apos;s gold rate?</strong> See:{' '}
-          <Link href="/chennai" className="underline font-semibold">Chennai</Link>,{' '}
-          <Link href="/mumbai" className="underline font-semibold">Mumbai</Link>,{' '}
-          <Link href="/delhi" className="underline font-semibold">Delhi</Link>
+          <Link href="/gold-rate/chennai" className="underline font-semibold">Chennai</Link>,{' '}
+          <Link href="/gold-rate/mumbai" className="underline font-semibold">Mumbai</Link>,{' '}
+          <Link href="/gold-rate/delhi" className="underline font-semibold">Delhi</Link>
         </div>
 
         <article className="mt-4 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
