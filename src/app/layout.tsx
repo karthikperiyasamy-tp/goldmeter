@@ -11,16 +11,18 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   icons: {
+    // Primary favicon for browsers
     icon: [
-      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/favicon.ico", sizes: "any" },
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
+    // Apple touch icon
     apple: [
       { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
     ],
-    // Shortcut icon for Google Search (needs to be at least 48x48, prefer larger)
-    shortcut: "/icon-192.png",
+    // Shortcut icon - Google prefers PNG icons at least 48x48
+    shortcut: { url: "/icon-192.png", type: "image/png" },
   },
   keywords: [
     "gold rate",
@@ -69,10 +71,15 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  // Add Google Search Console verification code here after setup
+  // TODO: Add your Google Search Console verification code
+  // Get it from: https://search.google.com/search-console
   // verification: {
   //   google: "YOUR_VERIFICATION_CODE",
   // },
+  other: {
+    // Help Google find favicon faster
+    'msapplication-TileImage': '/icon-192.png',
+  },
 };
 
 export default function RootLayout({
