@@ -54,8 +54,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Homepage (with https://goldmeter.in/ canonical)
   const homepage = {
     url: baseUrl,
-    lastModified: new Date('2025-12-18'),
-    changeFrequency: 'daily' as const,
+    lastModified: new Date(),
+    changeFrequency: 'hourly' as const,
+    priority: 1,
+  }
+
+  // Gold Rate Today - Primary landing page for "gold rate today" query
+  const goldRateToday = {
+    url: `${baseUrl}/gold-rate-today`,
+    lastModified: new Date(),
+    changeFrequency: 'hourly' as const,
     priority: 1,
   }
 
@@ -139,12 +147,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  // City pages
+  // City pages - high priority with hourly updates for freshness signals
   const cityPages = cities.map((city) => ({
     url: `${baseUrl}/${city}`,
-    lastModified: new Date('2025-12-18'),
-    changeFrequency: 'daily' as const,
-    priority: 0.9,
+    lastModified: new Date(),
+    changeFrequency: 'hourly' as const,
+    priority: 0.95,
   }))
 
   // Silver rate index page
@@ -165,6 +173,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     homepage,
+    goldRateToday,
+    ...cityPages,
     calculator,
     wastageCalculator,
     purityConverter,
@@ -175,7 +185,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     recapListing,
     ...newsPages,
     ...recapPages,
-    ...cityPages,
     silverRateIndex,
     ...silverRateCityPages,
   ]

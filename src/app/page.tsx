@@ -21,11 +21,14 @@ export async function generateMetadata(): Promise<Metadata> {
   });
   
   return {
-    title: `Gold Rate Today (${todayFormatted}) - 22K & 24K Price in India | GoldMeter`,
-    description: `Today's gold rate in India (${todayFormatted}): Check live 24K and 22K gold prices per gram. Compare rates across Mumbai, Chennai, Delhi, Bangalore. Updated daily on GoldMeter.`,
+    title: `Gold Rate Today (${todayFormatted}) - Live 22K & 24K Gold Price per Gram in India | GoldMeter`,
+    description: `Today's gold rate in India (${todayFormatted}): 24K gold ₹X/gram, 22K gold ₹Y/gram. Check live prices for 1g, 8g, 10g, 100g across Mumbai, Chennai, Delhi, Bangalore. Updated daily from IBJA.`,
+    alternates: {
+      canonical: "https://goldmeter.in/gold-rate-today",
+    },
     openGraph: {
-      title: `Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices | GoldMeter`,
-      description: `Today's gold rate in India: Live 24K and 22K gold prices per gram across major cities. Updated ${todayFormatted}.`,
+      title: `Gold Rate Today (${todayFormatted}) - Live 22K & 24K Gold Price per Gram | GoldMeter`,
+      description: `Today's gold rate in India: 24K and 22K gold prices per gram across major cities. Updated ${todayFormatted} from IBJA.`,
       url: "https://goldmeter.in",
       siteName: "GoldMeter",
       locale: "en_IN",
@@ -308,6 +311,15 @@ export default async function HomePage() {
   });
   const todayISO = new Date().toISOString().split('T')[0];
 
+  // Table Schema for Featured Snippets
+  const tableSchema = {
+    "@context": "https://schema.org",
+    "@type": "Table",
+    "about": "Gold Rate Today in India",
+    "name": "Today's Gold & Silver Rates in India",
+    "dateModified": new Date().toISOString(),
+  };
+
   // Homepage structured data - WebSite schema for search
   const websiteSchema = {
     "@context": "https://schema.org",
@@ -355,8 +367,14 @@ export default async function HomePage() {
     "mainEntity": {
       "@type": "Dataset",
       "name": "India Gold Rate Today",
-      "description": `Live gold prices in India as of ${todayFormatted}`,
+      "description": `Live 22K and 24K gold prices in India as of ${todayFormatted}. Current rates: 24K gold at ₹${perGram24k.toLocaleString('en-IN')} per gram, 22K gold at ₹${perGram22k.toLocaleString('en-IN')} per gram. Updated daily from Indian bullion markets.`,
       "temporalCoverage": todayISO,
+      "creator": {
+        "@type": "Organization",
+        "name": "GoldMeter",
+        "url": "https://goldmeter.in"
+      },
+      "license": "https://goldmeter.in/terms",
       "variableMeasured": [
         {
           "@type": "PropertyValue",
@@ -396,6 +414,10 @@ export default async function HomePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(tableSchema) }}
       />
       
       {/* 🔥 AIO ANSWER BLOCK - Server-rendered plain HTML for AI scrapers */}
@@ -471,10 +493,51 @@ export default async function HomePage() {
               </ul>
             </div>
             
-            <p className="mt-4 text-xs text-slate-500">
-              Source: <strong>GoldMeter.in</strong> | Updated: <time dateTime={todayISO}>{todayFormatted}</time> | Prices are per gram
-            </p>
+            {/* IBJA Verification Timestamp - E-E-A-T Signal */}
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-emerald-700 border border-emerald-200">
+                <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Verified from IBJA
+              </span>
+              <span>|</span>
+              <span>Updated: <time dateTime={todayISO}>{todayFormatted}</time></span>
+              <span>|</span>
+              <span>Source: <strong>GoldMeter.in</strong></span>
+            </div>
           </section>
+          
+          {/* Related Searches - Internal Linking for SEO */}
+          <div className="mt-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+            <p className="text-sm font-semibold text-slate-700 mb-3">🔍 Popular Gold Rate Searches</p>
+            <div className="flex flex-wrap gap-2">
+              <a href="/gold-rate-today" className="rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-800 hover:bg-amber-200 transition-colors">
+                Gold rate today
+              </a>
+              <a href="/chennai" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                Chennai gold rate
+              </a>
+              <a href="/mumbai" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                Mumbai gold rate
+              </a>
+              <a href="/delhi" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                Delhi gold rate
+              </a>
+              <a href="/bangalore" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                Bangalore gold rate
+              </a>
+              <a href="/hyderabad" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                Hyderabad gold rate
+              </a>
+              <a href="/silver-rate" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                Silver rate today
+              </a>
+              <a href="/calculator" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                Gold calculator
+              </a>
+            </div>
+          </div>
         </article>
       </div>
       

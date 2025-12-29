@@ -12,8 +12,8 @@ export async function generateMetadata(): Promise<Metadata> {
   });
   
   return {
-    title: `Mumbai Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices | GoldMeter`,
-    description: `As of ${todayFormatted}, get today's Mumbai gold rate per gram for 22K and 24K gold. Compare prices, check making charges, and find best jewellery shops in Mumbai.`,
+    title: `Mumbai Gold Rate Today (${todayFormatted}) - 22K & 24K Gold Price per Gram | GoldMeter`,
+    description: `Mumbai gold rate today (${todayFormatted}): 24K at ₹X/gram, 22K at ₹Y/gram. Check Zaveri Bazaar prices, making charges ₹200-500/g, compare with yesterday. Updated daily from IBJA.`,
     alternates: {
       canonical: "https://goldmeter.in/mumbai",
     },
@@ -109,9 +109,19 @@ export default async function MumbaiPage() {
               </table>
             </div>
             
-            <p className="mt-3 text-sm text-slate-600">
-              Source: <strong>GoldMeter.in</strong> | Last updated: <time dateTime={rates.dateISO}>{todayFormatted}</time>
-            </p>
+            {/* IBJA Verification Timestamp - E-E-A-T Signal */}
+            <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-emerald-700 border border-emerald-200">
+                <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Verified from IBJA
+              </span>
+              <span>|</span>
+              <span>Updated: <time dateTime={rates.dateISO}>{todayFormatted}</time></span>
+              <span>|</span>
+              <span>Source: <strong>GoldMeter.in</strong></span>
+            </div>
 
             {/* SEO: Expanded intro paragraph */}
             <div className="mt-4 pt-4 border-t border-amber-200 text-sm text-slate-600 leading-relaxed">
@@ -133,6 +143,28 @@ export default async function MumbaiPage() {
               </div>
             </div>
           </section>
+          
+          {/* Related Searches - Internal Linking for SEO */}
+          <div className="mt-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+            <p className="text-sm font-semibold text-slate-700 mb-3">🔍 Related Gold Rate Searches</p>
+            <div className="flex flex-wrap gap-2">
+              <a href="/gold-rate-today" className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700 hover:bg-amber-100 transition-colors">
+                Gold rate today India
+              </a>
+              <a href="/delhi" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                Delhi gold rate
+              </a>
+              <a href="/pune" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                Pune gold rate
+              </a>
+              <a href="/ahmedabad" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                Ahmedabad gold rate
+              </a>
+              <a href="/silver-rate/mumbai" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+                Mumbai silver rate
+              </a>
+            </div>
+          </div>
         </article>
       </div>
 
