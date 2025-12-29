@@ -328,7 +328,13 @@ export default async function HomePage() {
             {/* Structured price table for AI extraction */}
             <div className="mt-4 overflow-x-auto" data-price-table="true">
               <table className="w-full text-sm border-collapse" itemProp="offers" itemScope itemType="https://schema.org/AggregateOffer">
-                <caption className="text-left font-semibold text-amber-800 mb-2">Today&apos;s Gold & Silver Rates in India</caption>
+                <caption className="text-left font-semibold text-amber-800 mb-2">
+                  Today&apos;s Gold & Silver Rates in India
+                  {/* Schema.org metadata for AggregateOffer - must be inside itemScope */}
+                  <meta itemProp="priceCurrency" content="INR" />
+                  <meta itemProp="lowPrice" content={perGram18k.toString()} />
+                  <meta itemProp="highPrice" content={perGram24k.toString()} />
+                </caption>
                 <thead>
                   <tr className="bg-amber-100 text-amber-900">
                     <th className="px-3 py-2 text-left border border-amber-200">Metal</th>
@@ -341,7 +347,7 @@ export default async function HomePage() {
                   <tr className="bg-white">
                     <td className="px-3 py-2 border border-amber-200 font-medium">Gold 24K</td>
                     <td className="px-3 py-2 border border-amber-200">99.9%</td>
-                    <td className="px-3 py-2 border border-amber-200 font-semibold" itemProp="lowPrice">₹{perGram24k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200 font-semibold">₹{perGram24k.toLocaleString('en-IN')}</td>
                     <td className="px-3 py-2 border border-amber-200">₹{baseRates.gold_24k.toLocaleString('en-IN')}</td>
                   </tr>
                   <tr className="bg-amber-50/50">
@@ -364,7 +370,6 @@ export default async function HomePage() {
                   </tr>
                 </tbody>
               </table>
-              <meta itemProp="priceCurrency" content="INR" />
             </div>
 
             {/* City-wise quick rates for AI */}
