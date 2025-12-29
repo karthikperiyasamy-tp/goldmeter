@@ -9,16 +9,34 @@ import PriceTicker from "./PriceTicker";
 // Map URL slugs to city display names
 const SLUG_TO_CITY: Record<string, string> = {
   "": "India",
-  "chennai": "Chennai",
+  "ahmedabad": "Ahmedabad",
+  "ayodhya": "Ayodhya",
   "bangalore": "Bangalore",
-  "mumbai": "Mumbai",
+  "bhubaneswar": "Bhubaneswar",
+  "chandigarh": "Chandigarh",
+  "chennai": "Chennai",
+  "coimbatore": "Coimbatore",
   "delhi": "Delhi",
   "hyderabad": "Hyderabad",
-  "coimbatore": "Coimbatore",
-  "pune": "Pune",
+  "jaipur": "Jaipur",
+  "kerala": "Kerala",
   "kolkata": "Kolkata",
-  "ahmedabad": "Ahmedabad",
+  "lucknow": "Lucknow",
+  "madurai": "Madurai",
+  "mangalore": "Mangalore",
+  "mumbai": "Mumbai",
+  "mysore": "Mysore",
+  "nagpur": "Nagpur",
+  "nashik": "Nashik",
+  "patna": "Patna",
+  "pune": "Pune",
+  "rajkot": "Rajkot",
+  "salem": "Salem",
+  "surat": "Surat",
+  "trichy": "Trichy",
+  "vadodara": "Vadodara",
   "vijayawada": "Vijayawada",
+  "visakhapatnam": "Visakhapatnam",
 };
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
@@ -26,18 +44,24 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   
   // Derive city from URL path
   const getCityFromPath = (path: string): string => {
-    // Break path into segments to handle both gold (/city) and silver (/silver-rate/city)
+    // Break path into segments to handle gold-rate, silver-rate, and legacy routes
     const segments = path.split("/").filter(Boolean);
 
-    // Silver routes store city in the second segment
-    if (segments[0] === "silver-rate") {
-      const silverCitySlug = segments[1] || "";
-      return SLUG_TO_CITY[silverCitySlug] || "India";
+    // Gold rate routes: /gold-rate/{city}
+    if (segments[0] === "gold-rate") {
+      const citySlug = segments[1] || "";
+      return SLUG_TO_CITY[citySlug] || "India";
     }
 
-    // Gold routes keep city in the first segment
-    const goldCitySlug = segments[0] || "";
-    return SLUG_TO_CITY[goldCitySlug] || "India";
+    // Silver routes: /silver-rate/{city}
+    if (segments[0] === "silver-rate") {
+      const citySlug = segments[1] || "";
+      return SLUG_TO_CITY[citySlug] || "India";
+    }
+
+    // Legacy routes or homepage: /{city} or /
+    const citySlug = segments[0] || "";
+    return SLUG_TO_CITY[citySlug] || "India";
   };
 
   const [activeCity, setActiveCity] = useState(() => getCityFromPath(pathname));

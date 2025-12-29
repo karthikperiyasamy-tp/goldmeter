@@ -2,13 +2,18 @@ name: Hourly Gold Rate Scraping
 
 on:
   schedule:
-    # IST window: 08:00–11:30 every 30 mins
-    # 08:30 IST -> 03:00 UTC; 11:30 IST -> 06:00 UTC
-    - cron: '30 2 * * *'    # 08:00 IST
+    # ===== OVERNIGHT: 7 PM - 7 AM IST (hourly) =====
+    # 8 PM IST (14:30 UTC) to 5 AM IST (23:30 UTC)
+    - cron: '30 14-23 * * *'
+    # 6 AM IST (00:30 UTC) to 7 AM IST (01:30 UTC)
+    - cron: '30 0-1 * * *'
+    
+    # ===== MORNING: 8 AM - 11:30 AM IST (every 30 mins) =====
+    - cron: '30 2 * * *'     # 08:00 IST
     - cron: '0,30 3-5 * * *' # 08:30–11:30 IST
-    - cron: '0 6 * * *'     # 11:30 IST
-    # IST window: 12:00–19:00 once per hour (run at :30 UTC)
-    # 12:00 IST -> 06:30 UTC; 19:00 IST -> 13:30 UTC
+    - cron: '0 6 * * *'      # 11:30 IST
+    
+    # ===== AFTERNOON: 12 PM - 7 PM IST (hourly) =====
     - cron: '30 6-13 * * *'
   workflow_dispatch: # Allows manual trigger
 
