@@ -1,6 +1,6 @@
-import { headers } from "next/headers";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Script from "next/script";
 import { getLatestGoldRates, getHistoricalGoldRates } from "@/lib/goldRatesDB";
 import { getRecentNews } from "@/lib/newsDB";
 import { getInternationalRates } from "@/lib/internationalRates";
@@ -179,8 +179,9 @@ export default async function GoldRateTodayPage() {
     hour12: true
   });
 
-  // Consolidated Structured Data using @graph (recommended by Google to avoid duplicate field errors)
-  const structuredData = {
+  // Consolidated Structured Data using @graph - ALL schemas in ONE block
+  // This prevents Next.js RSC serialization from creating duplicate FAQPage entries
+  const structuredDataJson = JSON.stringify({
     "@context": "https://schema.org",
     "@graph": [
       // WebSite schema for search
@@ -271,70 +272,66 @@ export default async function GoldRateTodayPage() {
             "unitText": "INR"
           }
         ]
+      },
+      // FAQPage schema - included in @graph to prevent RSC duplication
+      {
+        "@type": "FAQPage",
+        "@id": "https://goldmeter.in/gold-rate-today/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is the gold rate today in India?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `As of ${todayFormatted}, 24K gold rate is ₹${perGram24k.toLocaleString('en-IN')} per gram and 22K gold rate is ₹${perGram22k.toLocaleString('en-IN')} per gram in India.`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the 22K gold rate today?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `Today's 22K gold rate in India is ₹${perGram22k.toLocaleString('en-IN')} per gram (₹${baseRates.gold_22k.toLocaleString('en-IN')} per 10 grams). 22K gold contains 91.6% pure gold.`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the 24K gold rate today?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `Today's 24K gold rate in India is ₹${perGram24k.toLocaleString('en-IN')} per gram (₹${baseRates.gold_24k.toLocaleString('en-IN')} per 10 grams). 24K is 99.9% pure gold.`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the price of 1 gram gold today?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `1 gram gold price today: 24K is ₹${perGram24k.toLocaleString('en-IN')}, 22K is ₹${perGram22k.toLocaleString('en-IN')}, and 18K is ₹${perGram18k.toLocaleString('en-IN')}.`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the price of 8 gram gold today?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `8 gram gold price today: 24K is ₹${(perGram24k * 8).toLocaleString('en-IN')}, 22K is ₹${(perGram22k * 8).toLocaleString('en-IN')}, and 18K is ₹${(perGram18k * 8).toLocaleString('en-IN')}.`
+            }
+          }
+        ]
       }
     ]
-  };
-
-  // FAQPage Schema - Separate to avoid "Duplicate field" errors
-  // Google recommends keeping FAQPage as a standalone schema
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is the gold rate today in India?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": `As of ${todayFormatted}, 24K gold rate is ₹${perGram24k.toLocaleString('en-IN')} per gram and 22K gold rate is ₹${perGram22k.toLocaleString('en-IN')} per gram in India.`
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the 22K gold rate today?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": `Today's 22K gold rate in India is ₹${perGram22k.toLocaleString('en-IN')} per gram (₹${baseRates.gold_22k.toLocaleString('en-IN')} per 10 grams). 22K gold contains 91.6% pure gold.`
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the 24K gold rate today?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": `Today's 24K gold rate in India is ₹${perGram24k.toLocaleString('en-IN')} per gram (₹${baseRates.gold_24k.toLocaleString('en-IN')} per 10 grams). 24K is 99.9% pure gold.`
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the price of 1 gram gold today?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": `1 gram gold price today: 24K is ₹${perGram24k.toLocaleString('en-IN')}, 22K is ₹${perGram22k.toLocaleString('en-IN')}, and 18K is ₹${perGram18k.toLocaleString('en-IN')}.`
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the price of 8 gram gold today?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": `8 gram gold price today: 24K is ₹${(perGram24k * 8).toLocaleString('en-IN')}, 22K is ₹${(perGram22k * 8).toLocaleString('en-IN')}, and 18K is ₹${(perGram18k * 8).toLocaleString('en-IN')}.`
-        }
-      }
-    ]
-  };
+  });
 
   return (
     <>
-      {/* Consolidated structured data using @graph */}
-      <script
+      {/* Single consolidated structured data script using @graph */}
+      {/* Using Script component with id to prevent Next.js RSC double-serialization */}
+      <Script
+        id="structured-data"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-      {/* FAQPage as separate schema to avoid duplicate field errors */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: structuredDataJson }}
+        strategy="beforeInteractive"
       />
       
       {/* AIO ANSWER BLOCK - Server-rendered for AI scrapers */}
