@@ -179,96 +179,104 @@ export default async function GoldRateTodayPage() {
     hour12: true
   });
 
-  // WebSite schema for search
-  const websiteSchema = {
+  // Consolidated Structured Data using @graph (recommended by Google to avoid duplicate field errors)
+  const structuredData = {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "GoldMeter",
-    "url": "https://goldmeter.in",
-    "description": "Track live 22K & 24K gold prices across Indian cities, compare trends, and calculate jewellery costs.",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://goldmeter.in/{city}",
-      "query-input": "required name=city"
-    }
-  };
-
-  // Organization schema for brand recognition
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "GoldMeter",
-    "url": "https://goldmeter.in",
-    "logo": "https://goldmeter.in/logo.png",
-    "description": "India's trusted source for live gold and silver prices across major cities.",
-    "sameAs": []
-  };
-
-  // Structured Data - WebPage schema
-  const webPageSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": `Gold Rate Today in India (${todayFormatted}) - Live 22K & 24K Price per Gram`,
-    "description": `Today's gold rate in India: ₹${perGram24k.toLocaleString('en-IN')}/gram for 24K, ₹${perGram22k.toLocaleString('en-IN')}/gram for 22K. Updated ${todayFormatted}.`,
-    "url": "https://goldmeter.in/gold-rate-today",
-    "datePublished": "2024-01-01",
-    "dateModified": new Date().toISOString(),
-    "inLanguage": "en-IN",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "GoldMeter",
-      "url": "https://goldmeter.in"
-    },
-    "speakable": {
-      "@type": "SpeakableSpecification",
-      "cssSelector": ["[data-ai-answer]", "h1", "[data-price-table]"]
-    }
-  };
-
-  // Table Schema for Featured Snippets
-  const tableSchema = {
-    "@context": "https://schema.org",
-    "@type": "Table",
-    "about": "Gold Rate Today in India",
-    "name": "Today's Gold & Silver Rates in India",
-    "dateModified": new Date().toISOString(),
-  };
-
-  // Dataset schema for AI Overview authority
-  const datasetSchema = {
-    "@context": "https://schema.org",
-    "@type": "Dataset",
-    "name": "India Gold Rate Today",
-    "description": `Live 22K and 24K gold prices in India as of ${todayFormatted}. Current rates: 24K gold at ₹${perGram24k.toLocaleString('en-IN')} per gram, 22K gold at ₹${perGram22k.toLocaleString('en-IN')} per gram.`,
-    "temporalCoverage": todayISO,
-    "creator": {
-      "@type": "Organization",
-      "name": "GoldMeter",
-      "url": "https://goldmeter.in"
-    },
-    "variableMeasured": [
+    "@graph": [
+      // WebSite schema for search
       {
-        "@type": "PropertyValue",
-        "name": "24K Gold Price per gram",
-        "value": perGram24k,
-        "unitText": "INR"
+        "@type": "WebSite",
+        "@id": "https://goldmeter.in/#website",
+        "name": "GoldMeter",
+        "url": "https://goldmeter.in",
+        "description": "Track live 22K & 24K gold prices across Indian cities, compare trends, and calculate jewellery costs.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://goldmeter.in/{city}",
+          "query-input": "required name=city"
+        }
       },
+      // Organization schema for brand recognition
       {
-        "@type": "PropertyValue",
-        "name": "22K Gold Price per gram",
-        "value": perGram22k,
-        "unitText": "INR"
+        "@type": "Organization",
+        "@id": "https://goldmeter.in/#organization",
+        "name": "GoldMeter",
+        "url": "https://goldmeter.in",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://goldmeter.in/logo.png"
+        },
+        "description": "India's trusted source for live gold and silver prices across major cities."
       },
+      // WebPage schema
       {
-        "@type": "PropertyValue",
-        "name": "18K Gold Price per gram",
-        "value": perGram18k,
-        "unitText": "INR"
+        "@type": "WebPage",
+        "@id": "https://goldmeter.in/gold-rate-today/#webpage",
+        "name": `Gold Rate Today in India (${todayFormatted}) - Live 22K & 24K Price per Gram`,
+        "description": `Today's gold rate in India: ₹${perGram24k.toLocaleString('en-IN')}/gram for 24K, ₹${perGram22k.toLocaleString('en-IN')}/gram for 22K. Updated ${todayFormatted}.`,
+        "url": "https://goldmeter.in/gold-rate-today",
+        "datePublished": "2024-01-01",
+        "dateModified": new Date().toISOString(),
+        "inLanguage": "en-IN",
+        "isPartOf": { "@id": "https://goldmeter.in/#website" },
+        "speakable": {
+          "@type": "SpeakableSpecification",
+          "cssSelector": ["[data-ai-answer]", "h1", "[data-price-table]"]
+        }
+      },
+      // BreadcrumbList schema
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://goldmeter.in/gold-rate-today/#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://goldmeter.in"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Gold Rate Today",
+            "item": "https://goldmeter.in/gold-rate-today"
+          }
+        ]
+      },
+      // Dataset schema for AI Overview authority
+      {
+        "@type": "Dataset",
+        "@id": "https://goldmeter.in/gold-rate-today/#dataset",
+        "name": "India Gold Rate Today",
+        "description": `Live 22K and 24K gold prices in India as of ${todayFormatted}. Current rates: 24K gold at ₹${perGram24k.toLocaleString('en-IN')} per gram, 22K gold at ₹${perGram22k.toLocaleString('en-IN')} per gram.`,
+        "temporalCoverage": todayISO,
+        "creator": { "@id": "https://goldmeter.in/#organization" },
+        "variableMeasured": [
+          {
+            "@type": "PropertyValue",
+            "name": "24K Gold Price per gram",
+            "value": perGram24k,
+            "unitText": "INR"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "22K Gold Price per gram",
+            "value": perGram22k,
+            "unitText": "INR"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "18K Gold Price per gram",
+            "value": perGram18k,
+            "unitText": "INR"
+          }
+        ]
       }
     ]
   };
 
-  // FAQ Schema
+  // FAQPage Schema - Separate to avoid "Duplicate field" errors
+  // Google recommends keeping FAQPage as a standalone schema
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -316,67 +324,29 @@ export default async function GoldRateTodayPage() {
     ]
   };
 
-  // Breadcrumb Schema
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://goldmeter.in"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Gold Rate Today",
-        "item": "https://goldmeter.in/gold-rate-today"
-      }
-    ]
-  };
-
   return (
     <>
+      {/* Consolidated structured data using @graph */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(tableSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetSchema) }}
-      />
+      {/* FAQPage as separate schema to avoid duplicate field errors */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
       
       {/* AIO ANSWER BLOCK - Server-rendered for AI scrapers */}
-      <div className="bg-[#fffdf7]" itemScope itemType="https://schema.org/Product">
+      <div className="bg-[#fffdf7]">
         <article className="mx-auto max-w-6xl px-4 pt-6">
           <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
-            <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl" itemProp="name">
+            <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
               Gold Rate Today in India ({todayFormatted}) – Live 22K &amp; 24K Price per Gram
             </h1>
             
             {/* Primary AIO answer */}
-            <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true" itemProp="description">
+            <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
               As of <time dateTime={todayISO}>{todayFormatted}</time>, gold rates in India are <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> (99.9% purity), <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> (91.6% purity), and <strong>₹{perGram18k.toLocaleString('en-IN')} per gram for 18K</strong> (75.0% purity). Silver rate is ₹{silver1g.toLocaleString('en-IN')} per gram.
             </p>
 
@@ -410,12 +380,9 @@ export default async function GoldRateTodayPage() {
 
             {/* Structured price table matching competitor format */}
             <div className="mt-4 overflow-x-auto" data-price-table="true">
-              <table className="w-full text-sm border-collapse" itemProp="offers" itemScope itemType="https://schema.org/AggregateOffer">
+              <table className="w-full text-sm border-collapse">
                 <caption className="text-left font-semibold text-amber-800 mb-2">
                   Today&apos;s Gold & Silver Rates in India (per gram)
-                  <meta itemProp="priceCurrency" content="INR" />
-                  <meta itemProp="lowPrice" content={perGram18k.toString()} />
-                  <meta itemProp="highPrice" content={perGram24k.toString()} />
                 </caption>
                 <thead>
                   <tr className="bg-amber-100 text-amber-900">
