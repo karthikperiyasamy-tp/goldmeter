@@ -6,10 +6,12 @@ import HomeClient, {
   type NewsItem,
   type RateResponse,
   type PriceChange,
+  type RecapItem,
 } from "./components/HomeClient";
 import { getLatestGoldRates, getHistoricalGoldRates } from "@/lib/goldRatesDB";
 import { getRecentNews } from "@/lib/newsDB";
 import { getInternationalRates } from "@/lib/internationalRates";
+import { getRecentRecaps, formatDateForDisplay } from "@/lib/recapDB";
 
 // Dynamic metadata for SEO - updates with today's date for freshness signals
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: `Gold Rate Today (${todayFormatted}) - Live 22K & 24K Gold Price per Gram in India | GoldMeter`,
     description: `Today's gold rate in India (${todayFormatted}): 24K gold ₹X/gram, 22K gold ₹Y/gram. Check live prices for 1g, 8g, 10g, 100g across Mumbai, Chennai, Delhi, Bangalore. Updated daily from IBJA.`,
     alternates: {
-      canonical: "https://goldmeter.in/gold-rate-today",
+      canonical: "https://goldmeter.in",
     },
     openGraph: {
       title: `Gold Rate Today (${todayFormatted}) - Live 22K & 24K Gold Price per Gram | GoldMeter`,
@@ -148,11 +150,12 @@ export default async function HomePage() {
   console.log("🏠 [HomePage] Loading gold rates and news...");
   
   // Fetch all data in parallel for faster page load
-  const [dbDataResult, historyResult, newsResult, intlRatesResult] = await Promise.allSettled([
+  const [dbDataResult, historyResult, newsResult, intlRatesResult, recapsResult] = await Promise.allSettled([
     getLatestGoldRates(),
     getHistoricalGoldRates("India", 30),
     getRecentNews(3),
     getInternationalRates(),
+    getRecentRecaps(6),
   ]);
 
   // Process database rates
@@ -197,6 +200,21 @@ export default async function HomePage() {
     console.log(`🌍 [HomePage] Loaded international rates: 24K=${internationalRates.gold24k.length}, 22K=${internationalRates.gold22k.length}, 18K=${internationalRates.gold18k.length}`);
   } else if (intlRatesResult.status === 'rejected') {
     console.error("❌ [HomePage] Failed to fetch international rates:", intlRatesResult.reason);
+  }
+
+  // Process recaps for internal linking
+  let recentRecaps: RecapItem[] = [];
+  if (recapsResult.status === 'fulfilled' && recapsResult.value.length > 0) {
+    recentRecaps = recapsResult.value.map((recap) => ({
+      slug: recap.slug,
+      title: recap.title,
+      date: formatDateForDisplay(recap.date),
+      summary: recap.summary,
+      sourcesCount: recap.sourcesCount,
+    }));
+    console.log(`📊 [HomePage] Loaded ${recentRecaps.length} recent recaps for internal linking`);
+  } else if (recapsResult.status === 'rejected') {
+    console.error("❌ [HomePage] Failed to fetch recaps:", recapsResult.reason);
   }
   
   // Prepare base rates (India)
@@ -541,7 +559,7 @@ export default async function HomePage() {
         </article>
       </div>
       
-      <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} priceChange={priceChange} history={normalizedHistory} internationalRates={internationalRates ?? undefined} />
+      <HomeClient baseRates={baseRates} cities={cityRates} newsItems={newsItems} priceChange={priceChange} history={normalizedHistory} internationalRates={internationalRates ?? undefined} recentRecaps={recentRecaps} />
     </>
   );
 }

@@ -211,6 +211,40 @@ export async function getRecentRecaps(limit: number = 5): Promise<DailyRecap[]> 
   return getAllRecaps(limit);
 }
 
+// Get adjacent recaps (previous and next) for navigation
+export async function getAdjacentRecaps(currentSlug: string): Promise<{
+  previous: DailyRecap | null;
+  next: DailyRecap | null;
+}> {
+  const db = await getDatabase();
+  const collection = db.collection<DailyRecap>(RECAP_COLLECTION);
+  
+  // Get current recap to find its date
+  const currentRecap = await collection.findOne({ slug: currentSlug });
+  if (!currentRecap) {
+    return { previous: null, next: null };
+  }
+  
+  // Find previous recap (older date)
+  const previousRecap = await collection
+    .find({ date: { $lt: currentRecap.date } })
+    .sort({ date: -1 })
+    .limit(1)
+    .toArray();
+  
+  // Find next recap (newer date)
+  const nextRecap = await collection
+    .find({ date: { $gt: currentRecap.date } })
+    .sort({ date: 1 })
+    .limit(1)
+    .toArray();
+  
+  return {
+    previous: previousRecap[0] ? { ...previousRecap[0], _id: previousRecap[0]._id?.toString() } : null,
+    next: nextRecap[0] ? { ...nextRecap[0], _id: nextRecap[0]._id?.toString() } : null,
+  };
+}
+
 // Create indexes
 export async function ensureRecapIndexes(): Promise<void> {
   const db = await getDatabase();

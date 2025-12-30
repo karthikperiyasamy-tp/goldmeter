@@ -7,6 +7,22 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://goldmeter.in/about",
   },
+  openGraph: {
+    title: "About GoldMeter - India's Trusted Gold Price Tracker",
+    description: "Learn about GoldMeter, India's reliable source for daily gold and silver prices across major cities. Our mission, data sources, and commitment to accuracy.",
+    type: "website",
+    url: "https://goldmeter.in/about",
+    siteName: "GoldMeter",
+    locale: "en_IN",
+    images: [
+      {
+        url: "https://goldmeter.in/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "About GoldMeter",
+      },
+    ],
+  },
 };
 
 export default function AboutPage() {

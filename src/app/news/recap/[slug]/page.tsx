@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getRecapBySlug, getAllRecaps, formatDateForDisplay } from "@/lib/recapDB";
+import { getRecapBySlug, getAllRecaps, formatDateForDisplay, getAdjacentRecaps } from "@/lib/recapDB";
 import type { Metadata } from "next";
 import StructuredData from "@/app/components/StructuredData";
-import type { GoldRateSnapshot } from "@/lib/recapTypes";
+import type { GoldRateSnapshot, DailyRecap } from "@/lib/recapTypes";
 
 // Gold Rate Card Component for displaying historical prices
 function GoldRateCard({ 
@@ -146,10 +146,13 @@ export default async function RecapPage({ params }: Props) {
   const displayDate = formatDateForDisplay(recap.date);
   const recapUrl = `https://goldmeter.in/news/recap/${slug}`;
   const cityLinks = [
-    { name: "Chennai", href: "/chennai" },
-    { name: "Mumbai", href: "/mumbai" },
-    { name: "Delhi", href: "/delhi" },
+    { name: "Chennai", href: "/gold-rate/chennai" },
+    { name: "Mumbai", href: "/gold-rate/mumbai" },
+    { name: "Delhi", href: "/gold-rate/delhi" },
   ];
+  
+  // Get previous and next recaps for navigation
+  const { previous, next } = await getAdjacentRecaps(slug);
 
   // Generate price structured data for SEO
   const priceStructuredData = recap.goldRates ? {
@@ -299,6 +302,42 @@ export default async function RecapPage({ params }: Props) {
           <strong>Disclaimer:</strong> This is an AI-generated summary based on news headlines from {displayDate}. 
           For investment decisions, please consult with a financial advisor and verify information from primary sources.
         </div>
+
+        {/* Previous/Next Navigation */}
+        <nav className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+          {previous ? (
+            <Link
+              href={`/news/recap/${previous.slug}`}
+              className="group flex items-center gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:border-amber-300 hover:shadow-md transition-all"
+            >
+              <span className="text-xl group-hover:-translate-x-1 transition-transform">←</span>
+              <div className="flex-1 min-w-0">
+                <span className="text-xs text-slate-500 uppercase tracking-wide">Previous Recap</span>
+                <p className="text-sm font-semibold text-charcoal line-clamp-1 group-hover:text-amber-700">
+                  {formatDateForDisplay(previous.date)}
+                </p>
+              </div>
+            </Link>
+          ) : (
+            <div />
+          )}
+          {next ? (
+            <Link
+              href={`/news/recap/${next.slug}`}
+              className="group flex items-center gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:border-amber-300 hover:shadow-md transition-all md:text-right"
+            >
+              <div className="flex-1 min-w-0">
+                <span className="text-xs text-slate-500 uppercase tracking-wide">Next Recap</span>
+                <p className="text-sm font-semibold text-charcoal line-clamp-1 group-hover:text-amber-700">
+                  {formatDateForDisplay(next.date)}
+                </p>
+              </div>
+              <span className="text-xl group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
+          ) : (
+            <div />
+          )}
+        </nav>
 
         {/* Related Links */}
         <div className="mt-8 flex flex-wrap gap-4">

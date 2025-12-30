@@ -7,6 +7,22 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://goldmeter.in/disclaimer",
   },
+  openGraph: {
+    title: "Disclaimer - GoldMeter",
+    description: "Important disclaimers about gold price information provided by GoldMeter. Understand the limitations of our data.",
+    type: "website",
+    url: "https://goldmeter.in/disclaimer",
+    siteName: "GoldMeter",
+    locale: "en_IN",
+    images: [
+      {
+        url: "https://goldmeter.in/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Disclaimer - GoldMeter",
+      },
+    ],
+  },
 };
 
 export default function DisclaimerPage() {

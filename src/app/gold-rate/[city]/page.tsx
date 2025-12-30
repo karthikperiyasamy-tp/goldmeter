@@ -42,6 +42,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: `As of ${todayFormatted}, get today's ${config.name} gold rate per gram for 22K and 24K gold. Updated daily from ${config.name} bullion market.`,
       type: 'website',
       url: `https://goldmeter.in/gold-rate/${config.slug}`,
+      siteName: 'GoldMeter',
+      locale: 'en_IN',
+      images: [
+        {
+          url: 'https://goldmeter.in/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: `${config.name} Gold Rate Today`,
+        },
+      ],
     },
   };
 }

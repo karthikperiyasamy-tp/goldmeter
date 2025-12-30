@@ -14,6 +14,22 @@ export const metadata: Metadata = {
     "gold karat converter",
     "gold purity calculator india",
   ],
+  openGraph: {
+    title: "Gold Purity Converter - 22K to 24K & Karat Calculator | GoldMeter",
+    description: "Convert gold purity between 22K, 24K, 18K karats instantly. Free gold purity calculator for India with accurate conversion rates.",
+    type: "website",
+    url: "https://goldmeter.in/purity-converter",
+    siteName: "GoldMeter",
+    locale: "en_IN",
+    images: [
+      {
+        url: "https://goldmeter.in/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Gold Purity Converter - GoldMeter",
+      },
+    ],
+  },
 };
 
 export default function PurityConverterLayout({

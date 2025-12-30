@@ -7,6 +7,22 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://goldmeter.in/privacy",
   },
+  openGraph: {
+    title: "Privacy Policy - GoldMeter",
+    description: "GoldMeter's privacy policy explains how we collect, use, and protect your personal information when you use our gold price tracking service.",
+    type: "website",
+    url: "https://goldmeter.in/privacy",
+    siteName: "GoldMeter",
+    locale: "en_IN",
+    images: [
+      {
+        url: "https://goldmeter.in/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Privacy Policy - GoldMeter",
+      },
+    ],
+  },
 };
 
 export default function PrivacyPage() {

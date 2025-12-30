@@ -7,6 +7,22 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://goldmeter.in/contact",
   },
+  openGraph: {
+    title: "Contact Us - GoldMeter",
+    description: "Get in touch with GoldMeter for questions, feedback, or business inquiries about gold prices in India.",
+    type: "website",
+    url: "https://goldmeter.in/contact",
+    siteName: "GoldMeter",
+    locale: "en_IN",
+    images: [
+      {
+        url: "https://goldmeter.in/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Contact GoldMeter",
+      },
+    ],
+  },
 };
 
 export default function ContactPage() {

@@ -22,6 +22,14 @@ export const metadata: Metadata = {
     siteName: "GoldMeter",
     type: "website",
     locale: "en_IN",
+    images: [
+      {
+        url: "https://goldmeter.in/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Gold Investment Calculator - GoldMeter",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",

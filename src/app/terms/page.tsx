@@ -7,6 +7,22 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://goldmeter.in/terms",
   },
+  openGraph: {
+    title: "Terms of Service - GoldMeter",
+    description: "Terms and conditions for using GoldMeter's gold price tracking service and website.",
+    type: "website",
+    url: "https://goldmeter.in/terms",
+    siteName: "GoldMeter",
+    locale: "en_IN",
+    images: [
+      {
+        url: "https://goldmeter.in/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Terms of Service - GoldMeter",
+      },
+    ],
+  },
 };
 
 export default function TermsPage() {

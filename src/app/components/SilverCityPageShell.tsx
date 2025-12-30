@@ -51,7 +51,7 @@ export default function SilverCityPageShell({
   intro,
 }: SilverCityPageShellProps) {
   const citySlug = city.toLowerCase();
-  const goldHref = city === 'India' ? '/' : `/${citySlug}`;
+  const goldHref = city === 'India' ? '/' : `/gold-rate/${citySlug}`;
 
   const perGramSilver = silver1kg / 1000;
   const changePerGram = priceChange / 1000;

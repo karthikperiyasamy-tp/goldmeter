@@ -38,6 +38,14 @@ export type NewsItem = {
   slug: string;
 };
 
+export type RecapItem = {
+  slug: string;
+  title: string;
+  date: string;
+  summary: string;
+  sourcesCount: number;
+};
+
 // Price change per 10g (today - yesterday)
 export type PriceChange = {
   gold22k: number;
@@ -64,6 +72,7 @@ type HomeClientProps = {
   priceChange?: PriceChange;
   history?: HistoryRate[];
   internationalRates?: InternationalRates | null;
+  recentRecaps?: RecapItem[];
 };
 
 // Gram presets for quick cards (just the gram quantities)
@@ -105,6 +114,7 @@ export default function HomeClient({
   priceChange = { gold22k: 0, gold24k: 0 },
   history = [],
   internationalRates = null,
+  recentRecaps = [],
 }: HomeClientProps) {
   const router = useRouter();
 
@@ -515,6 +525,43 @@ export default function HomeClient({
                     </Link>
                   </div>
                 </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Daily Market Recaps - SEO internal linking */}
+      {recentRecaps.length > 0 && (
+        <section className="mx-auto w-full max-w-6xl px-4 pt-6">
+          <div className="rounded-3xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-6 shadow-soft">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">📊</span>
+                <h3 className="text-lg font-semibold text-charcoal">Daily Market Recaps</h3>
+              </div>
+              <Link href="/news/recap" className="text-sm font-semibold text-amber-600 hover:text-amber-700">
+                View all →
+              </Link>
+            </div>
+            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+              {recentRecaps.slice(0, 6).map((recap) => (
+                <Link
+                  key={recap.slug}
+                  href={`/news/recap/${recap.slug}`}
+                  className="group flex items-start gap-3 rounded-2xl border border-amber-100 bg-white p-4 hover:border-amber-300 hover:shadow-md transition-all"
+                >
+                  <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center">
+                    📊
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-slate-500">{recap.date}</p>
+                    <p className="text-sm font-semibold text-charcoal line-clamp-2 group-hover:text-amber-700 mt-0.5">
+                      {recap.title}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-1">{recap.sourcesCount} sources</p>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>
