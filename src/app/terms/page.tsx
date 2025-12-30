@@ -3,13 +3,14 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Terms of Service - GoldMeter",
-  description: "Terms and conditions for using GoldMeter's gold price tracking service and website.",
+  // Description: 145 chars (recommended: 110-160)
+  description: "Terms and conditions for using GoldMeter's gold price tracking service. Read our policies on data accuracy, liability, and website usage guidelines.",
   alternates: {
     canonical: "https://goldmeter.in/terms",
   },
   openGraph: {
     title: "Terms of Service - GoldMeter",
-    description: "Terms and conditions for using GoldMeter's gold price tracking service and website.",
+    description: "Terms and conditions for using GoldMeter's gold price tracking service. Read our policies on data accuracy, liability, and website usage.",
     type: "website",
     url: "https://goldmeter.in/terms",
     siteName: "GoldMeter",

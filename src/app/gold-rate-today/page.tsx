@@ -15,21 +15,24 @@ import HomeClient, {
 // Dynamic metadata for SEO - optimized for "gold rate today" query
 export async function generateMetadata(): Promise<Metadata> {
   const today = new Date();
-  const todayFormatted = today.toLocaleDateString('en-IN', {
+  // Short date for title (50-60 chars recommended)
+  const shortDate = today.toLocaleDateString('en-IN', {
     day: 'numeric',
-    month: 'long',
+    month: 'short',
     year: 'numeric'
   });
   
   return {
-    title: `Gold Rate Today (${todayFormatted}) - Live 22K & 24K Gold Price per Gram in India | GoldMeter`,
-    description: `Today's gold rate in India (${todayFormatted}): 24K gold at ₹X per gram, 22K gold at ₹Y per gram. Check live prices for 1g, 8g, 10g across Mumbai, Chennai, Delhi, Bangalore. Updated daily from IBJA.`,
+    // Title: ~55 chars (recommended: 50-60)
+    title: `Gold Rate Today (${shortDate}) - 22K & 24K India | GoldMeter`,
+    // Description: 155 chars (recommended: 110-160)
+    description: `Today's gold rate in India: 24K & 22K prices per gram. Live rates across Mumbai, Chennai, Delhi, Bangalore. Updated daily from IBJA.`,
     alternates: {
       canonical: "https://goldmeter.in/gold-rate-today",
     },
     openGraph: {
-      title: `Gold Rate Today (${todayFormatted}) - Live Gold Price in India | GoldMeter`,
-      description: `Today's gold rate: 24K and 22K gold prices per gram in India. Updated ${todayFormatted} from Indian bullion markets.`,
+      title: `Gold Rate Today (${shortDate}) - 22K & 24K India | GoldMeter`,
+      description: `Today's gold rate: 24K and 22K prices per gram in India. Updated from IBJA.`,
       url: "https://goldmeter.in/gold-rate-today",
       siteName: "GoldMeter",
       locale: "en_IN",
@@ -39,14 +42,14 @@ export async function generateMetadata(): Promise<Metadata> {
           url: "https://goldmeter.in/og-image.png",
           width: 1200,
           height: 630,
-          alt: `Gold Rate Today in India - ${todayFormatted}`,
+          alt: `Gold Rate Today in India`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `Gold Rate Today (${todayFormatted}) - India Gold Prices`,
-      description: `Live 22K & 24K gold rates per gram in India. Updated ${todayFormatted}.`,
+      title: `Gold Rate Today (${shortDate}) - India Gold Prices`,
+      description: `Live 22K & 24K gold rates per gram in India. Updated daily from IBJA.`,
       images: ["https://goldmeter.in/og-image.png"],
     },
   };

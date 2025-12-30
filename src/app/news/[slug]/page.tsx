@@ -20,15 +20,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
+  // Ensure description is 110-160 chars - pad short summaries with context
+  let description = article.summary;
+  if (description.length < 110) {
+    description = `${article.summary} Read the latest gold market news and price updates on GoldMeter.`;
+  }
+  // Truncate if too long
+  if (description.length > 160) {
+    description = description.substring(0, 157) + "...";
+  }
+
   return {
     title: `${article.title} | GoldMeter`,
-    description: article.summary,
+    description,
     alternates: {
       canonical: `https://goldmeter.in/news/${slug}`,
     },
     openGraph: {
       title: article.title,
-      description: article.summary,
+      description,
       type: "article",
       publishedTime: article.publishedAt.toISOString(),
     },

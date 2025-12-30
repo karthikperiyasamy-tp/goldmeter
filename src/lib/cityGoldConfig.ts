@@ -44,7 +44,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   chennai: {
     name: 'Chennai',
     slug: 'chennai',
-    metaDescription: 'Chennai gold rate today ({date}): 24K at ₹X/gram, 22K at ₹Y/gram. Check T Nagar prices, making charges ₹150-450/g, and top jewellery shops. Updated daily from IBJA.',
+    metaDescription: 'Chennai gold rate today ({date}): 24K & 22K per gram. T Nagar prices, making charges ₹150-450/g. Updated from IBJA.',
     intro: 'Gold rate in Chennai today per gram: 22K & 24K live prices with T Nagar and Anna Nagar trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Chennai is updated daily based on international market rates, USD/INR currency fluctuations, and local bullion market demand. Chennai's gold prices may vary slightly from national averages due to transport costs, regional demand during festivals like Pongal and weddings, and jeweller pricing policies. These rates reflect the spot metal price and do not include making charges (typically ₹150-450/gram in T Nagar) or 3% GST, which vary by retailer.`,
     introParagraph2: `Chennai is one of India's largest gold markets, with major jewellery hubs in T Nagar (Usman Road), Pondy Bazaar, and Anna Nagar. The city follows Tamil Nadu Bullion Merchants Association rates, which are among the most competitive in South India. For accurate buying decisions, compare rates across multiple jewellers and factor in making charges for your chosen design.`,
@@ -90,7 +90,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   mumbai: {
     name: 'Mumbai',
     slug: 'mumbai',
-    metaDescription: 'Mumbai gold rate today ({date}): 24K at ₹X/gram, 22K at ₹Y/gram. Check Zaveri Bazaar prices, making charges ₹200-500/g, compare with yesterday. Updated daily from IBJA.',
+    metaDescription: 'Mumbai gold rate today ({date}): 24K & 22K per gram. Zaveri Bazaar prices, making charges ₹200-500/g. Updated from IBJA.',
     intro: 'Gold rate in Mumbai today per gram: 22K & 24K live prices with Zaveri Bazaar and Dadar trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Mumbai is updated daily based on international market rates, USD/INR currency movements, and Zaveri Bazaar bullion market prices. Mumbai, being India's financial capital and home to MCX (Multi Commodity Exchange), often sets the benchmark for gold prices across India. These rates reflect spot metal prices without making charges (typically ₹200-500/gram in Zaveri Bazaar) or 3% GST.`,
     introParagraph2: `Zaveri Bazaar in South Mumbai is Asia's oldest and largest bullion market, dating back over 150 years. Other popular jewellery destinations include Dadar, Borivali, and Malad. Mumbai's gold rates are typically ₹20-50 lower than South Indian cities due to proximity to international trade routes and wholesale trading volumes.`,
@@ -136,7 +136,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   bangalore: {
     name: 'Bangalore',
     slug: 'bangalore',
-    metaDescription: 'Bangalore gold rate today ({date}): 24K at ₹X/gram, 22K at ₹Y/gram. Check Commercial Street prices, making charges ₹180-450/g. Updated daily from IBJA.',
+    metaDescription: 'Bangalore gold rate today ({date}): 24K & 22K per gram. Commercial Street prices, making charges ₹180-450/g. Updated from IBJA.',
     intro: 'Gold rate in Bangalore today per gram: 22K & 24K live prices with Jayanagar and Commercial Street trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Bangalore is updated daily based on international market rates, USD/INR exchange movements, and Karnataka Bullion Merchants Association pricing. Bangalore's gold prices are influenced by strong demand from IT professionals and the city's growing affluent population. These rates reflect spot metal prices and exclude making charges (typically ₹180-450/gram) and 3% GST.`,
     introParagraph2: `Commercial Street and Jayanagar are Bangalore's premier gold jewellery destinations, offering both traditional South Indian designs and contemporary styles. The city follows Karnataka state gold rates, which are competitive with Chennai and Hyderabad. For investment-grade gold, look for BIS hallmarked products from established jewellers.`,
@@ -182,7 +182,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   delhi: {
     name: 'Delhi',
     slug: 'delhi',
-    metaDescription: 'Delhi gold rate today ({date}): 24K at ₹X/gram, 22K at ₹Y/gram. Check Chandni Chowk prices, making charges ₹220-600/g. Updated daily from IBJA.',
+    metaDescription: 'Delhi gold rate today ({date}): 24K & 22K per gram. Chandni Chowk prices, making charges ₹220-600/g. Updated from IBJA.',
     intro: 'Gold rate in Delhi today per gram: 22K & 24K live prices with Karol Bagh and Chandni Chowk trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Delhi NCR is updated daily based on international spot prices, USD/INR currency movements, and Chandni Chowk bullion market rates. Delhi, being India's capital and a major import hub, has some of the most competitive gold prices in North India. These rates reflect spot metal prices and exclude making charges (typically ₹220-600/gram) and 3% GST.`,
     introParagraph2: `Chandni Chowk is India's largest traditional gold market, with over 3,000 jewellery shops. Other popular destinations include Karol Bagh, Connaught Place, and South Extension. Delhi gold rates often see spikes during wedding season (November-February) and festivals like Dhanteras. The city offers both North Indian Kundan and Polki styles as well as modern designs.`,
@@ -228,7 +228,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   hyderabad: {
     name: 'Hyderabad',
     slug: 'hyderabad',
-    metaDescription: 'As of {date}, get today\'s Hyderabad gold rate per gram for 22K and 24K gold. Check Abids and Sultan Bazaar prices, making charges info.',
+    metaDescription: 'Hyderabad gold rate today ({date}): 24K & 22K per gram. Abids prices, making charges ₹180-500/g. Updated from IBJA.',
     intro: 'Gold rate in Hyderabad today per gram: 22K & 24K live prices with Abids and Banjara Hills trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Hyderabad is updated daily based on international market rates, USD/INR exchange movements, and Telangana Bullion Association pricing. Hyderabad is known for competitive gold rates due to lower state taxes and strong local competition. These prices exclude making charges (₹180-500/gram) and 3% GST.`,
     introParagraph2: `Hyderabad's gold markets in Abids, Sultan Bazaar, and Begum Bazaar offer traditional Telugu and Hyderabadi designs at competitive prices. The city is famous for uncut diamond (Polki) and traditional temple jewellery. Gold demand peaks during Ugadi, Bonalu, and wedding season (November-February).`,
@@ -274,7 +274,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   kolkata: {
     name: 'Kolkata',
     slug: 'kolkata',
-    metaDescription: 'As of {date}, get today\'s Kolkata gold rate per gram for 22K and 24K gold. Check Bowbazar prices, Bengali jewellery making charges, and trusted shops.',
+    metaDescription: 'Kolkata gold rate today ({date}): 24K & 22K per gram. Bowbazar prices, making charges ₹200-550/g. Updated from IBJA.',
     intro: 'Gold rate in Kolkata today per gram: 22K & 24K live prices with Bowbazar and Burrabazar trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Kolkata is updated daily based on international market prices, USD/INR currency movements, and West Bengal Bullion Association rates. Kolkata, being East India's largest gold market, has unique pricing influenced by traditional Bengali jewellery demand. These rates exclude making charges (₹200-550/gram) and 3% GST.`,
     introParagraph2: `Bowbazar is Kolkata's historic gold hub with century-old jewellers specializing in traditional Bengali designs like Shakha-Pola and temple jewellery. Gold demand peaks during Durga Puja, Dhanteras, and Bengali wedding season. The city is known for intricate filigree work and lightweight contemporary designs.`,
@@ -320,7 +320,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   ahmedabad: {
     name: 'Ahmedabad',
     slug: 'ahmedabad',
-    metaDescription: 'As of {date}, get today\'s Ahmedabad gold rate per gram for 22K and 24K gold. Check Manek Chowk prices, making charges, and best jewellers.',
+    metaDescription: 'Ahmedabad gold rate today ({date}): 24K & 22K per gram. Manek Chowk prices, making charges ₹170-420/g. Updated from IBJA.',
     intro: 'Gold rate in Ahmedabad today per gram: live 22K & 24K prices with Manek Chowk and C.G. Road trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Ahmedabad is updated daily based on international market rates, USD/INR currency movements, and Gujarat Bullion Association pricing. Ahmedabad benefits from proximity to Surat's diamond and gold wholesale market, making it one of the most competitive gold markets in India. These prices exclude making charges (₹170-420/gram) and 3% GST.`,
     introParagraph2: `Manek Chowk is Ahmedabad's iconic jewellery market, known for traditional Gujarati designs and competitive wholesale prices. The city's strong business community creates steady demand for gold as investment and jewellery. Gold buying peaks during Dhanteras, Diwali, and wedding season (November-February).`,
@@ -366,7 +366,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   pune: {
     name: 'Pune',
     slug: 'pune',
-    metaDescription: 'As of {date}, get today\'s Pune gold rate per gram for 22K and 24K gold. Check Laxmi Road prices, making charges, and trusted jewellers list.',
+    metaDescription: 'Pune gold rate today ({date}): 24K & 22K per gram. Laxmi Road prices, making charges ₹190-480/g. Updated from IBJA.',
     intro: 'Gold rate in Pune today per gram: 22K & 24K live prices with Laxmi Road and Hadapsar trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Pune is updated daily based on international market rates, USD/INR currency movements, and Maharashtra Bullion Association pricing. Pune, being close to Mumbai, enjoys competitive gold rates with lower overhead costs. These prices exclude making charges (₹190-480/gram) and 3% GST.`,
     introParagraph2: `Laxmi Road is Pune's premier jewellery destination, with established stores offering traditional Maharashtrian designs and contemporary styles. The city's IT and manufacturing workforce creates steady demand. Gold prices typically follow Mumbai trends but are ₹10-20 lower due to reduced logistics costs.`,
@@ -412,7 +412,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   coimbatore: {
     name: 'Coimbatore',
     slug: 'coimbatore',
-    metaDescription: 'As of {date}, get today\'s Coimbatore gold rate per gram for 22K and 24K gold. Check RS Puram prices, making charges, and best jewellery shops.',
+    metaDescription: 'Coimbatore gold rate today ({date}): 24K & 22K per gram. RS Puram prices, making charges ₹140-400/g. Updated from IBJA.',
     intro: 'Gold rate in Coimbatore today per gram: 22K & 24K live prices with RS Puram and Cross Cut Road trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Coimbatore is updated daily based on international market rates, USD/INR currency movements, and Tamil Nadu Bullion Association pricing. Coimbatore, known as the "Manchester of South India," offers competitive gold rates compared to Chennai. These prices exclude making charges (₹140-400/gram) and 3% GST.`,
     introParagraph2: `RS Puram and Oppanakara Street are Coimbatore's main jewellery markets, offering traditional South Indian designs at competitive prices. The city's textile industry creates a wealthy consumer base with strong gold demand. Prices typically follow Chennai trends but are ₹20-40 lower due to lower overhead costs.`,
@@ -458,7 +458,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   vijayawada: {
     name: 'Vijayawada',
     slug: 'vijayawada',
-    metaDescription: 'As of {date}, get today\'s Vijayawada gold rate per gram for 22K and 24K gold. Check Governorpet prices, making charges, and trusted jewellers.',
+    metaDescription: 'Vijayawada gold rate today ({date}): 24K & 22K per gram. Governorpet prices, making charges ₹160-400/g. Updated from IBJA.',
     intro: 'Gold rate in Vijayawada today per gram: 22K & 24K live prices with Governorpet and Autonagar trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Vijayawada is updated daily based on international market rates, USD/INR currency movements, and Andhra Pradesh Bullion Association pricing. As Andhra Pradesh's commercial capital, Vijayawada offers competitive gold rates similar to Hyderabad. These prices exclude making charges (₹160-400/gram) and 3% GST.`,
     introParagraph2: `Governorpet is Vijayawada's main jewellery hub, with established stores offering traditional Andhra designs and temple jewellery. The city's strategic location makes it a regional gold trading center. Gold demand peaks during Telugu festivals like Ugadi, Sankranti, and wedding season.`,
@@ -504,7 +504,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   ayodhya: {
     name: 'Ayodhya',
     slug: 'ayodhya',
-    metaDescription: 'As of {date}, get today\'s Ayodhya gold rate per gram for 22K and 24K gold. Check local jewellery market prices and making charges.',
+    metaDescription: 'Ayodhya gold rate today ({date}): 24K & 22K per gram. Local market prices, making charges ₹180-450/g. Updated from IBJA.',
     intro: 'Gold rate in Ayodhya today per gram: 22K & 24K live prices with local market trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Ayodhya is updated daily based on international market rates, USD/INR currency movements, and Uttar Pradesh Bullion Association pricing. Ayodhya, being a major pilgrimage destination, sees significant gold demand during religious festivals and temple visits. These prices exclude making charges (₹180-450/gram) and 3% GST.`,
     introParagraph2: `Ayodhya's gold market centers around the main town area with traditional jewellers offering religious motif jewellery and temple designs. The city's spiritual significance drives demand for gold items used in religious ceremonies. Gold buying peaks during Ram Navami, Diwali, and wedding season.`,
@@ -550,7 +550,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   bhubaneswar: {
     name: 'Bhubaneswar',
     slug: 'bhubaneswar',
-    metaDescription: 'As of {date}, get today\'s Bhubaneswar gold rate per gram for 22K and 24K gold. Check Unit-1 market prices, making charges, and trusted jewellers.',
+    metaDescription: 'Bhubaneswar gold rate today ({date}): 24K & 22K per gram. Unit-1 prices, making charges ₹160-420/g. Updated from IBJA.',
     intro: 'Gold rate in Bhubaneswar today per gram: 22K & 24K live prices with Unit-1 and Saheed Nagar trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Bhubaneswar is updated daily based on international market rates, USD/INR currency movements, and Odisha Bullion Association pricing. Bhubaneswar, the capital of Odisha, offers competitive gold rates with strong demand for traditional Odia jewellery designs. These prices exclude making charges (₹160-420/gram) and 3% GST.`,
     introParagraph2: `Unit-1 Market and Saheed Nagar are Bhubaneswar's main jewellery destinations, offering traditional Odia designs like Tarakasi (silver filigree with gold plating) and temple jewellery. Gold demand peaks during Durga Puja, Raja festival, and wedding season.`,
@@ -596,7 +596,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   chandigarh: {
     name: 'Chandigarh',
     slug: 'chandigarh',
-    metaDescription: 'As of {date}, get today\'s Chandigarh gold rate per gram for 22K and 24K gold. Check Sector 17 prices, making charges, and best jewellers.',
+    metaDescription: 'Chandigarh gold rate today ({date}): 24K & 22K per gram. Sector 17 prices, making charges ₹200-500/g. Updated from IBJA.',
     intro: 'Gold rate in Chandigarh today per gram: 22K & 24K live prices with Sector 17 and Sector 22 trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Chandigarh is updated daily based on international market rates, USD/INR currency movements, and Punjab Bullion Association pricing. Chandigarh, shared capital of Punjab and Haryana, enjoys competitive gold rates due to proximity to Delhi markets. These prices exclude making charges (₹200-500/gram) and 3% GST.`,
     introParagraph2: `Sector 17 and Sector 22 are Chandigarh's premier jewellery destinations, offering both Punjabi traditional designs and modern styles. The city's affluent population and strong Punjabi wedding culture drive significant gold demand, especially during wedding season (November-February).`,
@@ -642,7 +642,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   jaipur: {
     name: 'Jaipur',
     slug: 'jaipur',
-    metaDescription: 'As of {date}, get today\'s Jaipur gold rate per gram for 22K and 24K gold. Check Johari Bazaar prices, Kundan making charges, and best jewellers.',
+    metaDescription: 'Jaipur gold rate today ({date}): 24K & 22K per gram. Johari Bazaar prices, Kundan making charges ₹250-700/g. Updated from IBJA.',
     intro: 'Gold rate in Jaipur today per gram: 22K & 24K live prices with Johari Bazaar and MI Road trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Jaipur is updated daily based on international market rates, USD/INR currency movements, and Rajasthan Bullion Association pricing. Jaipur, known as India's gemstone capital, is famous for Kundan, Meenakari, and Thewa jewellery. These prices exclude making charges (₹250-700/gram for intricate work) and 3% GST.`,
     introParagraph2: `Johari Bazaar is one of India's oldest and most renowned jewellery markets, specializing in traditional Rajasthani designs. The city's rich heritage in jewellery craftsmanship makes it a destination for unique pieces. Gold demand peaks during Teej, Gangaur, and wedding season.`,
@@ -688,7 +688,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   kerala: {
     name: 'Kerala',
     slug: 'kerala',
-    metaDescription: 'As of {date}, get today\'s Kerala gold rate per gram for 22K and 24K gold. Check Kochi and Thrissur prices, making charges, and best jewellers.',
+    metaDescription: 'Kerala gold rate today ({date}): 24K & 22K per gram. Thrissur & Kochi prices, making charges ₹200-550/g. Updated from IBJA.',
     intro: 'Gold rate in Kerala today per gram: 22K & 24K live prices with Kochi, Thrissur, and Trivandrum trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Kerala is updated daily based on international market rates, USD/INR currency movements, and Kerala Bullion Merchants Association pricing. Kerala has the highest per capita gold consumption in India, driven by strong cultural traditions and wedding customs. These prices exclude making charges (₹200-550/gram) and 3% GST.`,
     introParagraph2: `Thrissur is known as Kerala's gold capital with major jewellers like Kalyan and Jos Alukkas headquartered here. Kochi's Broadway and MG Road are other major jewellery destinations. Gold demand peaks during Onam, Vishu, and the extensive wedding season.`,
@@ -734,7 +734,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   lucknow: {
     name: 'Lucknow',
     slug: 'lucknow',
-    metaDescription: 'As of {date}, get today\'s Lucknow gold rate per gram for 22K and 24K gold. Check Hazratganj prices, making charges, and trusted jewellers.',
+    metaDescription: 'Lucknow gold rate today ({date}): 24K & 22K per gram. Hazratganj prices, making charges ₹180-480/g. Updated from IBJA.',
     intro: 'Gold rate in Lucknow today per gram: 22K & 24K live prices with Hazratganj and Aminabad trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Lucknow is updated daily based on international market rates, USD/INR currency movements, and Uttar Pradesh Bullion Association pricing. Lucknow, the capital of India's most populous state, offers competitive gold rates with strong demand for traditional Nawabi-style jewellery. These prices exclude making charges (₹180-480/gram) and 3% GST.`,
     introParagraph2: `Hazratganj and Aminabad are Lucknow's premier jewellery destinations, known for intricate Lucknowi work and Jadau jewellery. The city's Nawabi heritage influences unique jewellery designs. Gold demand peaks during Eid, Diwali, and wedding season.`,
@@ -780,7 +780,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   madurai: {
     name: 'Madurai',
     slug: 'madurai',
-    metaDescription: 'As of {date}, get today\'s Madurai gold rate per gram for 22K and 24K gold. Check Town Hall Road prices, making charges, and best jewellers.',
+    metaDescription: 'Madurai gold rate today ({date}): 24K & 22K per gram. Town Hall Road prices, making charges ₹140-380/g. Updated from IBJA.',
     intro: 'Gold rate in Madurai today per gram: 22K & 24K live prices with Town Hall Road and South Masi Street trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Madurai is updated daily based on international market rates, USD/INR currency movements, and Tamil Nadu Bullion Association pricing. Madurai, one of Tamil Nadu's oldest cities, has a strong gold-buying tradition linked to Meenakshi Temple. These prices exclude making charges (₹140-380/gram) and 3% GST.`,
     introParagraph2: `Town Hall Road and South Masi Street are Madurai's main jewellery hubs, offering traditional South Indian temple jewellery at competitive prices. The city's temple culture drives demand for religious gold items. Gold buying peaks during Meenakshi Thirukalyanam, Chithirai festival, and wedding season.`,
@@ -826,7 +826,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   mangalore: {
     name: 'Mangalore',
     slug: 'mangalore',
-    metaDescription: 'As of {date}, get today\'s Mangalore gold rate per gram for 22K and 24K gold. Check Car Street prices, making charges, and best jewellers.',
+    metaDescription: 'Mangalore gold rate today ({date}): 24K & 22K per gram. Car Street prices, making charges ₹170-430/g. Updated from IBJA.',
     intro: 'Gold rate in Mangalore today per gram: 22K & 24K live prices with Car Street and Hampankatta trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Mangalore is updated daily based on international market rates, USD/INR currency movements, and Karnataka Bullion Association pricing. Mangalore, a major port city, has competitive gold rates influenced by coastal trade. These prices exclude making charges (₹170-430/gram) and 3% GST.`,
     introParagraph2: `Car Street and Hampankatta are Mangalore's main jewellery destinations, offering traditional Tulu Nadu and South Canara designs. The city's coastal prosperity and strong wedding traditions drive significant gold demand, especially during Tulunadu festivals.`,
@@ -872,7 +872,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   mysore: {
     name: 'Mysore',
     slug: 'mysore',
-    metaDescription: 'As of {date}, get today\'s Mysore gold rate per gram for 22K and 24K gold. Check Sayyaji Rao Road prices, making charges, and best jewellers.',
+    metaDescription: 'Mysore gold rate today ({date}): 24K & 22K per gram. Sayyaji Rao Road prices, making charges ₹180-450/g. Updated from IBJA.',
     intro: 'Gold rate in Mysore today per gram: 22K & 24K live prices with Sayyaji Rao Road and Devaraja Market trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Mysore is updated daily based on international market rates, USD/INR currency movements, and Karnataka Bullion Association pricing. Mysore, the cultural capital of Karnataka, has a rich tradition of royal jewellery craftsmanship. These prices exclude making charges (₹180-450/gram) and 3% GST.`,
     introParagraph2: `Sayyaji Rao Road and Devaraja Market are Mysore's premier jewellery destinations, known for traditional Mysore-style ornaments. The city's royal heritage influences unique design aesthetics. Gold demand peaks during Dasara (Mysore's grandest festival), Deepavali, and wedding season.`,
@@ -918,7 +918,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   nagpur: {
     name: 'Nagpur',
     slug: 'nagpur',
-    metaDescription: 'As of {date}, get today\'s Nagpur gold rate per gram for 22K and 24K gold. Check Sitabuldi prices, making charges, and best jewellers.',
+    metaDescription: 'Nagpur gold rate today ({date}): 24K & 22K per gram. Sitabuldi prices, making charges ₹180-450/g. Updated from IBJA.',
     intro: 'Gold rate in Nagpur today per gram: 22K & 24K live prices with Sitabuldi and Itwari trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Nagpur is updated daily based on international market rates, USD/INR currency movements, and Vidarbha Bullion Association pricing. Nagpur, central India's largest city, serves as a gold trading hub for the Vidarbha region. These prices exclude making charges (₹180-450/gram) and 3% GST.`,
     introParagraph2: `Sitabuldi and Itwari are Nagpur's main jewellery markets, offering traditional Maharashtrian designs at competitive prices. The city's central location makes it accessible for buyers from surrounding regions. Gold demand peaks during Gudi Padwa, Diwali, and wedding season.`,
@@ -964,7 +964,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   nashik: {
     name: 'Nashik',
     slug: 'nashik',
-    metaDescription: 'As of {date}, get today\'s Nashik gold rate per gram for 22K and 24K gold. Check Main Road prices, making charges, and best jewellers.',
+    metaDescription: 'Nashik gold rate today ({date}): 24K & 22K per gram. Main Road prices, making charges ₹180-440/g. Updated from IBJA.',
     intro: 'Gold rate in Nashik today per gram: 22K & 24K live prices with Main Road and Panchavati trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Nashik is updated daily based on international market rates, USD/INR currency movements, and Maharashtra Bullion Association pricing. Nashik, known for its wine industry and Kumbh Mela, has competitive gold rates. These prices exclude making charges (₹180-440/gram) and 3% GST.`,
     introParagraph2: `Main Road (MG Road) and Panchavati are Nashik's main jewellery destinations, offering traditional Maharashtrian designs. The city sees significant gold demand during Kumbh Mela years and regular pilgrimage seasons. Wedding season and Gudi Padwa also boost gold buying.`,
@@ -1010,7 +1010,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   patna: {
     name: 'Patna',
     slug: 'patna',
-    metaDescription: 'As of {date}, get today\'s Patna gold rate per gram for 22K and 24K gold. Check Hathwa Market prices, making charges, and best jewellers.',
+    metaDescription: 'Patna gold rate today ({date}): 24K & 22K per gram. Hathwa Market prices, making charges ₹170-420/g. Updated from IBJA.',
     intro: 'Gold rate in Patna today per gram: 22K & 24K live prices with Hathwa Market and Kankarbagh trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Patna is updated daily based on international market rates, USD/INR currency movements, and Bihar Bullion Association pricing. Patna, the capital of Bihar, offers competitive gold rates with growing demand from the state's rising middle class. These prices exclude making charges (₹170-420/gram) and 3% GST.`,
     introParagraph2: `Hathwa Market and Kankarbagh are Patna's main jewellery destinations, offering traditional Bihari designs and modern styles. Gold demand peaks during Chhath Puja, Diwali, and wedding season, with significant purchases during Akshaya Tritiya.`,
@@ -1056,7 +1056,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   rajkot: {
     name: 'Rajkot',
     slug: 'rajkot',
-    metaDescription: 'As of {date}, get today\'s Rajkot gold rate per gram for 22K and 24K gold. Check Soni Bazaar prices, making charges, and best jewellers.',
+    metaDescription: 'Rajkot gold rate today ({date}): 24K & 22K per gram. Soni Bazaar prices, making charges ₹160-400/g. Updated from IBJA.',
     intro: 'Gold rate in Rajkot today per gram: 22K & 24K live prices with Soni Bazaar and Yagnik Road trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Rajkot is updated daily based on international market rates, USD/INR currency movements, and Gujarat Bullion Association pricing. Rajkot is a major gold manufacturing hub in India, producing jewellery for domestic and export markets. These prices exclude making charges (₹160-400/gram) and 3% GST.`,
     introParagraph2: `Soni Bazaar is Rajkot's historic jewellery market, known for traditional Gujarati designs and wholesale trading. The city's strong manufacturing base means competitive prices and wide variety. Gold demand peaks during Dhanteras, Diwali, and wedding season.`,
@@ -1102,7 +1102,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   salem: {
     name: 'Salem',
     slug: 'salem',
-    metaDescription: 'As of {date}, get today\'s Salem gold rate per gram for 22K and 24K gold. Check Shevapet prices, making charges, and best jewellers.',
+    metaDescription: 'Salem gold rate today ({date}): 24K & 22K per gram. Shevapet prices, making charges ₹140-380/g. Updated from IBJA.',
     intro: 'Gold rate in Salem today per gram: 22K & 24K live prices with Shevapet and Five Roads trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Salem is updated daily based on international market rates, USD/INR currency movements, and Tamil Nadu Bullion Association pricing. Salem, known for steel and textiles, has a growing gold market with competitive prices. These prices exclude making charges (₹140-380/gram) and 3% GST.`,
     introParagraph2: `Shevapet and Five Roads are Salem's main jewellery markets, offering traditional South Indian designs at competitive prices. The city's industrial prosperity drives steady gold demand. Gold buying peaks during Pongal, Deepavali, and wedding season.`,
@@ -1148,7 +1148,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   surat: {
     name: 'Surat',
     slug: 'surat',
-    metaDescription: 'As of {date}, get today\'s Surat gold rate per gram for 22K and 24K gold. Check Chauta Bazaar prices, making charges, and best jewellers.',
+    metaDescription: 'Surat gold rate today ({date}): 24K & 22K per gram. Chauta Bazaar prices, making charges ₹150-400/g. Updated from IBJA.',
     intro: 'Gold rate in Surat today per gram: 22K & 24K live prices with Chauta Bazaar and Ring Road trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Surat is updated daily based on international market rates, USD/INR currency movements, and Gujarat Bullion Association pricing. Surat, the world's diamond cutting capital, is also a major gold trading hub with competitive wholesale prices. These prices exclude making charges (₹150-400/gram) and 3% GST.`,
     introParagraph2: `Chauta Bazaar is Surat's historic jewellery market, while Ring Road and Athwa Lines have modern showrooms. The city's diamond industry workers are significant gold buyers. Gold demand peaks during Dhanteras, Diwali, and wedding season.`,
@@ -1194,7 +1194,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   trichy: {
     name: 'Trichy',
     slug: 'trichy',
-    metaDescription: 'As of {date}, get today\'s Trichy gold rate per gram for 22K and 24K gold. Check NSB Road prices, making charges, and best jewellers.',
+    metaDescription: 'Trichy gold rate today ({date}): 24K & 22K per gram. NSB Road prices, making charges ₹140-380/g. Updated from IBJA.',
     intro: 'Gold rate in Trichy today per gram: 22K & 24K live prices with NSB Road and Thillai Nagar trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Trichy (Tiruchirappalli) is updated daily based on international market rates, USD/INR currency movements, and Tamil Nadu Bullion Association pricing. Trichy, home to the famous Rockfort Temple, has a traditional gold market with competitive prices. These prices exclude making charges (₹140-380/gram) and 3% GST.`,
     introParagraph2: `NSB Road (Netaji Subhash Bose Road) and Thillai Nagar are Trichy's main jewellery destinations, offering traditional temple jewellery designs. The city's religious significance drives demand for traditional gold ornaments. Gold buying peaks during temple festivals, Pongal, and wedding season.`,
@@ -1240,7 +1240,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   vadodara: {
     name: 'Vadodara',
     slug: 'vadodara',
-    metaDescription: 'As of {date}, get today\'s Vadodara gold rate per gram for 22K and 24K gold. Check Mandvi prices, making charges, and best jewellers.',
+    metaDescription: 'Vadodara gold rate today ({date}): 24K & 22K per gram. Mandvi prices, making charges ₹170-430/g. Updated from IBJA.',
     intro: 'Gold rate in Vadodara today per gram: 22K & 24K live prices with Mandvi and Alkapuri trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Vadodara is updated daily based on international market rates, USD/INR currency movements, and Gujarat Bullion Association pricing. Vadodara, the cultural capital of Gujarat, has a rich tradition of jewellery craftsmanship. These prices exclude making charges (₹170-430/gram) and 3% GST.`,
     introParagraph2: `Mandvi Gate area and Alkapuri are Vadodara's main jewellery destinations, offering traditional Gujarati designs with Gaekwadi royal influence. The city's heritage attracts buyers seeking unique traditional pieces. Gold demand peaks during Navratri, Dhanteras, and wedding season.`,
@@ -1286,7 +1286,7 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   visakhapatnam: {
     name: 'Visakhapatnam',
     slug: 'visakhapatnam',
-    metaDescription: 'As of {date}, get today\'s Visakhapatnam gold rate per gram for 22K and 24K gold. Check Jagadamba Junction prices, making charges, and best jewellers.',
+    metaDescription: 'Vizag gold rate today ({date}): 24K & 22K per gram. Jagadamba prices, making charges ₹160-420/g. Updated from IBJA.',
     intro: 'Gold rate in Visakhapatnam today per gram: 22K & 24K live prices with Jagadamba Junction and Dwaraka Nagar trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Visakhapatnam (Vizag) is updated daily based on international market rates, USD/INR currency movements, and Andhra Pradesh Bullion Association pricing. Vizag, the largest city in Andhra Pradesh, has a growing gold market with competitive prices. These prices exclude making charges (₹160-420/gram) and 3% GST.`,
     introParagraph2: `Jagadamba Junction and Dwaraka Nagar are Visakhapatnam's main jewellery destinations, offering traditional Telugu designs and modern styles. The city's port-based economy and growing IT sector drive steady gold demand. Gold buying peaks during Ugadi, Sankranti, and wedding season.`,

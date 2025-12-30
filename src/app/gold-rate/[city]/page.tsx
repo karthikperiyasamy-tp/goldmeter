@@ -25,6 +25,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'City Not Found' };
   }
 
+  // Short date for title (50-60 chars recommended)
+  const shortDate = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
+  
+  // Full date for descriptions
   const todayFormatted = new Date().toLocaleDateString('en-IN', {
     day: 'numeric',
     month: 'long',
@@ -32,14 +40,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
   
   return {
-    title: `${config.name} Gold Rate Today (${todayFormatted}) - 22K & 24K Gold Price per Gram | GoldMeter`,
-    description: config.metaDescription.replace('{date}', todayFormatted),
+    // Title: ~55 chars (recommended: 50-60)
+    title: `${config.name} Gold Rate Today (${shortDate}) - 22K & 24K | GoldMeter`,
+    // Description: 110-160 chars recommended
+    description: config.metaDescription.replace('{date}', shortDate),
     alternates: {
       canonical: `https://goldmeter.in/gold-rate/${config.slug}`,
     },
     openGraph: {
-      title: `${config.name} Gold Rate Today (${todayFormatted}) - Live 22K & 24K Prices`,
-      description: `As of ${todayFormatted}, get today's ${config.name} gold rate per gram for 22K and 24K gold. Updated daily from ${config.name} bullion market.`,
+      title: `${config.name} Gold Rate Today (${shortDate}) - 22K & 24K | GoldMeter`,
+      description: `${config.name} gold rate: 24K & 22K prices per gram. Updated ${shortDate} from IBJA.`,
       type: 'website',
       url: `https://goldmeter.in/gold-rate/${config.slug}`,
       siteName: 'GoldMeter',

@@ -8,7 +8,8 @@ import type { DailyRecap } from "@/lib/recapTypes";
 
 export const metadata: Metadata = {
   title: "Gold News & Market Updates | GoldMeter",
-  description: "Latest gold market news, price updates, and expert analysis.",
+  // Description: 145 chars (recommended: 110-160)
+  description: "Stay updated with the latest gold news, price movements, and market analysis. Daily gold rate headlines for Indian investors and jewellery buyers.",
   alternates: {
     canonical: "https://goldmeter.in/news",
   },

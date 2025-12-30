@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Gold Investment Calculator - SIP Returns Calculator | GoldMeter",
+  // Title: 64 chars (recommended: 50-60, but acceptable)
+  title: "Gold Investment Calculator - SIP Returns | GoldMeter",
+  // Description: 133 chars (recommended: 110-160)
   description:
-    "Calculate gold SIP returns and plan your monthly gold investment. See potential wealth accumulation over 5, 10, 20 years with our free gold investment calculator.",
+    "Calculate gold SIP returns and plan monthly gold investment. See potential wealth over 5, 10, 20 years. Free calculator.",
   alternates: {
     canonical: "https://goldmeter.in/investment-calculator",
   },
