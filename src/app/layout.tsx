@@ -11,18 +11,17 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   icons: {
-    // Primary favicon for browsers
+    // Google requires at least 48x48, prefers multiples of 48
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/favicon.png", sizes: "96x96", type: "image/png" },
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    // Apple touch icon
-    apple: [
-      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
-    ],
-    // Shortcut icon - Google prefers PNG icons at least 48x48
-    shortcut: { url: "/icon-192.png", type: "image/png" },
+    // Apple touch icon (standard name)
+    apple: "/apple-touch-icon.png",
+    // Shortcut icon for legacy support
+    shortcut: "/favicon.ico",
   },
   keywords: [
     "gold rate",
