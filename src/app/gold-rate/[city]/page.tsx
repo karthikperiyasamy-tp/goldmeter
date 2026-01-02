@@ -2,6 +2,9 @@ import { headers } from "next/headers";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CityPageShell from "../../components/CityPageShell";
+import ChennaiStaticContent from "../../components/ChennaiStaticContent";
+import MumbaiStaticContent from "../../components/MumbaiStaticContent";
+import HyderabadStaticContent from "../../components/HyderabadStaticContent";
 import { fetchCityRates } from "@/lib/fetchCityRates";
 import { getCityGoldConfig, getAllCitySlugs, generateFAQs } from "@/lib/cityGoldConfig";
 
@@ -223,7 +226,12 @@ export default async function GoldRateCityPage({ params }: Props) {
         localInfo={config.localInfo}
         faqs={faqs}
         similarCities={config.similarCities}
-      />
+      >
+        {/* City-specific static content for SEO */}
+        {config.slug === 'chennai' && <ChennaiStaticContent />}
+        {config.slug === 'mumbai' && <MumbaiStaticContent />}
+        {config.slug === 'hyderabad' && <HyderabadStaticContent />}
+      </CityPageShell>
     </>
   );
 }

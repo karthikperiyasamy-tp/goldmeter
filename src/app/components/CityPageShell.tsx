@@ -62,6 +62,7 @@ type CityPageShellProps = {
   intro?: string;
   dateISO?: string; // ISO date for structured data freshness
   hideAnswerBlock?: boolean; // Hide the AIO answer block if server-rendered version exists
+  children?: React.ReactNode; // City-specific static content for SEO
 };
 
 const inr = new Intl.NumberFormat("en-IN", {
@@ -98,6 +99,7 @@ export default function CityPageShell({
   intro,
   dateISO,
   hideAnswerBlock = false,
+  children,
 }: CityPageShellProps) {
   const router = useRouter();
 
@@ -668,6 +670,9 @@ export default function CityPageShell({
             </div>
           </div>
         </section>
+
+        {/* City-specific static content for SEO */}
+        {children}
 
         {/* E-E-A-T: About GoldMeter - moved lower for SEO, not in answer block */}
         <section className="mt-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
