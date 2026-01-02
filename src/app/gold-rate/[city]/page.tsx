@@ -5,6 +5,31 @@ import CityPageShell from "../../components/CityPageShell";
 import ChennaiStaticContent from "../../components/ChennaiStaticContent";
 import MumbaiStaticContent from "../../components/MumbaiStaticContent";
 import HyderabadStaticContent from "../../components/HyderabadStaticContent";
+import AhmedabadStaticContent from "../../components/AhmedabadStaticContent";
+import AyodhyaStaticContent from "../../components/AyodhyaStaticContent";
+import BangaloreStaticContent from "../../components/BangaloreStaticContent";
+import BhubaneswarStaticContent from "../../components/BhubaneswarStaticContent";
+import ChandigarhStaticContent from "../../components/ChandigarhStaticContent";
+import CoimbatoreStaticContent from "../../components/CoimbatoreStaticContent";
+import DelhiStaticContent from "../../components/DelhiStaticContent";
+import JaipurStaticContent from "../../components/JaipurStaticContent";
+import KeralaStaticContent from "../../components/KeralaStaticContent";
+import KolkataStaticContent from "../../components/KolkataStaticContent";
+import LucknowStaticContent from "../../components/LucknowStaticContent";
+import MaduraiStaticContent from "../../components/MaduraiStaticContent";
+import MangaloreStaticContent from "../../components/MangaloreStaticContent";
+import MysoreStaticContent from "../../components/MysoreStaticContent";
+import NagpurStaticContent from "../../components/NagpurStaticContent";
+import NashikStaticContent from "../../components/NashikStaticContent";
+import PatnaStaticContent from "../../components/PatnaStaticContent";
+import PuneStaticContent from "../../components/PuneStaticContent";
+import RajkotStaticContent from "../../components/RajkotStaticContent";
+import SalemStaticContent from "../../components/SalemStaticContent";
+import SuratStaticContent from "../../components/SuratStaticContent";
+import TrichyStaticContent from "../../components/TrichyStaticContent";
+import VadodaraStaticContent from "../../components/VadodaraStaticContent";
+import VijayawadaStaticContent from "../../components/VijayawadaStaticContent";
+import VisakhapatnamStaticContent from "../../components/VisakhapatnamStaticContent";
 import { fetchCityRates } from "@/lib/fetchCityRates";
 import { getCityGoldConfig, getAllCitySlugs, generateFAQs } from "@/lib/cityGoldConfig";
 
@@ -231,6 +256,31 @@ export default async function GoldRateCityPage({ params }: Props) {
         {config.slug === 'chennai' && <ChennaiStaticContent />}
         {config.slug === 'mumbai' && <MumbaiStaticContent />}
         {config.slug === 'hyderabad' && <HyderabadStaticContent />}
+        {config.slug === 'ahmedabad' && <AhmedabadStaticContent />}
+        {config.slug === 'ayodhya' && <AyodhyaStaticContent />}
+        {config.slug === 'bangalore' && <BangaloreStaticContent />}
+        {config.slug === 'bhubaneswar' && <BhubaneswarStaticContent />}
+        {config.slug === 'chandigarh' && <ChandigarhStaticContent />}
+        {config.slug === 'coimbatore' && <CoimbatoreStaticContent />}
+        {config.slug === 'delhi' && <DelhiStaticContent />}
+        {config.slug === 'jaipur' && <JaipurStaticContent />}
+        {config.slug === 'kerala' && <KeralaStaticContent />}
+        {config.slug === 'kolkata' && <KolkataStaticContent />}
+        {config.slug === 'lucknow' && <LucknowStaticContent />}
+        {config.slug === 'madurai' && <MaduraiStaticContent />}
+        {config.slug === 'mangalore' && <MangaloreStaticContent />}
+        {config.slug === 'mysore' && <MysoreStaticContent />}
+        {config.slug === 'nagpur' && <NagpurStaticContent />}
+        {config.slug === 'nashik' && <NashikStaticContent />}
+        {config.slug === 'patna' && <PatnaStaticContent />}
+        {config.slug === 'pune' && <PuneStaticContent />}
+        {config.slug === 'rajkot' && <RajkotStaticContent />}
+        {config.slug === 'salem' && <SalemStaticContent />}
+        {config.slug === 'surat' && <SuratStaticContent />}
+        {config.slug === 'trichy' && <TrichyStaticContent />}
+        {config.slug === 'vadodara' && <VadodaraStaticContent />}
+        {config.slug === 'vijayawada' && <VijayawadaStaticContent />}
+        {config.slug === 'visakhapatnam' && <VisakhapatnamStaticContent />}
       </CityPageShell>
     </>
   );
