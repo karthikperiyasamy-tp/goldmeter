@@ -5,54 +5,64 @@ export default function VijayawadaStaticContent() {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Gold Rate in Vijayawada: The Bezawada Gold Market</h2>
+        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Vijayawada</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Vijayawada, the commercial capital of Andhra Pradesh, has a robust gold market serving the Krishna 
-            district and surrounding areas. The city&apos;s proximity to the Kanaka Durga Temple influences gold 
-            buying patterns, especially during Dasara. Gold rates align with Hyderabad prices, with traditional 
-            Telugu jewellery being the dominant style.
+            Vijayawada, the commercial capital of Andhra Pradesh on the Krishna River, has a thriving gold market. 
+            Gold rates follow the India Bullion and Jewellers Association (IBJA) reference prices, international 
+            spot rates, and the US dollar index. Besant Road and Governorpet house traditional jewellery shops.
+          </p>
+          <p>
+            The city&apos;s prosperous business community and proximity to major pilgrimage sites drive gold demand. 
+            Traditional Telugu jewellery designs are popular alongside contemporary styles.
           </p>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Telugu Gold Jewellery Traditions</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rates by Carat in Vijayawada</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li><strong>Guttapusalu</strong> - Clustered bead necklace</li>
-            <li><strong>Bottu</strong> - Traditional pendant</li>
-            <li><strong>Kasulaperu</strong> - Gold coin necklace</li>
-            <li><strong>Vaddanam</strong> - Waist belt for brides</li>
-            <li><strong>Temple Designs</strong> - Kanaka Durga-inspired</li>
+            <li><strong>24 Carat Gold Rate</strong> - 99.9% pure for investment</li>
+            <li><strong>22 Carat Gold Rate (916)</strong> - Standard for Telugu bridal jewellery</li>
+            <li><strong>18 Carat Gold Rate</strong> - For diamond-studded designs</li>
           </ul>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Where to Buy Gold in Vijayawada</h2>
+        <h2 className="text-xl font-bold text-charcoal">Factors & Peak Seasons</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li><strong>MG Road</strong> - Main jewellery shopping area</li>
-            <li><strong>Governorpet</strong> - Traditional jewellers</li>
-            <li><strong>Benz Circle Area</strong> - Modern showrooms</li>
+            <li><strong>Global</strong> - Dollar index, Federal Reserve, geopolitical tensions</li>
+            <li><strong>Peak Seasons</strong> - Ugadi, Dasara, Diwali, Telugu wedding season</li>
           </ul>
-          <p>Trusted names include GRT, Malabar Gold, Kalyan, and CMR Jewels.</p>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Tips for Vijayawada Buyers</h2>
+        <h2 className="text-xl font-bold text-charcoal">BIS Hallmarking & Buying Tips</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li>Check Vijayawada gold rates on GoldMeter</li>
-            <li>Dasara is the peak buying season</li>
-            <li>Verify BIS hallmark on all gold</li>
-            <li>Compare MG Road and mall prices</li>
+            <li>BIS Logo with purity grade (916/750) and HUID required</li>
+            <li>Check rates on GoldMeter before visiting</li>
+            <li>Compare prices at Besant Road and branded showrooms</li>
           </ul>
+          <p>Popular jewellers: GRT, Malabar Gold, Kalyan, Tanishq, and local traditional jewellers.</p>
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Investment & Loans</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li>Physical gold, SGBs, Gold ETFs, Digital gold available</li>
+            <li>Gold loans from banks and NBFCs at 75% LTV</li>
+            <li>GST: 3% on gold, 5% on making; Long-term: 20% with indexation</li>
+          </ul>
+          <p>GoldMeter provides daily updated gold rates for Vijayawada.</p>
         </div>
       </section>
     </div>
   );
 }
-

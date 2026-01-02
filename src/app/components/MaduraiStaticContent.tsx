@@ -5,54 +5,89 @@ export default function MaduraiStaticContent() {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Gold Rate in Madurai: Temple City of Tamil Nadu</h2>
+        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Madurai</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Madurai, home to the magnificent Meenakshi Temple, has a gold market steeped in religious tradition. 
-            The city&apos;s jewellery shops specialize in traditional Tamil temple jewellery, with designs inspired by 
-            deity ornaments. Gold rates align with Chennai prices, with the city serving as a major hub for 
-            southern Tamil Nadu.
+            Madurai, the Temple City of Tamil Nadu, has a vibrant gold market centered around the famous 
+            Meenakshi Amman Temple. The city&apos;s gold rates follow the India Bullion and Jewellers Association 
+            (IBJA) reference prices, international spot rates, and the US dollar index.
+          </p>
+          <p>
+            South Masi Street and Town Hall Road house traditional jewellers offering authentic Tamil temple 
+            jewellery. Gold prices fluctuate based on global economic conditions and local festival demand.
           </p>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Temple Jewellery Tradition</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rates by Carat in Madurai</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li><strong>Kemp Jewellery</strong> - Red and green stone settings</li>
-            <li><strong>Temple Designs</strong> - Lakshmi, Ganesha motifs</li>
-            <li><strong>Oddiyanam</strong> - Traditional waist belt</li>
-            <li><strong>Jimikki</strong> - Bell-shaped earrings</li>
-            <li><strong>Vanki</strong> - Armlet ornament</li>
+            <li><strong>24 Carat Gold Rate</strong> - 99.9% pure for investment</li>
+            <li><strong>22 Carat Gold Rate (916)</strong> - Standard for Tamil temple jewellery</li>
+            <li><strong>18 Carat Gold Rate</strong> - For diamond-studded designs</li>
           </ul>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Where to Buy Gold in Madurai</h2>
+        <h2 className="text-xl font-bold text-charcoal">Factors Influencing Gold Prices</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li><strong>Town Hall Area</strong> - Traditional jewellery shops</li>
-            <li><strong>West Masi Street</strong> - Historic jewellery market</li>
-            <li><strong>Anna Nagar</strong> - Modern showrooms</li>
+            <li><strong>Global</strong> - Dollar index, Federal Reserve, geopolitical tensions</li>
+            <li><strong>Domestic</strong> - Currency exchange, import duties, GST, local demand</li>
+            <li><strong>Peak Seasons</strong> - Chithirai Festival, Pongal, Tamil wedding season</li>
           </ul>
-          <p>Popular jewellers include Thangamayil, GRT, and Kalyan Jewellers.</p>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Tips for Madurai Buyers</h2>
+        <h2 className="text-xl font-bold text-charcoal">BIS Hallmarking</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li>Check Madurai gold rates on GoldMeter</li>
-            <li>Chithirai Festival is a major buying season</li>
-            <li>Temple jewellery has 15-25% making charges</li>
-            <li>Verify BIS hallmark on all gold</li>
+            <li>BIS Logo with purity grade (916/750)</li>
+            <li>HUID - 6-digit unique identification</li>
+            <li>Purchase only from BIS-certified jewellers</li>
           </ul>
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Gold Buying Tips for Madurai</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li>Check rates on GoldMeter before visiting</li>
+            <li>Compare prices on South Masi Street and branded showrooms</li>
+            <li>Understand making charges (8-20%); temple jewellery may be higher</li>
+            <li>Get detailed invoice with gold weight and purity</li>
+          </ul>
+          <p>Popular jewellers: Thangamayil, GRT, Kalyan, Tanishq, and traditional family jewellers.</p>
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Investment Options</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li>Physical gold - coins, bars, jewellery</li>
+            <li>Sovereign Gold Bonds - 2.5% interest, tax-free on maturity</li>
+            <li>Gold ETFs and mutual funds</li>
+            <li>Digital gold via apps</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Gold Loans & Taxation</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li>Banks and NBFCs offer gold loans at 75% LTV</li>
+            <li>GST: 3% on gold, 5% on making</li>
+            <li>Long-term gains (3+ years): 20% with indexation</li>
+          </ul>
+          <p>GoldMeter provides daily updated gold rates for Madurai.</p>
         </div>
       </section>
     </div>
   );
 }
-

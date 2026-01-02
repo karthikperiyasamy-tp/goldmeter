@@ -5,53 +5,91 @@ export default function AyodhyaStaticContent() {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Gold Rate in Ayodhya: The Sacred City</h2>
+        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Ayodhya</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Ayodhya, the birthplace of Lord Ram, has a gold market deeply connected to religious traditions. 
-            With the development of the Ram Mandir, the city has seen increased economic activity including 
-            the jewellery sector. Gold rates in Ayodhya follow Lucknow prices, with demand peaking during 
-            Ram Navami and other religious occasions.
+            Ayodhya, the sacred city and birthplace of Lord Ram, has a growing gold market driven by 
+            religious tourism and pilgrim purchases. The city&apos;s gold rates follow the India Bullion and 
+            Jewellers Association (IBJA) reference prices, international spot rates, and the US dollar index.
+          </p>
+          <p>
+            With the Ram Mandir attracting millions of devotees, demand for religious gold jewellery 
+            and coins has increased significantly. Gold prices fluctuate based on global economic 
+            conditions and MCX futures market movements.
           </p>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Temple Gold and Religious Significance</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rates by Carat in Ayodhya</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li><strong>Temple Ornaments</strong> - Gold pieces for deity worship</li>
-            <li><strong>Religious Jewellery</strong> - Om pendants, Ram Darbar motifs</li>
-            <li><strong>Gold Coins</strong> - Popular for religious gifting</li>
-            <li><strong>Traditional UP Designs</strong> - Influenced by Lucknowi style</li>
+            <li><strong>24 Carat Gold Rate</strong> - 99.9% pure for investment coins and temple offerings</li>
+            <li><strong>22 Carat Gold Rate (916)</strong> - Standard for traditional jewellery</li>
+            <li><strong>18 Carat Gold Rate</strong> - For diamond-studded designs</li>
           </ul>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Where to Buy Gold in Ayodhya</h2>
+        <h2 className="text-xl font-bold text-charcoal">Factors Influencing Gold Prices</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li><strong>Hanuman Garhi Area</strong> - Traditional jewellers near temples</li>
-            <li><strong>Faizabad Market</strong> - Nearby commercial center</li>
-            <li><strong>Local Jewellers</strong> - Family-run shops with traditional designs</li>
+            <li><strong>Global</strong> - Dollar index, Federal Reserve policies, geopolitical events</li>
+            <li><strong>Domestic</strong> - Currency exchange, import duties, GST</li>
+            <li><strong>Religious Events</strong> - Ram Navami, Diwali see increased gold purchases</li>
           </ul>
-          <p>For larger purchases, many visitors prefer shopping in Lucknow with its wider selection.</p>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Tips for Ayodhya Buyers</h2>
+        <h2 className="text-xl font-bold text-charcoal">BIS Hallmarking</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li>Check Ayodhya gold rates on GoldMeter</li>
-            <li>Ram Navami sees peak gold buying</li>
-            <li>Verify BIS hallmark on all purchases</li>
-            <li>Compare with Lucknow rates for large purchases</li>
+            <li>BIS Logo with purity grade (916/750)</li>
+            <li>HUID - 6-digit unique identification</li>
+            <li>Purchase only from BIS-certified jewellers</li>
           </ul>
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Gold Buying Tips for Ayodhya</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li>Check rates on GoldMeter before visiting</li>
+            <li>Compare prices at local and branded showrooms</li>
+            <li>Understand making charges (8-20%)</li>
+            <li>For religious coins, verify weight and purity</li>
+            <li>Get detailed invoice with gold weight and purity</li>
+          </ul>
+          <p>For larger purchases, consider visiting nearby Lucknow for more options.</p>
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Investment Options</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li>Physical gold - coins, bars, jewellery</li>
+            <li>Sovereign Gold Bonds - 2.5% interest, tax-free on maturity</li>
+            <li>Gold ETFs and mutual funds</li>
+            <li>Digital gold via apps</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Gold Loans & Taxation</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li>Banks and NBFCs offer gold loans at 75% LTV</li>
+            <li>GST: 3% on gold, 5% on making</li>
+            <li>Long-term gains (3+ years): 20% with indexation</li>
+          </ul>
+          <p>GoldMeter provides daily updated gold rates for Ayodhya.</p>
         </div>
       </section>
     </div>
   );
 }
-

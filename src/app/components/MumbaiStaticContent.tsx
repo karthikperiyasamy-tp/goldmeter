@@ -1,278 +1,382 @@
 /**
  * Mumbai-specific static content for SEO
- * This component contains informational content about gold rates in Mumbai
- * that helps with search engine optimization and user education.
+ * Comprehensive coverage of gold rates, buying/selling, investment, taxation, and local market insights.
  */
 export default function MumbaiStaticContent() {
   return (
     <div className="mt-8 space-y-6">
-      {/* Gold Rate Today in Mumbai: What You Should Know */}
+      {/* Introduction to Mumbai Gold Market */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Mumbai: What You Should Know</h2>
+        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Mumbai</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Gold prices in Mumbai change daily and are influenced by a mix of global and local factors. As one of India&apos;s 
-            largest gold trading and jewellery hubs, Mumbai often reflects near-benchmark prices followed by jewellers 
-            across the country. Whether you are buying gold jewellery, investing in coins, or tracking prices for future 
-            purchases, understanding how gold rates work can help you make better decisions.
+            Mumbai is India&apos;s financial capital and the primary gateway for gold imports, making it the benchmark 
+            city for national gold prices. The India Bullion and Jewellers Association (IBJA), headquartered in 
+            Mumbai, publishes daily reference rates that jewellers across India use as their baseline. Zaveri Bazaar 
+            in South Mumbai has been the historic heart of India&apos;s bullion trade for over 150 years.
           </p>
           <p>
-            Gold in India is commonly priced per gram and varies based on purity, with 24K, 22K, and 18K being the 
-            most popular options. While 24K gold is considered the purest form, 22K gold is widely used for jewellery 
-            due to its durability.
+            Gold prices in Mumbai are determined by international spot prices, the US dollar index, import duties, 
+            and trading on the Multi Commodity Exchange (MCX) futures market. As the first point of entry for 
+            imported gold, Mumbai rates often set the tone for prices in other Indian cities, with minimal 
+            premiums compared to landed costs.
           </p>
         </div>
       </section>
 
-      {/* Why Gold Prices Change Daily in Mumbai */}
+      {/* Gold Rates by Carat */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Why Gold Prices Change Daily in Mumbai</h2>
-        <p className="mt-4 text-sm text-slate-600 leading-relaxed">
-          Gold rates in Mumbai do not remain constant. They fluctuate every day due to several factors:
-        </p>
-        
-        <div className="mt-4 space-y-4 text-sm text-slate-600">
-          <div>
-            <h3 className="font-semibold text-charcoal">International gold prices:</h3>
-            <p className="mt-1">
-              Gold is traded globally, and prices are influenced by demand and supply in international markets. Any 
-              movement in global spot prices directly impacts Indian gold rates.
-            </p>
-          </div>
-          
-          <div>
-            <h3 className="font-semibold text-charcoal">USD–INR exchange rate:</h3>
-            <p className="mt-1">
-              Since India imports most of its gold, the value of the Indian rupee against the US dollar plays a major role. A 
-              weaker rupee usually results in higher gold prices, while a stronger rupee can reduce prices.
-            </p>
-          </div>
-          
-          <div>
-            <h3 className="font-semibold text-charcoal">Import duty and taxes:</h3>
-            <p className="mt-1">
-              Government-imposed import duties and GST affect the final price of gold in Mumbai. Any change in these 
-              charges is reflected almost immediately in market rates.
-            </p>
-          </div>
-          
-          <div>
-            <h3 className="font-semibold text-charcoal">Local demand and market conditions:</h3>
-            <p className="mt-1">
-              Festive seasons, wedding demand, and investor sentiment in Mumbai can cause slight variations compared 
-              to other cities.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Difference Between 24K, 22K, and 18K Gold */}
-      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Difference Between 24K, 22K, and 18K Gold</h2>
-        <p className="mt-4 text-sm text-slate-600 leading-relaxed">
-          Understanding gold purity is important before making a purchase.
-        </p>
-        
-        <div className="mt-4 space-y-4 text-sm text-slate-600">
-          <div>
-            <h3 className="font-semibold text-charcoal">24K Gold:</h3>
-            <p className="mt-1">
-              This is the purest form of gold, containing nearly 99.9% gold. It is commonly used for coins and bars and is 
-              preferred for investment purposes. Due to its softness, it is not ideal for making jewellery.
-            </p>
-          </div>
-          
-          <div>
-            <h3 className="font-semibold text-charcoal">22K Gold:</h3>
-            <p className="mt-1">
-              Also known as 916 gold, this contains 91.6% gold mixed with other metals for strength. It is the most 
-              popular choice for jewellery in Mumbai.
-            </p>
-          </div>
-          
-          <div>
-            <h3 className="font-semibold text-charcoal">18K Gold:</h3>
-            <p className="mt-1">
-              This contains 75% gold and is often used for designer or gemstone jewellery. It is more affordable but has 
-              lower resale value compared to 22K and 24K gold.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Gold Jewellery Prices and Making Charges */}
-      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Gold Jewellery Prices and Making Charges</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rates by Carat: 24K, 22K, and 18K in Mumbai</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            When buying gold jewellery in Mumbai, the final price is not just the gold rate of the day. Jewellers add 
-            making charges, which cover the cost of crafting the jewellery.
+            Understanding different carat values is essential for Mumbai gold buyers. The gold price per gram 
+            varies based on purity:
           </p>
           
-          <div>
-            <h3 className="font-semibold text-charcoal">Making charges:</h3>
-            <ul className="mt-2 space-y-1 list-disc list-inside">
-              <li>Can be a flat amount or a percentage of gold value</li>
-              <li>Vary widely between jewellers</li>
-              <li>Are usually not recoverable during resale</li>
-            </ul>
-          </div>
-          
-          <p>
-            Even if two jewellers quote the same gold rate, the final price can differ due to making charges and design 
-            complexity. It is always advisable to compare prices before purchasing.
-          </p>
-        </div>
-      </section>
-
-      {/* Importance of Hallmarked Gold */}
-      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Importance of Hallmarked Gold</h2>
-        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
-          <p>
-            Buying hallmarked gold is essential to ensure purity and authenticity. Hallmarking in India is regulated by the 
-            Bureau of Indian Standards (BIS).
-          </p>
-          
-          <div>
-            <h3 className="font-semibold text-charcoal">A BIS hallmark includes:</h3>
-            <ul className="mt-2 space-y-1 list-disc list-inside">
-              <li>Purity grade (such as 916 for 22K)</li>
-              <li>BIS logo</li>
-              <li>Jeweller identification mark</li>
-            </ul>
-          </div>
-          
-          <p>
-            Hallmarked gold offers better trust and resale value, especially in a city like Mumbai where gold trading 
-            volumes are high.
-          </p>
-        </div>
-      </section>
-
-      {/* Gold Investment Options in Mumbai */}
-      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Gold Investment Options in Mumbai</h2>
-        <p className="mt-4 text-sm text-slate-600 leading-relaxed">
-          Gold is not only used for jewellery but also considered a long-term investment. Buyers in Mumbai have 
-          multiple options:
-        </p>
-        
-        <div className="mt-4 space-y-4 text-sm text-slate-600">
-          <div>
-            <h3 className="font-semibold text-charcoal">Physical gold:</h3>
-            <p className="mt-1">Includes jewellery, coins, and bars. While popular, it involves storage and security concerns.</p>
-          </div>
-          
-          <div>
-            <h3 className="font-semibold text-charcoal">Gold coins and bars:</h3>
-            <p className="mt-1">Preferred for investment due to lower making charges and higher purity.</p>
-          </div>
-          
-          <div>
-            <h3 className="font-semibold text-charcoal">Sovereign Gold Bonds (SGBs):</h3>
-            <p className="mt-1">
-              Issued by the Government of India, these bonds are linked to gold prices and also offer interest. They 
-              eliminate storage risk and are considered a safer alternative to physical gold.
-            </p>
-          </div>
-          
-          <div>
-            <h3 className="font-semibold text-charcoal">Gold ETFs and mutual funds:</h3>
-            <p className="mt-1">These allow investors to gain exposure to gold prices without owning physical gold.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Storing Gold Safely */}
-      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Storing Gold Safely</h2>
-        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
-          <p>Gold storage is an important consideration, especially for physical gold owners.</p>
-          
-          <div>
-            <h3 className="font-semibold text-charcoal">Common storage options include:</h3>
-            <ul className="mt-2 space-y-1 list-disc list-inside">
-              <li>Home lockers (for small quantities)</li>
-              <li>Bank lockers (for larger holdings)</li>
-              <li>Digital gold platforms (for online purchases)</li>
-            </ul>
-          </div>
-          
-          <p>
-            Bank lockers in Mumbai usually involve annual rental charges, so buyers should assess whether the quantity 
-            of gold justifies the cost.
-          </p>
-        </div>
-      </section>
-
-      {/* Resale Value of Gold in Mumbai */}
-      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Resale Value of Gold in Mumbai</h2>
-        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
-          <p>Gold generally offers good resale value, but the amount you receive depends on several factors:</p>
-          
-          <ul className="mt-2 space-y-1 list-disc list-inside">
-            <li>Purity of gold</li>
-            <li>Presence of hallmark</li>
-            <li>Current market rate</li>
-            <li>Deductions for impurities or wear</li>
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li><strong>24 Carat Gold Rate</strong> - 99.9% pure gold, the benchmark for investment-grade bullion. 
+            IBJA quotes 24K rates as the primary reference price.</li>
+            <li><strong>22 Carat Gold Rate (916 Gold)</strong> - 91.6% pure gold, standard for traditional 
+            Maharashtrian and Gujarati jewellery. Popular for wedding sets.</li>
+            <li><strong>18 Carat Gold Rate</strong> - 75% pure gold, preferred for diamond-studded contemporary 
+            designs and daily-wear jewellery due to enhanced durability.</li>
           </ul>
           
           <p>
-            Jewellery resale prices are usually lower than the purchase price due to non-refundable making charges. 
-            Coins and bars typically offer better resale value.
+            Use GoldMeter&apos;s gold rate calculator to compute exact costs including making charges. Mumbai&apos;s 
+            diverse population drives demand for both traditional Maharashtrian designs like Kolhapuri Saaj 
+            and contemporary styles from designer boutiques.
           </p>
         </div>
       </section>
 
-      {/* Is Today a Good Day to Buy Gold? */}
+      {/* Factors Influencing Gold Prices */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Is Today a Good Day to Buy Gold?</h2>
+        <h2 className="text-xl font-bold text-charcoal">What Drives Gold Price Movements in Mumbai</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            There is no single perfect day to buy gold, as prices fluctuate daily. Long-term buyers often focus on gradual 
-            accumulation rather than timing the market. In Mumbai, gold demand remains strong throughout the year, 
-            especially during festivals and wedding seasons.
+            As India&apos;s import hub, Mumbai gold prices are particularly sensitive to multiple factors:
           </p>
-          <p>
-            Tracking daily gold prices and understanding trends can help buyers make informed decisions.
-          </p>
-        </div>
-      </section>
-
-      {/* Why Track Gold Rates Daily? */}
-      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Why Track Gold Rates Daily?</h2>
-        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
-          <p>Keeping an eye on daily gold prices in Mumbai helps:</p>
           
-          <ul className="mt-2 space-y-1 list-disc list-inside">
-            <li>Jewellery buyers plan purchases</li>
-            <li>Investors identify price trends</li>
-            <li>Sellers choose better resale timing</li>
+          <div>
+            <h3 className="font-semibold text-charcoal">Global Economic Factors:</h3>
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              <li><strong>Dollar Index</strong> - Gold trades inversely to USD; rupee-dollar rate critically impacts Mumbai prices</li>
+              <li><strong>Federal Reserve Meetings</strong> - Interest rate decisions affect gold&apos;s safe-haven appeal</li>
+              <li><strong>Bond Yields</strong> - Rising US Treasury yields reduce gold&apos;s attractiveness</li>
+              <li><strong>Geopolitical Tensions</strong> - Global conflicts drive investors to gold as a safe haven</li>
+              <li><strong>Inflation Rates</strong> - Gold historically serves as an inflation hedge</li>
+            </ul>
+          </div>
+          
+          <div className="mt-3">
+            <h3 className="font-semibold text-charcoal">Domestic Factors:</h3>
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              <li><strong>Currency Exchange Rates</strong> - Rupee depreciation directly increases landed gold cost</li>
+              <li><strong>Import Duties</strong> - Government customs duty (currently ~15%) is a major cost component</li>
+              <li><strong>GST</strong> - 3% Goods and Services Tax on gold value</li>
+              <li><strong>Central Bank Reserves</strong> - RBI gold buying signals indicate market sentiment</li>
+              <li><strong>Local Demand and Supply</strong> - Wedding season and festivals create demand surges</li>
+            </ul>
+          </div>
+          
+          <p>
+            Mumbai traders on MCX futures market and Zaveri Bazaar bullion dealers are among the first to react 
+            to global price movements, making the city&apos;s rates a leading indicator for national trends.
+          </p>
+        </div>
+      </section>
+
+      {/* Historical Price Trends */}
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Historical Gold Price Trends in Mumbai</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <p>
+            The history of gold trade in Mumbai spans centuries, with Zaveri Bazaar serving as India&apos;s bullion 
+            capital. Analysing historical trends helps investors time purchases effectively:
+          </p>
+          
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li><strong>Seasonal Patterns</strong> - Prices typically rise during wedding season and Diwali/Dhanteras 
+            due to heightened Maharashtra and Gujarat demand</li>
+            <li><strong>Economic Indicators</strong> - Gold spiked during economic crises as investors sought 
+            safe-haven assets</li>
+            <li><strong>Moving Averages</strong> - Technical traders use 50-day and 200-day moving averages 
+            to identify entry points</li>
+            <li><strong>Forward Booking</strong> - Many Mumbai jewellers offer price-lock facilities for 
+            customers planning future purchases</li>
           </ul>
           
           <p>
-            GoldMeter provides regularly updated gold prices to help users stay informed with accurate and city-specific 
-            data.
+            The international gold market directly influences Mumbai prices with minimal lag. IBJA rates are 
+            published twice daily reflecting morning and afternoon London fixes.
           </p>
         </div>
       </section>
 
-      {/* Summary */}
+      {/* Gold Purity and Hallmarking */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Summary</h2>
-        <div className="mt-4 text-sm text-slate-600 leading-relaxed">
+        <h2 className="text-xl font-bold text-charcoal">Verifying Gold Purity and BIS Hallmarking</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Gold prices in Mumbai are influenced by global markets, currency rates, and local demand. Whether you are 
-            buying jewellery, investing in gold, or tracking prices for future needs, understanding purity, making charges, 
-            and market factors is essential. By monitoring daily gold rates and choosing trusted sources, buyers can 
-            make smarter and more confident decisions.
+            BIS hallmarking is mandatory for gold jewellery sold in India. Understanding hallmark symbols 
+            protects Mumbai buyers from adulteration:
           </p>
+          
+          <div>
+            <h3 className="font-semibold text-charcoal">Hallmark Components:</h3>
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              <li><strong>BIS Logo</strong> - Triangle mark indicating Bureau of Indian Standards certification</li>
+              <li><strong>Purity Grade</strong> - 916 for 22K, 750 for 18K, 585 for 14K gold</li>
+              <li><strong>HUID</strong> - 6-digit Hallmark Unique Identification number traceable online</li>
+              <li><strong>Hallmarking Centre Code</strong> - Identifies the testing and assaying centre</li>
+            </ul>
+          </div>
+          
+          <div className="mt-3">
+            <h3 className="font-semibold text-charcoal">Purity Testing Methods:</h3>
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              <li><strong>Visual Inspection</strong> - Check for hallmark stamps and finish quality</li>
+              <li><strong>Karat Machine</strong> - Electronic XRF devices for quick non-destructive testing</li>
+              <li><strong>Nitric Acid Test</strong> - Chemical test at assaying centres for precise measurement</li>
+              <li><strong>Magnetic Assessment</strong> - Pure gold is non-magnetic</li>
+            </ul>
+          </div>
+          
+          <p>
+            The Indian Bullion Association in Mumbai sets industry standards. Always demand invoice transparency 
+            with separate listing of gold weight, purity, stone weight, and making charges.
+          </p>
+        </div>
+      </section>
+
+      {/* Buying Gold in Mumbai */}
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Smart Gold Jewellery Buying Tips for Mumbai</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <p>
+            Whether buying for personal consumption or investment, follow these gold jewellery buying tips:
+          </p>
+          
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li><strong>Check Current Rates</strong> - Verify today&apos;s gold rate on GoldMeter before visiting jewellers</li>
+            <li><strong>Evaluate Seller Reputation</strong> - Choose established jewellers with transparent pricing</li>
+            <li><strong>Understand Making Charges</strong> - Range from 8% to 25% based on design complexity</li>
+            <li><strong>Insist on Hallmarked Gold</strong> - Only purchase BIS-certified jewellery with HUID</li>
+            <li><strong>Compare Prices</strong> - Visit multiple shops in Zaveri Bazaar and suburban malls</li>
+            <li><strong>Get Detailed Invoice</strong> - Bill must itemize gold weight, purity, making charges, and GST</li>
+            <li><strong>Understand Buyback Terms</strong> - Know the jeweller&apos;s exchange policies</li>
+          </ul>
+          
+          <p>
+            Popular Mumbai jewellers include Tribhovandas Bhimji Zaveri (TBZ), PNG Jewellers, Tanishq, Kalyan 
+            Jewellers, Waman Hari Pethe, and Joyalukkas. Zaveri Bazaar offers wholesale rates while suburban 
+            showrooms provide modern shopping experience.
+          </p>
+        </div>
+      </section>
+
+      {/* Selling Gold */}
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">How to Sell Gold and Scrap Gold in Mumbai</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <p>
+            When selling gold or scrap gold in Mumbai, understanding gold jewellery resale prices maximizes returns:
+          </p>
+          
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li><strong>Know Current Rates</strong> - Check gold rate before approaching buyers</li>
+            <li><strong>Get Multiple Quotes</strong> - Visit jewellers in Zaveri Bazaar for competitive offers</li>
+            <li><strong>Carry Original Documents</strong> - Bills prove authenticity and fetch better prices</li>
+            <li><strong>Understand Deductions</strong> - Expect 3-8% below market rate for hallmarked gold</li>
+            <li><strong>Scrap Gold Value</strong> - Broken jewellery valued by weight and purity after melting</li>
+            <li><strong>Exchange vs Cash</strong> - Exchange purchases often offer better value</li>
+          </ul>
+          
+          <p>
+            Zaveri Bazaar&apos;s bullion traders offer competitive rates for scrap gold. The concentrated market 
+            ensures competitive pricing. Always witness weighing and purity testing.
+          </p>
+        </div>
+      </section>
+
+      {/* Investment Options */}
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Gold Investment Options for Mumbai Investors</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <p>
+            Mumbai&apos;s financial hub status offers extensive gold investment avenues:
+          </p>
+          
+          <div>
+            <h3 className="font-semibold text-charcoal">Physical Gold:</h3>
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              <li><strong>Gold Coins and Bars</strong> - Available from MMTC, banks, and jewellers; minimal making charges</li>
+              <li><strong>Gold Jewellery</strong> - Serves dual purpose; higher making charges</li>
+            </ul>
+          </div>
+          
+          <div className="mt-3">
+            <h3 className="font-semibold text-charcoal">Paper and Digital Gold:</h3>
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              <li><strong>Sovereign Gold Bonds (SGBs)</strong> - Government-backed, 2.5% annual interest, tax-free maturity gains</li>
+              <li><strong>Gold Exchange Traded Funds (ETFs)</strong> - Trade on NSE/BSE; one unit equals ~1 gram gold</li>
+              <li><strong>Gold Mutual Funds</strong> - Invest in gold ETFs without demat; SIP available</li>
+              <li><strong>Digital Gold</strong> - Buy via apps; stored in insured vaults</li>
+              <li><strong>Gold Futures</strong> - Trade on MCX with leverage; requires expertise</li>
+            </ul>
+          </div>
+          
+          <div className="mt-3">
+            <h3 className="font-semibold text-charcoal">Other Options:</h3>
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              <li><strong>Gold Monetization Scheme</strong> - Deposit idle gold with banks, earn interest</li>
+              <li><strong>Gold Jewellery Schemes</strong> - Monthly deposits at jewellers</li>
+              <li><strong>Systematic Investment Plans</strong> - Regular investment in gold funds</li>
+            </ul>
+          </div>
+          
+          <p>
+            Mumbai investors benefit from direct access to MCX trading and proximity to IBJA for price discovery. 
+            SGBs offer best risk-adjusted returns for long-term investors.
+          </p>
+        </div>
+      </section>
+
+      {/* Gold Loans */}
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Gold Loan Facilities in Mumbai</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <p>
+            Gold-backed loans offer quick liquidity without selling precious metal:
+          </p>
+          
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li><strong>Banks</strong> - SBI, HDFC, ICICI, Kotak offer gold loans at competitive rates</li>
+            <li><strong>NBFCs</strong> - Muthoot, Manappuram, IIFL provide faster processing</li>
+            <li><strong>Loan-to-Value Ratios</strong> - Typically 75% of gold&apos;s market value</li>
+            <li><strong>Documents Required</strong> - ID proof, address proof, and the gold</li>
+            <li><strong>Gold Loan Process</strong> - Same-day disbursement after verification</li>
+          </ul>
+          
+          <p>
+            Mumbai&apos;s competitive lending market ensures attractive interest rates. Compare across gold loan 
+            companies for best terms. Gold is returned upon full repayment.
+          </p>
+        </div>
+      </section>
+
+      {/* Taxation */}
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Taxation on Gold Purchases and Sales</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <p>
+            Understanding tax implications is crucial for gold investors:
+          </p>
+          
+          <div>
+            <h3 className="font-semibold text-charcoal">On Purchase:</h3>
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              <li><strong>GST</strong> - 3% on gold value, 5% on making charges</li>
+              <li><strong>No Wealth Tax</strong> - Abolished since 2016</li>
+            </ul>
+          </div>
+          
+          <div className="mt-3">
+            <h3 className="font-semibold text-charcoal">On Sale (Capital Gains Tax):</h3>
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              <li><strong>Short Term Capital Gains Tax</strong> - Sold within 3 years, taxed at slab rate</li>
+              <li><strong>Long Term Capital Gains Tax</strong> - Held over 3 years, 20% with indexation benefit</li>
+              <li><strong>Indexation Benefit</strong> - Adjusts cost for inflation, reducing tax burden</li>
+            </ul>
+          </div>
+          
+          <div className="mt-3">
+            <h3 className="font-semibold text-charcoal">Tax Treatment by Investment Type:</h3>
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              <li><strong>Sovereign Gold Bonds</strong> - Interest taxable; capital gains tax-free on maturity</li>
+              <li><strong>Gold ETFs</strong> - Same rules as physical gold</li>
+              <li><strong>Digital Gold</strong> - Taxed as physical gold</li>
+            </ul>
+          </div>
+          
+          <p>
+            Maintain all purchase invoices for capital gains calculation. Consult tax professionals for complex queries.
+          </p>
+        </div>
+      </section>
+
+      {/* Local Market Insights */}
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Mumbai Gold Market: Local Insights</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <p>
+            Mumbai&apos;s gold market has unique characteristics:
+          </p>
+          
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li><strong>Zaveri Bazaar</strong> - Historic bullion trading hub; wholesale and retail</li>
+            <li><strong>IBJA</strong> - Sets national reference rates twice daily</li>
+            <li><strong>Local Jewellers</strong> - Multi-generational businesses with competitive pricing</li>
+            <li><strong>Daily Fluctuations</strong> - Rates update multiple times tracking global markets</li>
+          </ul>
+          
+          <div className="mt-3">
+            <h3 className="font-semibold text-charcoal">Peak Buying Seasons:</h3>
+            <ul className="mt-2 space-y-1 list-disc list-inside">
+              <li><strong>Gudi Padwa</strong> - Maharashtrian New Year; auspicious for gold</li>
+              <li><strong>Dhanteras</strong> - Peak buying day across India</li>
+              <li><strong>Akshaya Tritiya</strong> - Pan-India auspicious day</li>
+              <li><strong>Wedding Season</strong> - November to February sees highest demand</li>
+            </ul>
+          </div>
+          
+          <p>
+            Mumbai&apos;s market insights often precede national trends. Forward booking and gold rate calculators 
+            help customers plan purchases effectively.
+          </p>
+        </div>
+      </section>
+
+      {/* Storage and Security */}
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Gold Storage and Security Options</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li><strong>Bank Lockers</strong> - Most secure; annual rent varies by size</li>
+            <li><strong>Home Safes</strong> - Fire-resistant options for moderate holdings</li>
+            <li><strong>Insurance</strong> - Specific jewellery policies recommended</li>
+            <li><strong>Documentation</strong> - Maintain invoices and photos for claims</li>
+            <li><strong>Digital Options</strong> - SGBs and ETFs eliminate storage concerns</li>
+          </ul>
+          
+          <p>
+            Bank lockers are preferred for significant holdings. Locker contents require separate insurance 
+            as banks don&apos;t cover stored items by default.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ Summary */}
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Frequently Asked Questions About Mumbai Gold Rates</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <p><strong>Why are Mumbai gold rates considered the benchmark?</strong><br />
+          Mumbai is India&apos;s primary gold import gateway and home to IBJA, which sets national reference rates.</p>
+          
+          <p><strong>Is Zaveri Bazaar cheaper than mall showrooms?</strong><br />
+          Zaveri Bazaar often offers lower making charges due to wholesale volumes, though mall showrooms 
+          provide better shopping experience and standardized pricing.</p>
+          
+          <p><strong>What documents are needed for selling gold?</strong><br />
+          Original purchase invoices help get better rates. Without bills, jewellers test purity and 
+          may apply higher deductions.</p>
+          
+          <p><strong>How to track live gold prices in Mumbai?</strong><br />
+          GoldMeter provides real-time Mumbai gold rates, historical charts, and calculators for 
+          informed decision-making.</p>
         </div>
       </section>
     </div>
   );
 }
-

@@ -5,52 +5,66 @@ export default function MysoreStaticContent() {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Gold Rate in Mysore: The Royal City&apos;s Gold Market</h2>
+        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Mysore</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Mysore, the erstwhile royal capital of Karnataka, has a gold market influenced by its rich heritage. 
-            The city is known for traditional Mysorean designs and temple jewellery. Gold rates follow Bangalore 
-            prices with the Dasara festival being the peak buying season when the city celebrates its royal heritage.
+            Mysore, the City of Palaces, has a gold market rooted in its royal heritage. Gold rates follow the 
+            India Bullion and Jewellers Association (IBJA) reference prices, international spot rates, and 
+            the US dollar index. Devaraja Market and Sayyaji Rao Road house traditional jewellers.
+          </p>
+          <p>
+            The Mysore royal family&apos;s patronage historically elevated local jewellery craftsmanship. 
+            Traditional Karnataka designs remain popular alongside contemporary styles.
           </p>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Mysore Gold Jewellery Traditions</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rates by Carat in Mysore</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li><strong>Mysore Peta Designs</strong> - Royal heritage patterns</li>
-            <li><strong>Temple Jewellery</strong> - Chamundi temple-inspired</li>
-            <li><strong>Traditional Karnataka</strong> - Havala, Gantalu designs</li>
-            <li><strong>Silk Saree Matching</strong> - Jewellery to complement Mysore silk</li>
+            <li><strong>24 Carat Gold Rate</strong> - 99.9% pure for investment</li>
+            <li><strong>22 Carat Gold Rate (916)</strong> - Standard for traditional Karnataka jewellery</li>
+            <li><strong>18 Carat Gold Rate</strong> - For diamond-studded designs</li>
           </ul>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Where to Buy Gold in Mysore</h2>
+        <h2 className="text-xl font-bold text-charcoal">Factors & Peak Seasons</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li><strong>Devaraja Market Area</strong> - Traditional jewellers</li>
-            <li><strong>Sayyaji Rao Road</strong> - Main commercial street</li>
-            <li><strong>Gokulam/Vijayanagar</strong> - Modern showrooms</li>
+            <li><strong>Global</strong> - Dollar index, Federal Reserve, geopolitical tensions</li>
+            <li><strong>Domestic</strong> - Currency exchange, import duties, GST</li>
+            <li><strong>Peak Seasons</strong> - Mysore Dasara (major festival), Diwali, wedding season</li>
           </ul>
-          <p>Trusted names include C. Krishniah Chetty, Tanishq, and GRT Jewellers.</p>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Tips for Mysore Buyers</h2>
+        <h2 className="text-xl font-bold text-charcoal">BIS Hallmarking & Buying Tips</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li>Check Mysore gold rates on GoldMeter</li>
-            <li>Dasara festival sees special offers</li>
-            <li>Temple jewellery commands higher making charges</li>
-            <li>Verify BIS hallmark on all purchases</li>
+            <li>BIS Logo with purity grade (916/750) and HUID required</li>
+            <li>Check rates on GoldMeter before visiting</li>
+            <li>Compare prices at Devaraja Market area and branded showrooms</li>
+            <li>Understand making charges (8-20%)</li>
           </ul>
+          <p>Popular jewellers: C. Krishniah Chetty, GRT, Tanishq, Kalyan, and local traditional jewellers.</p>
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Investment & Loans</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li>Physical gold, SGBs, Gold ETFs, Digital gold available</li>
+            <li>Gold loans from banks and NBFCs at 75% LTV</li>
+            <li>GST: 3% on gold, 5% on making; Long-term: 20% with indexation</li>
+          </ul>
+          <p>GoldMeter provides daily updated gold rates for Mysore.</p>
         </div>
       </section>
     </div>
   );
 }
-

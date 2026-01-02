@@ -5,53 +5,64 @@ export default function TrichyStaticContent() {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Gold Rate in Trichy: Rock Fort City&apos;s Gold Market</h2>
+        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Trichy</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Tiruchirappalli (Trichy), home to the famous Rock Fort Temple, has a gold market influenced by 
-            religious traditions and central Tamil Nadu culture. The city serves as a gold hub for the Cauvery 
-            delta region, with rates following Chennai prices. Temple jewellery and traditional Tamil designs 
-            are the specialties here.
+            Tiruchirappalli (Trichy), home to the iconic Rockfort Temple, has a vibrant gold market. Gold rates 
+            follow the India Bullion and Jewellers Association (IBJA) reference prices, international spot rates, 
+            and the US dollar index. NSB Road and Singarathope house traditional jewellery shops.
+          </p>
+          <p>
+            The temple city&apos;s pilgrims and local residents drive gold demand. Traditional Tamil temple 
+            jewellery designs are particularly popular in Trichy.
           </p>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Temple City Gold Traditions</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rates by Carat in Trichy</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li><strong>Temple Jewellery</strong> - Designs inspired by Rock Fort Temple</li>
-            <li><strong>Traditional Tamil</strong> - Manga Malai, Attigai</li>
-            <li><strong>Antique Finish</strong> - Popular traditional style</li>
-            <li><strong>Bridal Sets</strong> - Complete wedding collections</li>
+            <li><strong>24 Carat Gold Rate</strong> - 99.9% pure for investment</li>
+            <li><strong>22 Carat Gold Rate (916)</strong> - Standard for temple jewellery</li>
+            <li><strong>18 Carat Gold Rate</strong> - For diamond-studded designs</li>
           </ul>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Where to Buy Gold in Trichy</h2>
+        <h2 className="text-xl font-bold text-charcoal">Factors & Peak Seasons</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li><strong>Singarathope</strong> - Traditional jewellery area</li>
-            <li><strong>Big Bazaar Street</strong> - Main market</li>
-            <li><strong>Cantonment Area</strong> - Modern showrooms</li>
+            <li><strong>Global</strong> - Dollar index, Federal Reserve, geopolitical tensions</li>
+            <li><strong>Peak Seasons</strong> - Pongal, Diwali, temple festivals, Tamil wedding season</li>
           </ul>
-          <p>Trusted names include GRT, Thangamayil, and Kalyan Jewellers.</p>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Tips for Trichy Buyers</h2>
+        <h2 className="text-xl font-bold text-charcoal">BIS Hallmarking & Buying Tips</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li>Check Trichy gold rates on GoldMeter</li>
-            <li>Temple festivals see increased buying</li>
-            <li>Verify BIS hallmark on all gold</li>
-            <li>Compare traditional and branded shops</li>
+            <li>BIS Logo with purity grade (916/750) and HUID required</li>
+            <li>Check rates on GoldMeter before visiting</li>
+            <li>Compare prices at NSB Road and branded showrooms</li>
           </ul>
+          <p>Popular jewellers: Thangamayil, GRT, Kalyan, Tanishq, and local traditional jewellers.</p>
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Investment & Loans</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li>Physical gold, SGBs, Gold ETFs, Digital gold available</li>
+            <li>Gold loans from banks and NBFCs at 75% LTV</li>
+            <li>GST: 3% on gold, 5% on making; Long-term: 20% with indexation</li>
+          </ul>
+          <p>GoldMeter provides daily updated gold rates for Trichy.</p>
         </div>
       </section>
     </div>
   );
 }
-

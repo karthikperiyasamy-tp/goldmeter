@@ -5,54 +5,64 @@ export default function PatnaStaticContent() {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Gold Rate in Patna: Bihar&apos;s Capital Gold Market</h2>
+        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Patna</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Patna, the capital of Bihar, has a growing gold market driven by wedding traditions and increasing 
-            prosperity. Gold is integral to Bihari weddings, with elaborate bridal sets being a norm. The city&apos;s 
-            gold rates follow Delhi prices, with Patna serving as the primary market for the entire state. 
-            Boring Road and Fraser Road are the main jewellery shopping destinations.
+            Patna, Bihar&apos;s capital on the Ganges, has a growing gold market. Gold rates follow the India Bullion 
+            and Jewellers Association (IBJA) reference prices, international spot rates, and the US dollar index. 
+            Fraser Road and Patna City house traditional jewellery shops.
+          </p>
+          <p>
+            Chhath Puja and wedding season drive significant gold demand. Traditional Bihari and North Indian 
+            designs are popular alongside contemporary styles.
           </p>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Bihari Wedding Gold Traditions</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rates by Carat in Patna</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li><strong>Heavy Bridal Sets</strong> - Traditional elaborate necklaces</li>
-            <li><strong>Maang Tikka</strong> - Essential forehead ornament</li>
-            <li><strong>Kamarbandh</strong> - Waist belt for brides</li>
-            <li><strong>Nathni</strong> - Traditional nose ring</li>
-            <li><strong>Bichhiya</strong> - Toe rings in gold</li>
+            <li><strong>24 Carat Gold Rate</strong> - 99.9% pure for investment</li>
+            <li><strong>22 Carat Gold Rate (916)</strong> - Standard for traditional jewellery</li>
+            <li><strong>18 Carat Gold Rate</strong> - For diamond-studded designs</li>
           </ul>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Where to Buy Gold in Patna</h2>
+        <h2 className="text-xl font-bold text-charcoal">Factors & Peak Seasons</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li><strong>Boring Road</strong> - Premium showrooms and malls</li>
-            <li><strong>Fraser Road</strong> - Main commercial area</li>
-            <li><strong>Kankarbagh</strong> - Popular retail market</li>
+            <li><strong>Global</strong> - Dollar index, Federal Reserve, geopolitical tensions</li>
+            <li><strong>Peak Seasons</strong> - Chhath Puja, Diwali, wedding season (Nov-Feb)</li>
           </ul>
-          <p>Trusted names include Tanishq, Kalyan Jewellers, and Tribhovandas Bhimji Zaveri.</p>
         </div>
       </section>
 
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Tips for Patna Buyers</h2>
+        <h2 className="text-xl font-bold text-charcoal">BIS Hallmarking & Buying Tips</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <ul className="mt-2 space-y-2 list-disc list-inside">
-            <li>Check Patna gold rates on GoldMeter</li>
-            <li>Wedding season (Nov-Feb) is peak buying time</li>
-            <li>Chhath Puja sees auspicious gold purchases</li>
-            <li>Verify BIS hallmark on all gold</li>
+            <li>BIS Logo with purity grade (916/750) and HUID required</li>
+            <li>Check rates on GoldMeter before visiting</li>
+            <li>Compare prices at Fraser Road and branded showrooms</li>
           </ul>
+          <p>Popular jewellers: Tanishq, Kalyan, Malabar Gold, and local traditional jewellers.</p>
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+        <h2 className="text-xl font-bold text-charcoal">Investment & Loans</h2>
+        <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
+          <ul className="mt-2 space-y-2 list-disc list-inside">
+            <li>Physical gold, SGBs, Gold ETFs, Digital gold available</li>
+            <li>Gold loans from banks and NBFCs at 75% LTV</li>
+            <li>GST: 3% on gold, 5% on making; Long-term: 20% with indexation</li>
+          </ul>
+          <p>GoldMeter provides daily updated gold rates for Patna.</p>
         </div>
       </section>
     </div>
   );
 }
-
