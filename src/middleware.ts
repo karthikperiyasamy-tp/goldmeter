@@ -94,6 +94,15 @@ export function middleware(request: NextRequest) {
     console.log(`🔄 [Middleware] Redirecting www → non-www: ${host} → ${newHost}`);
     return NextResponse.redirect(newUrl, 301); // 301 = permanent redirect
   }
+
+  // SEO MIGRATION: 301 redirect from old /{city} URLs to new /gold-rate/{city} URLs
+  // This transfers SEO equity and tells Google the content has permanently moved
+  const pathWithoutSlash = pathname.slice(1); // Remove leading slash
+  if (CITY_SLUGS.includes(pathWithoutSlash)) {
+    const newUrl = new URL(`/gold-rate/${pathWithoutSlash}`, request.url);
+    console.log(`🔄 [Middleware] SEO redirect: /${pathWithoutSlash} → /gold-rate/${pathWithoutSlash}`);
+    return NextResponse.redirect(newUrl, 301);
+  }
   
   // Skip geo-redirect for search engine bots so homepage returns 200.
   // This ensures Google sees the homepage, not city-specific redirected content.
@@ -104,7 +113,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Only run on homepage
+  // Only run geo-redirect on homepage
   if (pathname !== "/") {
     return NextResponse.next();
   }
