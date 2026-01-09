@@ -28,6 +28,7 @@ const citySlugMap: Record<string, string> = {
   "Lucknow": "lucknow",
   "Madurai": "madurai",
   "Mangalore": "mangalore",
+  "Moodbidri": "moodbidri",
   "Mumbai": "mumbai",
   "Mysore": "mysore",
   "Nagpur": "nagpur",

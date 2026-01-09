@@ -24,6 +24,7 @@ const SLUG_TO_CITY: Record<string, string> = {
   "lucknow": "Lucknow",
   "madurai": "Madurai",
   "mangalore": "Mangalore",
+  "moodbidri": "Moodbidri",
   "mumbai": "Mumbai",
   "mysore": "Mysore",
   "nagpur": "Nagpur",

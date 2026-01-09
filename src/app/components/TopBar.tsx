@@ -27,6 +27,7 @@ const cityOptions = [
   { name: "Lucknow", slug: "lucknow" },
   { name: "Madurai", slug: "madurai" },
   { name: "Mangalore", slug: "mangalore" },
+  { name: "Moodbidri", slug: "moodbidri" },
   { name: "Mumbai", slug: "mumbai" },
   { name: "Mysore", slug: "mysore" },
   { name: "Nagpur", slug: "nagpur" },
@@ -50,7 +51,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   const pathname = usePathname();
   
   // List of city pages for highlighting "Gold Rate Today"
-  const cityPages = ["ahmedabad", "ayodhya", "bangalore", "bhubaneswar", "chandigarh", "chennai", "coimbatore", "delhi", "hyderabad", "jaipur", "kerala", "kolkata", "lucknow", "madurai", "mangalore", "mumbai", "mysore", "nagpur", "nashik", "patna", "pune", "rajkot", "salem", "surat", "trichy", "vadodara", "vijayawada", "visakhapatnam"];
+  const cityPages = ["ahmedabad", "ayodhya", "bangalore", "bhubaneswar", "chandigarh", "chennai", "coimbatore", "delhi", "hyderabad", "jaipur", "kerala", "kolkata", "lucknow", "madurai", "mangalore", "moodbidri", "mumbai", "mysore", "nagpur", "nashik", "patna", "pune", "rajkot", "salem", "surat", "trichy", "vadodara", "vijayawada", "visakhapatnam"];
   const isGoldRatePage = pathname === "/" || pathname.startsWith("/gold-rate") || cityPages.some(city => pathname === `/${city}`);
   const isSilverRoute = pathname.startsWith("/silver-rate");
   const citySlug = city.toLowerCase();
