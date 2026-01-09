@@ -24,16 +24,16 @@ export async function generateMetadata(): Promise<Metadata> {
   });
   
   return {
-    // Title: ~55 chars (recommended: 50-60)
-    title: `Gold Rate Today (${shortDate}) - 22K & 24K India | GoldMeter`,
-    // Description: 155 chars (recommended: 110-160)
-    description: `Today's gold rate in India: 24K & 22K prices per gram. Live rates across Mumbai, Chennai, Delhi, Bangalore. Updated daily from IBJA.`,
+    // Homepage title - brand-focused, differentiated from /gold-rate-today
+    title: `GoldMeter - Live Gold & Silver Prices India (${shortDate})`,
+    // Description: brand-focused with live rates
+    description: `GoldMeter: Track live gold & silver rates across 25+ Indian cities. Compare 22K, 24K prices, use calculators, and get daily updates from IBJA.`,
     alternates: {
       canonical: "https://goldmeter.in",
     },
     openGraph: {
-      title: `Gold Rate Today (${shortDate}) - 22K & 24K India | GoldMeter`,
-      description: `Today's gold rate in India: 24K and 22K prices per gram. Updated from IBJA.`,
+      title: `GoldMeter - India's Gold Price Tracker (${shortDate})`,
+      description: `Live gold & silver prices across 25+ Indian cities. Updated daily from IBJA.`,
       url: "https://goldmeter.in",
       siteName: "GoldMeter",
       locale: "en_IN",
@@ -447,7 +447,7 @@ export default async function HomePage() {
         <article className="mx-auto max-w-6xl px-4 pt-6">
           <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
             <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl" itemProp="name">
-              Gold Rate Today in India ({todayFormatted}) – Live 22K &amp; 24K Price
+              Live Gold &amp; Silver Prices in India ({todayFormatted})
             </h1>
             
             {/* Primary AIO answer - structured for AI extraction */}

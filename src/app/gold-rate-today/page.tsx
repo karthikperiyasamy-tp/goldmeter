@@ -23,16 +23,17 @@ export async function generateMetadata(): Promise<Metadata> {
   });
   
   return {
-    // Title: ~55 chars (recommended: 50-60)
-    title: `Gold Rate Today (${shortDate}) - 22K & 24K India | GoldMeter`,
-    // Description: 155 chars (recommended: 110-160)
-    description: `Today's gold rate in India: 24K & 22K prices per gram. Live rates across Mumbai, Chennai, Delhi, Bangalore. Updated daily from IBJA.`,
+    // OPTIMIZED for "gold rate today" AND "gold price today" keywords
+    // Title: ~60 chars - includes both target keywords
+    title: `Gold Rate Today (${shortDate}) | Gold Price Today India - GoldMeter`,
+    // Description: includes both keywords naturally - 155 chars
+    description: `Gold rate today & gold price today in India: 24K ₹ per gram, 22K ₹ per gram. Live prices for Mumbai, Chennai, Delhi, Bangalore. Updated from IBJA.`,
     alternates: {
       canonical: "https://goldmeter.in/gold-rate-today",
     },
     openGraph: {
-      title: `Gold Rate Today (${shortDate}) - 22K & 24K India | GoldMeter`,
-      description: `Today's gold rate: 24K and 22K prices per gram in India. Updated from IBJA.`,
+      title: `Gold Rate Today & Gold Price Today (${shortDate}) - India | GoldMeter`,
+      description: `Today's gold rate & gold price: 24K and 22K prices per gram in India. Updated from IBJA.`,
       url: "https://goldmeter.in/gold-rate-today",
       siteName: "GoldMeter",
       locale: "en_IN",
@@ -291,6 +292,14 @@ export default async function GoldRateTodayPage() {
           },
           {
             "@type": "Question",
+            "name": "What is the gold price today?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `Gold price today in India: 24K gold is ₹${perGram24k.toLocaleString('en-IN')} per gram, 22K gold is ₹${perGram22k.toLocaleString('en-IN')} per gram. Prices updated ${todayFormatted} from IBJA.`
+            }
+          },
+          {
+            "@type": "Question",
             "name": "What is the 22K gold rate today?",
             "acceptedAnswer": {
               "@type": "Answer",
@@ -320,6 +329,38 @@ export default async function GoldRateTodayPage() {
               "@type": "Answer",
               "text": `8 gram gold price today: 24K is ₹${(perGram24k * 8).toLocaleString('en-IN')}, 22K is ₹${(perGram22k * 8).toLocaleString('en-IN')}, and 18K is ₹${(perGram18k * 8).toLocaleString('en-IN')}.`
             }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the price of 10 gram gold today?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `10 gram gold price today in India: 24K is ₹${baseRates.gold_24k.toLocaleString('en-IN')}, 22K is ₹${baseRates.gold_22k.toLocaleString('en-IN')}. Updated ${todayFormatted}.`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is gold rate up or down today?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `Gold rate today is ${(priceChange.gold24k || 0) >= 0 ? 'UP' : 'DOWN'} by ₹${Math.abs(Math.round((priceChange.gold24k || 0) / 10))}/gram compared to yesterday. 24K: ₹${perGram24k.toLocaleString('en-IN')}/g, 22K: ₹${perGram22k.toLocaleString('en-IN')}/g.`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is today's gold price per gram in India?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `Today's gold price per gram in India: 24 carat (99.9% pure) is ₹${perGram24k.toLocaleString('en-IN')}, 22 carat (91.6% pure) is ₹${perGram22k.toLocaleString('en-IN')}, 18 carat is ₹${perGram18k.toLocaleString('en-IN')}. Source: IBJA.`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the hallmark gold rate today?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `Hallmark gold rate today: 22K (916 hallmark) is ₹${perGram22k.toLocaleString('en-IN')}/gram, 18K (750 hallmark) is ₹${perGram18k.toLocaleString('en-IN')}/gram. Always buy BIS hallmarked gold.`
+            }
           }
         ]
       }
@@ -342,8 +383,9 @@ export default async function GoldRateTodayPage() {
         <article className="mx-auto max-w-6xl px-4 pt-6">
           <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
             <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
-              Gold Rate Today in India ({todayFormatted}) – Live 22K &amp; 24K Price per Gram
+              Gold Rate Today &amp; Gold Price Today in India ({todayFormatted})
             </h1>
+            <p className="text-lg text-amber-700 font-medium mt-1">Live 22K &amp; 24K Price per Gram</p>
             
             {/* Primary AIO answer */}
             <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true">
@@ -488,9 +530,40 @@ export default async function GoldRateTodayPage() {
         </article>
       </div>
 
-      {/* Related Searches - Internal Linking for SEO */}
+      {/* FAQ Section - Visible content matching FAQ schema (important for Google validation) */}
       <div className="bg-[#fffdf7]">
         <div className="mx-auto max-w-6xl px-4 py-6">
+          <section className="rounded-2xl border border-amber-100 bg-white p-6 shadow-soft">
+            <h2 className="text-xl font-bold text-charcoal mb-4">Gold Rate Today - Frequently Asked Questions</h2>
+            <div className="space-y-3">
+              <details className="rounded-xl border border-slate-100 p-4 hover:border-amber-200">
+                <summary className="cursor-pointer font-semibold text-charcoal">What is the gold rate today in India?</summary>
+                <p className="mt-2 text-sm text-slate-600">As of {todayFormatted}, 24K gold rate is ₹{perGram24k.toLocaleString('en-IN')} per gram and 22K gold rate is ₹{perGram22k.toLocaleString('en-IN')} per gram in India.</p>
+              </details>
+              <details className="rounded-xl border border-slate-100 p-4 hover:border-amber-200">
+                <summary className="cursor-pointer font-semibold text-charcoal">What is the gold price today?</summary>
+                <p className="mt-2 text-sm text-slate-600">Gold price today in India: 24K gold is ₹{perGram24k.toLocaleString('en-IN')} per gram, 22K gold is ₹{perGram22k.toLocaleString('en-IN')} per gram. Prices updated {todayFormatted} from IBJA.</p>
+              </details>
+              <details className="rounded-xl border border-slate-100 p-4 hover:border-amber-200">
+                <summary className="cursor-pointer font-semibold text-charcoal">What is the price of 10 gram gold today?</summary>
+                <p className="mt-2 text-sm text-slate-600">10 gram gold price today in India: 24K is ₹{baseRates.gold_24k.toLocaleString('en-IN')}, 22K is ₹{baseRates.gold_22k.toLocaleString('en-IN')}. Updated {todayFormatted}.</p>
+              </details>
+              <details className="rounded-xl border border-slate-100 p-4 hover:border-amber-200">
+                <summary className="cursor-pointer font-semibold text-charcoal">Is gold rate up or down today?</summary>
+                <p className="mt-2 text-sm text-slate-600">Gold rate today is {(priceChange.gold24k || 0) >= 0 ? 'UP' : 'DOWN'} by ₹{Math.abs(Math.round((priceChange.gold24k || 0) / 10))}/gram compared to yesterday. 24K: ₹{perGram24k.toLocaleString('en-IN')}/g, 22K: ₹{perGram22k.toLocaleString('en-IN')}/g.</p>
+              </details>
+              <details className="rounded-xl border border-slate-100 p-4 hover:border-amber-200">
+                <summary className="cursor-pointer font-semibold text-charcoal">What is today&apos;s gold price per gram in India?</summary>
+                <p className="mt-2 text-sm text-slate-600">Today&apos;s gold price per gram in India: 24 carat (99.9% pure) is ₹{perGram24k.toLocaleString('en-IN')}, 22 carat (91.6% pure) is ₹{perGram22k.toLocaleString('en-IN')}, 18 carat is ₹{perGram18k.toLocaleString('en-IN')}. Source: IBJA.</p>
+              </details>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      {/* Related Searches - Internal Linking for SEO */}
+      <div className="bg-[#fffdf7]">
+        <div className="mx-auto max-w-6xl px-4 pb-6">
           <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft">
             <h3 className="text-sm font-semibold text-slate-700 mb-3">🔍 Popular Gold Rate Searches</h3>
             <div className="flex flex-wrap gap-2">

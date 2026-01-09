@@ -21,6 +21,7 @@ const SUPPORTED_CITIES = [
   { name: "Lucknow", slug: "lucknow", lat: 26.8467, lon: 80.9462, aliases: [] },
   { name: "Madurai", slug: "madurai", lat: 9.9252, lon: 78.1198, aliases: [] },
   { name: "Mangalore", slug: "mangalore", lat: 12.9141, lon: 74.8560, aliases: ["mangaluru"] },
+  { name: "Moodbidri", slug: "moodbidri", lat: 13.0686, lon: 74.9988, aliases: ["moodabidri"] },
   { name: "Mysore", slug: "mysore", lat: 12.2958, lon: 76.6394, aliases: ["mysuru"] },
   { name: "Nagpur", slug: "nagpur", lat: 21.1458, lon: 79.0882, aliases: [] },
   { name: "Nashik", slug: "nashik", lat: 19.9975, lon: 73.7898, aliases: ["nasik"] },

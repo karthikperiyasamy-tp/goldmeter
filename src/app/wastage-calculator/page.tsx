@@ -88,10 +88,10 @@ export default function WastageCalculatorPage() {
           Gold tools
         </p>
         <h1 className="mt-2 text-3xl font-bold text-charcoal">
-          Jewellery Wastage Tool
+          What is Wastage in Gold? Calculator & Guide
         </h1>
         <p className="text-sm text-slate-600">
-          Estimate making + wastage charges
+          Calculate wastage charges (6-12%) and making charges for gold jewellery
         </p>
         
         {loading && (
@@ -208,16 +208,62 @@ export default function WastageCalculatorPage() {
           </div>
         </section>
 
-        <div className="mt-6 rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
-          <h3 className="text-sm font-semibold text-blue-900">
-            💡 About Wastage Charges
-          </h3>
-          <p className="mt-2 text-xs text-blue-800">
-            Wastage charges compensate for gold lost during jewellery making.
-            Typical wastage ranges from 6-12% depending on jewellery design
-            complexity. Intricate designs like chains and bracelets may have
-            higher wastage.
-          </p>
+        {/* SEO Content: What is Wastage in Gold */}
+        <div className="mt-6 space-y-4">
+          <div className="rounded-2xl border border-amber-200 bg-amber-50/50 p-4">
+            <h2 className="text-lg font-semibold text-amber-900">
+              What is Wastage in Gold Jewellery?
+            </h2>
+            <p className="mt-2 text-sm text-amber-800">
+              <strong>Wastage in gold</strong> refers to the gold lost during the jewellery-making process. 
+              When artisans cut, shape, file, and polish gold, small amounts are lost as dust, filings, 
+              and scrap. Jewellers charge wastage (typically <strong>6-12% of gold weight</strong>) to 
+              compensate for this loss.
+            </p>
+          </div>
+          
+          <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
+            <h3 className="text-sm font-semibold text-blue-900">
+              💡 Typical Wastage Rates by Jewellery Type
+            </h3>
+            <ul className="mt-2 text-xs text-blue-800 space-y-1 list-disc list-inside">
+              <li><strong>Simple rings/bangles:</strong> 6-8% wastage</li>
+              <li><strong>Chains/bracelets:</strong> 8-10% wastage</li>
+              <li><strong>Intricate designs (necklaces, temple jewellery):</strong> 10-15% wastage</li>
+              <li><strong>Kundan/Polki work:</strong> 12-20% wastage</li>
+            </ul>
+          </div>
+          
+          <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+            <h3 className="text-sm font-semibold text-slate-700">
+              📌 Wastage vs Making Charges
+            </h3>
+            <p className="mt-2 text-xs text-slate-600">
+              <strong>Wastage</strong> = Gold lost during making (charged as % of gold weight)<br />
+              <strong>Making charges</strong> = Labour cost for craftsmanship (charged per gram or as % of gold value)<br />
+              Both are added to the gold value, plus 3% GST, to calculate your final jewellery price.
+            </p>
+          </div>
+          
+          {/* Internal Links to City Pages */}
+          <div className="rounded-2xl border border-amber-100 bg-white p-4">
+            <h3 className="text-sm font-semibold text-charcoal">
+              🔗 Check Today&apos;s Gold Rates
+            </h3>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <Link href="/gold-rate/chennai" className="text-xs text-amber-600 hover:underline">Chennai Gold Rate</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/gold-rate/mumbai" className="text-xs text-amber-600 hover:underline">Mumbai Gold Rate</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/gold-rate/bangalore" className="text-xs text-amber-600 hover:underline">Bangalore Gold Rate</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/gold-rate/delhi" className="text-xs text-amber-600 hover:underline">Delhi Gold Rate</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/gold-rate/kolkata" className="text-xs text-amber-600 hover:underline">Kolkata Gold Rate</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/gold-rate-today" className="text-xs text-amber-600 hover:underline">All India Gold Rate</Link>
+            </div>
+          </div>
         </div>
           </div>
           

@@ -18,6 +18,7 @@ import KolkataStaticContent from "../../components/KolkataStaticContent";
 import LucknowStaticContent from "../../components/LucknowStaticContent";
 import MaduraiStaticContent from "../../components/MaduraiStaticContent";
 import MangaloreStaticContent from "../../components/MangaloreStaticContent";
+import MoodbidriStaticContent from "../../components/MoodbidriStaticContent";
 import MysoreStaticContent from "../../components/MysoreStaticContent";
 import NagpurStaticContent from "../../components/NagpurStaticContent";
 import NashikStaticContent from "../../components/NashikStaticContent";
@@ -68,16 +69,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
   
   return {
-    // Title: ~55 chars (recommended: 50-60)
-    title: `${config.name} Gold Rate Today (${shortDate}) - 22K & 24K | GoldMeter`,
-    // Description: 110-160 chars recommended
+    // Title optimized for carat-specific searches: "22 carat gold rate bangalore today"
+    // Putting "22 & 24 Carat" at front improves keyword matching
+    title: `22 & 24 Carat Gold Rate in ${config.name} Today (${shortDate}) | GoldMeter`,
+    // Description: 110-160 chars recommended, includes "per gram" for common searches
     description: config.metaDescription.replace('{date}', shortDate),
     alternates: {
       canonical: `https://goldmeter.in/gold-rate/${config.slug}`,
     },
     openGraph: {
-      title: `${config.name} Gold Rate Today (${shortDate}) - 22K & 24K | GoldMeter`,
-      description: `${config.name} gold rate: 24K & 22K prices per gram. Updated ${shortDate} from IBJA.`,
+      title: `${config.name} Gold Rate Today - 22 Carat & 24 Carat Price (${shortDate})`,
+      description: `Today's 22 carat & 24 carat gold rate in ${config.name}: prices per gram updated ${shortDate} from IBJA.`,
       type: 'website',
       url: `https://goldmeter.in/gold-rate/${config.slug}`,
       siteName: 'GoldMeter',
@@ -131,7 +133,7 @@ export default async function GoldRateCityPage({ params }: Props) {
         <article className="mx-auto max-w-6xl px-4 pt-6">
           <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
             <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl" itemProp="name">
-              {config.name} Gold Rate Today ({todayFormatted})
+              {config.name} Gold Rate Today ({todayFormatted}) – 22 &amp; 24 Carat
             </h1>
             
             {/* Primary AIO answer - structured like competitors */}
@@ -269,6 +271,7 @@ export default async function GoldRateCityPage({ params }: Props) {
         {config.slug === 'lucknow' && <LucknowStaticContent />}
         {config.slug === 'madurai' && <MaduraiStaticContent />}
         {config.slug === 'mangalore' && <MangaloreStaticContent />}
+        {config.slug === 'moodbidri' && <MoodbidriStaticContent />}
         {config.slug === 'mysore' && <MysoreStaticContent />}
         {config.slug === 'nagpur' && <NagpurStaticContent />}
         {config.slug === 'nashik' && <NashikStaticContent />}

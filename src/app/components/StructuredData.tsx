@@ -45,7 +45,8 @@ export default function StructuredData({
   faqs,
   dateISO,
 }: StructuredDataProps) {
-  const cityUrl = city ? `https://goldmeter.in/${city.toLowerCase()}` : undefined;
+  // Use new URL structure: /gold-rate/{city} (not old /{city})
+  const cityUrl = city ? `https://goldmeter.in/gold-rate/${city.toLowerCase()}` : undefined;
   const defaultImage = "https://goldmeter.in/og-image.png";
 
   const toPrice = (value?: number | null) =>

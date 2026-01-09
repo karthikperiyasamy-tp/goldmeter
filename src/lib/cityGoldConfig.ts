@@ -869,6 +869,52 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
     ],
   },
 
+  moodbidri: {
+    name: 'Moodbidri',
+    slug: 'moodbidri',
+    metaDescription: 'Moodbidri gold rate today ({date}): 24K & 22K per gram. Jain Basadi area prices, making charges ₹160-400/g. Updated from IBJA.',
+    intro: 'Gold rate in Moodbidri today per gram: 22K & 24K live prices with local market trends, charts, and FAQs.',
+    introParagraph1: `The gold rate in Moodbidri is updated daily based on international market rates, USD/INR currency movements, and Karnataka Bullion Association pricing. Moodbidri, known as the "Jain Kashi" for its 18 Jain temples, has a growing gold market influenced by nearby Mangalore. These prices exclude making charges (₹160-400/gram) and 3% GST.`,
+    introParagraph2: `Moodbidri's gold market serves the Jain pilgrimage community and local residents, offering traditional South Canara and Tulu Nadu designs. The town's proximity to Mangalore (35 km) means competitive pricing. Gold demand peaks during Jain festivals, Deepavali, and wedding season.`,
+    localInfo: [
+      { title: 'Hallmarking centers', description: 'Karnataka State Hallmarking Center in nearby Mangalore serves Moodbidri.' },
+      { title: 'Making charges', description: '₹160 – ₹400 per gram for 22K ornaments in local jewellers.' },
+      { title: 'Top jewellery hubs', description: 'Main Road near Thousand Pillars Basadi and Mangalore city stores.' },
+    ],
+    faqTemplates: [
+      {
+        question: 'What is the gold rate in Moodbidri today?',
+        answerTemplate: `Today's gold rate in Moodbidri is ₹{perGram24k} per gram for 24K gold and ₹{perGram22k} per gram for 22K gold. Prices are updated daily from Karnataka bullion market.`,
+      },
+      {
+        question: 'Why does Moodbidri gold rate change daily?',
+        answerTemplate: `Moodbidri gold prices fluctuate based on London spot prices, USD/INR exchange rate, and follow Mangalore market trends. Jain festival seasons also impact local demand.`,
+      },
+      {
+        question: 'How is 22K different from 24K gold?',
+        answerTemplate: `24K gold is 99.9% pure (for investment), while 22K gold is 91.6% pure with alloy. Moodbidri jewellers prefer 22K for traditional South Canara and temple jewellery.`,
+      },
+      {
+        question: 'Does making charge affect final jewellery price?',
+        answerTemplate: `Yes, making charges in Moodbidri range from ₹160-400 per gram - slightly lower than Mangalore city. Final price = Gold Rate × Weight + Making Charges + 3% GST.`,
+      },
+      {
+        question: 'Are Moodbidri gold rates similar to Mangalore?',
+        answerTemplate: `Yes, Moodbidri rates are typically within ₹10-20 of Mangalore prices. Many residents also shop in Mangalore for wider selection.`,
+      },
+      {
+        question: 'Which is the best place to buy gold in Moodbidri?',
+        answerTemplate: `Main Road near Jain Basadis for local jewellers. For branded options, visit Mangalore's Car Street (35 km) with stores like Bhima, Tanishq, and Joyalukkas.`,
+      },
+    ],
+    similarCities: ['Mangalore', 'Udupi', 'Bangalore', 'Mysore'],
+    relatedCities: [
+      { name: 'Mangalore', slug: 'mangalore' },
+      { name: 'Bangalore', slug: 'bangalore' },
+      { name: 'Mysore', slug: 'mysore' },
+    ],
+  },
+
   mysore: {
     name: 'Mysore',
     slug: 'mysore',
