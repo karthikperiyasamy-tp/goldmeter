@@ -94,9 +94,9 @@ export default function PriceHero({
             <span className="text-slate-300">•</span>
             <span className="text-slate-500">{formattedDate}</span>
           </div>
-          <h1 className="mt-2 text-3xl font-extrabold text-amber-700 md:text-4xl">
+          <h2 className="mt-2 text-3xl font-extrabold text-amber-700 md:text-4xl">
             {city} Gold Rate Today
-          </h1>
+          </h2>
           <p className="mt-2 text-sm text-slate-600">
             Per 10 grams • Updated daily by GoldMeter
           </p>

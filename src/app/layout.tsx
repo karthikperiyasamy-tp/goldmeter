@@ -18,8 +18,13 @@ export const metadata: Metadata = {
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    // Apple touch icon (standard name)
-    apple: "/apple-touch-icon.png",
+    // Apple touch icons for iOS devices - all sizes for full compatibility
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180" },
+      { url: "/apple-icon-152x152.png", sizes: "152x152" },
+      { url: "/apple-icon-120x120.png", sizes: "120x120" },
+      { url: "/apple-icon-76x76.png", sizes: "76x76" },
+    ],
     // Shortcut icon for legacy support
     shortcut: "/favicon.ico",
   },

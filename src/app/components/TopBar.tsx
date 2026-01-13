@@ -101,6 +101,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
           <Image
             src="/logo.png"
             alt="GoldMeter Logo"
+            title="GoldMeter - India's Gold Price Tracker"
             width={56}
             height={56}
             className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain shrink-0"

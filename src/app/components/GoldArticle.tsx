@@ -165,9 +165,9 @@ export default function GoldArticle() {
                 // Expanded Article
                 <article className="rounded-3xl border border-slate-100 bg-white p-8 shadow-soft">
                 <div className="animate-fadeIn">
-                  <h1 className="text-3xl font-bold text-charcoal mb-2">
+                  <h2 className="text-3xl font-bold text-charcoal mb-2">
                     {article.title}
-                  </h1>
+                  </h2>
                   <div className="flex items-center gap-2 mb-8 text-sm text-slate-500">
                     <span>{article.date}</span>
                     <span>•</span>
