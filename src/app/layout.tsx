@@ -10,24 +10,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-  icons: {
-    // Google requires at least 48x48, prefers multiples of 48
-    icon: [
-      { url: "/favicon.ico", sizes: "48x48" },
-      { url: "/favicon.png", sizes: "96x96", type: "image/png" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
-    ],
-    // Apple touch icons for iOS devices - all sizes for full compatibility
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180" },
-      { url: "/apple-icon-152x152.png", sizes: "152x152" },
-      { url: "/apple-icon-120x120.png", sizes: "120x120" },
-      { url: "/apple-icon-76x76.png", sizes: "76x76" },
-    ],
-    // Shortcut icon for legacy support
-    shortcut: "/favicon.ico",
-  },
+  // Icons are auto-detected from /app directory (favicon.ico, icon.png, apple-icon.png)
+  // See: https://nextjs.org/docs/app/api-reference/file-conventions/metadata/app-icons
   keywords: [
     "gold rate",
     "india gold price",
