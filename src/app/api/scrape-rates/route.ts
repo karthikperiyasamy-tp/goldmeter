@@ -525,6 +525,20 @@ export async function performScraping(): Promise<ScrapedRates> {
     cities[name] = rates;
   });
 
+  // Fallback cities: Use nearby city's rates when GoodReturns doesn't have data
+  // Moodbidri (35 km from Mangalore) uses Mangalore's rates
+  const CITY_FALLBACKS: Record<string, string> = {
+    "Moodbidri": "Mangalore",
+  };
+
+  // Apply fallbacks for cities without direct GoodReturns data
+  for (const [city, fallbackCity] of Object.entries(CITY_FALLBACKS)) {
+    if (cities[fallbackCity]) {
+      cities[city] = { ...cities[fallbackCity] };
+      console.log(`📍 [Scrape] Using ${fallbackCity} rates for ${city} (nearby city fallback)`);
+    }
+  }
+
   const results: ScrapedRates = {
     india,
     cities,

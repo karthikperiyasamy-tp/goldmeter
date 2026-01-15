@@ -17,6 +17,12 @@ type RateHistory = {
   timestamp: number;
 };
 
+// Cities that use another city's rates as fallback
+// (when GoodReturns doesn't have data for them)
+const CITY_FALLBACKS: Record<string, string> = {
+  "Moodbidri": "Mangalore", // Moodbidri is 35km from Mangalore
+};
+
 /**
  * Fetch city-specific gold rates
  * Tries DB first, falls back to scraping API if needed
@@ -39,10 +45,14 @@ export async function fetchCityRates(
   priceChange: PriceChange;
   history: RateHistory[];
 }> {
+  // Determine if this city has a fallback source
+  const fallbackCity = CITY_FALLBACKS[cityName];
+  const historyCity = fallbackCity || cityName;
+  
   // Fetch history and current rates in parallel for better performance
-  console.log(`📊 [FetchCityRates] Fetching data for ${cityName}...`);
+  console.log(`📊 [FetchCityRates] Fetching data for ${cityName}${fallbackCity ? ` (using ${fallbackCity} rates)` : ''}...`);
   const [historyResult, dbDataResult] = await Promise.allSettled([
-    getHistoricalGoldRates(cityName, 30),
+    getHistoricalGoldRates(historyCity, 30), // Use fallback city for history if needed
     getLatestGoldRates(),
   ]);
 
@@ -58,28 +68,35 @@ export async function fetchCityRates(
   if (dbDataResult.status === 'fulfilled') {
     const dbData = dbDataResult.value;
     
-    if (dbData.cities[cityName]) {
-      console.log(`✅ [FetchCityRates] Found ${cityName} in DB`);
+    // Try primary city first, then fallback city if available
+    const dbCityName = dbData.cities[cityName] ? cityName : (fallbackCity && dbData.cities[fallbackCity] ? fallbackCity : null);
+    
+    if (dbCityName) {
+      if (dbCityName !== cityName) {
+        console.log(`📍 [FetchCityRates] Using ${dbCityName} rates for ${cityName} (nearby city fallback)`);
+      } else {
+        console.log(`✅ [FetchCityRates] Found ${cityName} in DB`);
+      }
       
-      // Calculate price change from yesterday
+      // Calculate price change from yesterday (using the same source city)
       let priceChange: PriceChange = { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: 0 };
-      if (dbData.yesterdayCities[cityName]) {
+      if (dbData.yesterdayCities[dbCityName]) {
         priceChange = {
-          gold22k: dbData.cities[cityName].gold22k - dbData.yesterdayCities[cityName].gold22k,
-          gold24k: dbData.cities[cityName].gold24k - dbData.yesterdayCities[cityName].gold24k,
-          gold18k: dbData.cities[cityName].gold18k - dbData.yesterdayCities[cityName].gold18k,
-          silver1kg: (dbData.cities[cityName].silver1kg || 0) - (dbData.yesterdayCities[cityName].silver1kg || 0),
+          gold22k: dbData.cities[dbCityName].gold22k - dbData.yesterdayCities[dbCityName].gold22k,
+          gold24k: dbData.cities[dbCityName].gold24k - dbData.yesterdayCities[dbCityName].gold24k,
+          gold18k: dbData.cities[dbCityName].gold18k - dbData.yesterdayCities[dbCityName].gold18k,
+          silver1kg: (dbData.cities[dbCityName].silver1kg || 0) - (dbData.yesterdayCities[dbCityName].silver1kg || 0),
         };
         console.log(`📈 [FetchCityRates] ${cityName} price change: 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}, 18K=${priceChange.gold18k >= 0 ? '+' : ''}₹${priceChange.gold18k}, Silver=${priceChange.silver1kg >= 0 ? '+' : ''}₹${priceChange.silver1kg}`);
       }
       
       return {
-        gold22k: dbData.cities[cityName].gold22k,
-        gold24k: dbData.cities[cityName].gold24k,
-        gold18k: dbData.cities[cityName].gold18k || Math.round((dbData.cities[cityName].gold24k * 18) / 24),
-        silver1kg: dbData.cities[cityName].silver1kg || 0,
+        gold22k: dbData.cities[dbCityName].gold22k,
+        gold24k: dbData.cities[dbCityName].gold24k,
+        gold18k: dbData.cities[dbCityName].gold18k || Math.round((dbData.cities[dbCityName].gold24k * 18) / 24),
+        silver1kg: dbData.cities[dbCityName].silver1kg || 0,
         source: 'db',
-        date: dbData.cities[cityName].date, // Already formatted as string
+        date: dbData.cities[dbCityName].date, // Already formatted as string
         dateISO: new Date().toISOString().split('T')[0], // ISO format for structured data
         priceChange,
         history,
@@ -100,10 +117,21 @@ export async function fetchCityRates(
     
     if (response.ok) {
       const data = await response.json();
-      const cityRates = data.data?.cities?.[cityName];
+      // Try primary city first, then fallback city
+      let cityRates = data.data?.cities?.[cityName];
+      let usedFallback = false;
+      
+      if (!cityRates?.gold22k && fallbackCity) {
+        cityRates = data.data?.cities?.[fallbackCity];
+        usedFallback = true;
+      }
       
       if (cityRates?.gold22k && cityRates?.gold24k) {
-        console.log(`✅ [FetchCityRates] Scraped ${cityName} rates`);
+        if (usedFallback) {
+          console.log(`📍 [FetchCityRates] Scraped ${fallbackCity} rates for ${cityName} (nearby city fallback)`);
+        } else {
+          console.log(`✅ [FetchCityRates] Scraped ${cityName} rates`);
+        }
         const gold18k = cityRates.gold18k || Math.round((cityRates.gold24k * 18) / 24);
         return {
           gold22k: cityRates.gold22k,
