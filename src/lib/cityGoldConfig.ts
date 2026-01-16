@@ -44,8 +44,8 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   chennai: {
     name: 'Chennai',
     slug: 'chennai',
-    metaDescription: 'Chennai gold rate today ({date}): 24K & 22K per gram. T Nagar prices, making charges ₹150-450/g. Updated from IBJA.',
-    intro: 'Gold rate in Chennai today per gram: 22K & 24K live prices with T Nagar and Anna Nagar trends, charts, and FAQs.',
+    metaDescription: 'Gold rate today Chennai ({date}): 22K & 24K per gram live prices. T Nagar jewellery rates, making charges ₹150-450/g. IBJA verified.',
+    intro: 'Gold rate today in Chennai per gram: 22K & 24K live prices with T Nagar and Anna Nagar trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Chennai is updated daily based on international market rates, USD/INR currency fluctuations, and local bullion market demand. Chennai's gold prices may vary slightly from national averages due to transport costs, regional demand during festivals like Pongal and weddings, and jeweller pricing policies. These rates reflect the spot metal price and do not include making charges (typically ₹150-450/gram in T Nagar) or 3% GST, which vary by retailer.`,
     introParagraph2: `Chennai is one of India's largest gold markets, with major jewellery hubs in T Nagar (Usman Road), Pondy Bazaar, and Anna Nagar. The city follows Tamil Nadu Bullion Merchants Association rates, which are among the most competitive in South India. For accurate buying decisions, compare rates across multiple jewellers and factor in making charges for your chosen design.`,
     localInfo: [
@@ -55,8 +55,8 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
     ],
     faqTemplates: [
       {
-        question: 'What is the gold rate in Chennai today?',
-        answerTemplate: `Today's gold rate in Chennai is ₹{perGram24k} per gram for 24K gold and ₹{perGram22k} per gram for 22K gold. Prices are updated daily from Chennai bullion market.`,
+        question: 'What is the gold rate today in Chennai?',
+        answerTemplate: `Gold rate today in Chennai is ₹{perGram22k} per gram for 22K and ₹{perGram24k} per gram for 24K gold. Prices are updated daily from Chennai bullion market and IBJA.`,
       },
       {
         question: 'Why does Chennai gold rate change daily?',
@@ -90,8 +90,8 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   mumbai: {
     name: 'Mumbai',
     slug: 'mumbai',
-    metaDescription: 'Mumbai gold rate today ({date}): 24K & 22K per gram. Zaveri Bazaar prices, making charges ₹200-500/g. Updated from IBJA.',
-    intro: 'Gold rate in Mumbai today per gram: 22K & 24K live prices with Zaveri Bazaar and Dadar trends, charts, and FAQs.',
+    metaDescription: 'Gold rate today Mumbai ({date}): 22K & 24K per gram live prices. Zaveri Bazaar rates, making charges ₹200-500/g. IBJA verified.',
+    intro: 'Gold rate today in Mumbai per gram: 22K & 24K live prices with Zaveri Bazaar and Dadar trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Mumbai is updated daily based on international market rates, USD/INR currency movements, and Zaveri Bazaar bullion market prices. Mumbai, being India's financial capital and home to MCX (Multi Commodity Exchange), often sets the benchmark for gold prices across India. These rates reflect spot metal prices without making charges (typically ₹200-500/gram in Zaveri Bazaar) or 3% GST.`,
     introParagraph2: `Zaveri Bazaar in South Mumbai is Asia's oldest and largest bullion market, dating back over 150 years. Other popular jewellery destinations include Dadar, Borivali, and Malad. Mumbai's gold rates are typically ₹20-50 lower than South Indian cities due to proximity to international trade routes and wholesale trading volumes.`,
     localInfo: [
@@ -101,8 +101,8 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
     ],
     faqTemplates: [
       {
-        question: 'What is the gold rate in Mumbai today?',
-        answerTemplate: `Today's gold rate in Mumbai is ₹{perGram24k} per gram for 24K gold and ₹{perGram22k} per gram for 22K gold. Prices are updated daily from Zaveri Bazaar bullion market.`,
+        question: 'What is the gold rate today in Mumbai?',
+        answerTemplate: `Gold rate today in Mumbai is ₹{perGram22k} per gram for 22K and ₹{perGram24k} per gram for 24K gold. Prices are updated daily from Zaveri Bazaar bullion market and IBJA.`,
       },
       {
         question: 'Why does Mumbai gold rate change daily?',
@@ -136,8 +136,8 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   bangalore: {
     name: 'Bangalore',
     slug: 'bangalore',
-    metaDescription: 'Bangalore gold rate today ({date}): 24K & 22K per gram. Commercial Street prices, making charges ₹180-450/g. Updated from IBJA.',
-    intro: 'Gold rate in Bangalore today per gram: 22K & 24K live prices with Jayanagar and Commercial Street trends, charts, and FAQs.',
+    metaDescription: 'Gold rate today Bangalore ({date}): 22K & 24K per gram live prices. Commercial Street rates, making charges ₹180-450/g. IBJA verified.',
+    intro: 'Gold rate today in Bangalore per gram: 22K & 24K live prices with Jayanagar and Commercial Street trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Bangalore is updated daily based on international market rates, USD/INR exchange movements, and Karnataka Bullion Merchants Association pricing. Bangalore's gold prices are influenced by strong demand from IT professionals and the city's growing affluent population. These rates reflect spot metal prices and exclude making charges (typically ₹180-450/gram) and 3% GST.`,
     introParagraph2: `Commercial Street and Jayanagar are Bangalore's premier gold jewellery destinations, offering both traditional South Indian designs and contemporary styles. The city follows Karnataka state gold rates, which are competitive with Chennai and Hyderabad. For investment-grade gold, look for BIS hallmarked products from established jewellers.`,
     localInfo: [
@@ -147,8 +147,8 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
     ],
     faqTemplates: [
       {
-        question: 'What is the gold rate in Bangalore today?',
-        answerTemplate: `Today's gold rate in Bangalore is ₹{perGram24k} per gram for 24K gold and ₹{perGram22k} per gram for 22K gold. Prices are updated daily from Karnataka bullion market.`,
+        question: 'What is the gold rate today in Bangalore?',
+        answerTemplate: `Gold rate today in Bangalore is ₹{perGram22k} per gram for 22K and ₹{perGram24k} per gram for 24K gold. Prices are updated daily from Karnataka bullion market and IBJA.`,
       },
       {
         question: 'Why does Bangalore gold rate change daily?',
@@ -228,8 +228,8 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   hyderabad: {
     name: 'Hyderabad',
     slug: 'hyderabad',
-    metaDescription: 'Hyderabad gold rate today ({date}): 24K & 22K per gram. Abids prices, making charges ₹180-500/g. Updated from IBJA.',
-    intro: 'Gold rate in Hyderabad today per gram: 22K & 24K live prices with Abids and Banjara Hills trends, charts, and FAQs.',
+    metaDescription: 'Gold rate today Hyderabad ({date}): 22K & 24K per gram live prices. Abids jewellery rates, making charges ₹180-500/g. IBJA verified.',
+    intro: 'Gold rate today in Hyderabad per gram: 22K & 24K live prices with Abids and Banjara Hills trends, charts, and FAQs.',
     introParagraph1: `The gold rate in Hyderabad is updated daily based on international market rates, USD/INR exchange movements, and Telangana Bullion Association pricing. Hyderabad is known for competitive gold rates due to lower state taxes and strong local competition. These prices exclude making charges (₹180-500/gram) and 3% GST.`,
     introParagraph2: `Hyderabad's gold markets in Abids, Sultan Bazaar, and Begum Bazaar offer traditional Telugu and Hyderabadi designs at competitive prices. The city is famous for uncut diamond (Polki) and traditional temple jewellery. Gold demand peaks during Ugadi, Bonalu, and wedding season (November-February).`,
     localInfo: [
@@ -239,8 +239,8 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
     ],
     faqTemplates: [
       {
-        question: 'What is the gold rate in Hyderabad today?',
-        answerTemplate: `Today's gold rate in Hyderabad is ₹{perGram24k} per gram for 24K gold and ₹{perGram22k} per gram for 22K gold. Prices are updated daily from Telangana bullion market.`,
+        question: 'What is the gold rate today in Hyderabad?',
+        answerTemplate: `Gold rate today in Hyderabad is ₹{perGram22k} per gram for 22K and ₹{perGram24k} per gram for 24K gold. Prices are updated daily from Telangana bullion market and IBJA.`,
       },
       {
         question: 'Why does Hyderabad gold rate change daily?',

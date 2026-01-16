@@ -69,17 +69,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
   
   return {
-    // Title optimized for carat-specific searches: "22 carat gold rate bangalore today"
-    // Putting "22 & 24 Carat" at front improves keyword matching
-    title: `22 & 24 Carat Gold Rate in ${config.name} Today (${shortDate}) | GoldMeter`,
-    // Description: 110-160 chars recommended, includes "per gram" for common searches
-    description: config.metaDescription.replace('{date}', shortDate),
+    // Title optimized for "gold rate today [city]" searches
+    // Putting search phrase "Gold Rate Today" at front for better keyword matching
+    title: `Gold Rate Today in ${config.name} (${shortDate}) - 22K & 24K Price | GoldMeter`,
+    // Description: Starts with exact search phrase for better CTR
+    description: `Gold rate today ${config.name.toLowerCase()}: ₹{price}/gram for 22K, ₹{price24k}/gram for 24K. Live prices updated ${shortDate}. Check making charges, charts & buy tips.`.replace('{date}', shortDate),
     alternates: {
       canonical: `https://goldmeter.in/gold-rate/${config.slug}`,
     },
     openGraph: {
-      title: `${config.name} Gold Rate Today - 22 Carat & 24 Carat Price (${shortDate})`,
-      description: `Today's 22 carat & 24 carat gold rate in ${config.name}: prices per gram updated ${shortDate} from IBJA.`,
+      title: `Gold Rate Today ${config.name} - 22K & 24K Price (${shortDate})`,
+      description: `Gold rate today in ${config.name}: 22K & 24K prices per gram. Updated ${shortDate} from IBJA. Check live rates, charts & jeweller tips.`,
       type: 'website',
       url: `https://goldmeter.in/gold-rate/${config.slug}`,
       siteName: 'GoldMeter',
@@ -89,7 +89,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           url: 'https://goldmeter.in/og-image.png',
           width: 1200,
           height: 630,
-          alt: `${config.name} Gold Rate Today`,
+          alt: `Gold Rate Today ${config.name}`,
         },
       ],
     },
@@ -133,7 +133,7 @@ export default async function GoldRateCityPage({ params }: Props) {
         <article className="mx-auto max-w-6xl px-4 pt-6">
           <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
             <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl" itemProp="name">
-              {config.name} Gold Rate Today ({todayFormatted}) – 22 &amp; 24 Carat
+              Gold Rate Today in {config.name} ({todayFormatted}) – 22K &amp; 24K
             </h1>
             
             {/* Primary AIO answer - structured like competitors */}
