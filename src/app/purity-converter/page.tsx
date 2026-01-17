@@ -234,20 +234,25 @@ export default function PurityConverterPage() {
         </div>
 
         <div className="mt-6 rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
-          <h3 className="text-sm font-semibold text-blue-900">
-            💡 Understanding Purity
-          </h3>
+          <h2 className="text-sm font-semibold text-blue-900">
+            💡 Understanding Gold Purity
+          </h2>
           <p className="mt-2 text-xs text-blue-800">
-            Gold purity is measured in karats (K) or percentage. 24K is 99.9% pure gold.
+            <strong>Gold purity</strong> is measured in karats (K) or percentage. <strong>24K is 99.9% pure gold</strong>.
             22K gold contains 91.6% pure gold mixed with other metals for strength.
             This converter helps you understand equivalent weights when converting between purities.
           </p>
+          <ul className="mt-3 text-xs text-blue-800 list-disc list-inside space-y-1">
+            <li><strong>24K Gold</strong> - 99.9% pure, best for investment</li>
+            <li><strong>22K Gold</strong> - 91.6% pure, standard for Indian jewellery</li>
+            <li><strong>18K Gold</strong> - 75% pure, common in international markets</li>
+          </ul>
         </div>
 
         <div className="mt-6">
-          <h3 className="text-sm font-semibold text-slate-700 mb-3">
-            Purity Reference Table
-          </h3>
+          <h2 className="text-sm font-semibold text-slate-700 mb-3">
+            Gold Purity Reference Table
+          </h2>
           <div className="overflow-x-auto rounded-2xl border border-slate-200">
             <table className="w-full text-sm">
               <thead className="bg-slate-50">

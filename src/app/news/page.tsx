@@ -91,9 +91,9 @@ export default async function NewsPage() {
           <p className="text-sm text-amber-900">
             <strong>Looking for today&apos;s gold rate?</strong> See the dedicated price page:{' '}
             <Link href="/gold-rate/chennai" className="underline font-semibold hover:text-amber-700">Gold Rate in Chennai</Link>,{' '}
-            <Link href="/gold-rate/mumbai" className="underline font-semibold hover:text-amber-700">Mumbai</Link>,{' '}
-            <Link href="/gold-rate/delhi" className="underline font-semibold hover:text-amber-700">Delhi</Link>, or{' '}
-            <Link href="/gold-rate/bangalore" className="underline font-semibold hover:text-amber-700">Bangalore</Link>.
+            <Link href="/gold-rate/mumbai" className="underline font-semibold hover:text-amber-700">Gold Rate in Mumbai</Link>,{' '}
+            <Link href="/gold-rate/delhi" className="underline font-semibold hover:text-amber-700">Gold Rate in Delhi</Link>, or{' '}
+            <Link href="/gold-rate/bangalore" className="underline font-semibold hover:text-amber-700">Gold Rate in Bangalore</Link>.
           </p>
         </div>
         
@@ -120,7 +120,7 @@ export default async function NewsPage() {
                 href="/news/recap"
                 className="text-sm text-amber-600 hover:text-amber-700 font-medium"
               >
-                View all →
+                View all daily recaps →
               </Link>
             </div>
             <div className="space-y-3">
@@ -143,8 +143,18 @@ export default async function NewsPage() {
           />
         </div>
 
-        <div className="mt-10 rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">
-          <h3 className="text-lg font-semibold text-charcoal">Tools & links</h3>
+        <div className="mt-8 rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-slate-600">
+          <h2 className="font-semibold text-charcoal">📌 Key Market Indicators to Watch</h2>
+          <ul className="mt-3 list-disc list-inside space-y-1">
+            <li><strong>MCX Gold</strong> - Multi Commodity Exchange futures price</li>
+            <li><strong>COMEX Gold</strong> - International gold futures benchmark</li>
+            <li><strong>USD/INR Rate</strong> - Currency movements affect local gold prices</li>
+            <li><strong>Federal Reserve</strong> - Interest rate decisions impact gold</li>
+          </ul>
+        </div>
+
+        <div className="mt-6 rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">
+          <h2 className="text-lg font-semibold text-charcoal">Gold Price Tools & Resources</h2>
           <div className="mt-4 grid gap-3 md:grid-cols-3">
             <Link href="/calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
               <p className="font-semibold text-charcoal">Gold price calculator</p>

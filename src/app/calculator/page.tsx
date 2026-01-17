@@ -149,10 +149,10 @@ export default function CalculatorPage() {
         </div>
 
         <section className="mt-8 rounded-3xl border border-amber-100 bg-amber-50/60 p-6">
-          <h2 className="text-lg font-semibold">Estimate</h2>
+          <h2 className="text-lg font-semibold">Cost Estimate Breakdown</h2>
           <div className="mt-4 space-y-2 text-sm text-slate-600">
             <div className="flex items-center justify-between">
-              <span>Gold value</span>
+              <span><strong>Gold value</strong></span>
               <span>₹{formatCurrency(result.goldValue)}</span>
             </div>
             <div className="flex items-center justify-between">
@@ -165,8 +165,8 @@ export default function CalculatorPage() {
             </div>
             <hr className="border-dashed border-slate-300" />
             <div className="flex items-center justify-between text-lg font-semibold">
-              <span>Payable amount</span>
-              <span>₹{formatCurrency(result.total)}</span>
+              <span><strong>Total Payable Amount</strong></span>
+              <span className="text-amber-700">₹{formatCurrency(result.total)}</span>
             </div>
           </div>
 
@@ -178,6 +178,16 @@ export default function CalculatorPage() {
               Share
             </button>
           </div>
+        </section>
+
+        <section className="mt-6 rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-slate-600">
+          <h2 className="font-semibold text-charcoal">💡 How Jewellery Pricing Works</h2>
+          <ul className="mt-3 list-disc list-inside space-y-1">
+            <li><strong>Gold Rate</strong> - Base price per gram (changes daily based on market)</li>
+            <li><strong>Making Charges</strong> - Labour cost, typically ₹150-600 per gram</li>
+            <li><strong>GST</strong> - 3% on gold value + 5% on making charges</li>
+            <li><strong>Wastage</strong> - Gold lost during manufacturing (3-20%)</li>
+          </ul>
         </section>
           </div>
           

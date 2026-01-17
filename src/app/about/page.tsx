@@ -31,9 +31,9 @@ export default function AboutPage() {
       <div className="mx-auto max-w-4xl px-4 py-12">
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm text-slate-500">
-          <Link href="/" className="hover:text-amber-600">Home</Link>
+          <Link href="/" className="hover:text-amber-600">GoldMeter Home</Link>
           <span className="mx-2">›</span>
-          <span className="text-slate-700">About</span>
+          <span className="text-slate-700">About Us</span>
         </nav>
 
         <article className="prose prose-slate max-w-none">

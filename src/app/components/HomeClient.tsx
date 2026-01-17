@@ -474,7 +474,7 @@ export default function HomeClient({
                           href={`/gold-rate/${city.name.toLowerCase()}`}
                           className="text-amber-600 hover:text-amber-700 font-medium"
                         >
-                          View →
+                          View gold rate →
                         </Link>
                       </td>
                     </tr>
@@ -496,7 +496,7 @@ export default function HomeClient({
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Latest News</h3>
               <Link href="/news" className="text-sm font-semibold text-amber-600">
-                View all →
+                View all gold news →
               </Link>
             </div>
             <div className="mt-4 space-y-3">
@@ -521,7 +521,7 @@ export default function HomeClient({
                       href={`/news/${item.slug}`}
                       className="text-sm font-semibold text-amber-600"
                     >
-                      Read
+                      Read article
                     </Link>
                   </div>
                 </article>
@@ -541,7 +541,7 @@ export default function HomeClient({
                 <h3 className="text-lg font-semibold text-charcoal">Daily Market Recaps</h3>
               </div>
               <Link href="/news/recap" className="text-sm font-semibold text-amber-600 hover:text-amber-700">
-                View all →
+                View all daily recaps →
               </Link>
             </div>
             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">

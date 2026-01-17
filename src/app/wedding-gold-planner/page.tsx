@@ -354,9 +354,19 @@ export default function WeddingGoldPlannerPage() {
                 </div>
               </div>
 
-              <p className="mt-4 text-sm text-slate-600">
-                💡 With your budget of ₹{formatCurrency(budget)}, you can afford approximately <strong>{result.affordableWeight}g</strong> of 22K gold.
-              </p>
+            <p className="mt-4 text-sm text-slate-600">
+              💡 With your budget of ₹{formatCurrency(budget)}, you can afford approximately <strong>{result.affordableWeight}g</strong> of 22K gold.
+            </p>
+            
+            <div className="mt-4 text-sm text-slate-600">
+              <p className="font-semibold">Tips for Wedding Gold Shopping:</p>
+              <ul className="mt-2 list-disc list-inside space-y-1">
+                <li>Compare prices from <strong>multiple jewellers</strong> before buying</li>
+                <li>Ask for <strong>detailed bill</strong> showing gold weight, making charges, and GST separately</li>
+                <li>Check for <strong>BIS hallmark</strong> to ensure gold purity</li>
+                <li>Negotiate making charges - they&apos;re often negotiable</li>
+              </ul>
+            </div>
 
               <div className="mt-6 flex flex-wrap gap-3 text-sm font-semibold print:hidden">
                 <button 

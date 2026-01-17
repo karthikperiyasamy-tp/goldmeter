@@ -53,7 +53,7 @@ export default function CitySelector({ cities }: CitySelectorProps) {
           Prices by City
         </h3>
         <button className="text-sm font-semibold text-amber-600">
-          View all cities →
+          View gold rates in all cities →
         </button>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -72,7 +72,7 @@ export default function CitySelector({ cities }: CitySelectorProps) {
               ₹{city.gold22k.toLocaleString("en-IN")}
             </p>
             <p className="text-xs text-slate-400">Updated {city.updated}</p>
-            <p className="mt-2 text-xs font-semibold text-amber-600">View →</p>
+            <p className="mt-2 text-xs font-semibold text-amber-600">View gold rate →</p>
           </button>
         ))}
       </div>

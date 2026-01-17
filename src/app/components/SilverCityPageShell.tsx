@@ -189,7 +189,7 @@ export default function SilverCityPageShell({
         {/* Quick Cards */}
         <section className="mt-8">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-slate-800">Silver Rate - Quick Cards</h3>
+            <h2 className="text-lg font-semibold text-slate-800">Silver Rate - Quick Cards</h2>
             <p className="text-sm text-slate-500">{city} price</p>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -207,14 +207,14 @@ export default function SilverCityPageShell({
 
         {/* Silver Historical Rates Table */}
         <section className="mt-8">
-          <h3 className="mb-4 text-lg font-semibold text-slate-800">Historical Rates</h3>
+          <h2 className="mb-4 text-lg font-semibold text-slate-800">Historical Silver Rates in {city}</h2>
           <SilverLast10DaysTable history={history} city={city} />
         </section>
 
         {/* Price Trend Section */}
         <section id="price-chart" className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-slate-800">Silver Price Trend</h3>
+            <h2 className="text-lg font-semibold text-slate-800">Silver Price Trend in {city}</h2>
             <p className="text-sm text-slate-500">Last 30 days (per 1kg)</p>
           </div>
           <div className="h-[300px] w-full">
@@ -235,7 +235,7 @@ export default function SilverCityPageShell({
         </section>
 
         <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-          <h3 className="text-lg font-semibold">Tools & links</h3>
+          <h2 className="text-lg font-semibold">Gold & Silver Tools</h2>
           <div className="mt-4 grid gap-3 md:grid-cols-3">
             <Link href={goldHref} className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
               <p className="font-semibold text-charcoal">Gold rate in {city}</p>
@@ -265,7 +265,7 @@ export default function SilverCityPageShell({
         </section>
 
         <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-          <h3 className="text-lg font-semibold">FAQs</h3>
+          <h2 className="text-lg font-semibold">Frequently Asked Questions</h2>
           <div className="mt-4 space-y-3 text-sm text-slate-600">
             {faqs.map((faq) => (
               <details key={faq.question} className="rounded-2xl border border-slate-100 p-4">

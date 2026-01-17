@@ -83,9 +83,12 @@ export default async function NewsArticlePage({ params }: Props) {
 
   const articleUrl = `https://goldmeter.in/news/${slug}`;
   const cityLinks = [
-    { name: "Chennai", href: "/chennai" },
-    { name: "Mumbai", href: "/mumbai" },
-    { name: "Delhi", href: "/delhi" },
+    { name: "Chennai", href: "/gold-rate/chennai" },
+    { name: "Mumbai", href: "/gold-rate/mumbai" },
+    { name: "Delhi", href: "/gold-rate/delhi" },
+    { name: "Bangalore", href: "/gold-rate/bangalore" },
+    { name: "Hyderabad", href: "/gold-rate/hyderabad" },
+    { name: "Kolkata", href: "/gold-rate/kolkata" },
   ];
 
   return (
@@ -111,9 +114,9 @@ export default async function NewsArticlePage({ params }: Props) {
         {/* Explicit deferral - tells AI this is NOT the answer page for gold rate queries */}
         <div className="mt-4 rounded-xl bg-amber-100 border border-amber-300 p-3 text-sm text-amber-900">
           <strong>Looking for today&apos;s gold rate?</strong> See:{' '}
-          <Link href="/gold-rate/chennai" className="underline font-semibold">Chennai</Link>,{' '}
-          <Link href="/gold-rate/mumbai" className="underline font-semibold">Mumbai</Link>,{' '}
-          <Link href="/gold-rate/delhi" className="underline font-semibold">Delhi</Link>
+          <Link href="/gold-rate/chennai" className="underline font-semibold">Gold Rate in Chennai</Link>,{' '}
+          <Link href="/gold-rate/mumbai" className="underline font-semibold">Gold Rate in Mumbai</Link>,{' '}
+          <Link href="/gold-rate/delhi" className="underline font-semibold">Gold Rate in Delhi</Link>
         </div>
 
         <article className="mt-4 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
@@ -171,34 +174,60 @@ export default async function NewsArticlePage({ params }: Props) {
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-3 md:grid-cols-3">
-            {cityLinks.map((link) => (
+          <div className="mt-6">
+            <h3 className="text-base font-semibold text-charcoal mb-3">Check Gold Rates by City</h3>
+            <div className="grid gap-3 md:grid-cols-3">
+              {cityLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
+                >
+                  Gold rate in {link.name} today → per gram, charts, FAQs
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="mt-4">
+            <h3 className="text-base font-semibold text-charcoal mb-3">Gold Calculators & Tools</h3>
+            <div className="grid gap-3 md:grid-cols-3">
               <Link
-                key={link.name}
-                href={link.href}
+                href="/calculator"
                 className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
               >
-                Gold rate in {link.name} today → per gram, charts, FAQs
+                Gold price calculator → get cost with GST & making charges
               </Link>
-            ))}
-            <Link
-              href="/calculator"
-              className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
-            >
-              Gold price calculator → get cost with GST & making charges
-            </Link>
-            <Link
-              href="/wastage-calculator"
-              className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
-            >
-              Wastage & making calculator → compare jeweller quotes
-            </Link>
-            <Link
-              href="/silver-rate"
-              className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
-            >
-              Silver rate today → India & city history
-            </Link>
+              <Link
+                href="/wastage-calculator"
+                className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
+              >
+                Wastage & making calculator → compare jeweller quotes
+              </Link>
+              <Link
+                href="/purity-converter"
+                className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
+              >
+                Gold purity converter → 22K to 24K conversion
+              </Link>
+              <Link
+                href="/silver-rate"
+                className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
+              >
+                Silver rate today → India & city history
+              </Link>
+              <Link
+                href="/news/recap"
+                className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
+              >
+                Daily market recaps → AI-powered summaries
+              </Link>
+              <Link
+                href="/investment-calculator"
+                className="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-charcoal hover:border-amber-200"
+              >
+                Gold investment calculator → plan your SIP
+              </Link>
+            </div>
           </div>
         </article>
 

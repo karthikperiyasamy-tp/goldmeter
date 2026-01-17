@@ -16,9 +16,9 @@ function ArticleCard({ article }: { article: NewsArticle }) {
     <article className="rounded-2xl border border-slate-100 bg-white p-5 shadow-soft hover:shadow-md transition-shadow">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex-1 min-w-0">
-          <h2 className="text-lg font-semibold text-charcoal leading-snug">
+          <h3 className="text-lg font-semibold text-charcoal leading-snug">
             {article.title}
-          </h2>
+          </h3>
           <p className="text-xs text-slate-500 mt-1">
             {article.sourceName} • {timeAgo}
           </p>
@@ -32,7 +32,7 @@ function ArticleCard({ article }: { article: NewsArticle }) {
           rel="noopener noreferrer"
           className="shrink-0 text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors whitespace-nowrap"
         >
-          Read →
+          Read full article →
         </a>
       </div>
     </article>

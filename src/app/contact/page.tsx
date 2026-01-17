@@ -31,9 +31,9 @@ export default function ContactPage() {
       <div className="mx-auto max-w-4xl px-4 py-12">
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm text-slate-500">
-          <Link href="/" className="hover:text-amber-600">Home</Link>
+          <Link href="/" className="hover:text-amber-600">GoldMeter Home</Link>
           <span className="mx-2">›</span>
-          <span className="text-slate-700">Contact</span>
+          <span className="text-slate-700">Contact Us</span>
         </nav>
 
         <h1 className="text-3xl font-bold text-charcoal mb-6">Contact Us</h1>
@@ -44,7 +44,7 @@ export default function ContactPage() {
             <div className="rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6">
               <h2 className="text-lg font-semibold text-charcoal mb-4">Get in Touch</h2>
               <p className="text-slate-600 leading-relaxed mb-4">
-                We value your feedback and are here to help with any questions about gold prices, 
+                We value your feedback and are here to help with any questions about <strong>gold prices</strong>, 
                 our calculators, or suggestions for improvement.
               </p>
               <div className="space-y-4">
@@ -72,27 +72,12 @@ export default function ContactPage() {
 
             <div className="rounded-2xl border border-slate-200 bg-white p-6">
               <h2 className="text-lg font-semibold text-charcoal mb-4">Common Inquiries</h2>
-              <ul className="space-y-3 text-slate-600">
-                <li className="flex items-start gap-2">
-                  <span className="text-amber-500">•</span>
-                  <span>Questions about gold prices and data sources</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-amber-500">•</span>
-                  <span>Bug reports or website issues</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-amber-500">•</span>
-                  <span>Feature requests and suggestions</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-amber-500">•</span>
-                  <span>Business and partnership inquiries</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-amber-500">•</span>
-                  <span>Press and media requests</span>
-                </li>
+              <ul className="space-y-3 text-slate-600 list-disc list-inside">
+                <li>Questions about <strong>gold prices</strong> and data sources</li>
+                <li>Bug reports or website issues</li>
+                <li>Feature requests and suggestions</li>
+                <li><strong>Business and partnership</strong> inquiries</li>
+                <li>Press and media requests</li>
               </ul>
             </div>
           </div>

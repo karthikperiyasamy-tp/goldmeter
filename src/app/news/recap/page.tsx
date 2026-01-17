@@ -104,9 +104,9 @@ export default async function RecapsPage() {
           <p className="text-sm text-amber-900">
             <strong>Looking for today&apos;s gold rate?</strong> See the dedicated price page:{' '}
             <Link href="/gold-rate/chennai" className="underline font-semibold hover:text-amber-700">Gold Rate in Chennai</Link>,{' '}
-            <Link href="/gold-rate/mumbai" className="underline font-semibold hover:text-amber-700">Mumbai</Link>,{' '}
-            <Link href="/gold-rate/delhi" className="underline font-semibold hover:text-amber-700">Delhi</Link>, or{' '}
-            <Link href="/gold-rate/bangalore" className="underline font-semibold hover:text-amber-700">Bangalore</Link>.
+            <Link href="/gold-rate/mumbai" className="underline font-semibold hover:text-amber-700">Gold Rate in Mumbai</Link>,{' '}
+            <Link href="/gold-rate/delhi" className="underline font-semibold hover:text-amber-700">Gold Rate in Delhi</Link>, or{' '}
+            <Link href="/gold-rate/bangalore" className="underline font-semibold hover:text-amber-700">Gold Rate in Bangalore</Link>.
           </p>
         </div>
         
@@ -160,14 +160,19 @@ export default async function RecapsPage() {
 
         {/* Info Box */}
         <div className="mt-8 p-4 rounded-xl bg-white border border-slate-100 text-sm text-slate-600">
-          <div className="flex items-start gap-3">
-            <span className="text-xl">ℹ️</span>
-            <div>
-              <strong>How it works:</strong> Every day at 6 AM IST, our AI analyzes the previous day&apos;s 
-              gold-related news from multiple sources and generates a comprehensive market recap. 
-              This helps you stay informed without reading dozens of articles.
-            </div>
-          </div>
+          <h2 className="font-semibold text-charcoal flex items-center gap-2">
+            ℹ️ How Daily Recaps Work
+          </h2>
+          <p className="mt-2">
+            Every day at <strong>6 AM IST</strong>, our AI analyzes the previous day&apos;s 
+            gold-related news from multiple sources and generates a comprehensive market recap.
+          </p>
+          <ul className="mt-3 list-disc list-inside space-y-1">
+            <li>Aggregates <strong>10+ news sources</strong> automatically</li>
+            <li>Identifies key <strong>price movements</strong> and trends</li>
+            <li>Provides <strong>expert insights</strong> in simple language</li>
+            <li>Saves you time by summarizing important news</li>
+          </ul>
         </div>
       </section>
     </main>
