@@ -8,6 +8,7 @@ import Last10DaysTable from "./Last10DaysTable";
 import MonthStatistics from "./MonthStatistics";
 import StructuredData from "./StructuredData";
 import { GOLD_RATE_CITIES, SILVER_RATE_CITIES } from "@/lib/cities";
+import { getAllJewellers, type JewellerConfig } from "@/lib/jewellerConfig";
 
 type LocalInfo = {
   title: string;
@@ -195,6 +196,29 @@ export default function CityPageShell({
       ? `down ₹${Math.abs(priceChange.gold24k)}` 
       : 'unchanged';
 
+  // Get popular jewellers for sidebar (mix of national and regional based on city)
+  const getPopularJewellers = (): JewellerConfig[] => {
+    const allJewellers = getAllJewellers();
+    const cityLower = city.toLowerCase();
+    
+    // Get jewellers that have this city in their cityLinks
+    const jewellersInCity = allJewellers.filter((j) =>
+      j.cityLinks.some((c) => c.slug === cityLower)
+    );
+    
+    // If we have jewellers for this city, prioritize them
+    if (jewellersInCity.length >= 4) {
+      return jewellersInCity.slice(0, 6);
+    }
+    
+    // Otherwise, show national chains + some regional
+    const national = allJewellers.filter((j) => j.type === 'national').slice(0, 4);
+    const regional = allJewellers.filter((j) => j.type === 'regional').slice(0, 2);
+    return [...national, ...regional];
+  };
+  
+  const popularJewellers = getPopularJewellers();
+
   // Sidebar component for Top Cities (reusable)
   const TopCitiesSidebar = () => (
     <aside className="space-y-6">
@@ -243,6 +267,35 @@ export default function CityPageShell({
             </li>
           ))}
         </ul>
+      </section>
+
+      {/* Popular Jewellers */}
+      <section className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-5 shadow-soft">
+        <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wide flex items-center gap-2">
+          <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
+          Popular Jewellers in {city}
+        </h3>
+        <ul className="mt-4 space-y-2">
+          {popularJewellers.map((jeweller) => (
+            <li key={jeweller.slug}>
+              <Link
+                href={`/jewellers/${jeweller.slug}`}
+                className="block py-1.5 text-sm text-slate-600 hover:text-amber-600 transition-colors"
+              >
+                <span className="font-medium">{jeweller.name}</span>
+                <span className="block text-xs text-slate-400 mt-0.5">
+                  Making: {jeweller.makingChargesRange.split(' - ')[0]}+
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <Link
+          href="/jewellers"
+          className="mt-4 block text-center text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors"
+        >
+          View all jewellers →
+        </Link>
       </section>
     </aside>
   );

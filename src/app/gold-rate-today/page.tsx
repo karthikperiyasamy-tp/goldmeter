@@ -4,6 +4,7 @@ import Script from "next/script";
 import { getLatestGoldRates, getHistoricalGoldRates } from "@/lib/goldRatesDB";
 import { getRecentNews } from "@/lib/newsDB";
 import { getInternationalRates } from "@/lib/internationalRates";
+import { getAllJewellers } from "@/lib/jewellerConfig";
 import HomeClient, {
   type CityRate,
   type InternationalRates,
@@ -591,6 +592,46 @@ export default async function GoldRateTodayPage() {
               <Link href="/silver-rate" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
                 Silver rate today
               </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Popular Jewellers Section */}
+      <div className="bg-[#fffdf7]">
+        <div className="mx-auto max-w-6xl px-4 pb-6">
+          <div className="rounded-2xl border border-amber-100 bg-white p-6 shadow-soft">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-charcoal flex items-center gap-2">
+                💍 Popular Jewellers in India
+              </h2>
+              <Link href="/jewellers" className="text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors">
+                View all jewellers →
+              </Link>
+            </div>
+            <p className="text-sm text-slate-600 mb-4">
+              Compare making charges and gold purity standards across India&apos;s top jewellers before making your purchase.
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {getAllJewellers().filter(j => j.type === 'national').slice(0, 8).map((jeweller) => (
+                <Link
+                  key={jeweller.slug}
+                  href={`/jewellers/${jeweller.slug}`}
+                  className="group flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-3 hover:border-amber-300 hover:shadow-md transition-all"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-lg shrink-0">
+                    💎
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-charcoal line-clamp-1 group-hover:text-amber-700">
+                      {jeweller.name}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Making: {jeweller.makingChargesRange.split(' - ')[0]}+
+                    </p>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         </div>

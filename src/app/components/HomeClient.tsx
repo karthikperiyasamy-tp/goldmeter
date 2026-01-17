@@ -11,6 +11,7 @@ import Last10DaysTable from "./Last10DaysTable";
 import MonthStatistics from "./MonthStatistics";
 import GoldArticle from "./GoldArticle";
 import { type InternationalRate, type InternationalRates } from "@/lib/internationalRates";
+import { getAllJewellers } from "@/lib/jewellerConfig";
 
 export type RateResponse = {
   date: string;
@@ -567,6 +568,53 @@ export default function HomeClient({
           </div>
         </section>
       )}
+
+      {/* Popular Jewellers Section */}
+      <section className="mx-auto w-full max-w-6xl px-4 pt-6">
+        <div className="rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-6 shadow-soft">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">💎</span>
+              <h3 className="text-lg font-semibold text-charcoal">Popular Jewellers in India</h3>
+            </div>
+            <Link href="/jewellers" className="text-sm font-semibold text-amber-600 hover:text-amber-700">
+              View all jewellers →
+            </Link>
+          </div>
+          <p className="text-sm text-slate-600 mb-4">
+            Compare making charges, exchange policies, and find trusted jewellers across India.
+          </p>
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+            {getAllJewellers()
+              .filter((j) => j.type === 'national')
+              .slice(0, 8)
+              .map((jeweller) => (
+                <Link
+                  key={jeweller.slug}
+                  href={`/jewellers/${jeweller.slug}`}
+                  className="group rounded-2xl border border-amber-100 bg-white p-4 hover:border-amber-300 hover:shadow-md transition-all"
+                >
+                  <p className="font-semibold text-charcoal group-hover:text-amber-700">
+                    {jeweller.name}
+                  </p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    {jeweller.headquarters}
+                  </p>
+                  <div className="mt-2 rounded-lg bg-amber-50 px-2 py-1">
+                    <p className="text-xs text-amber-800 font-medium">
+                      Making: {jeweller.makingChargesRange.split(' - ')[0]}+
+                    </p>
+                  </div>
+                </Link>
+              ))}
+          </div>
+          <div className="mt-4 pt-4 border-t border-amber-100">
+            <p className="text-xs text-slate-500">
+              💡 Making charges vary by design complexity. Always ask for a detailed bill breakdown before purchasing.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Featured Article - Gold Origins */}
       <GoldArticle />

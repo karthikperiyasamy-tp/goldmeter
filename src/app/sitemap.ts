@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import { getAllRecaps } from '@/lib/recapDB'
 import { GOLD_RATE_CITIES, SILVER_RATE_CITIES, getCitySlug } from '@/lib/cities'
+import { getAllJewellerSlugs } from '@/lib/jewellerConfig'
 
 // Regenerate the sitemap periodically so lastModified timestamps stay fresh
 // and new recap pages appear promptly for search engines.
@@ -147,6 +148,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }))
 
+  // Jewellers index page
+  const jewellersIndex = {
+    url: `${baseUrl}/jewellers`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }
+
+  // Individual jeweller pages
+  const jewellerPages = getAllJewellerSlugs().map((slug) => ({
+    url: `${baseUrl}/jewellers/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }))
+
   // Footer/Legal pages
   const footerPages = [
     { url: `${baseUrl}/about`, priority: 0.5 },
@@ -176,6 +193,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...recapPages,
     silverRateIndex,
     ...silverRateCityPages,
+    jewellersIndex,
+    ...jewellerPages,
     ...footerPages,
   ]
 }

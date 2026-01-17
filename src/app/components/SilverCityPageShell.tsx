@@ -5,6 +5,7 @@ import RateCard from "./RateCard";
 import SilverLast10DaysTable from "./SilverLast10DaysTable";
 import SimplePriceChart from "./SimplePriceChart";
 import { GOLD_RATE_CITIES, SILVER_RATE_CITIES } from "@/lib/cities";
+import { getAllJewellers, type JewellerConfig } from "@/lib/jewellerConfig";
 
 type LocalInfo = {
   title: string;
@@ -69,6 +70,27 @@ export default function SilverCityPageShell({
       price: h.silver1kg || 0,
     }));
 
+  // Get popular jewellers for sidebar
+  const getPopularJewellers = (): JewellerConfig[] => {
+    const allJewellers = getAllJewellers();
+    const cityLower = city.toLowerCase();
+    
+    // Get jewellers that have this city in their cityLinks
+    const jewellersInCity = allJewellers.filter((j) =>
+      j.cityLinks.some((c) => c.slug === cityLower)
+    );
+    
+    // If we have jewellers for this city, prioritize them
+    if (jewellersInCity.length >= 4) {
+      return jewellersInCity.slice(0, 5);
+    }
+    
+    // Otherwise, show national chains
+    return allJewellers.filter((j) => j.type === 'national').slice(0, 5);
+  };
+  
+  const popularJewellers = getPopularJewellers();
+
   // Sidebar component for Top Cities (reusable)
   const TopCitiesSidebar = () => (
     <aside className="space-y-6">
@@ -117,6 +139,35 @@ export default function SilverCityPageShell({
             </li>
           ))}
         </ul>
+      </section>
+
+      {/* Popular Jewellers */}
+      <section className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-5 shadow-soft">
+        <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wide flex items-center gap-2">
+          <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
+          Popular Jewellers
+        </h3>
+        <ul className="mt-4 space-y-2">
+          {popularJewellers.map((jeweller) => (
+            <li key={jeweller.slug}>
+              <Link
+                href={`/jewellers/${jeweller.slug}`}
+                className="block py-1.5 text-sm text-slate-600 hover:text-amber-600 transition-colors"
+              >
+                <span className="font-medium">{jeweller.name}</span>
+                <span className="block text-xs text-slate-400 mt-0.5">
+                  Making: {jeweller.makingChargesRange.split(' - ')[0]}+
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <Link
+          href="/jewellers"
+          className="mt-4 block text-center text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors"
+        >
+          View all jewellers →
+        </Link>
       </section>
     </aside>
   );
