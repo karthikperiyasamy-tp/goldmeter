@@ -148,15 +148,8 @@ export default async function SilverCityPage({ params }: Props) {
   );
 }
 
-export async function generateMetadata({ params }: Props) {
-  const { city } = await params;
-  const cityName = city.charAt(0).toUpperCase() + city.slice(1);
-  return {
-    title: `${cityName} Silver Rate Today - 1kg, 10g, 1g Price`,
-    description:
-      `Get today's Silver rate in ${cityName} per 1kg, 10 grams, and 1 gram. Latest silver prices and trends in ${cityName}.`,
-  };
-}
+// Metadata is defined in layout.tsx for this route
+// Removed duplicate generateMetadata to prevent canonical/title conflicts
 
 // Cache page for 5 minutes - combined with DB-level caching
 export const revalidate = 300;

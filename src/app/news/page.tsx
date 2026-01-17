@@ -114,7 +114,7 @@ export default async function NewsPage() {
           <div className="mt-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-charcoal flex items-center gap-2">
-                📰 Daily Market Recaps
+                📊 Daily Market Recaps
               </h2>
               <Link
                 href="/news/recap"
@@ -134,7 +134,7 @@ export default async function NewsPage() {
         {/* News Articles Section */}
         <div className="mt-8">
           <h2 className="text-lg font-semibold text-charcoal mb-4 flex items-center gap-2">
-            📰 Latest Headlines
+            📰 Latest Gold News Headlines
           </h2>
           <NewsClient 
             initialGroups={initialData.groups} 
