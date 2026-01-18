@@ -720,7 +720,7 @@ export default function HomeClient({
 
       <section className="mx-auto w-full max-w-6xl px-4 py-10">
         <h3 className="text-lg font-semibold mb-4">🧮 Gold Calculators & Tools</h3>
-        <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
+        <div className="grid gap-4 md:grid-cols-4 lg:grid-cols-7">
           <Link href="/calculator" className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft hover:border-amber-200 transition-colors">
             <span className="text-2xl">🧮</span>
             <p className="text-sm font-semibold mt-2">Price Calculator</p>
@@ -750,6 +750,11 @@ export default function HomeClient({
             <span className="text-2xl">💍</span>
             <p className="text-sm font-semibold mt-2">Wedding Planner</p>
             <p className="text-xs text-slate-500">Plan wedding gold</p>
+          </Link>
+          <Link href="/hallmark-guide" className="rounded-2xl border border-amber-200 bg-amber-50 p-4 shadow-soft hover:border-amber-300 transition-colors">
+            <span className="text-2xl">🔍</span>
+            <p className="text-sm font-semibold mt-2">Hallmark Verifier</p>
+            <p className="text-xs text-slate-500">Check gold purity</p>
           </Link>
         </div>
       </section>

@@ -40,6 +40,12 @@ const calculators = [
     icon: "💍",
     description: "Plan wedding gold",
   },
+  {
+    name: "Hallmark Verifier",
+    href: "/hallmark-guide",
+    icon: "🔍",
+    description: "Check gold purity",
+  },
 ];
 
 export default function CalculatorSwitcher() {

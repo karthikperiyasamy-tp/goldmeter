@@ -112,9 +112,10 @@ export default function JewellersPage() {
 
         {/* Featured National Chains */}
         <section className="mt-8">
-          <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-            <span className="text-2xl">⭐</span> Featured Pan-India Chains
-          </h2>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-2xl" aria-hidden="true">⭐</span>
+            <h2 className="text-xl font-bold text-charcoal">Featured Pan-India Chains</h2>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {featuredJewellers.map((jeweller) => (
               <JewellerCard key={jeweller.slug} jeweller={jeweller} featured />
@@ -204,7 +205,7 @@ export default function JewellersPage() {
         {/* Making Charges Comparison Table */}
         <section className="mt-12 rounded-2xl border border-slate-100 bg-white p-6 shadow-soft">
           <h2 className="text-xl font-bold text-charcoal mb-4">
-            Making Charges Comparison
+            Making Charges Comparison Table - Top 10 Jewellers
           </h2>
           <p className="text-sm text-slate-600 mb-6">
             Quick comparison of making charges across popular jewellers. Lower making charges 
@@ -304,7 +305,7 @@ export default function JewellersPage() {
               premium charges (₹500-800/gram).
             </p>
             
-            <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">How Making Charges Affect Your Purchase</h3>
+            <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">Impact of Making Charges on Total Cost</h3>
             <ul className="space-y-2 text-slate-600">
               <li className="flex items-start gap-2">
                 <span className="text-amber-500 font-bold">•</span>
@@ -322,7 +323,7 @@ export default function JewellersPage() {
               </li>
             </ul>
 
-            <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">National vs Regional Jewellers</h3>
+            <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">Comparing National Chains vs Regional Jewellers</h3>
             <p className="text-slate-600 leading-relaxed">
               <strong>National chains</strong> like Tanishq (₹350-800/gram) and Kalyan (₹250-600/gram) offer brand assurance, 
               pan-India exchange, and certified purity but charge premium making charges. <strong>Regional chains</strong> like 
@@ -334,15 +335,16 @@ export default function JewellersPage() {
 
         {/* Jewellery Buying Checklist */}
         <section className="mt-8 rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-6">
-          <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-            <span className="text-2xl">✅</span> Gold Jewellery Buying Checklist
-          </h2>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-2xl" aria-hidden="true">✅</span>
+            <h2 className="text-xl font-bold text-charcoal">Gold Jewellery Buying Checklist</h2>
+          </div>
           <p className="text-slate-600 mb-6">
             Use this checklist before making any gold purchase to ensure you get the best deal with guaranteed quality:
           </p>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-3">
-              <h3 className="font-semibold text-amber-800">Before You Buy</h3>
+              <h3 className="font-semibold text-amber-800">Pre-Purchase Research</h3>
               <ul className="space-y-2 text-sm text-slate-600">
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500">□</span>
@@ -367,7 +369,7 @@ export default function JewellersPage() {
               </ul>
             </div>
             <div className="space-y-3">
-              <h3 className="font-semibold text-amber-800">At the Store</h3>
+              <h3 className="font-semibold text-amber-800">In-Store Verification Steps</h3>
               <ul className="space-y-2 text-sm text-slate-600">
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500">□</span>
@@ -622,7 +624,7 @@ export default function JewellersPage() {
               The hallmark includes several marks: the BIS logo, purity grade (916 for 22K, 750 for 18K, 585 for 14K), and the HUID. This standardization means that whether you buy from Tanishq in Delhi or a local jeweller in Madurai, the purity of hallmarked gold is guaranteed by the government. However, craftsmanship, design quality, and after-sales service still vary significantly between jewellers.
             </p>
 
-            <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">Understanding Making Charges Across Different Jewellers</h3>
+            <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">How Making Charges Vary by Jeweller Type</h3>
             <p className="text-slate-600 leading-relaxed">
               Making charges represent the cost of transforming raw gold into finished jewellery. These charges vary based on multiple factors: the jeweller&apos;s brand positioning, design complexity, manufacturing process (handcrafted vs. machine-made), and regional market dynamics. National chains like Tanishq charge premium making charges (₹350-800 per gram) reflecting their brand value, quality assurance, and pan-India service network.
             </p>
@@ -630,7 +632,7 @@ export default function JewellersPage() {
               Regional jewellers often offer significantly lower making charges. For instance, GRT Jewellers (₹180-450/gram), Lalithaa Jewellery (₹150-400/gram), and Thangamayil (₹160-420/gram) provide competitive pricing while maintaining BIS hallmarked quality. For a 50-gram bridal set, this difference in making charges can translate to savings of ₹10,000-20,000 or more.
             </p>
 
-            <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">Gold Exchange and Buyback Policies</h3>
+            <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">Exchange and Buyback: What to Expect</h3>
             <p className="text-slate-600 leading-relaxed">
               Exchange policies are a critical consideration when choosing a jeweller. Most branded jewellers offer 100% gold value exchange for their own jewellery, meaning you only lose the making charges when exchanging. For old gold from other sources, a deduction of 2-5% is typically applied for purity testing. Some jewellers like Tanishq and Kalyan have standardized nationwide policies, while regional jewellers may have varying terms.
             </p>
@@ -638,7 +640,7 @@ export default function JewellersPage() {
               For NRI customers or those who travel frequently, the international exchange policies of jewellers like Joyalukkas and Malabar Gold become particularly valuable. These brands allow you to buy gold in India and exchange it at stores in the UAE, Singapore, USA, UK, and other countries where they operate, providing unmatched flexibility.
             </p>
 
-            <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">Gold Savings Schemes: A Smart Way to Plan Purchases</h3>
+            <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">Monthly Gold Savings Plans Explained</h3>
             <p className="text-slate-600 leading-relaxed">
               Most major jewellers offer gold savings schemes that help customers plan for significant purchases like wedding jewellery. The typical structure involves monthly deposits for 11 months, with the 12th month contributed free by the jeweller (effectively 8-9% bonus). Some schemes protect against gold price rises during the deposit period, while others simply accumulate money value.
             </p>
@@ -760,7 +762,7 @@ export default function JewellersPage() {
         {/* Gold Purity Guide */}
         <section className="mt-8 rounded-2xl border border-slate-100 bg-white p-6 shadow-soft">
           <h2 className="text-xl font-bold text-charcoal mb-4">
-            Understanding Gold Purity: 24K, 22K, 18K, and 14K Explained
+            Gold Purity Guide: 24K, 22K, 18K & 14K Differences
           </h2>
           <div className="prose prose-slate prose-sm max-w-none">
             <p className="text-slate-600 leading-relaxed mb-4">

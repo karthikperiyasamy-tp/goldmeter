@@ -91,6 +91,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }
 
+  // Hallmark verification guide page
+  const hallmarkGuide = {
+    url: `${baseUrl}/hallmark-guide`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }
+
   // News index page
   const news = {
     url: `${baseUrl}/news`,
@@ -195,6 +203,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     investmentCalculator,
     goldLoanCalculator,
     weddingGoldPlanner,
+    hallmarkGuide,
     news,
     recapListing,
     ...newsPages,

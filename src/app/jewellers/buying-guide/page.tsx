@@ -57,9 +57,10 @@ export default function BuyingGuidePage() {
 
           {/* Making Charges */}
           <section id="making-charges" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft scroll-mt-20">
-            <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-              <span className="text-xl">💰</span> Understanding Making Charges
-            </h2>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-xl" aria-hidden="true">💰</span>
+              <h2 className="text-xl font-bold text-charcoal">Understanding Making Charges</h2>
+            </div>
             <div className="prose prose-slate prose-sm max-w-none">
               <p className="text-slate-600 mb-4">
                 Making charges are the fees jewellers charge for crafting jewellery from raw gold. 
@@ -116,9 +117,10 @@ export default function BuyingGuidePage() {
 
           {/* Purity & BIS Hallmark */}
           <section id="purity" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft scroll-mt-20">
-            <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-              <span className="text-xl">✅</span> Gold Purity & BIS Hallmark
-            </h2>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-xl" aria-hidden="true">✅</span>
+              <h2 className="text-xl font-bold text-charcoal">Gold Purity & BIS Hallmark</h2>
+            </div>
             <div className="prose prose-slate prose-sm max-w-none">
               <p className="text-slate-600 mb-4">
                 Since June 2021, BIS hallmarking with HUID (Hallmark Unique Identification Number) 
@@ -187,14 +189,29 @@ export default function BuyingGuidePage() {
                   </li>
                 </ul>
               </div>
+
+              {/* Link to Hallmark Guide */}
+              <div className="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-amber-900">Want to verify your gold hallmark?</p>
+                  <p className="text-sm text-amber-700">Learn how to check HUID online and spot fake hallmarks.</p>
+                </div>
+                <Link
+                  href="/hallmark-guide"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500 text-white text-sm font-semibold hover:bg-amber-600 transition-colors whitespace-nowrap"
+                >
+                  Hallmark Verification Guide →
+                </Link>
+              </div>
             </div>
           </section>
 
           {/* Gold Savings Schemes */}
           <section id="savings-schemes" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft scroll-mt-20">
-            <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-              <span className="text-xl">🏦</span> Gold Savings Schemes
-            </h2>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-xl" aria-hidden="true">🏦</span>
+              <h2 className="text-xl font-bold text-charcoal">Gold Savings Schemes</h2>
+            </div>
             <div className="prose prose-slate prose-sm max-w-none">
               <p className="text-slate-600 mb-4">
                 Most branded jewellers offer monthly savings schemes to help customers plan for 
@@ -270,9 +287,10 @@ export default function BuyingGuidePage() {
 
           {/* Payment Options */}
           <section id="payment-options" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft scroll-mt-20">
-            <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-              <span className="text-xl">💳</span> Payment Options
-            </h2>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-xl" aria-hidden="true">💳</span>
+              <h2 className="text-xl font-bold text-charcoal">Payment Options</h2>
+            </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
                 <h3 className="font-semibold text-charcoal mb-3">Accepted Payment Methods</h3>
@@ -306,9 +324,10 @@ export default function BuyingGuidePage() {
 
           {/* Exchange & Buyback */}
           <section id="exchange-policy" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft scroll-mt-20">
-            <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-              <span className="text-xl">🔄</span> Exchange & Buyback Policies
-            </h2>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-xl" aria-hidden="true">🔄</span>
+              <h2 className="text-xl font-bold text-charcoal">Exchange & Buyback Policies</h2>
+            </div>
             <div className="prose prose-slate prose-sm max-w-none">
               <p className="text-slate-600 mb-4">
                 Understanding exchange policies is crucial - it affects the long-term value of your purchase.
@@ -357,9 +376,10 @@ export default function BuyingGuidePage() {
 
           {/* Smart Buying Tips */}
           <section id="buying-tips" className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-6 shadow-soft scroll-mt-20">
-            <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-              <span className="text-xl">📝</span> Smart Buying Tips
-            </h2>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-xl" aria-hidden="true">📝</span>
+              <h2 className="text-xl font-bold text-charcoal">Smart Buying Tips</h2>
+            </div>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-semibold text-amber-800 mb-3">Before Visiting the Store</h3>
@@ -416,9 +436,10 @@ export default function BuyingGuidePage() {
 
           {/* Pre-Purchase Checklist */}
           <section id="checklist" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft scroll-mt-20">
-            <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-              <span className="text-xl">✅</span> Pre-Purchase Checklist
-            </h2>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-xl" aria-hidden="true">✅</span>
+              <h2 className="text-xl font-bold text-charcoal">Pre-Purchase Checklist</h2>
+            </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-3">
                 <label className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50">
@@ -461,9 +482,10 @@ export default function BuyingGuidePage() {
 
           {/* Red Flags */}
           <section id="red-flags" className="rounded-2xl border border-rose-200 bg-rose-50 p-6 shadow-soft scroll-mt-20">
-            <h2 className="text-xl font-bold text-rose-900 mb-4 flex items-center gap-2">
-              <span className="text-xl">🚩</span> Red Flags to Avoid
-            </h2>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-xl" aria-hidden="true">🚩</span>
+              <h2 className="text-xl font-bold text-rose-900">Red Flags to Avoid</h2>
+            </div>
             <div className="grid md:grid-cols-2 gap-4">
               <ul className="space-y-2 text-sm text-rose-800">
                 <li className="flex items-start gap-2">

@@ -21,6 +21,8 @@ type RateHistory = {
 // (when GoodReturns doesn't have data for them)
 const CITY_FALLBACKS: Record<string, string> = {
   "Moodbidri": "Mangalore", // Moodbidri is 35km from Mangalore
+  "Kochi": "Kerala", // Kochi is in Kerala
+  "Tirunelveli": "Madurai", // Tirunelveli is 150km from Madurai, same region
 };
 
 /**

@@ -98,15 +98,16 @@ export default function JewellerPageShell({ jeweller, goldRate, lastUpdated }: J
 
             {/* Making Charges Card - Prominent */}
             <section className="rounded-2xl border-2 border-amber-300 bg-gradient-to-r from-amber-100 to-amber-50 p-6 shadow-md">
-              <h2 className="text-xl font-bold text-amber-900 flex items-center gap-2">
-                <span className="text-2xl">💰</span> {jeweller.name} Making Charges
-              </h2>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl" aria-hidden="true">💰</span>
+                <h2 className="text-xl font-bold text-amber-900">{jeweller.name} Making Charges</h2>
+              </div>
               <p className="mt-3 text-3xl font-bold text-amber-800">
-                {jeweller.makingChargesRange}
+                <strong>{jeweller.makingChargesRange}</strong>
               </p>
               <p className="mt-2 text-sm text-amber-700">
-                At {jeweller.name}, making charges start from ₹{jeweller.makingChargesMin}/gram for simple designs 
-                and go up to ₹{jeweller.makingChargesMax}/gram for intricate bridal and designer pieces.
+                At <strong>{jeweller.name}</strong>, making charges start from <strong>₹{jeweller.makingChargesMin}/gram</strong> for simple designs 
+                and go up to <strong>₹{jeweller.makingChargesMax}/gram</strong> for intricate bridal and designer pieces.
               </p>
             </section>
 
@@ -115,9 +116,10 @@ export default function JewellerPageShell({ jeweller, goldRate, lastUpdated }: J
               <section className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-white p-6 shadow-soft">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <h2 className="text-xl font-bold text-charcoal flex items-center gap-2">
-                      <span className="text-xl">📈</span> Gold Rate in {goldRate.city} Today
-                    </h2>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl" aria-hidden="true">📈</span>
+                      <h2 className="text-xl font-bold text-charcoal">Gold Rate in {goldRate.city} Today</h2>
+                    </div>
                     <p className="text-xs text-slate-500 mt-1">
                       {jeweller.name} headquarters • Updated {goldRate.date}
                     </p>
@@ -133,27 +135,27 @@ export default function JewellerPageShell({ jeweller, goldRate, lastUpdated }: J
                 <div className="mt-4 grid grid-cols-3 gap-4">
                   <div className="text-center p-4 bg-white rounded-xl border border-emerald-100">
                     <p className="text-xs text-slate-500 mb-1">22K Gold</p>
-                    <p className="text-xl font-bold text-charcoal">₹{goldRate.gold22k.toLocaleString('en-IN')}</p>
+                    <p className="text-xl font-bold text-charcoal"><strong>₹{goldRate.gold22k.toLocaleString('en-IN')}</strong></p>
                     <p className={`text-xs mt-1 font-medium ${goldRate.priceChange.gold22k >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                       {goldRate.priceChange.gold22k >= 0 ? '▲' : '▼'} ₹{Math.abs(goldRate.priceChange.gold22k)}
                     </p>
                   </div>
                   <div className="text-center p-4 bg-white rounded-xl border border-emerald-100">
                     <p className="text-xs text-slate-500 mb-1">24K Gold</p>
-                    <p className="text-xl font-bold text-charcoal">₹{goldRate.gold24k.toLocaleString('en-IN')}</p>
+                    <p className="text-xl font-bold text-charcoal"><strong>₹{goldRate.gold24k.toLocaleString('en-IN')}</strong></p>
                     <p className={`text-xs mt-1 font-medium ${goldRate.priceChange.gold24k >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                       {goldRate.priceChange.gold24k >= 0 ? '▲' : '▼'} ₹{Math.abs(goldRate.priceChange.gold24k)}
                     </p>
                   </div>
                   <div className="text-center p-4 bg-white rounded-xl border border-emerald-100">
                     <p className="text-xs text-slate-500 mb-1">18K Gold</p>
-                    <p className="text-xl font-bold text-charcoal">₹{goldRate.gold18k.toLocaleString('en-IN')}</p>
+                    <p className="text-xl font-bold text-charcoal"><strong>₹{goldRate.gold18k.toLocaleString('en-IN')}</strong></p>
                     <p className="text-xs mt-1 text-slate-400">per gram</p>
                   </div>
                 </div>
 
                 <p className="mt-4 text-xs text-slate-500 text-center">
-                  Prices are per gram. Actual jewellery cost = Gold rate + Making charges ({jeweller.makingChargesRange})
+                  Prices are per gram. <strong>Actual jewellery cost</strong> = Gold rate + Making charges (<strong>{jeweller.makingChargesRange}</strong>)
                 </p>
               </section>
             )}
@@ -166,7 +168,11 @@ export default function JewellerPageShell({ jeweller, goldRate, lastUpdated }: J
               <div className="prose prose-slate prose-sm max-w-none">
                 {jeweller.description.split('\n\n').map((para, idx) => (
                   <p key={idx} className="text-slate-600 leading-relaxed mb-4">
-                    {para}
+                    {idx === 0 ? (
+                      <><strong>{jeweller.name}</strong> {para.replace(jeweller.name, '').trim()}</>
+                    ) : (
+                      para
+                    )}
                   </p>
                 ))}
               </div>
@@ -174,24 +180,25 @@ export default function JewellerPageShell({ jeweller, goldRate, lastUpdated }: J
 
             {/* Key Statistics */}
             <section className="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-6 shadow-soft">
-              <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-                <span className="text-xl">📊</span> {jeweller.name} Key Facts
-              </h2>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xl" aria-hidden="true">📊</span>
+                <h2 className="text-xl font-bold text-charcoal">{jeweller.name} Key Facts</h2>
+              </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center p-4 bg-white rounded-xl border border-amber-100">
-                  <p className="text-2xl font-bold text-amber-700">{jeweller.foundedYear}</p>
+                  <p className="text-2xl font-bold text-amber-700"><strong>{jeweller.foundedYear}</strong></p>
                   <p className="text-xs text-slate-500 mt-1">Year Founded</p>
                 </div>
                 <div className="text-center p-4 bg-white rounded-xl border border-amber-100">
-                  <p className="text-2xl font-bold text-amber-700">{new Date().getFullYear() - jeweller.foundedYear}+</p>
+                  <p className="text-2xl font-bold text-amber-700"><strong>{new Date().getFullYear() - jeweller.foundedYear}+</strong></p>
                   <p className="text-xs text-slate-500 mt-1">Years of Heritage</p>
                 </div>
                 <div className="text-center p-4 bg-white rounded-xl border border-amber-100">
-                  <p className="text-2xl font-bold text-amber-700">₹{jeweller.makingChargesMin}</p>
+                  <p className="text-2xl font-bold text-amber-700"><strong>₹{jeweller.makingChargesMin}</strong></p>
                   <p className="text-xs text-slate-500 mt-1">Min Making/gram</p>
                 </div>
                 <div className="text-center p-4 bg-white rounded-xl border border-amber-100">
-                  <p className="text-lg font-bold text-amber-700">{typeLabel}</p>
+                  <p className="text-lg font-bold text-amber-700"><strong>{typeLabel}</strong></p>
                   <p className="text-xs text-slate-500 mt-1">Coverage Type</p>
                 </div>
               </div>
@@ -199,19 +206,21 @@ export default function JewellerPageShell({ jeweller, goldRate, lastUpdated }: J
 
             {/* Purity & Quality */}
             <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-soft">
-              <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-                <span className="text-xl">✅</span> Purity & Quality Standards at {jeweller.name}
-              </h2>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xl" aria-hidden="true">✅</span>
+                <h2 className="text-xl font-bold text-charcoal">Purity & Quality Standards at {jeweller.name}</h2>
+              </div>
               <p className="text-slate-600 leading-relaxed">
-                {jeweller.purityStandards}
+                <strong>{jeweller.name}</strong> ensures all gold jewellery is <strong>BIS hallmarked</strong> with <strong>HUID certification</strong>. {jeweller.purityStandards}
               </p>
             </section>
 
             {/* Popular Collections */}
             <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-soft">
-              <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-                <span className="text-xl">💎</span> Popular Collections
-              </h2>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xl" aria-hidden="true">💎</span>
+                <h2 className="text-xl font-bold text-charcoal">Popular Collections</h2>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {jeweller.popularCollections.map((collection, idx) => (
                   <span
@@ -226,24 +235,26 @@ export default function JewellerPageShell({ jeweller, goldRate, lastUpdated }: J
 
             {/* Exchange Policy */}
             <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-soft">
-              <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-                <span className="text-xl">🔄</span> Exchange & Buyback Policy at {jeweller.name}
-              </h2>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xl" aria-hidden="true">🔄</span>
+                <h2 className="text-xl font-bold text-charcoal">Exchange & Buyback Policy at {jeweller.name}</h2>
+              </div>
               <p className="text-slate-600 leading-relaxed">
-                {jeweller.exchangePolicy}
+                <strong>{jeweller.name}&apos;s exchange policy:</strong> {jeweller.exchangePolicy}
               </p>
             </section>
 
             {/* Buying Guide Callout - Links to central guide to avoid duplicate content */}
             <section className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-6 shadow-soft">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-bold text-charcoal flex items-center gap-2">
-                    <span className="text-xl">📝</span> Gold Buying Guide
-                  </h2>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl" aria-hidden="true">📝</span>
+                    <h2 className="text-lg font-bold text-charcoal">Gold Buying Guide</h2>
+                  </div>
                   <p className="text-sm text-slate-600 mt-1">
-                    Learn about gold savings schemes, making charges, BIS hallmark verification, 
-                    and smart buying tips before visiting {jeweller.name}.
+                    Learn about <strong>gold savings schemes</strong>, <strong>making charges</strong>, <strong>BIS hallmark verification</strong>, 
+                    and smart buying tips before visiting <strong>{jeweller.name}</strong>.
                   </p>
                 </div>
                 <Link
@@ -279,9 +290,10 @@ export default function JewellerPageShell({ jeweller, goldRate, lastUpdated }: J
 
             {/* FAQs */}
             <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-soft">
-              <h2 className="text-xl font-bold text-charcoal mb-6 flex items-center gap-2">
-                <span className="text-xl">❓</span> Frequently Asked Questions
-              </h2>
+              <div className="flex items-center gap-2 mb-6">
+                <span className="text-xl" aria-hidden="true">❓</span>
+                <h2 className="text-xl font-bold text-charcoal">Frequently Asked Questions</h2>
+              </div>
               <div className="space-y-4">
                 {jeweller.faqs.map((faq, idx) => (
                   <details key={idx} className="group rounded-xl border border-slate-100 p-4 open:bg-slate-50">
@@ -307,24 +319,24 @@ export default function JewellerPageShell({ jeweller, goldRate, lastUpdated }: J
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between py-2 border-b border-slate-100">
                   <span className="text-slate-500">Founded</span>
-                  <span className="font-semibold text-charcoal">{jeweller.foundedYear}</span>
+                  <span className="font-semibold text-charcoal"><strong>{jeweller.foundedYear}</strong></span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-slate-100">
                   <span className="text-slate-500">Headquarters</span>
-                  <span className="font-semibold text-charcoal text-right">{jeweller.headquarters}</span>
+                  <span className="font-semibold text-charcoal text-right"><strong>{jeweller.headquarters}</strong></span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-slate-100">
                   <span className="text-slate-500">Type</span>
-                  <span className="font-semibold text-charcoal">{typeLabel}</span>
+                  <span className="font-semibold text-charcoal"><strong>{typeLabel}</strong></span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-slate-100">
                   <span className="text-slate-500">Making Charges</span>
-                  <span className="font-semibold text-amber-700">₹{jeweller.makingChargesMin}+</span>
+                  <span className="font-semibold text-amber-700"><strong>₹{jeweller.makingChargesMin}+</strong></span>
                 </div>
                 {goldRate && (
                   <div className="flex justify-between py-2">
                     <span className="text-slate-500">22K Gold Today</span>
-                    <span className="font-semibold text-emerald-600">₹{goldRate.gold22k.toLocaleString('en-IN')}</span>
+                    <span className="font-semibold text-emerald-600"><strong>₹{goldRate.gold22k.toLocaleString('en-IN')}</strong></span>
                   </div>
                 )}
               </div>
