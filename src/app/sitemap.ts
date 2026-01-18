@@ -156,6 +156,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }
 
+  // Jewellers buying guide page
+  const jewellersBuyingGuide = {
+    url: `${baseUrl}/jewellers/buying-guide`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.75,
+  }
+
   // Individual jeweller pages
   const jewellerPages = getAllJewellerSlugs().map((slug) => ({
     url: `${baseUrl}/jewellers/${slug}`,
@@ -194,6 +202,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     silverRateIndex,
     ...silverRateCityPages,
     jewellersIndex,
+    jewellersBuyingGuide,
     ...jewellerPages,
     ...footerPages,
   ]
