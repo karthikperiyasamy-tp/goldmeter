@@ -47,6 +47,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearchResults, setShowSearchResults] = useState(false);
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   
@@ -172,6 +173,46 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
               </Link>
             );
           })}
+          
+          {/* More Menu (3-dot vertical) */}
+          <div className="relative">
+            <button
+              onClick={() => setMoreMenuOpen(!moreMenuOpen)}
+              onBlur={() => setTimeout(() => setMoreMenuOpen(false), 150)}
+              className={`flex flex-col items-center justify-center gap-[3px] p-2 rounded-lg transition-colors ${
+                moreMenuOpen || pathname.startsWith("/jewellers")
+                  ? "text-amber-600"
+                  : "text-slate-500 hover:text-amber-600 hover:bg-slate-50"
+              }`}
+              aria-label="More options"
+              aria-expanded={moreMenuOpen}
+            >
+              <span className="w-1 h-1 bg-current rounded-full"></span>
+              <span className="w-1 h-1 bg-current rounded-full"></span>
+              <span className="w-1 h-1 bg-current rounded-full"></span>
+            </button>
+            
+            {/* Dropdown Menu */}
+            {moreMenuOpen && (
+              <div className="absolute right-0 top-full mt-2 min-w-[160px] rounded-xl border border-slate-200 bg-white shadow-lg z-50">
+                <Link
+                  href="/jewellers"
+                  className={`block px-4 py-3 text-sm font-medium rounded-xl transition-colors ${
+                    pathname.startsWith("/jewellers")
+                      ? "text-amber-600 bg-amber-50"
+                      : "text-slate-700 hover:bg-amber-50 hover:text-amber-600"
+                  }`}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    setMoreMenuOpen(false);
+                    router.push("/jewellers");
+                  }}
+                >
+                  Jewellers
+                </Link>
+              </div>
+            )}
+          </div>
         </nav>
 
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
@@ -213,12 +254,15 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                 { label: "Silver Rate", href: silverHref },
                 { label: "Calculator", href: "/calculator" },
                 { label: "News", href: "/news" },
+                { label: "Jewellers", href: "/jewellers" },
               ].map((item) => {
                 const isActive = item.label === "Gold Rate Today" 
                   ? isGoldRatePage 
                   : item.label === "Silver Rate"
                     ? isSilverRoute
-                    : pathname === item.href;
+                    : item.label === "Jewellers"
+                      ? pathname.startsWith("/jewellers")
+                      : pathname === item.href;
                 
                 return (
                   <Link

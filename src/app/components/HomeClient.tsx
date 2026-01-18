@@ -411,7 +411,7 @@ export default function HomeClient({
             <div>
               <h3 className="text-lg font-semibold text-charcoal">International Gold Prices</h3>
               <p className="text-sm text-slate-500">
-                {internationalData.source || "GoodReturns"} · 1 gram prices
+                {internationalData.source || "GoldMeter"} · 1 gram prices
               </p>
             </div>
             <p className="text-xs text-slate-500">

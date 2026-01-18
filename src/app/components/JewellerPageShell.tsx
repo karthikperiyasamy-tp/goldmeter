@@ -4,13 +4,35 @@ import Link from "next/link";
 import type { JewellerConfig } from "@/lib/jewellerConfig";
 import { getRelatedJewellers } from "@/lib/jewellerConfig";
 
-type JewellerPageShellProps = {
-  jeweller: JewellerConfig;
+type GoldRateData = {
+  gold22k: number;
+  gold24k: number;
+  gold18k: number;
+  priceChange: {
+    gold22k: number;
+    gold24k: number;
+  };
+  date: string;
+  dateISO: string;
+  city: string;
 };
 
-export default function JewellerPageShell({ jeweller }: JewellerPageShellProps) {
+type JewellerPageShellProps = {
+  jeweller: JewellerConfig;
+  goldRate?: GoldRateData | null;
+  lastUpdated: string; // ISO date string
+};
+
+export default function JewellerPageShell({ jeweller, goldRate, lastUpdated }: JewellerPageShellProps) {
   const relatedJewellers = getRelatedJewellers(jeweller.slug, 4);
   const typeLabel = jeweller.type === 'national' ? 'Pan-India Chain' : 'Regional Chain';
+  
+  // Format last updated date
+  const formattedLastUpdated = new Date(lastUpdated).toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 
   return (
     <main className="min-h-screen bg-[#f8fafc] pb-12">
@@ -44,6 +66,9 @@ export default function JewellerPageShell({ jeweller }: JewellerPageShellProps) 
                   <p className="mt-2 text-slate-600">
                     {jeweller.headquarters} • Est. {jeweller.foundedYear}
                   </p>
+                  <p className="mt-2 text-xs text-slate-400">
+                    Last updated: {formattedLastUpdated}
+                  </p>
                 </div>
                 {jeweller.website && (
                   <a
@@ -74,22 +99,64 @@ export default function JewellerPageShell({ jeweller }: JewellerPageShellProps) 
             {/* Making Charges Card - Prominent */}
             <section className="rounded-2xl border-2 border-amber-300 bg-gradient-to-r from-amber-100 to-amber-50 p-6 shadow-md">
               <h2 className="text-xl font-bold text-amber-900 flex items-center gap-2">
-                <span className="text-2xl">💰</span> Making Charges
+                <span className="text-2xl">💰</span> {jeweller.name} Making Charges
               </h2>
               <p className="mt-3 text-3xl font-bold text-amber-800">
                 {jeweller.makingChargesRange}
               </p>
               <p className="mt-2 text-sm text-amber-700">
-                Making charges vary based on design complexity, jewellery type, and craftsmanship. 
-                Simple chains and bangles are at the lower end, while bridal sets and designer 
-                pieces have higher charges.
+                At {jeweller.name}, making charges start from ₹{jeweller.makingChargesMin}/gram for simple designs 
+                and go up to ₹{jeweller.makingChargesMax}/gram for intricate bridal and designer pieces.
               </p>
-              <div className="mt-4 pt-4 border-t border-amber-200">
-                <p className="text-xs text-amber-800 font-medium">
-                  💡 Tip: Always ask for a detailed bill showing gold rate and making charges separately.
-                </p>
-              </div>
             </section>
+
+            {/* Dynamic Gold Rate Section */}
+            {goldRate && (
+              <section className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-white p-6 shadow-soft">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <h2 className="text-xl font-bold text-charcoal flex items-center gap-2">
+                      <span className="text-xl">📈</span> Gold Rate in {goldRate.city} Today
+                    </h2>
+                    <p className="text-xs text-slate-500 mt-1">
+                      {jeweller.name} headquarters • Updated {goldRate.date}
+                    </p>
+                  </div>
+                  <Link
+                    href={`/gold-rate/${goldRate.city.toLowerCase()}`}
+                    className="text-sm font-medium text-emerald-600 hover:text-emerald-700"
+                  >
+                    View full rates →
+                  </Link>
+                </div>
+                
+                <div className="mt-4 grid grid-cols-3 gap-4">
+                  <div className="text-center p-4 bg-white rounded-xl border border-emerald-100">
+                    <p className="text-xs text-slate-500 mb-1">22K Gold</p>
+                    <p className="text-xl font-bold text-charcoal">₹{goldRate.gold22k.toLocaleString('en-IN')}</p>
+                    <p className={`text-xs mt-1 font-medium ${goldRate.priceChange.gold22k >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      {goldRate.priceChange.gold22k >= 0 ? '▲' : '▼'} ₹{Math.abs(goldRate.priceChange.gold22k)}
+                    </p>
+                  </div>
+                  <div className="text-center p-4 bg-white rounded-xl border border-emerald-100">
+                    <p className="text-xs text-slate-500 mb-1">24K Gold</p>
+                    <p className="text-xl font-bold text-charcoal">₹{goldRate.gold24k.toLocaleString('en-IN')}</p>
+                    <p className={`text-xs mt-1 font-medium ${goldRate.priceChange.gold24k >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      {goldRate.priceChange.gold24k >= 0 ? '▲' : '▼'} ₹{Math.abs(goldRate.priceChange.gold24k)}
+                    </p>
+                  </div>
+                  <div className="text-center p-4 bg-white rounded-xl border border-emerald-100">
+                    <p className="text-xs text-slate-500 mb-1">18K Gold</p>
+                    <p className="text-xl font-bold text-charcoal">₹{goldRate.gold18k.toLocaleString('en-IN')}</p>
+                    <p className="text-xs mt-1 text-slate-400">per gram</p>
+                  </div>
+                </div>
+
+                <p className="mt-4 text-xs text-slate-500 text-center">
+                  Prices are per gram. Actual jewellery cost = Gold rate + Making charges ({jeweller.makingChargesRange})
+                </p>
+              </section>
+            )}
 
             {/* About Section */}
             <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-soft">
@@ -135,30 +202,9 @@ export default function JewellerPageShell({ jeweller }: JewellerPageShellProps) 
               <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
                 <span className="text-xl">✅</span> Purity & Quality Standards at {jeweller.name}
               </h2>
-              <p className="text-slate-600 leading-relaxed mb-4">
+              <p className="text-slate-600 leading-relaxed">
                 {jeweller.purityStandards}
               </p>
-              <div className="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                <h3 className="font-semibold text-emerald-800 mb-2">What to Check When Buying</h3>
-                <ul className="space-y-2 text-sm text-slate-600">
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-500">✓</span>
-                    <span>Look for BIS hallmark with 6-digit HUID number (mandatory since 2021)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-500">✓</span>
-                    <span>916 mark indicates 22K gold (91.6% purity); 750 for 18K gold</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-500">✓</span>
-                    <span>Request itemized bill showing gold rate, weight, and making charges separately</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-500">✓</span>
-                    <span>Watch weight measurement and ensure stone weight is excluded</span>
-                  </li>
-                </ul>
-              </div>
             </section>
 
             {/* Popular Collections */}
@@ -183,107 +229,29 @@ export default function JewellerPageShell({ jeweller }: JewellerPageShellProps) 
               <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
                 <span className="text-xl">🔄</span> Exchange & Buyback Policy at {jeweller.name}
               </h2>
-              <p className="text-slate-600 leading-relaxed mb-4">
+              <p className="text-slate-600 leading-relaxed">
                 {jeweller.exchangePolicy}
               </p>
-              <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                <h3 className="font-semibold text-blue-800 mb-2">Exchange Tips</h3>
-                <ul className="space-y-2 text-sm text-slate-600">
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-500">💡</span>
-                    <span>Exchange during festivals - many jewellers offer bonus value on exchanges</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-500">💡</span>
-                    <span>Keep original invoice and purity certificate for hassle-free exchange</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-500">💡</span>
-                    <span>Compare exchange rates across 2-3 jewellers before finalizing</span>
-                  </li>
-                </ul>
-              </div>
             </section>
 
-            {/* Savings Schemes & EMI */}
-            <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-soft">
-              <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-                <span className="text-xl">💰</span> Gold Savings Schemes & Payment Options
-              </h2>
-              <p className="text-slate-600 leading-relaxed mb-4">
-                Most branded jewellers including {jeweller.name} offer monthly gold savings schemes that help 
-                customers plan for major purchases like wedding jewellery. Typical benefits include:
-              </p>
-              <div className="grid md:grid-cols-2 gap-4 mt-4">
-                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                  <h3 className="font-semibold text-charcoal mb-2">Monthly Savings Scheme</h3>
-                  <ul className="space-y-1 text-sm text-slate-600">
-                    <li>• Pay monthly for 11 months</li>
-                    <li>• Get 12th month free (bonus)</li>
-                    <li>• Redeem for any jewellery</li>
-                    <li>• Protection against price rise</li>
-                  </ul>
-                </div>
-                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                  <h3 className="font-semibold text-charcoal mb-2">Payment Options</h3>
-                  <ul className="space-y-1 text-sm text-slate-600">
-                    <li>• Credit/Debit cards</li>
-                    <li>• EMI options via banks</li>
-                    <li>• UPI payments</li>
-                    <li>• Advance booking benefits</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            {/* Buying Tips */}
+            {/* Buying Guide Callout - Links to central guide to avoid duplicate content */}
             <section className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-6 shadow-soft">
-              <h2 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
-                <span className="text-xl">📝</span> Tips for Buying at {jeweller.name}
-              </h2>
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                  <h3 className="font-semibold text-amber-800 mb-3">Before Visiting the Store</h3>
-                  <ul className="space-y-2 text-sm text-slate-600">
-                    <li className="flex items-start gap-2">
-                      <span className="text-amber-500">1.</span>
-                      <span>Check today&apos;s gold rate on GoldMeter or {jeweller.name}&apos;s website</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-amber-500">2.</span>
-                      <span>Research designs online to save time at the store</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-amber-500">3.</span>
-                      <span>Compare making charges with 1-2 alternative jewellers</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-amber-500">4.</span>
-                      <span>Check for ongoing offers or festival discounts</span>
-                    </li>
-                  </ul>
+                  <h2 className="text-lg font-bold text-charcoal flex items-center gap-2">
+                    <span className="text-xl">📝</span> Gold Buying Guide
+                  </h2>
+                  <p className="text-sm text-slate-600 mt-1">
+                    Learn about gold savings schemes, making charges, BIS hallmark verification, 
+                    and smart buying tips before visiting {jeweller.name}.
+                  </p>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-amber-800 mb-3">At the Store</h3>
-                  <ul className="space-y-2 text-sm text-slate-600">
-                    <li className="flex items-start gap-2">
-                      <span className="text-amber-500">1.</span>
-                      <span>Ask for the making charges before selecting designs</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-amber-500">2.</span>
-                      <span>Verify BIS hallmark and HUID number on each piece</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-amber-500">3.</span>
-                      <span>Get itemized bill with gold rate, weight, and charges</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-amber-500">4.</span>
-                      <span>Confirm exchange policy in writing before purchase</span>
-                    </li>
-                  </ul>
-                </div>
+                <Link
+                  href="/jewellers/buying-guide"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-white text-sm font-semibold hover:bg-amber-600 transition-colors whitespace-nowrap"
+                >
+                  Read Buying Guide →
+                </Link>
               </div>
             </section>
 
@@ -349,10 +317,16 @@ export default function JewellerPageShell({ jeweller }: JewellerPageShellProps) 
                   <span className="text-slate-500">Type</span>
                   <span className="font-semibold text-charcoal">{typeLabel}</span>
                 </div>
-                <div className="flex justify-between py-2">
+                <div className="flex justify-between py-2 border-b border-slate-100">
                   <span className="text-slate-500">Making Charges</span>
                   <span className="font-semibold text-amber-700">₹{jeweller.makingChargesMin}+</span>
                 </div>
+                {goldRate && (
+                  <div className="flex justify-between py-2">
+                    <span className="text-slate-500">22K Gold Today</span>
+                    <span className="font-semibold text-emerald-600">₹{goldRate.gold22k.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
               </div>
 
               {/* CTA */}
@@ -399,36 +373,28 @@ export default function JewellerPageShell({ jeweller }: JewellerPageShellProps) 
               </div>
             )}
 
-            {/* Gold Rate Links */}
-            <div className="rounded-2xl border border-amber-100 bg-amber-50 p-5">
-              <h3 className="font-bold text-amber-900 mb-3">Today&apos;s Gold Rates</h3>
-              <div className="space-y-2">
-                <Link
-                  href="/gold-rate/chennai"
-                  className="block text-sm text-amber-700 hover:text-amber-900"
-                >
-                  → Chennai Gold Rate
-                </Link>
-                <Link
-                  href="/gold-rate/mumbai"
-                  className="block text-sm text-amber-700 hover:text-amber-900"
-                >
-                  → Mumbai Gold Rate
-                </Link>
-                <Link
-                  href="/gold-rate/delhi"
-                  className="block text-sm text-amber-700 hover:text-amber-900"
-                >
-                  → Delhi Gold Rate
-                </Link>
-                <Link
-                  href="/gold-rate/bangalore"
-                  className="block text-sm text-amber-700 hover:text-amber-900"
-                >
-                  → Bangalore Gold Rate
-                </Link>
+            {/* Gold Rate Links - Dynamic based on jeweller's city presence */}
+            {jeweller.cityLinks.length > 0 && (
+              <div className="rounded-2xl border border-amber-100 bg-amber-50 p-5">
+                <h3 className="font-bold text-amber-900 mb-3">Gold Rates in {jeweller.name} Cities</h3>
+                <div className="space-y-2">
+                  {jeweller.cityLinks.slice(0, 5).map((city) => (
+                    <Link
+                      key={city.slug}
+                      href={`/gold-rate/${city.slug}`}
+                      className="block text-sm text-amber-700 hover:text-amber-900"
+                    >
+                      → {city.name} Gold Rate
+                    </Link>
+                  ))}
+                  {jeweller.cityLinks.length > 5 && (
+                    <p className="text-xs text-amber-600 pt-1">
+                      +{jeweller.cityLinks.length - 5} more cities
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </aside>
         </div>
       </div>
