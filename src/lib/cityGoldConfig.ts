@@ -685,6 +685,52 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
     ],
   },
 
+  kochi: {
+    name: 'Kochi',
+    slug: 'kochi',
+    metaDescription: 'Kochi gold rate today ({date}): 24K & 22K per gram. Broadway & MG Road prices, making charges ₹200-550/g. Updated from IBJA.',
+    intro: 'Gold rate in Kochi today per gram: 22K & 24K live prices with Broadway and MG Road trends, charts, and FAQs.',
+    introParagraph1: `The gold rate in Kochi is updated daily based on international market rates, USD/INR currency movements, and Kerala Bullion Merchants Association pricing. Kochi, being Kerala's commercial capital and a major port city, has one of the most competitive gold markets in South India. These prices exclude making charges (₹200-550/gram) and 3% GST.`,
+    introParagraph2: `Broadway and MG Road are Kochi's premier jewellery destinations, with showrooms from major Kerala jewellers like Kalyan, Jos Alukkas, and Chemmanur. The city's cosmopolitan population and strong NRI connections drive significant gold demand. Gold buying peaks during Onam, Vishu, and the extensive Kerala wedding season.`,
+    localInfo: [
+      { title: 'Hallmarking centers', description: 'Kerala State Hallmarking Center (Kochi) and BIS Regional Office (Ernakulam).' },
+      { title: 'Making charges', description: '₹200 – ₹550 per gram for 22K ornaments in Broadway/MG Road.' },
+      { title: 'Top jewellery hubs', description: 'Broadway, MG Road, Edappally, and Kaloor showrooms.' },
+    ],
+    faqTemplates: [
+      {
+        question: 'What is the gold rate in Kochi today?',
+        answerTemplate: `Today's gold rate in Kochi is ₹{perGram24k} per gram for 24K gold and ₹{perGram22k} per gram for 22K gold. Prices are updated daily from Kerala bullion market.`,
+      },
+      {
+        question: 'Why does Kochi gold rate change daily?',
+        answerTemplate: `Kochi gold prices fluctuate based on London spot prices, USD/INR exchange rate, and Kerala's exceptionally high gold demand. NRI remittances and festival seasons significantly impact prices.`,
+      },
+      {
+        question: 'How is 22K different from 24K gold?',
+        answerTemplate: `24K gold is 99.9% pure (for investment), while 22K gold is 91.6% pure with alloy. Kochi jewellers prefer 22K for traditional Kerala designs like Palakka, Nagapadam, and Manga Mala.`,
+      },
+      {
+        question: 'Does making charge affect final jewellery price?',
+        answerTemplate: `Yes, making charges in Kochi range from ₹200-550 per gram. Traditional bridal sets cost more. Final price = Gold Rate × Weight + Making Charges + 3% GST.`,
+      },
+      {
+        question: 'Is Kochi good for gold shopping?',
+        answerTemplate: `Yes, Kochi offers competitive prices with major Kerala jewellery brands headquartered nearby. The city has excellent variety in traditional Kerala and modern designs.`,
+      },
+      {
+        question: 'Which is the best place to buy gold in Kochi?',
+        answerTemplate: `Broadway (historic market), MG Road, and Edappally malls. For branded jewellery, visit Kalyan, Jos Alukkas, Chemmanur, or Joyalukkas showrooms.`,
+      },
+    ],
+    similarCities: ['Thrissur', 'Trivandrum', 'Calicut', 'Coimbatore'],
+    relatedCities: [
+      { name: 'Kerala', slug: 'kerala' },
+      { name: 'Coimbatore', slug: 'coimbatore' },
+      { name: 'Chennai', slug: 'chennai' },
+    ],
+  },
+
   kerala: {
     name: 'Kerala',
     slug: 'kerala',
@@ -1234,6 +1280,52 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
       { name: 'Ahmedabad', slug: 'ahmedabad' },
       { name: 'Mumbai', slug: 'mumbai' },
       { name: 'Rajkot', slug: 'rajkot' },
+    ],
+  },
+
+  tirunelveli: {
+    name: 'Tirunelveli',
+    slug: 'tirunelveli',
+    metaDescription: 'Tirunelveli gold rate today ({date}): 24K & 22K per gram. South Car Street prices, making charges ₹130-360/g. Updated from IBJA.',
+    intro: 'Gold rate in Tirunelveli today per gram: 22K & 24K live prices with South Car Street and Palayamkottai trends, charts, and FAQs.',
+    introParagraph1: `The gold rate in Tirunelveli is updated daily based on international market rates, USD/INR currency movements, and Tamil Nadu Bullion Association pricing. Tirunelveli, a major city in southern Tamil Nadu, offers competitive gold rates with traditional South Indian jewellery options. These prices exclude making charges (₹130-360/gram) and 3% GST.`,
+    introParagraph2: `South Car Street and Palayamkottai are Tirunelveli's main jewellery markets, offering traditional Tamil temple jewellery at competitive prices. The city's proximity to Nagercoil and Kanyakumari makes it a regional gold trading hub. Gold buying peaks during Pongal, Deepavali, and wedding season.`,
+    localInfo: [
+      { title: 'Hallmarking centers', description: 'Tamil Nadu Hallmarking Center serves Tirunelveli region via Madurai office.' },
+      { title: 'Making charges', description: '₹130 – ₹360 per gram for 22K ornaments in South Car Street.' },
+      { title: 'Top jewellery hubs', description: 'South Car Street, Palayamkottai, and Town area stores.' },
+    ],
+    faqTemplates: [
+      {
+        question: 'What is the gold rate in Tirunelveli today?',
+        answerTemplate: `Today's gold rate in Tirunelveli is ₹{perGram24k} per gram for 24K gold and ₹{perGram22k} per gram for 22K gold. Prices are updated daily from Tamil Nadu bullion market.`,
+      },
+      {
+        question: 'Why does Tirunelveli gold rate change daily?',
+        answerTemplate: `Tirunelveli gold prices fluctuate based on London spot prices, USD/INR exchange rate, and regional demand during festivals like Pongal and temple occasions.`,
+      },
+      {
+        question: 'How is 22K different from 24K gold?',
+        answerTemplate: `24K gold is 99.9% pure (for investment), while 22K gold is 91.6% pure with alloy. Tirunelveli jewellers prefer 22K for traditional South Tamil Nadu temple jewellery and antique designs.`,
+      },
+      {
+        question: 'Does making charge affect final jewellery price?',
+        answerTemplate: `Yes, making charges in Tirunelveli range from ₹130-360 per gram - among the lowest in Tamil Nadu. Final price = Gold Rate × Weight + Making Charges + 3% GST.`,
+      },
+      {
+        question: 'Are Tirunelveli gold rates lower than Chennai?',
+        answerTemplate: `Yes, Tirunelveli rates are typically ₹40-60 lower than Chennai due to lower overhead costs, making it attractive for buyers from southern Tamil Nadu.`,
+      },
+      {
+        question: 'Which is the best place to buy gold in Tirunelveli?',
+        answerTemplate: `South Car Street (main market), Palayamkottai, and Town area. For branded jewellery, visit GRT, Thangamayil, Lalitha, or Kalyan showrooms.`,
+      },
+    ],
+    similarCities: ['Madurai', 'Nagercoil', 'Tuticorin', 'Trichy'],
+    relatedCities: [
+      { name: 'Madurai', slug: 'madurai' },
+      { name: 'Chennai', slug: 'chennai' },
+      { name: 'Coimbatore', slug: 'coimbatore' },
     ],
   },
 

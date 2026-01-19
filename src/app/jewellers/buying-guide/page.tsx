@@ -12,6 +12,16 @@ export const metadata: Metadata = {
     description: "Complete guide to buying gold jewellery in India. Learn about gold savings schemes, making charges, BIS hallmark verification, and smart buying tips.",
     type: "website",
     url: "https://goldmeter.in/jewellers/buying-guide",
+    siteName: "GoldMeter",
+    locale: "en_IN",
+    images: [
+      {
+        url: "https://goldmeter.in/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Gold Jewellery Buying Guide - GoldMeter",
+      },
+    ],
   },
 };
 

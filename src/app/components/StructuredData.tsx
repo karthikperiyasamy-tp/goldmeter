@@ -336,6 +336,56 @@ export default function StructuredData({
     ]
   } : null;
 
+  // WebPage schema with Speakable specification for Voice Search Optimization
+  // This helps Google Assistant, Alexa, and other voice assistants identify speakable content
+  const webPageWithSpeakableData = (type === "city" || type === "homepage") && dateISO ? {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": city 
+      ? `Gold Rate Today in ${city} - Live 22K & 24K Price per Gram`
+      : "Gold Rate Today in India - Live 22K & 24K Price",
+    "description": city
+      ? `Today's gold rate in ${city}: ₹${gold24k ? Math.round(gold24k / 10).toLocaleString('en-IN') : ''}/gram for 24K, ₹${gold22k ? Math.round(gold22k / 10).toLocaleString('en-IN') : ''}/gram for 22K.`
+      : "Live gold prices across Indian cities with 22K, 24K rates updated daily.",
+    "url": cityUrl || "https://goldmeter.in",
+    "dateModified": dateISO,
+    "inLanguage": "en-IN",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "GoldMeter",
+      "url": "https://goldmeter.in"
+    },
+    // Speakable specification for voice search - targets key answer blocks
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": [
+        "[data-ai-answer]",           // Primary answer paragraph
+        "h1",                          // Page title/headline
+        "[data-price-table] caption",  // Table caption
+        "[data-speakable-price]",      // Key price elements
+        "[data-speakable-summary]"     // Summary blocks
+      ]
+    }
+  } : null;
+
+  // Article speakable for news articles
+  const articleSpeakableData = type === "article" && url ? {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": headline,
+    "url": url,
+    "dateModified": dateModified ? new Date(dateModified).toISOString() : undefined,
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": [
+        "[data-ai-answer]",
+        "h1",
+        "[data-article-summary]",
+        ".article-intro"
+      ]
+    }
+  } : null;
+
   // Add FAQ structured data where FAQs exist
   const faqData =
     faqs && faqs.length
@@ -392,6 +442,18 @@ export default function StructuredData({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }}
+        />
+      )}
+      {webPageWithSpeakableData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageWithSpeakableData) }}
+        />
+      )}
+      {articleSpeakableData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSpeakableData) }}
         />
       )}
     </>

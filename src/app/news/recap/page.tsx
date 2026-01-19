@@ -10,8 +10,20 @@ export const metadata: Metadata = {
     canonical: "https://goldmeter.in/news/recap",
   },
   openGraph: {
-    title: "Daily Gold Market Recaps",
-    description: "Comprehensive summaries of daily gold market news and trends",
+    title: "Daily Gold Market Recaps | GoldMeter",
+    description: "Comprehensive summaries of daily gold market news and trends from 10+ sources. AI-analyzed insights updated daily.",
+    type: "website",
+    url: "https://goldmeter.in/news/recap",
+    siteName: "GoldMeter",
+    locale: "en_IN",
+    images: [
+      {
+        url: "https://goldmeter.in/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Daily Gold Market Recaps - GoldMeter",
+      },
+    ],
   },
 };
 

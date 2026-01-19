@@ -122,7 +122,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: recap.title,
       description,
       type: "article",
+      url: `https://goldmeter.in/news/recap/${slug}`,
+      siteName: "GoldMeter",
+      locale: "en_IN",
       publishedTime: recap.publishedAt.toISOString(),
+      images: [
+        {
+          url: "https://goldmeter.in/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: recap.title,
+        },
+      ],
     },
   };
 }

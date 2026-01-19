@@ -186,6 +186,10 @@ function getMockRates(cityName: string): {
     Kolkata: { gold22k: 59680, gold24k: 64890, silver1kg: 77500 },
     Ahmedabad: { gold22k: 59520, gold24k: 64700, silver1kg: 75500 },
     Vijayawada: { gold22k: 59620, gold24k: 64820, silver1kg: 78200 },
+    Kerala: { gold22k: 59750, gold24k: 65020, silver1kg: 78500 },
+    Kochi: { gold22k: 59750, gold24k: 65020, silver1kg: 78500 }, // Same as Kerala
+    Madurai: { gold22k: 59680, gold24k: 64890, silver1kg: 78000 },
+    Tirunelveli: { gold22k: 59680, gold24k: 64890, silver1kg: 78000 }, // Same as Madurai
   };
   
   const rates = mockRatesMap[cityName] || { gold22k: 59500, gold24k: 64700, silver1kg: 75000 };

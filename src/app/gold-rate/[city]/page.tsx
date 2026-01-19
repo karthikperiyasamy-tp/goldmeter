@@ -14,6 +14,7 @@ import CoimbatoreStaticContent from "../../components/CoimbatoreStaticContent";
 import DelhiStaticContent from "../../components/DelhiStaticContent";
 import JaipurStaticContent from "../../components/JaipurStaticContent";
 import KeralaStaticContent from "../../components/KeralaStaticContent";
+import KochiStaticContent from "../../components/KochiStaticContent";
 import KolkataStaticContent from "../../components/KolkataStaticContent";
 import LucknowStaticContent from "../../components/LucknowStaticContent";
 import MaduraiStaticContent from "../../components/MaduraiStaticContent";
@@ -27,6 +28,7 @@ import PuneStaticContent from "../../components/PuneStaticContent";
 import RajkotStaticContent from "../../components/RajkotStaticContent";
 import SalemStaticContent from "../../components/SalemStaticContent";
 import SuratStaticContent from "../../components/SuratStaticContent";
+import TirunelveliStaticContent from "../../components/TirunelveliStaticContent";
 import TrichyStaticContent from "../../components/TrichyStaticContent";
 import VadodaraStaticContent from "../../components/VadodaraStaticContent";
 import VijayawadaStaticContent from "../../components/VijayawadaStaticContent";
@@ -163,25 +165,25 @@ export default async function GoldRateCityPage({ params }: Props) {
                   <tr className="bg-white">
                     <td className="px-3 py-2 border border-amber-200 font-medium">Gold 24K</td>
                     <td className="px-3 py-2 border border-amber-200">99.9%</td>
-                    <td className="px-3 py-2 border border-amber-200 font-semibold">₹{perGram24k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200 font-semibold" data-speakable-price="24k">₹{perGram24k.toLocaleString('en-IN')}</td>
                     <td className="px-3 py-2 border border-amber-200">₹{(rates.gold24k || 0).toLocaleString('en-IN')}</td>
                   </tr>
                   <tr className="bg-amber-50/50">
                     <td className="px-3 py-2 border border-amber-200 font-medium">Gold 22K</td>
                     <td className="px-3 py-2 border border-amber-200">91.6%</td>
-                    <td className="px-3 py-2 border border-amber-200 font-semibold">₹{perGram22k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200 font-semibold" data-speakable-price="22k">₹{perGram22k.toLocaleString('en-IN')}</td>
                     <td className="px-3 py-2 border border-amber-200">₹{(rates.gold22k || 0).toLocaleString('en-IN')}</td>
                   </tr>
                   <tr className="bg-white">
                     <td className="px-3 py-2 border border-amber-200 font-medium">Gold 18K</td>
                     <td className="px-3 py-2 border border-amber-200">75.0%</td>
-                    <td className="px-3 py-2 border border-amber-200 font-semibold">₹{perGram18k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200 font-semibold" data-speakable-price="18k">₹{perGram18k.toLocaleString('en-IN')}</td>
                     <td className="px-3 py-2 border border-amber-200">₹{(perGram18k * 10).toLocaleString('en-IN')}</td>
                   </tr>
                   <tr className="bg-slate-50">
                     <td className="px-3 py-2 border border-amber-200 font-medium">Silver</td>
                     <td className="px-3 py-2 border border-amber-200">99.9%</td>
-                    <td className="px-3 py-2 border border-amber-200 font-semibold">₹{silverPerGram.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200 font-semibold" data-speakable-price="silver">₹{silverPerGram.toLocaleString('en-IN')}</td>
                     <td className="px-3 py-2 border border-amber-200">₹{Math.round((rates.silver1kg || 0) / 100).toLocaleString('en-IN')}</td>
                   </tr>
                 </tbody>
@@ -202,8 +204,8 @@ export default async function GoldRateCityPage({ params }: Props) {
               <span>Source: <strong>GoldMeter.in</strong></span>
             </div>
 
-            {/* SEO: Expanded intro paragraph (150-200 words) */}
-            <div className="mt-4 pt-4 border-t border-amber-200 text-sm text-slate-600 leading-relaxed">
+            {/* SEO: Expanded intro paragraph (150-200 words) - Voice Search Optimized */}
+            <div className="mt-4 pt-4 border-t border-amber-200 text-sm text-slate-600 leading-relaxed" data-speakable-summary="true">
               <p>{config.introParagraph1}</p>
               <p className="mt-2">{config.introParagraph2}</p>
               <div className="mt-3 flex flex-wrap gap-3">
@@ -267,6 +269,7 @@ export default async function GoldRateCityPage({ params }: Props) {
         {config.slug === 'delhi' && <DelhiStaticContent />}
         {config.slug === 'jaipur' && <JaipurStaticContent />}
         {config.slug === 'kerala' && <KeralaStaticContent />}
+        {config.slug === 'kochi' && <KochiStaticContent />}
         {config.slug === 'kolkata' && <KolkataStaticContent />}
         {config.slug === 'lucknow' && <LucknowStaticContent />}
         {config.slug === 'madurai' && <MaduraiStaticContent />}
@@ -280,6 +283,7 @@ export default async function GoldRateCityPage({ params }: Props) {
         {config.slug === 'rajkot' && <RajkotStaticContent />}
         {config.slug === 'salem' && <SalemStaticContent />}
         {config.slug === 'surat' && <SuratStaticContent />}
+        {config.slug === 'tirunelveli' && <TirunelveliStaticContent />}
         {config.slug === 'trichy' && <TrichyStaticContent />}
         {config.slug === 'vadodara' && <VadodaraStaticContent />}
         {config.slug === 'vijayawada' && <VijayawadaStaticContent />}
