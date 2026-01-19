@@ -20,8 +20,26 @@ export default function JewellersPage() {
   const [selectedRegion, setSelectedRegion] = useState<Region | 'all'>('all');
   const [sortBy, setSortBy] = useState<'name' | 'makingCharges' | 'heritage'>('name');
 
+  // Featured jewellers (national chains) for hero section - defined before useMemo
+  const featuredJewellers = useMemo(() => 
+    allJewellers.filter((j) => j.type === 'national').slice(0, 4),
+    [allJewellers]
+  );
+  
+  // Get slugs of featured jewellers to exclude from main grid
+  const featuredSlugs = useMemo(() => 
+    new Set(featuredJewellers.map((j) => j.slug)),
+    [featuredJewellers]
+  );
+
   const filteredJewellers = useMemo(() => {
     let result = [...allJewellers];
+
+    // Exclude featured jewellers from main grid to avoid duplicate h3 headings
+    // Only exclude when showing all jewellers (no search/region filter active)
+    if (!searchQuery.trim() && selectedRegion === 'all') {
+      result = result.filter((j) => !featuredSlugs.has(j.slug));
+    }
 
     // Filter by search query
     if (searchQuery.trim()) {
@@ -50,12 +68,7 @@ export default function JewellersPage() {
     }
 
     return result;
-  }, [allJewellers, searchQuery, selectedRegion, sortBy]);
-
-  // Featured jewellers (national chains) for hero section
-  const featuredJewellers = allJewellers
-    .filter((j) => j.type === 'national')
-    .slice(0, 4);
+  }, [allJewellers, searchQuery, selectedRegion, sortBy, featuredSlugs]);
 
   return (
     <main className="min-h-screen bg-amber-50 pb-12">
@@ -170,7 +183,8 @@ export default function JewellersPage() {
 
           {/* Results count */}
           <p className="mt-4 text-sm text-slate-500">
-            Showing {filteredJewellers.length} of {allJewellers.length} jewellers
+            Showing {filteredJewellers.length} jewellers
+            {!searchQuery.trim() && selectedRegion === 'all' && ` (${featuredJewellers.length} featured above)`}
           </p>
         </section>
 

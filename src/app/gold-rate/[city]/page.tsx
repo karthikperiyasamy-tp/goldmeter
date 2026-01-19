@@ -148,10 +148,10 @@ export default async function GoldRateCityPage({ params }: Props) {
               <table className="w-full text-sm border-collapse" itemProp="offers" itemScope itemType="https://schema.org/AggregateOffer">
                 <caption className="text-left font-semibold text-amber-800 mb-2">
                   Today&apos;s Gold & Silver Rates in {config.name}
-                  {/* Schema.org metadata for AggregateOffer - must be inside itemScope */}
-                  <meta itemProp="priceCurrency" content="INR" />
-                  <meta itemProp="lowPrice" content={perGram18k.toString()} />
-                  <meta itemProp="highPrice" content={perGram24k.toString()} />
+                  {/* Schema.org metadata for AggregateOffer - using hidden spans instead of meta tags */}
+                  <span itemProp="priceCurrency" className="sr-only">INR</span>
+                  <span itemProp="lowPrice" className="sr-only">{perGram18k.toString()}</span>
+                  <span itemProp="highPrice" className="sr-only">{perGram24k.toString()}</span>
                 </caption>
                 <thead>
                   <tr className="bg-amber-100 text-amber-900">

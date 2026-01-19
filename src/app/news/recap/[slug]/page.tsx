@@ -54,7 +54,7 @@ function GoldRateCard({
               <td className="py-2 font-medium">24K Gold</td>
               <td className="py-2 text-right font-semibold text-amber-700">
                 <span itemProp="price">₹{perGram24k.toLocaleString('en-IN')}</span>
-                <meta itemProp="priceCurrency" content="INR" />
+                <span itemProp="priceCurrency" className="sr-only">INR</span>
               </td>
               <td className="py-2 text-right">₹{goldRates.gold24k.toLocaleString('en-IN')}</td>
               <td className="py-2 text-right text-sm">{formatChange(change24k)}</td>
