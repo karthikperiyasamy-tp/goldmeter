@@ -331,6 +331,13 @@ export default async function HomePage() {
     year: 'numeric'
   });
   const todayISO = new Date().toISOString().split('T')[0];
+  
+  // Format time for display
+  const timeFormatted = new Date().toLocaleTimeString('en-IN', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
 
   // Table Schema for Featured Snippets
   const tableSchema = {
@@ -470,6 +477,7 @@ export default async function HomePage() {
                     <th className="px-3 py-2 text-left border border-amber-200">Metal</th>
                     <th className="px-3 py-2 text-left border border-amber-200">Purity</th>
                     <th className="px-3 py-2 text-left border border-amber-200">Rate per Gram</th>
+                    <th className="px-3 py-2 text-left border border-amber-200">Rate per 8g</th>
                     <th className="px-3 py-2 text-left border border-amber-200">Rate per 10g</th>
                   </tr>
                 </thead>
@@ -478,24 +486,28 @@ export default async function HomePage() {
                     <td className="px-3 py-2 border border-amber-200 font-medium">Gold 24K</td>
                     <td className="px-3 py-2 border border-amber-200">99.9%</td>
                     <td className="px-3 py-2 border border-amber-200 font-semibold" data-speakable-price="24k">₹{perGram24k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{(perGram24k * 8).toLocaleString('en-IN')}</td>
                     <td className="px-3 py-2 border border-amber-200">₹{baseRates.gold_24k.toLocaleString('en-IN')}</td>
                   </tr>
                   <tr className="bg-amber-50/50">
                     <td className="px-3 py-2 border border-amber-200 font-medium">Gold 22K</td>
                     <td className="px-3 py-2 border border-amber-200">91.6%</td>
                     <td className="px-3 py-2 border border-amber-200 font-semibold" data-speakable-price="22k">₹{perGram22k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{(perGram22k * 8).toLocaleString('en-IN')}</td>
                     <td className="px-3 py-2 border border-amber-200">₹{baseRates.gold_22k.toLocaleString('en-IN')}</td>
                   </tr>
                   <tr className="bg-white">
                     <td className="px-3 py-2 border border-amber-200 font-medium">Gold 18K</td>
                     <td className="px-3 py-2 border border-amber-200">75.0%</td>
                     <td className="px-3 py-2 border border-amber-200 font-semibold" data-speakable-price="18k">₹{perGram18k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{(perGram18k * 8).toLocaleString('en-IN')}</td>
                     <td className="px-3 py-2 border border-amber-200">₹{(perGram18k * 10).toLocaleString('en-IN')}</td>
                   </tr>
                   <tr className="bg-slate-50">
                     <td className="px-3 py-2 border border-amber-200 font-medium">Silver</td>
                     <td className="px-3 py-2 border border-amber-200">99.9%</td>
                     <td className="px-3 py-2 border border-amber-200 font-semibold" data-speakable-price="silver">₹{silver1g.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{(silver1g * 8).toLocaleString('en-IN')}</td>
                     <td className="px-3 py-2 border border-amber-200">₹{Math.round((baseRates.silver_1kg || 0) / 100).toLocaleString('en-IN')}</td>
                   </tr>
                 </tbody>
@@ -523,7 +535,7 @@ export default async function HomePage() {
                 Verified from IBJA
               </span>
               <span>|</span>
-              <span>Updated: <time dateTime={todayISO}>{todayFormatted}</time></span>
+              <span>Updated: <time dateTime={todayISO}>{todayFormatted}, {timeFormatted}</time></span>
               <span>|</span>
               <span>Source: <strong>GoldMeter.in</strong></span>
             </div>

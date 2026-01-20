@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to save rates to database');
     }
     
-    console.log(`✅ [Admin] Saved ${saveResult.saved} rates to database`);
+    console.log(`✅ [Admin] Saved ${saveResult.saved} rates, skipped ${saveResult.skipped} (suspicious ₹10 diff)`);
     
     return NextResponse.json({
       success: true,
@@ -72,6 +72,7 @@ export async function POST(request: NextRequest) {
         citiesCount: Object.keys(scrapedData.cities).length,
       },
       saved: saveResult.saved,
+      skipped: saveResult.skipped,
       errors: saveResult.errors,
       timestamp: new Date().toISOString(),
     });

@@ -26,13 +26,29 @@ export type CityRates = {
 const COLLECTION_NAME = 'gold_prices';
 
 /**
+ * Check if the rate difference is suspicious (likely preliminary data from GoodReturns)
+ * GoodReturns often posts rates that differ by exactly ₹10/10g (₹1/gram) in the morning
+ * before updating to the final rate later.
+ * 
+ * @param existingRate Existing rate in DB (per 10g)
+ * @param newRate New rate from scraper (per 10g)
+ * @returns true if the difference is suspicious and should be ignored
+ */
+function isSuspiciousDifference(existingRate: number, newRate: number): boolean {
+  const diff = Math.abs(existingRate - newRate);
+  // Ignore if difference is exactly ₹10/10g (₹1/gram) - likely preliminary data
+  return diff === 10;
+}
+
+/**
  * Save gold rates to MongoDB
  * Creates/updates a record for each city for the given date
+ * Skips updates if the difference is exactly ₹10/10g (likely preliminary data)
  */
 export async function saveGoldRates(
   indiaRates: { gold22k: number | null; gold24k: number | null; gold18k: number | null; silver1kg: number | null },
   cityRates: CityRates
-): Promise<{ success: boolean; saved: number; errors: number }> {
+): Promise<{ success: boolean; saved: number; errors: number; skipped: number }> {
   try {
     const db = await getDatabase();
     const collection = db.collection<GoldRateDocument>(COLLECTION_NAME);
@@ -43,33 +59,58 @@ export async function saveGoldRates(
     const now = new Date();
     let saved = 0;
     let errors = 0;
+    let skipped = 0;
 
     const hasSilverValue = (value: number | null | undefined) => value !== null && value !== undefined;
 
     // Save India rate
     if (indiaRates.gold22k && indiaRates.gold24k) {
       try {
-        await collection.updateOne(
-          { city: 'India', date: today },
-          {
-            $set: {
-              gold_22k: indiaRates.gold22k,
-              gold_24k: indiaRates.gold24k,
-              gold_18k: indiaRates.gold18k || Math.round((indiaRates.gold24k * 18) / 24),
-              ...(hasSilverValue(indiaRates.silver1kg) ? { silver_1kg: indiaRates.silver1kg } : {}),
-              source: 'GoodReturns',
-              updated_at: now,
-            },
-            $setOnInsert: {
-              date: today,
-              city: 'India',
-              created_at: now,
-            },
-          },
-          { upsert: true }
-        );
-        saved++;
-        console.log(`✅ [DB] Saved India rates: 22K=₹${indiaRates.gold22k}, 24K=₹${indiaRates.gold24k}, Silver=₹${indiaRates.silver1kg}`);
+        // Check if rate already exists for today
+        const existingIndia = await collection.findOne({ city: 'India', date: today });
+        
+        if (existingIndia) {
+          // Check if the difference is suspicious (₹10/10g = ₹1/gram)
+          const is22kSuspicious = isSuspiciousDifference(existingIndia.gold_22k, indiaRates.gold22k);
+          const is24kSuspicious = isSuspiciousDifference(existingIndia.gold_24k, indiaRates.gold24k);
+          
+          if (is22kSuspicious || is24kSuspicious) {
+            console.log(`⏭️ [DB] Skipping India update - suspicious ₹10/10g difference (likely preliminary data). Existing: 22K=₹${existingIndia.gold_22k}, 24K=₹${existingIndia.gold_24k}. New: 22K=₹${indiaRates.gold22k}, 24K=₹${indiaRates.gold24k}`);
+            skipped++;
+          } else {
+            // Update with new rate
+            await collection.updateOne(
+              { city: 'India', date: today },
+              {
+                $set: {
+                  gold_22k: indiaRates.gold22k,
+                  gold_24k: indiaRates.gold24k,
+                  gold_18k: indiaRates.gold18k || Math.round((indiaRates.gold24k * 18) / 24),
+                  ...(hasSilverValue(indiaRates.silver1kg) ? { silver_1kg: indiaRates.silver1kg } : {}),
+                  source: 'GoodReturns',
+                  updated_at: now,
+                },
+              }
+            );
+            saved++;
+            console.log(`✅ [DB] Updated India rates: 22K=₹${indiaRates.gold22k}, 24K=₹${indiaRates.gold24k}, Silver=₹${indiaRates.silver1kg}`);
+          }
+        } else {
+          // Insert new rate
+          await collection.insertOne({
+            date: today,
+            city: 'India',
+            gold_22k: indiaRates.gold22k,
+            gold_24k: indiaRates.gold24k,
+            gold_18k: indiaRates.gold18k || Math.round((indiaRates.gold24k * 18) / 24),
+            ...(hasSilverValue(indiaRates.silver1kg) ? { silver_1kg: indiaRates.silver1kg } : {}),
+            source: 'GoodReturns',
+            created_at: now,
+            updated_at: now,
+          } as GoldRateDocument);
+          saved++;
+          console.log(`✅ [DB] Saved India rates: 22K=₹${indiaRates.gold22k}, 24K=₹${indiaRates.gold24k}, Silver=₹${indiaRates.silver1kg}`);
+        }
       } catch (error) {
         console.error('❌ [DB] Error saving India rates:', error);
         errors++;
@@ -80,26 +121,49 @@ export async function saveGoldRates(
     for (const [cityName, rates] of Object.entries(cityRates)) {
       if (rates.gold22k && rates.gold24k) {
         try {
-          await collection.updateOne(
-            { city: cityName, date: today },
-            {
-              $set: {
-                gold_22k: rates.gold22k,
-                gold_24k: rates.gold24k,
-                gold_18k: rates.gold18k || Math.round((rates.gold24k * 18) / 24),
-                ...(hasSilverValue(rates.silver1kg) ? { silver_1kg: rates.silver1kg } : {}),
-                source: 'GoodReturns',
-                updated_at: now,
-              },
-              $setOnInsert: {
-                date: today,
-                city: cityName,
-                created_at: now,
-              },
-            },
-            { upsert: true }
-          );
-          saved++;
+          // Check if rate already exists for today
+          const existingCity = await collection.findOne({ city: cityName, date: today });
+          
+          if (existingCity) {
+            // Check if the difference is suspicious (₹10/10g = ₹1/gram)
+            const is22kSuspicious = isSuspiciousDifference(existingCity.gold_22k, rates.gold22k);
+            const is24kSuspicious = isSuspiciousDifference(existingCity.gold_24k, rates.gold24k);
+            
+            if (is22kSuspicious || is24kSuspicious) {
+              console.log(`⏭️ [DB] Skipping ${cityName} update - suspicious ₹10/10g difference`);
+              skipped++;
+            } else {
+              // Update with new rate
+              await collection.updateOne(
+                { city: cityName, date: today },
+                {
+                  $set: {
+                    gold_22k: rates.gold22k,
+                    gold_24k: rates.gold24k,
+                    gold_18k: rates.gold18k || Math.round((rates.gold24k * 18) / 24),
+                    ...(hasSilverValue(rates.silver1kg) ? { silver_1kg: rates.silver1kg } : {}),
+                    source: 'GoodReturns',
+                    updated_at: now,
+                  },
+                }
+              );
+              saved++;
+            }
+          } else {
+            // Insert new rate
+            await collection.insertOne({
+              date: today,
+              city: cityName,
+              gold_22k: rates.gold22k,
+              gold_24k: rates.gold24k,
+              gold_18k: rates.gold18k || Math.round((rates.gold24k * 18) / 24),
+              ...(hasSilverValue(rates.silver1kg) ? { silver_1kg: rates.silver1kg } : {}),
+              source: 'GoodReturns',
+              created_at: now,
+              updated_at: now,
+            } as GoldRateDocument);
+            saved++;
+          }
         } catch (error) {
           console.error(`❌ [DB] Error saving ${cityName} rates:`, error);
           errors++;
@@ -107,12 +171,12 @@ export async function saveGoldRates(
       }
     }
 
-    console.log(`📊 [DB] Summary: ${saved} saved, ${errors} errors`);
+    console.log(`📊 [DB] Summary: ${saved} saved, ${skipped} skipped (suspicious ₹10 diff), ${errors} errors`);
     
-    return { success: true, saved, errors };
+    return { success: true, saved, errors, skipped };
   } catch (error) {
     console.error('❌ [DB] Database error:', error);
-    return { success: false, saved: 0, errors: 1 };
+    return { success: false, saved: 0, errors: 1, skipped: 0 };
   }
 }
 
@@ -201,9 +265,11 @@ async function getLatestGoldRatesUncached(): Promise<{
       }
     }
 
-    console.log(`✅ [DB] Fetched India rate and ${Object.keys(cities).length} city rates`);
-    if (yesterdayIndia) {
-      console.log(`✅ [DB] Also fetched yesterday's rates for change calculation`);
+    console.log(`✅ [DB] Fetched India rate and ${Object.keys(cities).length} city rates for today`);
+    if (yesterdayIndia || Object.keys(yesterdayCities).length > 0) {
+      console.log(`✅ [DB] Yesterday's rates: India=${yesterdayIndia ? 'yes' : 'no'}, ${Object.keys(yesterdayCities).length} cities`);
+    } else {
+      console.log(`⚠️ [DB] No yesterday rates found (need at least 2 distinct dates in DB)`);
     }
     
     return { india, cities, yesterdayIndia, yesterdayCities };

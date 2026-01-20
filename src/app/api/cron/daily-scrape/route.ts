@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
       throw new Error('Failed to save rates to database');
     }
     
-    const successMessage = `Cron job completed: ${saveResult.saved} rates saved, ${saveResult.errors} errors`;
+    const successMessage = `Cron job completed: ${saveResult.saved} rates saved, ${saveResult.skipped} skipped (suspicious ₹10 diff), ${saveResult.errors} errors`;
     console.log(`✅ [Cron] ${successMessage}`);
     
     return NextResponse.json({
@@ -68,6 +68,7 @@ export async function GET(request: NextRequest) {
         citiesCount: Object.keys(scrapedData.cities).length,
       },
       saved: saveResult.saved,
+      skipped: saveResult.skipped,
       errors: saveResult.errors,
       timestamp: new Date().toISOString(),
     });

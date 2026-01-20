@@ -124,6 +124,13 @@ export default async function GoldRateCityPage({ params }: Props) {
     month: 'long',
     year: 'numeric'
   });
+  
+  // Format time for display
+  const timeFormatted = new Date().toLocaleTimeString('en-IN', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
 
   // Generate FAQs with actual prices
   const faqs = generateFAQs(config, perGram24k, perGram22k);
@@ -158,6 +165,7 @@ export default async function GoldRateCityPage({ params }: Props) {
                     <th className="px-3 py-2 text-left border border-amber-200">Metal</th>
                     <th className="px-3 py-2 text-left border border-amber-200">Purity</th>
                     <th className="px-3 py-2 text-left border border-amber-200">Rate per Gram</th>
+                    <th className="px-3 py-2 text-left border border-amber-200">Rate per 8g</th>
                     <th className="px-3 py-2 text-left border border-amber-200">Rate per 10g</th>
                   </tr>
                 </thead>
@@ -166,24 +174,28 @@ export default async function GoldRateCityPage({ params }: Props) {
                     <td className="px-3 py-2 border border-amber-200 font-medium">Gold 24K</td>
                     <td className="px-3 py-2 border border-amber-200">99.9%</td>
                     <td className="px-3 py-2 border border-amber-200 font-semibold" data-speakable-price="24k">₹{perGram24k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{(perGram24k * 8).toLocaleString('en-IN')}</td>
                     <td className="px-3 py-2 border border-amber-200">₹{(rates.gold24k || 0).toLocaleString('en-IN')}</td>
                   </tr>
                   <tr className="bg-amber-50/50">
                     <td className="px-3 py-2 border border-amber-200 font-medium">Gold 22K</td>
                     <td className="px-3 py-2 border border-amber-200">91.6%</td>
                     <td className="px-3 py-2 border border-amber-200 font-semibold" data-speakable-price="22k">₹{perGram22k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{(perGram22k * 8).toLocaleString('en-IN')}</td>
                     <td className="px-3 py-2 border border-amber-200">₹{(rates.gold22k || 0).toLocaleString('en-IN')}</td>
                   </tr>
                   <tr className="bg-white">
                     <td className="px-3 py-2 border border-amber-200 font-medium">Gold 18K</td>
                     <td className="px-3 py-2 border border-amber-200">75.0%</td>
                     <td className="px-3 py-2 border border-amber-200 font-semibold" data-speakable-price="18k">₹{perGram18k.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{(perGram18k * 8).toLocaleString('en-IN')}</td>
                     <td className="px-3 py-2 border border-amber-200">₹{(perGram18k * 10).toLocaleString('en-IN')}</td>
                   </tr>
                   <tr className="bg-slate-50">
                     <td className="px-3 py-2 border border-amber-200 font-medium">Silver</td>
                     <td className="px-3 py-2 border border-amber-200">99.9%</td>
                     <td className="px-3 py-2 border border-amber-200 font-semibold" data-speakable-price="silver">₹{silverPerGram.toLocaleString('en-IN')}</td>
+                    <td className="px-3 py-2 border border-amber-200">₹{(silverPerGram * 8).toLocaleString('en-IN')}</td>
                     <td className="px-3 py-2 border border-amber-200">₹{Math.round((rates.silver1kg || 0) / 100).toLocaleString('en-IN')}</td>
                   </tr>
                 </tbody>
@@ -199,7 +211,7 @@ export default async function GoldRateCityPage({ params }: Props) {
                 Verified from IBJA
               </span>
               <span>|</span>
-              <span>Updated: <time dateTime={rates.dateISO}>{todayFormatted}</time></span>
+              <span>Updated: <time dateTime={rates.dateISO}>{todayFormatted}, {timeFormatted}</time></span>
               <span>|</span>
               <span>Source: <strong>GoldMeter.in</strong></span>
             </div>

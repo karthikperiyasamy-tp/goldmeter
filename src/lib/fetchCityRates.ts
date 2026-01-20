@@ -82,14 +82,30 @@ export async function fetchCityRates(
       
       // Calculate price change from yesterday (using the same source city)
       let priceChange: PriceChange = { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: 0 };
+      
       if (dbData.yesterdayCities[dbCityName]) {
+        // Primary: Use yesterday's data from DB
         priceChange = {
           gold22k: dbData.cities[dbCityName].gold22k - dbData.yesterdayCities[dbCityName].gold22k,
           gold24k: dbData.cities[dbCityName].gold24k - dbData.yesterdayCities[dbCityName].gold24k,
           gold18k: dbData.cities[dbCityName].gold18k - dbData.yesterdayCities[dbCityName].gold18k,
           silver1kg: (dbData.cities[dbCityName].silver1kg || 0) - (dbData.yesterdayCities[dbCityName].silver1kg || 0),
         };
-        console.log(`📈 [FetchCityRates] ${cityName} price change: 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}, 18K=${priceChange.gold18k >= 0 ? '+' : ''}₹${priceChange.gold18k}, Silver=${priceChange.silver1kg >= 0 ? '+' : ''}₹${priceChange.silver1kg}`);
+        console.log(`📈 [FetchCityRates] ${cityName} price change (from DB): 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}, 18K=${priceChange.gold18k >= 0 ? '+' : ''}₹${priceChange.gold18k}, Silver=${priceChange.silver1kg >= 0 ? '+' : ''}₹${priceChange.silver1kg}`);
+      } else if (history.length >= 2) {
+        // Fallback: Use history array if yesterday's specific city data is missing
+        // History is sorted by date ascending, so last entry is today's, second-to-last is yesterday's
+        const yesterdayHistory = history[history.length - 2];
+        const todayHistory = history[history.length - 1];
+        priceChange = {
+          gold22k: todayHistory.gold22k - yesterdayHistory.gold22k,
+          gold24k: todayHistory.gold24k - yesterdayHistory.gold24k,
+          gold18k: todayHistory.gold18k - yesterdayHistory.gold18k,
+          silver1kg: (todayHistory.silver1kg || 0) - (yesterdayHistory.silver1kg || 0),
+        };
+        console.log(`📈 [FetchCityRates] ${cityName} price change (from history fallback): 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}, 18K=${priceChange.gold18k >= 0 ? '+' : ''}₹${priceChange.gold18k}, Silver=${priceChange.silver1kg >= 0 ? '+' : ''}₹${priceChange.silver1kg}`);
+      } else {
+        console.log(`⚠️ [FetchCityRates] ${cityName}: No yesterday data in DB (yesterdayCities: ${Object.keys(dbData.yesterdayCities).length} cities) or history (${history.length} records), price change = ₹0`);
       }
       
       return {

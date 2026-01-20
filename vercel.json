@@ -4,5 +4,38 @@
       "path": "/api/cron/daily-scrape",
       "schedule": "30 4 * * *"
     }
+  ],
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/index.php", "destination": "/", "permanent": true },
+    { "source": "/ahmedabad", "destination": "/gold-rate/ahmedabad", "permanent": true },
+    { "source": "/ayodhya", "destination": "/gold-rate/ayodhya", "permanent": true },
+    { "source": "/bangalore", "destination": "/gold-rate/bangalore", "permanent": true },
+    { "source": "/bhubaneswar", "destination": "/gold-rate/bhubaneswar", "permanent": true },
+    { "source": "/chandigarh", "destination": "/gold-rate/chandigarh", "permanent": true },
+    { "source": "/chennai", "destination": "/gold-rate/chennai", "permanent": true },
+    { "source": "/coimbatore", "destination": "/gold-rate/coimbatore", "permanent": true },
+    { "source": "/delhi", "destination": "/gold-rate/delhi", "permanent": true },
+    { "source": "/hyderabad", "destination": "/gold-rate/hyderabad", "permanent": true },
+    { "source": "/jaipur", "destination": "/gold-rate/jaipur", "permanent": true },
+    { "source": "/kerala", "destination": "/gold-rate/kerala", "permanent": true },
+    { "source": "/kolkata", "destination": "/gold-rate/kolkata", "permanent": true },
+    { "source": "/lucknow", "destination": "/gold-rate/lucknow", "permanent": true },
+    { "source": "/madurai", "destination": "/gold-rate/madurai", "permanent": true },
+    { "source": "/mangalore", "destination": "/gold-rate/mangalore", "permanent": true },
+    { "source": "/moodbidri", "destination": "/gold-rate/moodbidri", "permanent": true },
+    { "source": "/mumbai", "destination": "/gold-rate/mumbai", "permanent": true },
+    { "source": "/mysore", "destination": "/gold-rate/mysore", "permanent": true },
+    { "source": "/nagpur", "destination": "/gold-rate/nagpur", "permanent": true },
+    { "source": "/nashik", "destination": "/gold-rate/nashik", "permanent": true },
+    { "source": "/patna", "destination": "/gold-rate/patna", "permanent": true },
+    { "source": "/pune", "destination": "/gold-rate/pune", "permanent": true },
+    { "source": "/rajkot", "destination": "/gold-rate/rajkot", "permanent": true },
+    { "source": "/salem", "destination": "/gold-rate/salem", "permanent": true },
+    { "source": "/surat", "destination": "/gold-rate/surat", "permanent": true },
+    { "source": "/trichy", "destination": "/gold-rate/trichy", "permanent": true },
+    { "source": "/vadodara", "destination": "/gold-rate/vadodara", "permanent": true },
+    { "source": "/vijayawada", "destination": "/gold-rate/vijayawada", "permanent": true },
+    { "source": "/visakhapatnam", "destination": "/gold-rate/visakhapatnam", "permanent": true }
   ]
 }
