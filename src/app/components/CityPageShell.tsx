@@ -7,8 +7,10 @@ import PriceChartWrapper from "./PriceChartWrapper";
 import Last10DaysTable from "./Last10DaysTable";
 import MonthStatistics from "./MonthStatistics";
 import StructuredData from "./StructuredData";
+import CityLocalSEOBlock from "./CityLocalSEOBlock";
 import { GOLD_RATE_CITIES, SILVER_RATE_CITIES } from "@/lib/cities";
 import { getAllJewellers, type JewellerConfig } from "@/lib/jewellerConfig";
+import { getCityMarketData } from "@/lib/cityMarketData";
 
 type LocalInfo = {
   title: string;
@@ -725,6 +727,13 @@ export default function CityPageShell({
 
         {/* City-specific static content for SEO */}
         {children}
+
+        {/* City Local SEO Block - Jewellers, Market Landmarks, Making Charges, Historical Trends */}
+        <CityLocalSEOBlock
+          city={city}
+          citySlug={city.toLowerCase()}
+          marketData={getCityMarketData(city.toLowerCase())}
+        />
 
         {/* E-E-A-T: About GoldMeter - moved lower for SEO, not in answer block */}
         <section className="mt-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
