@@ -29,6 +29,11 @@ export interface JewellerConfig {
   highlights: string[];
   faqs: JewellerFAQ[];
   website?: string;
+  // Custom SEO fields (optional - falls back to auto-generated if not provided)
+  seoTitle?: string; // Custom meta title
+  seoDescription?: string; // Custom meta description
+  seoH1?: string; // Custom H1 heading
+  seoKeywords?: string[]; // Additional keywords
 }
 
 export const JEWELLER_CONFIGS: Record<string, JewellerConfig> = {
@@ -1670,6 +1675,135 @@ For Delhi customers seeking authentic traditional North Indian wedding jewellery
       },
     ],
     website: 'https://www.mehrasons.com',
+  },
+
+  giva: {
+    name: 'GIVA',
+    slug: 'giva',
+    type: 'national',
+    headquarters: 'Bengaluru, Karnataka',
+    foundedYear: 2019,
+    makingChargesRange: '₹0 - ₹200 per gram (included in price)',
+    makingChargesMin: 0,
+    makingChargesMax: 200,
+    purityStandards: 'GIVA offers 925 Sterling Silver (92.5% pure silver), 18K gold-plated silver, and select pure gold pieces. All silver jewellery is certified 925 sterling silver with rhodium plating for tarnish resistance. Gold pieces are BIS hallmarked. Each piece comes with a certificate of authenticity.',
+    popularCollections: ['GIVA Rings', 'GIVA Earrings', 'GIVA Bracelets', 'GIVA Necklaces', 'GIVA Pendants', 'GIVA for Men', 'Zodiac Collection', 'Minimal Collection', 'Statement Pieces', 'Gift Sets'],
+    exchangePolicy: 'GIVA offers a 30-day easy return and exchange policy for all products. Unused items in original packaging can be returned for full refund or exchanged. Lifetime free replating service for gold-plated items. No exchange for old jewellery but competitive buyback available for silver pieces.',
+    regions: ['pan-india'],
+    cityLinks: [
+      { name: 'Bangalore', slug: 'bangalore' },
+      { name: 'Delhi', slug: 'delhi' },
+      { name: 'Mumbai', slug: 'mumbai' },
+      { name: 'Chennai', slug: 'chennai' },
+      { name: 'Hyderabad', slug: 'hyderabad' },
+      { name: 'Pune', slug: 'pune' },
+      { name: 'Kolkata', slug: 'kolkata' },
+      { name: 'Ahmedabad', slug: 'ahmedabad' },
+    ],
+    description: `GIVA is India's leading silver and gold jewellery brand, revolutionizing how millennials and Gen Z shop for affordable luxury jewellery. GIVA silver and gold jewellery has become synonymous with contemporary designs, exceptional quality, and accessible pricing. Founded in 2019 by Ishendra Agarwal in Bengaluru, GIVA jewellery emerged from a simple observation: young Indians wanted stylish, high-quality silver and gold jewellery without the traditional jeweller experience or premium price tags. Today, GIVA serves over 5 million customers across India, establishing itself as the go-to destination for modern jewellery.
+
+The brand name "GIVA" reflects its core philosophy of giving - giving customers exceptional quality at accessible prices, giving joy through beautiful designs, and giving confidence through everyday luxury. GIVA silver and gold jewellery offers an extensive range that includes 925 sterling silver pieces, 18K gold-plated silver designs, and select pure gold jewellery. Unlike traditional jewellers who focus primarily on heavy gold wedding pieces, GIVA has carved a unique niche with contemporary designs that resonate with modern consumers seeking everyday fashion jewellery.
+
+GIVA jewellery's product range is remarkably diverse, with categories that have become customer favorites. GIVA rings are bestsellers, ranging from minimalist bands to statement cocktail rings. GIVA earrings include studs, hoops, drops, and ear cuffs for every occasion. GIVA bracelets feature delicate chains, charm bracelets, and bold cuffs. GIVA necklaces and pendants complete the collection with layering pieces and statement designs. With over 3,000 unique designs available, GIVA online store and 150+ GIVA stores near you offer something for every style preference. Their Zodiac collection, Minimal collection, and Statement collection are particularly popular among customers looking for GIVA silver jewellery.
+
+What sets GIVA silver and gold jewellery apart from traditional jewellers is the uncompromising focus on quality at affordable price points. All GIVA silver jewellery is crafted from 925 sterling silver - the international standard containing 92.5% pure silver. This is significantly higher quality than silver-plated or German silver alternatives that flood the market. The sterling silver base is enhanced with rhodium plating, providing brilliant shine and protection against tarnishing. For gold-toned pieces, GIVA uses 18K gold plating over sterling silver, offering the luxury aesthetic of gold at a fraction of the cost. GIVA also offers select pure gold jewellery pieces for customers seeking precious metal options.
+
+The brand's pricing strategy is transparent and customer-friendly. Unlike traditional jewellers who separately charge for gold/silver weight, making charges, wastage, and GST, GIVA operates on an all-inclusive pricing model. What you see is what you pay - no hidden charges, no complicated calculations. This transparency has earned significant trust among young consumers who are often intimidated by traditional jewellery shopping experiences. Most GIVA pieces range from ₹500 to ₹5,000, making luxury jewellery accessible to students, young professionals, and anyone who values style without excessive spending.
+
+GIVA's online-first approach has been instrumental in its rapid growth. The brand's website (giva.co) and mobile app offer a seamless shopping experience with high-quality product photography, detailed descriptions, size guides, and customer reviews. Their virtual try-on feature allows customers to see how jewellery looks before purchasing. With free shipping across India, easy 30-day returns, and multiple payment options including EMI, GIVA has removed all friction from online jewellery shopping. The brand regularly features on Amazon, Myntra, Nykaa Fashion, and other major e-commerce platforms, expanding its reach further.
+
+Recognizing that many customers still prefer physical shopping experiences, GIVA has expanded its retail presence strategically. The brand operates 150+ exclusive stores across major Indian cities including Bengaluru, Delhi, Mumbai, Chennai, Hyderabad, Pune, Kolkata, and Ahmedabad. These stores, often located in premium malls and high-street locations, feature Instagram-worthy interiors designed for the digital generation. Unlike traditional jewellery stores with their formal atmosphere, GIVA stores are bright, welcoming spaces where customers can browse freely, try pieces without pressure, and experience the brand's youthful energy firsthand.
+
+One of GIVA's most innovative offerings is the lifetime free replating service for gold-plated jewellery. Gold plating naturally wears over time with regular use, but GIVA customers can get their pieces replated for free, forever. This service addresses a common concern with plated jewellery and demonstrates GIVA's commitment to long-term customer satisfaction. The brand also offers free ring resizing and repair services, ensuring customers can enjoy their purchases for years.
+
+GIVA's commitment to customer service extends across every touchpoint. Their customer support team is accessible via chat, email, phone, and social media, with quick response times that digital-native customers expect. The brand actively engages with its community on Instagram (where it has over 1.5 million followers), creating content that resonates with young audiences. User-generated content, influencer collaborations, and celebrity endorsements (including brand ambassador Anushka Sharma) have built a vibrant community around the brand.
+
+The brand's gifting segment deserves special mention. GIVA has become one of India's most popular jewellery gifting brands, offering beautifully packaged gift sets, personalized options, and a wide price range suitable for various occasions. From birthday gifts and anniversary presents to Raksha Bandhan and Valentine's Day specials, GIVA's gift-ready packaging and accessible pricing have made it the default choice for jewellery gifts among urban consumers. The option to include personalized messages and schedule delivery dates makes gifting seamless.
+
+For men, GIVA offers a dedicated collection that breaks the stereotype of jewellery being primarily for women. GIVA for Men includes bracelets, chains, rings, and accessories designed with masculine aesthetics - sleek, minimal, and contemporary. This collection has found popularity among young men who want to accessorize without the traditional heavy gold look. Silver bracelets with leather accents and minimal chain designs are bestsellers in this category.
+
+GIVA has also made sustainability a priority, using recycled silver in its production processes and minimizing packaging waste. The brand's products are nickel-free and hypoallergenic, ensuring comfort for customers with sensitive skin - a common concern with affordable jewellery brands. This attention to skin safety, combined with quality materials, has earned GIVA trust among customers who have experienced allergic reactions with cheaper alternatives.
+
+The brand's product development process combines data analytics with design expertise. By analyzing customer preferences, search trends, and feedback, GIVA consistently introduces designs that resonate with market demands. New collections drop frequently, keeping the offerings fresh and giving customers reasons to return. Limited edition pieces and collaboration collections create urgency and exclusivity, driving engagement among the brand's loyal customer base.
+
+GIVA's growth metrics are impressive by any standard. The brand has achieved over ₹500 crore in annual revenue, serves millions of customers annually, maintains a 4.5+ rating across platforms, and continues to grow at over 100% year-on-year. This success has attracted significant investor interest, with the brand raising substantial funding from prominent venture capital firms. The investment is being deployed toward expanding retail presence, enhancing technology, and strengthening the supply chain.
+
+Looking ahead, GIVA continues to innovate and expand. The brand is gradually introducing pure gold pieces for customers seeking precious metal options while maintaining its core focus on accessible luxury. International expansion, enhanced personalization features, and new product categories are on the roadmap. As India's young population increasingly seeks fashion-forward, affordable jewellery options, GIVA is well-positioned to capture this growing market.
+
+For consumers tired of traditional jewellery shopping experiences - the confusing pricing, the pressure tactics, the outdated designs, and the intimidating atmosphere - GIVA offers a refreshing alternative. It's jewellery shopping reimagined for the digital age: transparent, accessible, stylish, and enjoyable. Whether you're buying your first piece of jewellery, searching for a perfect gift, or building a collection of everyday accessories, GIVA delivers quality, style, and value that traditional jewellers struggle to match at comparable price points.`,
+    highlights: [
+      'GIVA silver and gold jewellery - India\'s #1 affordable luxury brand',
+      '5M+ customers trust GIVA jewellery for quality and design',
+      '925 Sterling Silver & 18K gold plating - certified quality',
+      'GIVA rings, GIVA earrings, GIVA bracelets - 3,000+ designs',
+      '150+ GIVA stores near you + GIVA online at giva.co',
+      'Lifetime free replating for GIVA silver and gold jewellery',
+      '30-day easy returns - buy GIVA online with confidence',
+      'Brand ambassador: Anushka Sharma',
+    ],
+    faqs: [
+      {
+        question: 'What is GIVA silver and gold jewellery?',
+        answer: 'GIVA silver and gold jewellery is India\'s leading affordable luxury jewellery brand offering 925 sterling silver pieces, 18K gold-plated silver designs, and select pure gold jewellery. GIVA jewellery is known for contemporary designs, certified quality, and transparent pricing. With 5M+ customers and 150+ stores, GIVA has become India\'s most popular silver and gold jewellery destination for millennials.',
+      },
+      {
+        question: 'Is GIVA silver jewellery real silver?',
+        answer: 'Yes, all GIVA silver jewellery is made from 925 sterling silver (92.5% pure silver), the international standard for quality silver jewellery. Each GIVA silver piece comes with a certificate of authenticity. The silver is enhanced with rhodium plating for brilliant shine and tarnish resistance.',
+      },
+      {
+        question: 'What are GIVA rings prices?',
+        answer: 'GIVA rings range from ₹499 to ₹3,999 depending on design complexity. Sterling silver GIVA rings start at ₹499, while gold-plated and studded GIVA rings range from ₹999-2,499. Premium GIVA rings with gemstones go up to ₹3,999. All prices include GST with no hidden charges.',
+      },
+      {
+        question: 'What are GIVA earrings prices?',
+        answer: 'GIVA earrings are priced between ₹399 and ₹4,999. Basic GIVA earrings (studs, small hoops) start at ₹399-699. Statement GIVA earrings and drops range from ₹999-2,499. Premium GIVA earrings with detailed work cost ₹2,500-4,999. All GIVA earrings are nickel-free and hypoallergenic.',
+      },
+      {
+        question: 'What are GIVA bracelet prices?',
+        answer: 'GIVA bracelet prices range from ₹599 to ₹3,999. Simple chain GIVA bracelets start at ₹599-999. Charm GIVA bracelets and tennis bracelets cost ₹1,299-2,499. Premium GIVA bracelets with detailed work range from ₹2,500-3,999. GIVA for Men bracelets are also available in similar price ranges.',
+      },
+      {
+        question: 'Is there a GIVA store near me?',
+        answer: 'GIVA has 150+ stores across India. To find a GIVA store near you, visit giva.co/stores or search "GIVA store near me". GIVA stores are located in major cities including Bengaluru, Delhi, Mumbai, Chennai, Hyderabad, Pune, Kolkata, Ahmedabad, Jaipur, Lucknow, and 50+ other cities. Most GIVA stores are in premium malls.',
+      },
+      {
+        question: 'Can I buy GIVA online?',
+        answer: 'Yes, GIVA online shopping is available at giva.co with 3,000+ designs. You can also buy GIVA online through Amazon, Myntra, Nykaa, and Flipkart. GIVA online offers free shipping across India, 30-day easy returns, and cash on delivery. The GIVA app provides exclusive online offers and early access to new collections.',
+      },
+      {
+        question: 'Does GIVA gold plating last long?',
+        answer: 'GIVA uses 18K gold plating over sterling silver base. With proper care (avoiding water, perfumes, chemicals), GIVA gold plating lasts 1-2 years with regular wear. GIVA offers lifetime free replating service - you can get your GIVA silver and gold jewellery replated anytime at any GIVA store.',
+      },
+      {
+        question: 'Is GIVA jewellery good for gifting?',
+        answer: 'GIVA jewellery is one of India\'s most popular gifting choices. GIVA offers beautiful gift packaging, personalized messages, scheduled delivery, and price range from ₹500-5,000+. GIVA rings, GIVA earrings, and GIVA bracelets are perfect gifts for birthdays, anniversaries, Rakhi, Valentine\'s Day, and other occasions.',
+      },
+      {
+        question: 'Why is GIVA cheaper than Tanishq or Kalyan?',
+        answer: 'GIVA silver and gold jewellery specializes in 925 sterling silver rather than heavy gold, making it naturally more affordable. GIVA\'s online-first model reduces overhead costs, and efficient supply chain enables competitive pricing. For silver jewellery and affordable fashion pieces, GIVA offers better value than traditional gold-focused jewellers.',
+      },
+      {
+        question: 'What GIVA jewellery collections are popular?',
+        answer: 'Popular GIVA jewellery collections include: GIVA rings (bestseller category), GIVA earrings (studs to statement pieces), GIVA bracelets (chains and charms), GIVA necklaces, Zodiac collection, Minimal collection, and GIVA for Men. GIVA silver and gold jewellery is available in 3,000+ designs across all collections.',
+      },
+    ],
+    website: 'https://www.giva.co',
+    // Custom SEO for high-volume keywords
+    seoTitle: 'GIVA Silver and Gold Jewellery | GIVA Rings, Earrings, Bracelets | GoldMeter',
+    seoDescription: 'GIVA silver and gold jewellery - India\'s #1 affordable luxury brand. Shop GIVA rings, GIVA earrings, GIVA bracelets online. 925 sterling silver, 150+ GIVA stores near you. Free shipping & 30-day returns.',
+    seoH1: 'GIVA Silver and Gold Jewellery',
+    seoKeywords: [
+      'giva silver and gold jewellery',
+      'giva jewellery',
+      'giva rings',
+      'giva earrings',
+      'giva bracelet',
+      'giva store near me',
+      'giva online',
+      'giva silver',
+      'giva necklace',
+      'giva for men',
+    ],
   },
 };
 

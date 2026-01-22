@@ -61,7 +61,7 @@ export default function JewellerPageShell({ jeweller, goldRate, lastUpdated }: J
                     {typeLabel}
                   </span>
                   <h1 className="text-3xl font-bold text-charcoal md:text-4xl">
-                    {jeweller.name}
+                    {jeweller.seoH1 || jeweller.name}
                   </h1>
                   <p className="mt-2 text-slate-600">
                     {jeweller.headquarters} • Est. {jeweller.foundedYear}

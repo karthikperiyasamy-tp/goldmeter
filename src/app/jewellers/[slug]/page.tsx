@@ -25,8 +25,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "Jeweller Not Found" };
   }
 
-  const title = `${jeweller.name} Making Charges & Gold Rate Today | GoldMeter`;
-  const description = `${jeweller.name} making charges: ${jeweller.makingChargesRange}. Check gold rates, exchange policy, and reviews. ${jeweller.headquarters} since ${jeweller.foundedYear}.`;
+  // Use custom SEO fields if available, otherwise fall back to auto-generated
+  const title = jeweller.seoTitle || `${jeweller.name} Making Charges & Gold Rate Today | GoldMeter`;
+  const description = jeweller.seoDescription || `${jeweller.name} making charges: ${jeweller.makingChargesRange}. Check gold rates, exchange policy, and reviews. ${jeweller.headquarters} since ${jeweller.foundedYear}.`;
+  
+  // Merge custom keywords with default keywords
+  const defaultKeywords = [
+    `${jeweller.name.toLowerCase()} making charges`,
+    `${jeweller.name.toLowerCase()} gold rate`,
+    `${jeweller.name.toLowerCase()} review`,
+    `${jeweller.name.toLowerCase()} exchange policy`,
+    "gold jewellers india",
+  ];
+  const keywords = jeweller.seoKeywords 
+    ? [...jeweller.seoKeywords, ...defaultKeywords] 
+    : defaultKeywords;
 
   return {
     title,
@@ -35,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: `https://goldmeter.in/jewellers/${jeweller.slug}`,
     },
     openGraph: {
-      title: `${jeweller.name} - Making Charges & Reviews`,
+      title: jeweller.seoTitle || `${jeweller.name} - Making Charges & Reviews`,
       description,
       type: "website",
       url: `https://goldmeter.in/jewellers/${jeweller.slug}`,
@@ -50,13 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         },
       ],
     },
-    keywords: [
-      `${jeweller.name.toLowerCase()} making charges`,
-      `${jeweller.name.toLowerCase()} gold rate`,
-      `${jeweller.name.toLowerCase()} review`,
-      `${jeweller.name.toLowerCase()} exchange policy`,
-      "gold jewellers india",
-    ],
+    keywords,
   };
 }
 

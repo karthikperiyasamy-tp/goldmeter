@@ -210,12 +210,12 @@ export default function CityPageShell({
     
     // If we have jewellers for this city, prioritize them
     if (jewellersInCity.length >= 4) {
-      return jewellersInCity.slice(0, 6);
+      return jewellersInCity.slice(0, 10); // Show up to 10 jewellers
     }
     
     // Otherwise, show national chains + some regional
-    const national = allJewellers.filter((j) => j.type === 'national').slice(0, 4);
-    const regional = allJewellers.filter((j) => j.type === 'regional').slice(0, 2);
+    const national = allJewellers.filter((j) => j.type === 'national').slice(0, 6);
+    const regional = allJewellers.filter((j) => j.type === 'regional').slice(0, 4);
     return [...national, ...regional];
   };
   

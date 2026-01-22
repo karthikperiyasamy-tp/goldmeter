@@ -64,8 +64,8 @@ export default function CityLocalSEOBlock({
   
   // If no specific jewellers, show a mix of national chains
   const displayJewellers = jewellersInCity.length > 0 
-    ? jewellersInCity.slice(0, 8) 
-    : allJewellers.filter((j: JewellerConfig) => j.type === 'national').slice(0, 6);
+    ? jewellersInCity.slice(0, 12) // Show up to 12 jewellers
+    : allJewellers.filter((j: JewellerConfig) => j.type === 'national').slice(0, 8);
 
   // Default market data if not provided
   const defaultMarketData: CityMarketData = {
