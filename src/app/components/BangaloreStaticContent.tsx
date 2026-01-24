@@ -2,18 +2,25 @@
  * Bangalore-specific static content for SEO
  * Comprehensive coverage of gold rates, buying/selling, investment, taxation, and local market insights.
  */
-export default function BangaloreStaticContent() {
+
+interface BangaloreStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function BangaloreStaticContent({ perGram22k, perGram24k }: BangaloreStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       {/* Introduction to Bangalore Gold Market */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Bangalore</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Bangalore</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Bangalore, India&apos;s IT capital, has a thriving gold market that caters to its cosmopolitan population. 
-            The city&apos;s gold rates are determined by the India Bullion and Jewellers Association (IBJA) reference 
-            prices, international spot rates, and the US dollar index. From historic jewellery shops in Commercial 
-            Street to premium showrooms in malls, Bangalore offers diverse options for gold buyers.
+            Today&apos;s gold rate in Bangalore is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Bangalore gold prices are similar to Chennai, typically ₹20-50 higher than Mumbai due to South 
+            India&apos;s strong gold buying tradition. Commercial Street and Jayanagar are the main jewellery 
+            hubs. Prices are updated from IBJA multiple times daily based on international spot prices and 
+            rupee-dollar movements.
           </p>
           <p>
             Gold prices in Bangalore fluctuate based on global economic conditions, currency exchange rates, and 

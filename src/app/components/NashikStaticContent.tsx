@@ -1,16 +1,22 @@
 /**
  * Nashik-specific static content for SEO
  */
-export default function NashikStaticContent() {
+
+interface NashikStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function NashikStaticContent({ perGram22k, perGram24k }: NashikStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Nashik</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Nashik</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Nashik, the Wine Capital and pilgrimage city on the Godavari, has a prosperous gold market. Gold rates 
-            follow the India Bullion and Jewellers Association (IBJA) reference prices, international spot rates, 
-            and the US dollar index. Main Road and College Road house traditional jewellery shops.
+            Today&apos;s gold rate in Nashik is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Nashik is a pilgrimage city on the Godavari with a prosperous gold market. Main Road and 
+            College Road are the main jewellery hubs. Prices are updated from IBJA multiple times daily.
           </p>
           <p>
             The city&apos;s Kumbh Mela pilgrims and growing middle class drive gold demand. Traditional 

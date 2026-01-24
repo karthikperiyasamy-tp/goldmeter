@@ -1,16 +1,22 @@
 /**
  * Trichy-specific static content for SEO
  */
-export default function TrichyStaticContent() {
+
+interface TrichyStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function TrichyStaticContent({ perGram22k, perGram24k }: TrichyStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Trichy</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Trichy</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Tiruchirappalli (Trichy), home to the iconic Rockfort Temple, has a vibrant gold market. Gold rates 
-            follow the India Bullion and Jewellers Association (IBJA) reference prices, international spot rates, 
-            and the US dollar index. NSB Road and Singarathope house traditional jewellery shops.
+            Today&apos;s gold rate in Trichy is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Tiruchirappalli (Trichy) is home to the iconic Rockfort Temple with a vibrant gold market. NSB Road 
+            and Singarathope are the main jewellery hubs. Prices are updated from IBJA multiple times daily.
           </p>
           <p>
             The temple city&apos;s pilgrims and local residents drive gold demand. Traditional Tamil temple 

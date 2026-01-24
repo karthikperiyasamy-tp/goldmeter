@@ -2,20 +2,27 @@
  * Surat-specific static content for SEO
  * Comprehensive coverage of gold rates, buying/selling, investment, taxation, and local market insights.
  */
-export default function SuratStaticContent() {
+
+interface SuratStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function SuratStaticContent({ perGram22k, perGram24k }: SuratStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       {/* Introduction */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Surat</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Surat</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Surat, the diamond capital of the world, also has a thriving gold market. The city&apos;s prosperous 
-            textile and diamond industries drive significant gold demand. Gold rates in Surat follow the India 
-            Bullion and Jewellers Association (IBJA) reference prices, international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Surat is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Surat is the diamond capital of the world with a thriving gold market. Mahidharpura is the main 
+            jewellery hub. Prices are updated from IBJA multiple times daily based on international spot 
+            prices and USD/INR movements.
           </p>
           <p>
-            The Mahidharpura area is famous for both diamond and gold jewellery, while modern showrooms in 
+            The city&apos;s prosperous textile and diamond industries drive significant gold demand. Modern showrooms in 
             Athwa and Adajan cater to contemporary tastes. Surat&apos;s wealthy business families traditionally 
             invest heavily in gold.
           </p>

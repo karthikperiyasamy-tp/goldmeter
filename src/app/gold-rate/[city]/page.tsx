@@ -269,37 +269,37 @@ export default async function GoldRateCityPage({ params }: Props) {
         similarCities={config.similarCities}
       >
         {/* City-specific static content for SEO */}
-        {config.slug === 'chennai' && <ChennaiStaticContent />}
-        {config.slug === 'mumbai' && <MumbaiStaticContent />}
-        {config.slug === 'hyderabad' && <HyderabadStaticContent />}
-        {config.slug === 'ahmedabad' && <AhmedabadStaticContent />}
-        {config.slug === 'ayodhya' && <AyodhyaStaticContent />}
-        {config.slug === 'bangalore' && <BangaloreStaticContent />}
-        {config.slug === 'bhubaneswar' && <BhubaneswarStaticContent />}
-        {config.slug === 'chandigarh' && <ChandigarhStaticContent />}
-        {config.slug === 'coimbatore' && <CoimbatoreStaticContent />}
-        {config.slug === 'delhi' && <DelhiStaticContent />}
-        {config.slug === 'jaipur' && <JaipurStaticContent />}
-        {config.slug === 'kerala' && <KeralaStaticContent />}
-        {config.slug === 'kochi' && <KochiStaticContent />}
-        {config.slug === 'kolkata' && <KolkataStaticContent />}
-        {config.slug === 'lucknow' && <LucknowStaticContent />}
-        {config.slug === 'madurai' && <MaduraiStaticContent />}
-        {config.slug === 'mangalore' && <MangaloreStaticContent />}
-        {config.slug === 'moodbidri' && <MoodbidriStaticContent />}
-        {config.slug === 'mysore' && <MysoreStaticContent />}
-        {config.slug === 'nagpur' && <NagpurStaticContent />}
-        {config.slug === 'nashik' && <NashikStaticContent />}
-        {config.slug === 'patna' && <PatnaStaticContent />}
-        {config.slug === 'pune' && <PuneStaticContent />}
-        {config.slug === 'rajkot' && <RajkotStaticContent />}
-        {config.slug === 'salem' && <SalemStaticContent />}
-        {config.slug === 'surat' && <SuratStaticContent />}
-        {config.slug === 'tirunelveli' && <TirunelveliStaticContent />}
-        {config.slug === 'trichy' && <TrichyStaticContent />}
-        {config.slug === 'vadodara' && <VadodaraStaticContent />}
-        {config.slug === 'vijayawada' && <VijayawadaStaticContent />}
-        {config.slug === 'visakhapatnam' && <VisakhapatnamStaticContent />}
+        {config.slug === 'chennai' && <ChennaiStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'mumbai' && <MumbaiStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'hyderabad' && <HyderabadStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'ahmedabad' && <AhmedabadStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'ayodhya' && <AyodhyaStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'bangalore' && <BangaloreStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'bhubaneswar' && <BhubaneswarStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'chandigarh' && <ChandigarhStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'coimbatore' && <CoimbatoreStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'delhi' && <DelhiStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'jaipur' && <JaipurStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'kerala' && <KeralaStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'kochi' && <KochiStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'kolkata' && <KolkataStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'lucknow' && <LucknowStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'madurai' && <MaduraiStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'mangalore' && <MangaloreStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'moodbidri' && <MoodbidriStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'mysore' && <MysoreStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'nagpur' && <NagpurStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'nashik' && <NashikStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'patna' && <PatnaStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'pune' && <PuneStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'rajkot' && <RajkotStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'salem' && <SalemStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'surat' && <SuratStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'tirunelveli' && <TirunelveliStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'trichy' && <TrichyStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'vadodara' && <VadodaraStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'vijayawada' && <VijayawadaStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
+        {config.slug === 'visakhapatnam' && <VisakhapatnamStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
       </CityPageShell>
     </>
   );

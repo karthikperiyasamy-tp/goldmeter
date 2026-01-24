@@ -2,19 +2,24 @@
  * Ahmedabad-specific static content for SEO
  * Comprehensive coverage of gold rates, buying/selling, investment, taxation, and local market insights.
  */
-export default function AhmedabadStaticContent() {
+
+interface AhmedabadStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function AhmedabadStaticContent({ perGram22k, perGram24k }: AhmedabadStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       {/* Introduction to Ahmedabad Gold Market */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Ahmedabad</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Ahmedabad</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Gujarat has long been renowned for its flourishing gold trade, and Ahmedabad stands at the heart of 
-            this legacy. As Gujarat&apos;s largest city, Ahmedabad serves as a major hub for gold trading and jewellery 
-            manufacturing, with many of India&apos;s leading jewellers tracing their roots here. The gold rate in 
-            Ahmedabad is determined by the India Bullion and Jewellers Association (IBJA) reference prices, 
-            international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Ahmedabad is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Ahmedabad is Gujarat&apos;s largest gold trading hub, with Manek Chowk and CG Road being the main jewellery 
+            markets. Many of India&apos;s leading jewellers trace their roots here. Prices are updated from IBJA 
+            multiple times daily based on international spot prices.
           </p>
           <p>
             Gold prices in Ahmedabad fluctuate based on global economic conditions, currency exchange rates, and 

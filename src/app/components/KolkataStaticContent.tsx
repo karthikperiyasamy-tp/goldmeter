@@ -3,25 +3,29 @@
  * This component contains comprehensive informational content about gold rates in Kolkata
  * covering buying/selling, purity, investment, taxation, and local market insights.
  */
-export default function KolkataStaticContent() {
+
+interface KolkataStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function KolkataStaticContent({ perGram22k, perGram24k }: KolkataStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       {/* Introduction to Kolkata Gold Market */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Kolkata</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Kolkata</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Kolkata&apos;s gold market stands as one of India&apos;s most significant trading hubs, with Bowbazar serving as the 
-            historic epicentre of gold commerce in Eastern India. The city&apos;s gold rates are determined by a complex 
-            interplay of international spot prices, the US dollar index, and local demand dynamics. The India Bullion 
-            and Jewellers Association (IBJA) publishes daily reference rates that Kolkata jewellers use as their 
-            benchmark, adding local premiums based on market conditions.
+            Today&apos;s gold rate in Kolkata is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Kolkata is the largest gold market in Eastern India, with Bowbazar being the historic trading hub. 
+            Prices are updated from IBJA multiple times daily. During Durga Puja and Dhanteras, local demand 
+            surges can create temporary price premiums.
           </p>
           <p>
             Gold prices in Kolkata fluctuate throughout the day based on global economic conditions, currency exchange 
             rates between the rupee and dollar, and trading activity on the Multi Commodity Exchange (MCX) futures 
-            market. During festivals like Durga Puja and Dhanteras, local demand surges can create temporary price 
-            premiums above the national average.
+            market. The city is famous for its lightweight Bengali gold jewellery designs.
           </p>
         </div>
       </section>

@@ -1,21 +1,27 @@
 /**
  * Ayodhya-specific static content for SEO
  */
-export default function AyodhyaStaticContent() {
+
+interface AyodhyaStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function AyodhyaStaticContent({ perGram22k, perGram24k }: AyodhyaStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Ayodhya</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Ayodhya</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Ayodhya, the sacred city and birthplace of Lord Ram, has a growing gold market driven by 
-            religious tourism and pilgrim purchases. The city&apos;s gold rates follow the India Bullion and 
-            Jewellers Association (IBJA) reference prices, international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Ayodhya is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Ayodhya is the sacred city and birthplace of Lord Ram with a growing gold market driven by 
+            religious tourism. With Ram Mandir attracting millions of devotees, demand for religious 
+            gold jewellery and coins has increased. Prices are updated from IBJA multiple times daily.
           </p>
           <p>
-            With the Ram Mandir attracting millions of devotees, demand for religious gold jewellery 
-            and coins has increased significantly. Gold prices fluctuate based on global economic 
-            conditions and MCX futures market movements.
+            Gold prices fluctuate based on global economic conditions and MCX futures market movements. 
+            Religious gold coins and temple jewellery are particularly popular here.
           </p>
         </div>
       </section>

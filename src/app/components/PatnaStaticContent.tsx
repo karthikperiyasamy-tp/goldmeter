@@ -1,16 +1,22 @@
 /**
  * Patna-specific static content for SEO
  */
-export default function PatnaStaticContent() {
+
+interface PatnaStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function PatnaStaticContent({ perGram22k, perGram24k }: PatnaStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Patna</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Patna</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Patna, Bihar&apos;s capital on the Ganges, has a growing gold market. Gold rates follow the India Bullion 
-            and Jewellers Association (IBJA) reference prices, international spot rates, and the US dollar index. 
-            Fraser Road and Patna City house traditional jewellery shops.
+            Today&apos;s gold rate in Patna is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Patna is Bihar&apos;s capital with a growing gold market. Fraser Road and Patna City are the main 
+            jewellery hubs. Prices are updated from IBJA multiple times daily based on international spot prices.
           </p>
           <p>
             Chhath Puja and wedding season drive significant gold demand. Traditional Bihari and North Indian 

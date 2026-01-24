@@ -2,18 +2,24 @@
  * Hyderabad-specific static content for SEO
  * Comprehensive coverage of gold rates, buying/selling, investment, taxation, and local market insights.
  */
-export default function HyderabadStaticContent() {
+
+interface HyderabadStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function HyderabadStaticContent({ perGram22k, perGram24k }: HyderabadStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       {/* Introduction to Hyderabad Gold Market */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Hyderabad</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Hyderabad</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Hyderabad, the City of Pearls, has a rich tradition of gold craftsmanship dating back to the Nizams. 
-            The city&apos;s gold market centres around Begum Bazaar, Abids, and modern showrooms across Banjara Hills 
-            and Jubilee Hills. Gold rates in Hyderabad are determined by the India Bullion and Jewellers Association 
-            (IBJA) reference prices, international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Hyderabad is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Hyderabad gold prices are among the most competitive in South India due to lower state taxes and 
+            strong local competition—typically ₹20-40 lower than Chennai or Bangalore. Begum Bazaar and Abids 
+            are the main jewellery markets. Prices are updated from IBJA multiple times daily.
           </p>
           <p>
             As Telangana&apos;s capital and a major IT hub, Hyderabad sees strong gold demand from both traditional 

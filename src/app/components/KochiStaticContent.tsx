@@ -1,21 +1,27 @@
 /**
  * Kochi-specific static content for SEO
  */
-export default function KochiStaticContent() {
+
+interface KochiStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function KochiStaticContent({ perGram22k, perGram24k }: KochiStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Kochi</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Kochi</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Kochi, Kerala&apos;s commercial capital and a historic port city, has one of South India&apos;s most 
-            active gold markets. The city&apos;s gold rates follow the India Bullion and Jewellers Association 
-            (IBJA) reference prices, international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Kochi is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Kochi is Kerala&apos;s commercial capital with one of South India&apos;s most active gold markets. 
+            Broadway and MG Road house major showrooms including Kalyan, Jos Alukkas, and Joyalukkas. 
+            Prices are updated from IBJA multiple times daily.
           </p>
           <p>
-            Broadway and MG Road house major jewellery showrooms including Kalyan, Jos Alukkas, Chemmanur, 
-            and Joyalukkas. Gold prices fluctuate based on global economic conditions and Kerala&apos;s 
-            exceptionally high gold demand.
+            Gold prices fluctuate based on global economic conditions and Kerala&apos;s exceptionally high 
+            gold demand. NRI remittances from the Gulf significantly boost demand during festivals.
           </p>
         </div>
       </section>

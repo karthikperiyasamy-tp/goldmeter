@@ -1,20 +1,27 @@
 /**
  * Madurai-specific static content for SEO
  */
-export default function MaduraiStaticContent() {
+
+interface MaduraiStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function MaduraiStaticContent({ perGram22k, perGram24k }: MaduraiStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Madurai</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Madurai</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Madurai, the Temple City of Tamil Nadu, has a vibrant gold market centered around the famous 
-            Meenakshi Amman Temple. The city&apos;s gold rates follow the India Bullion and Jewellers Association 
-            (IBJA) reference prices, international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Madurai is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Madurai is Tamil Nadu&apos;s Temple City with a vibrant gold market centered around Meenakshi 
+            Amman Temple. South Masi Street and Town Hall Road are the main jewellery hubs. Prices are 
+            updated from IBJA multiple times daily.
           </p>
           <p>
-            South Masi Street and Town Hall Road house traditional jewellers offering authentic Tamil temple 
-            jewellery. Gold prices fluctuate based on global economic conditions and local festival demand.
+            Traditional jewellers offer authentic Tamil temple jewellery. Gold prices fluctuate based on 
+            global economic conditions and local festival demand.
           </p>
         </div>
       </section>

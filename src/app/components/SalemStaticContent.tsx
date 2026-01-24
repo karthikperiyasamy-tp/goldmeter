@@ -1,16 +1,23 @@
 /**
  * Salem-specific static content for SEO
  */
-export default function SalemStaticContent() {
+
+interface SalemStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function SalemStaticContent({ perGram22k, perGram24k }: SalemStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Salem</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Salem</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Salem, the Steel City of Tamil Nadu, has a growing gold market. Gold rates follow the India Bullion 
-            and Jewellers Association (IBJA) reference prices, international spot rates, and the US dollar index. 
-            Bazaar Street and Five Roads house traditional jewellery shops.
+            Today&apos;s gold rate in Salem is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Salem is Tamil Nadu&apos;s Steel City with a growing gold market. Bazaar Street and Five Roads are 
+            the main jewellery hubs. Prices are updated from IBJA multiple times daily based on international 
+            spot prices.
           </p>
           <p>
             The city&apos;s prosperous textile and steel industries drive gold demand. Traditional Tamil temple 

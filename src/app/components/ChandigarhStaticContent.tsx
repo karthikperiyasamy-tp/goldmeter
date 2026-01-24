@@ -2,18 +2,24 @@
  * Chandigarh-specific static content for SEO
  * Comprehensive coverage of gold rates, buying/selling, investment, taxation, and local market insights.
  */
-export default function ChandigarhStaticContent() {
+
+interface ChandigarhStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function ChandigarhStaticContent({ perGram22k, perGram24k }: ChandigarhStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       {/* Introduction */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Chandigarh</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Chandigarh</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Chandigarh, the City Beautiful, has a thriving gold market serving Punjab, Haryana, and Himachal 
-            Pradesh. The city&apos;s gold rates follow the India Bullion and Jewellers Association (IBJA) 
-            reference prices, international spot rates, and the US dollar index. Sector 17 and 22 house the 
-            main jewellery markets.
+            Today&apos;s gold rate in Chandigarh is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Chandigarh serves as the gold market hub for Punjab, Haryana, and Himachal Pradesh. Sector 17 
+            and 22 are the main jewellery markets. Prices are updated from IBJA multiple times daily based 
+            on international spot prices.
           </p>
           <p>
             The prosperous Punjabi and Haryanvi communities drive strong gold demand, particularly for elaborate 

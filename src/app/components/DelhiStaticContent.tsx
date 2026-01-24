@@ -2,18 +2,24 @@
  * Delhi-specific static content for SEO
  * Comprehensive coverage of gold rates, buying/selling, investment, taxation, and local market insights.
  */
-export default function DelhiStaticContent() {
+
+interface DelhiStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function DelhiStaticContent({ perGram22k, perGram24k }: DelhiStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       {/* Introduction to Delhi Gold Market */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Delhi</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Delhi</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Delhi, the national capital, is one of India&apos;s largest gold markets with historic trading lanes in 
-            Chandni Chowk and modern showrooms across South Delhi and Gurgaon. The city&apos;s gold rates serve as 
-            a benchmark for North India, closely tracking the India Bullion and Jewellers Association (IBJA) 
-            reference prices, international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Delhi is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Delhi gold prices serve as a benchmark for North India, with Chandni Chowk and Karol Bagh being 
+            the main jewellery markets. Rates are updated from IBJA multiple times daily based on international 
+            spot prices and USD/INR movements.
           </p>
           <p>
             Gold prices in Delhi fluctuate based on global economic conditions, currency exchange rates, and 

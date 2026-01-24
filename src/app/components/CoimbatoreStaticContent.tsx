@@ -2,22 +2,28 @@
  * Coimbatore-specific static content for SEO
  * Comprehensive coverage of gold rates, buying/selling, investment, taxation, and local market insights.
  */
-export default function CoimbatoreStaticContent() {
+
+interface CoimbatoreStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function CoimbatoreStaticContent({ perGram22k, perGram24k }: CoimbatoreStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       {/* Introduction */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Coimbatore</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Coimbatore</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Coimbatore, the Manchester of South India, has a vibrant gold market catering to its prosperous 
-            textile industry families and growing IT sector. The city&apos;s gold rates follow the India Bullion 
-            and Jewellers Association (IBJA) reference prices, international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Coimbatore is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Coimbatore is Tamil Nadu&apos;s second-largest gold market after Chennai, with RS Puram and 
+            Gandhipuram being the main jewellery hubs. Prices are updated from IBJA multiple times daily 
+            based on international spot prices.
           </p>
           <p>
-            RS Puram and Gandhipuram house the city&apos;s premier jewellery shops, offering traditional Tamil 
-            designs alongside contemporary styles. Gold prices fluctuate based on global economic conditions 
-            and MCX futures market movements.
+            The city&apos;s prosperous textile industry families and growing IT sector drive strong gold demand. 
+            Gold prices fluctuate based on global economic conditions and MCX futures market movements.
           </p>
         </div>
       </section>

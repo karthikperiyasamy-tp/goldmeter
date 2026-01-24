@@ -1,20 +1,27 @@
 /**
  * Bhubaneswar-specific static content for SEO
  */
-export default function BhubaneswarStaticContent() {
+
+interface BhubaneswarStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function BhubaneswarStaticContent({ perGram22k, perGram24k }: BhubaneswarStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Bhubaneswar</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Bhubaneswar</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Bhubaneswar, Odisha&apos;s capital and Temple City, has a rich tradition of silver filigree and gold 
-            jewellery. The city&apos;s gold rates follow the India Bullion and Jewellers Association (IBJA) 
-            reference prices, international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Bhubaneswar is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Bhubaneswar is Odisha&apos;s capital with a rich tradition of gold and silver filigree jewellery. 
+            Saheed Nagar, Unit-1, and Kalpana Square are the main jewellery hubs. Prices are updated from 
+            IBJA multiple times daily.
           </p>
           <p>
-            Saheed Nagar, Unit-1, and Kalpana Square house major jewellery showrooms. Traditional Odia 
-            temple jewellery designs are popular alongside contemporary styles.
+            Traditional Odia temple jewellery designs are popular alongside contemporary styles. The city 
+            serves buyers from across Odisha.
           </p>
         </div>
       </section>

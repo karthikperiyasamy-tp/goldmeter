@@ -2,18 +2,24 @@
  * Jaipur-specific static content for SEO
  * Comprehensive coverage of gold rates, buying/selling, investment, taxation, and local market insights.
  */
-export default function JaipurStaticContent() {
+
+interface JaipurStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function JaipurStaticContent({ perGram22k, perGram24k }: JaipurStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       {/* Introduction to Jaipur Gold Market */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Jaipur</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Jaipur</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Jaipur, the Pink City, is world-renowned for its exquisite jewellery craftsmanship, particularly Kundan, 
-            Meenakari, and Polki work. As one of India&apos;s premier jewellery manufacturing hubs, Jaipur attracts 
-            buyers globally. The city&apos;s gold rates are determined by the India Bullion and Jewellers Association (IBJA) 
-            reference prices, international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Jaipur is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Jaipur is world-renowned for Kundan, Meenakari, and Polki jewellery craftsmanship. Johari Bazaar 
+            is the main jewellery market. Prices are updated from IBJA multiple times daily based on 
+            international spot prices and USD/INR movements.
           </p>
           <p>
             Johari Bazaar has been the epicenter of gem and gold trade for centuries, housing skilled artisans who 

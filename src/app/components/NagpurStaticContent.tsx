@@ -1,20 +1,27 @@
 /**
  * Nagpur-specific static content for SEO
  */
-export default function NagpurStaticContent() {
+
+interface NagpurStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function NagpurStaticContent({ perGram22k, perGram24k }: NagpurStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Nagpur</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Nagpur</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Nagpur, the Orange City and central India&apos;s commercial hub, has a thriving gold market. Gold rates 
-            follow the India Bullion and Jewellers Association (IBJA) reference prices, international spot rates, 
-            and the US dollar index. Sitabuldi and Itwari are the main jewellery shopping areas.
+            Today&apos;s gold rate in Nagpur is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Nagpur is central India&apos;s commercial hub and Maharashtra&apos;s second capital. Sitabuldi and 
+            Itwari are the main jewellery markets. Prices are updated from IBJA multiple times daily based 
+            on international spot prices.
           </p>
           <p>
-            As Maharashtra&apos;s second capital, Nagpur serves buyers from Vidarbha and neighboring states. 
-            Traditional Maharashtrian and Central Indian designs are popular.
+            The city serves buyers from Vidarbha and neighboring states. Traditional Maharashtrian and 
+            Central Indian designs are popular alongside contemporary styles.
           </p>
         </div>
       </section>

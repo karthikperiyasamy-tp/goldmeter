@@ -2,19 +2,25 @@
  * Chennai-specific static content for SEO
  * Comprehensive coverage of gold rates, buying/selling, investment, taxation, and local market insights.
  */
-export default function ChennaiStaticContent() {
+
+interface ChennaiStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function ChennaiStaticContent({ perGram22k, perGram24k }: ChennaiStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       {/* Introduction to Chennai Gold Market */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Chennai</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Chennai</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Chennai&apos;s gold market is among India&apos;s largest, with T. Nagar serving as the epicentre of jewellery 
-            trade in South India. The city&apos;s gold rates are determined by international spot prices, the US dollar 
-            index, and local demand dynamics. The India Bullion and Jewellers Association (IBJA) publishes daily 
-            reference rates that Chennai jewellers use as their benchmark, with local premiums varying based on 
-            market conditions and seasonal demand.
+            Today&apos;s gold rate in Chennai is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            The 22K (916) gold price is used for jewellery purchases at T. Nagar and other Chennai markets, while 
+            24K rate applies to gold coins and bars. Chennai gold prices are among the most competitive in South 
+            India, with rates updated from IBJA multiple times daily based on international spot prices and 
+            USD/INR movements.
           </p>
           <p>
             Gold prices in Chennai fluctuate throughout the day based on global economic conditions, currency 

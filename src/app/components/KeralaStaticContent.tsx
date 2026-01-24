@@ -2,22 +2,28 @@
  * Kerala-specific static content for SEO
  * Comprehensive coverage of gold rates, buying/selling, investment, taxation, and local market insights.
  */
-export default function KeralaStaticContent() {
+
+interface KeralaStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function KeralaStaticContent({ perGram22k, perGram24k }: KeralaStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       {/* Introduction to Kerala Gold Market */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Kerala</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Kerala</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Kerala, often called India&apos;s gold capital, has the highest per capita gold consumption in the country. 
-            The state&apos;s deep cultural connection with gold dates back to ancient maritime trade routes. From 
-            elaborate bridal sets weighing kilograms to daily-wear ornaments, gold is integral to Malayali identity.
+            Today&apos;s gold rate in Kerala is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Kerala has the highest per capita gold consumption in India. Thrissur is known as Kerala&apos;s gold 
+            capital, home to Kalyan Jewellers and Joyalukkas. Prices are updated from IBJA multiple times daily 
+            based on international spot prices.
           </p>
           <p>
-            Gold rates in Kerala are determined by the India Bullion and Jewellers Association (IBJA) reference 
-            prices, international spot rates, and the US dollar index. Thrissur, known as Kerala&apos;s gold capital, 
-            is home to numerous jewellers including Kalyan Jewellers and Joyalukkas, both of which originated here.
+            The state&apos;s deep cultural connection with gold dates back to ancient maritime trade routes. From 
+            elaborate bridal sets weighing kilograms to daily-wear ornaments, gold is integral to Malayali identity.
           </p>
         </div>
       </section>

@@ -1,20 +1,27 @@
 /**
  * Mangalore-specific static content for SEO
  */
-export default function MangaloreStaticContent() {
+
+interface MangaloreStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function MangaloreStaticContent({ perGram22k, perGram24k }: MangaloreStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Mangalore</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Mangalore</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Mangalore, the coastal city of Karnataka, has a thriving gold market influenced by its prosperous 
-            business community and NRI population from the Gulf. Gold rates follow the India Bullion and 
-            Jewellers Association (IBJA) reference prices, international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Mangalore is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Mangalore has a thriving gold market with Hampankatta and Car Street being the main jewellery 
+            hubs. The NRI population from the Gulf significantly boosts demand. Prices are updated from 
+            IBJA multiple times daily.
           </p>
           <p>
-            Hampankatta and Car Street house traditional jewellers offering Tulu and Konkani-style designs. 
-            NRI remittances significantly boost gold demand during festival and wedding seasons.
+            Traditional jewellers offer Tulu and Konkani-style designs. NRI remittances significantly boost 
+            gold demand during festival and wedding seasons.
           </p>
         </div>
       </section>

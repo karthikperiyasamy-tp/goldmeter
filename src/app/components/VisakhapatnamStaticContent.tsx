@@ -1,20 +1,26 @@
 /**
  * Visakhapatnam-specific static content for SEO
  */
-export default function VisakhapatnamStaticContent() {
+
+interface VisakhapatnamStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function VisakhapatnamStaticContent({ perGram22k, perGram24k }: VisakhapatnamStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Visakhapatnam</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Visakhapatnam</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Visakhapatnam (Vizag), the City of Destiny on the Bay of Bengal, has a growing gold market driven by 
-            its industrial economy and naval presence. Gold rates follow the India Bullion and Jewellers Association 
-            (IBJA) reference prices, international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Visakhapatnam is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Visakhapatnam (Vizag) is the City of Destiny on the Bay of Bengal with a growing gold market. 
+            Jagadamba Junction and Dwaraka Nagar are the main jewellery hubs. Prices are updated from IBJA 
+            multiple times daily.
           </p>
           <p>
-            Jagadamba Junction and Dwaraka Nagar house traditional jewellers. The city&apos;s diverse population 
-            drives demand for both traditional Telugu designs and contemporary styles.
+            The city&apos;s diverse population drives demand for both traditional Telugu designs and contemporary styles.
           </p>
         </div>
       </section>

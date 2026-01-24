@@ -1,20 +1,27 @@
 /**
  * Vadodara-specific static content for SEO
  */
-export default function VadodaraStaticContent() {
+
+interface VadodaraStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function VadodaraStaticContent({ perGram22k, perGram24k }: VadodaraStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Vadodara</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Vadodara</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Vadodara (Baroda), the cultural capital of Gujarat, has a rich gold market influenced by its royal 
-            heritage and prosperous business community. Gold rates follow the India Bullion and Jewellers 
-            Association (IBJA) reference prices, international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Vadodara is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Vadodara (Baroda) is Gujarat&apos;s cultural capital with a rich gold market influenced by its 
+            royal heritage. Mandvi Gate and Raopura are the main jewellery hubs. Prices are updated from 
+            IBJA multiple times daily.
           </p>
           <p>
-            Mandvi Gate and Raopura house traditional jewellers. The Gaekwad royal legacy has fostered appreciation 
-            for fine jewellery, with traditional Gujarati designs being particularly popular.
+            The Gaekwad royal legacy has fostered appreciation for fine jewellery, with traditional Gujarati 
+            designs being particularly popular.
           </p>
         </div>
       </section>

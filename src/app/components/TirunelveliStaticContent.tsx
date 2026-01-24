@@ -1,21 +1,26 @@
 /**
  * Tirunelveli-specific static content for SEO
  */
-export default function TirunelveliStaticContent() {
+
+interface TirunelveliStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function TirunelveliStaticContent({ perGram22k, perGram24k }: TirunelveliStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Tirunelveli</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Tirunelveli</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Tirunelveli, a historic city in southern Tamil Nadu, has a traditional gold market that serves 
-            the Nellai region. The city&apos;s gold rates follow the India Bullion and Jewellers Association 
-            (IBJA) reference prices, international spot rates, and the US dollar index.
+            Today&apos;s gold rate in Tirunelveli is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Tirunelveli is a historic city in southern Tamil Nadu serving the Nellai region. South Car Street 
+            and Palayamkottai are the main jewellery hubs. Prices are updated from IBJA multiple times daily.
           </p>
           <p>
-            South Car Street and Palayamkottai are Tirunelveli&apos;s main jewellery hubs, offering authentic 
-            Tamil temple jewellery at competitive prices. The city&apos;s proximity to Nagercoil and Kanyakumari 
-            makes it a regional gold trading center.
+            The city offers authentic Tamil temple jewellery at competitive prices. Its proximity to 
+            Nagercoil and Kanyakumari makes it a regional gold trading center.
           </p>
         </div>
       </section>

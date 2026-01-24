@@ -2,18 +2,25 @@
  * Mumbai-specific static content for SEO
  * Comprehensive coverage of gold rates, buying/selling, investment, taxation, and local market insights.
  */
-export default function MumbaiStaticContent() {
+
+interface MumbaiStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function MumbaiStaticContent({ perGram22k, perGram24k }: MumbaiStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       {/* Introduction to Mumbai Gold Market */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Mumbai</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Mumbai</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Mumbai is India&apos;s financial capital and the primary gateway for gold imports, making it the benchmark 
-            city for national gold prices. The India Bullion and Jewellers Association (IBJA), headquartered in 
-            Mumbai, publishes daily reference rates that jewellers across India use as their baseline. Zaveri Bazaar 
-            in South Mumbai has been the historic heart of India&apos;s bullion trade for over 150 years.
+            Today&apos;s gold rate in Mumbai is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Mumbai gold prices serve as the benchmark for all of India since IBJA is headquartered here and 
+            Mumbai is the primary gold import gateway. Zaveri Bazaar rates are typically ₹20-50 lower than 
+            South Indian cities due to proximity to ports and wholesale trading volumes. Prices update 
+            multiple times daily from IBJA.
           </p>
           <p>
             Gold prices in Mumbai are determined by international spot prices, the US dollar index, import duties, 

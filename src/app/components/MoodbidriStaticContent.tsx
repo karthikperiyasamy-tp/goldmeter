@@ -1,20 +1,26 @@
 /**
  * Moodbidri-specific static content for SEO
  */
-export default function MoodbidriStaticContent() {
+
+interface MoodbidriStaticContentProps {
+  perGram22k: number;
+  perGram24k: number;
+}
+
+export default function MoodbidriStaticContent({ perGram22k, perGram24k }: MoodbidriStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Understanding Today&apos;s Gold Rate in Moodbidri</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Moodbidri</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Moodbidri, known as &quot;Jain Kashi&quot; for its 18 historic Jain temples including the famous 
-            Thousand Pillars Basadi, has a growing gold market. Gold rates follow the India Bullion and 
-            Jewellers Association (IBJA) reference prices and Karnataka Bullion Association pricing.
+            Today&apos;s gold rate in Moodbidri is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Moodbidri, known as &quot;Jain Kashi&quot; for its 18 historic Jain temples, has a growing gold 
+            market. Located 35 km from Mangalore, prices closely follow IBJA and Karnataka Bullion Association rates.
           </p>
           <p>
-            Located 35 km from Mangalore, Moodbidri&apos;s gold prices closely follow the coastal city&apos;s 
-            rates. The town serves Jain pilgrims and local residents with traditional South Canara designs.
+            The town serves Jain pilgrims and local residents with traditional South Canara designs. 
+            Gold prices are updated multiple times daily.
           </p>
         </div>
       </section>
