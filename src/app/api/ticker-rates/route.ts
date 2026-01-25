@@ -37,6 +37,11 @@ export async function GET() {
         silver1kgChange,
         updated: dbData.india.date,
       },
+    }, {
+      headers: {
+        // Cache for 5 minutes at edge, serve stale for 10 more minutes while revalidating
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+      },
     });
   } catch (error) {
     console.error("Ticker rates error:", error);

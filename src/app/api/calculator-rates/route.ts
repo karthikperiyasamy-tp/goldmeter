@@ -1,19 +1,19 @@
 import { NextResponse } from 'next/server';
 import { getLatestGoldRates } from '@/lib/goldRatesDB';
 
+// Cache for 5 minutes at edge and in browser
+export const revalidate = 300;
+
 /**
  * API endpoint to fetch all city rates for the calculator
  * Returns simplified data for dropdown usage
  */
 export async function GET() {
   try {
-    console.log('📊 [Calculator-Rates] Fetching rates...');
-    
     // Try database first
     const dbData = await getLatestGoldRates();
     
     if (dbData.india && Object.keys(dbData.cities).length > 0) {
-      console.log(`✅ [Calculator-Rates] Found ${Object.keys(dbData.cities).length} cities in DB`);
       
       // Format data for calculator
       const rates = Object.entries(dbData.cities).map(([name, rates]) => ({
@@ -33,11 +33,14 @@ export async function GET() {
         success: true,
         rates,
         source: 'database',
+      }, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        },
       });
     }
     
     // Fallback to default rates if DB is empty
-    console.log('⚠️  [Calculator-Rates] No DB data, using fallback rates');
     return NextResponse.json({
       success: true,
       rates: [
@@ -54,6 +57,10 @@ export async function GET() {
         { name: "Vijayawada", gold22k: 59620, gold24k: 64820 },
       ],
       source: 'fallback',
+    }, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+      },
     });
     
   } catch (error) {

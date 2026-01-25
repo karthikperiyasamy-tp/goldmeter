@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getGroupedNews } from '@/lib/newsDB';
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// Cache news for 10 minutes - news doesn't change that frequently
+export const revalidate = 600;
 
 // GET /api/news - Get news articles grouped by date
 export async function GET(request: Request) {
@@ -20,6 +20,11 @@ export async function GET(request: Request) {
       hasMore,
       limit,
       offset,
+    }, {
+      headers: {
+        // Cache for 10 minutes at edge, serve stale for 20 more minutes while revalidating
+        'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1200',
+      },
     });
   } catch (error) {
     console.error('❌ Error fetching news:', error);
