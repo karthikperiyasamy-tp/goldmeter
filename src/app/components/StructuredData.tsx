@@ -110,22 +110,38 @@ export default function StructuredData({
       "headline": headline,
       "description": description,
       "url": url,
-      "mainEntityOfPage": url,
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": url
+      },
       "datePublished": published,
       "dateModified": modified,
-      "image": imageUrl ? [imageUrl] : undefined,
+      "image": imageUrl ? [imageUrl] : [defaultImage],
       "author": {
         "@type": "Organization",
         "name": authorName || "GoldMeter",
+        "url": "https://goldmeter.in"
       },
       "publisher": {
         "@type": "Organization",
         "name": "GoldMeter",
+        "url": "https://goldmeter.in",
         "logo": {
           "@type": "ImageObject",
           "url": "https://goldmeter.in/logo.png",
+          "width": 250,
+          "height": 60
         },
       },
+      // Enhanced for AIO: Article section and keywords
+      "articleSection": "Gold Market News",
+      "keywords": ["gold rate", "gold price", "bullion", "precious metals", "India gold"],
+      "inLanguage": "en-IN",
+      "isAccessibleForFree": true,
+      "about": {
+        "@type": "Thing",
+        "name": "Gold Price in India"
+      }
     };
   }
 

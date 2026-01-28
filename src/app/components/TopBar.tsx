@@ -102,7 +102,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
           <Image
             src="/logo.png"
             alt="GoldMeter Logo"
-            title="GoldMeter - India's Gold Price Tracker"
+            title="GoldMeter - India's Gold Price Today"
             width={56}
             height={56}
             className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain shrink-0"
@@ -110,7 +110,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
           />
           <div className="min-w-0 text-left" aria-hidden="true">
             <div className="text-sm sm:text-base md:text-lg font-semibold text-charcoal truncate">GoldMeter</div>
-            <p className="text-[9px] sm:text-[10px] md:text-xs text-slate-500 truncate">Gold Price Tracker</p>
+            <p className="text-[9px] sm:text-[10px] md:text-xs text-slate-500 truncate">Gold Price Today</p>
           </div>
         </button>
 
@@ -194,10 +194,10 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
             
             {/* Dropdown Menu */}
             {moreMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 min-w-[160px] rounded-xl border border-slate-200 bg-white shadow-lg z-50">
+              <div className="absolute right-0 top-full mt-2 min-w-[180px] rounded-xl border border-slate-200 bg-white shadow-lg z-50 divide-y divide-slate-100">
                 <Link
                   href="/jewellers"
-                  className={`block px-4 py-3 text-sm font-medium rounded-xl transition-colors ${
+                  className={`block px-4 py-3 text-sm font-medium rounded-t-xl transition-colors ${
                     pathname.startsWith("/jewellers")
                       ? "text-amber-600 bg-amber-50"
                       : "text-slate-700 hover:bg-amber-50 hover:text-amber-600"
@@ -208,7 +208,22 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                     router.push("/jewellers");
                   }}
                 >
-                  Jewellers
+                  Jewellers Directory
+                </Link>
+                <Link
+                  href="/gold-comparison"
+                  className={`block px-4 py-3 text-sm font-medium rounded-b-xl transition-colors ${
+                    pathname === "/gold-comparison"
+                      ? "text-amber-600 bg-amber-50"
+                      : "text-slate-700 hover:bg-amber-50 hover:text-amber-600"
+                  }`}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    setMoreMenuOpen(false);
+                    router.push("/gold-comparison");
+                  }}
+                >
+                  Compare Gold Rates
                 </Link>
               </div>
             )}
@@ -255,6 +270,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                 { label: "Calculator", href: "/calculator" },
                 { label: "News", href: "/news" },
                 { label: "Jewellers", href: "/jewellers" },
+                { label: "Compare Gold Rates", href: "/gold-comparison" },
               ].map((item) => {
                 const isActive = item.label === "Gold Rate Today" 
                   ? isGoldRatePage 
@@ -262,7 +278,9 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                     ? isSilverRoute
                     : item.label === "Jewellers"
                       ? pathname.startsWith("/jewellers")
-                      : pathname === item.href;
+                      : item.label === "Compare Gold Rates"
+                        ? pathname === "/gold-comparison"
+                        : pathname === item.href;
                 
                 return (
                   <Link

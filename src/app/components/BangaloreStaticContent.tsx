@@ -11,12 +11,38 @@ interface BangaloreStaticContentProps {
 export default function BangaloreStaticContent({ perGram22k, perGram24k }: BangaloreStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
+      {/* Quick Answer Section for Search Query */}
+      <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
+        <h2 className="text-xl font-bold text-amber-900">Gold Rate Today Bangalore - Quick Answer</h2>
+        <div className="mt-3 text-sm text-slate-700 leading-relaxed">
+          <p className="text-base font-semibold text-amber-800">
+            Looking for gold rate today Bangalore? Here&apos;s the current price for Commercial Street and Jayanagar:
+          </p>
+          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="bg-white p-4 rounded-xl border border-amber-200">
+              <p className="text-xs text-slate-600 uppercase tracking-wide">22K Gold (916) - Most Popular</p>
+              <p className="text-2xl font-bold text-amber-800 mt-1">₹{perGram22k.toLocaleString('en-IN')}/gram</p>
+              <p className="text-xs text-slate-500 mt-1">Per 10g: ₹{(perGram22k * 10).toLocaleString('en-IN')}</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-amber-200">
+              <p className="text-xs text-slate-600 uppercase tracking-wide">24K Gold (999) - Investment Grade</p>
+              <p className="text-2xl font-bold text-amber-800 mt-1">₹{perGram24k.toLocaleString('en-IN')}/gram</p>
+              <p className="text-xs text-slate-500 mt-1">Per 10g: ₹{(perGram24k * 10).toLocaleString('en-IN')}</p>
+            </div>
+          </div>
+          <p className="mt-3 text-xs text-slate-600">
+            <strong>Note:</strong> Gold rate today Bangalore is updated multiple times daily from Karnataka bullion market and IBJA. 
+            Making charges (₹180-450/g) and 3% GST are additional.
+          </p>
+        </div>
+      </section>
+
       {/* Introduction to Bangalore Gold Market */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Bangalore</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today Bangalore</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Today&apos;s gold rate in Bangalore is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Gold rate today Bangalore is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
             Bangalore gold prices are similar to Chennai, typically ₹20-50 higher than Mumbai due to South 
             India&apos;s strong gold buying tradition. Commercial Street and Jayanagar are the main jewellery 
             hubs. Prices are updated from IBJA multiple times daily based on international spot prices and 

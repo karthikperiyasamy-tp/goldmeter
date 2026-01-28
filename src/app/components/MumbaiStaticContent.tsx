@@ -11,12 +11,38 @@ interface MumbaiStaticContentProps {
 export default function MumbaiStaticContent({ perGram22k, perGram24k }: MumbaiStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
+      {/* Quick Answer Section for Search Query */}
+      <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
+        <h2 className="text-xl font-bold text-amber-900">Gold Rate Today Mumbai - Quick Answer</h2>
+        <div className="mt-3 text-sm text-slate-700 leading-relaxed">
+          <p className="text-base font-semibold text-amber-800">
+            Looking for gold rate today Mumbai? Here&apos;s the current IBJA benchmark price for Zaveri Bazaar:
+          </p>
+          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="bg-white p-4 rounded-xl border border-amber-200">
+              <p className="text-xs text-slate-600 uppercase tracking-wide">22K Gold (916) - Most Popular</p>
+              <p className="text-2xl font-bold text-amber-800 mt-1">₹{perGram22k.toLocaleString('en-IN')}/gram</p>
+              <p className="text-xs text-slate-500 mt-1">Per 10g: ₹{(perGram22k * 10).toLocaleString('en-IN')}</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-amber-200">
+              <p className="text-xs text-slate-600 uppercase tracking-wide">24K Gold (999) - Investment Grade</p>
+              <p className="text-2xl font-bold text-amber-800 mt-1">₹{perGram24k.toLocaleString('en-IN')}/gram</p>
+              <p className="text-xs text-slate-500 mt-1">Per 10g: ₹{(perGram24k * 10).toLocaleString('en-IN')}</p>
+            </div>
+          </div>
+          <p className="mt-3 text-xs text-slate-600">
+            <strong>Note:</strong> Gold rate today Mumbai sets India&apos;s national benchmark. Updated multiple times daily from IBJA and Zaveri Bazaar. 
+            Making charges (₹200-500/g) and 3% GST are additional.
+          </p>
+        </div>
+      </section>
+
       {/* Introduction to Mumbai Gold Market */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Mumbai</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today Mumbai</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Today&apos;s gold rate in Mumbai is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Gold rate today Mumbai is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
             Mumbai gold prices serve as the benchmark for all of India since IBJA is headquartered here and 
             Mumbai is the primary gold import gateway. Zaveri Bazaar rates are typically ₹20-50 lower than 
             South Indian cities due to proximity to ports and wholesale trading volumes. Prices update 

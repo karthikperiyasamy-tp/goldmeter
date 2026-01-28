@@ -56,6 +56,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'City Not Found' };
   }
 
+  // Fetch actual rates for metadata
+  const headersList = await headers();
+  const host = headersList.get("host") ?? "localhost:3000";
+  const rates = await fetchCityRates(config.name, host);
+  
+  // Calculate per-gram prices for metadata
+  const perGram24k = Math.round((rates.gold24k || 0) / 10);
+  const perGram22k = Math.round((rates.gold22k || 0) / 10);
+
   // Short date for title (50-60 chars recommended)
   const shortDate = new Date().toLocaleDateString('en-IN', {
     day: 'numeric',
@@ -72,16 +81,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   return {
     // Title optimized for "gold rate today [city]" searches
-    // Putting search phrase "Gold Rate Today" at front for better keyword matching
-    title: `Gold Rate Today in ${config.name} (${shortDate}) - 22K & 24K Price | GoldMeter`,
-    // Description: Starts with exact search phrase for better CTR
-    description: `Gold rate today ${config.name.toLowerCase()}: ₹{price}/gram for 22K, ₹{price24k}/gram for 24K. Live prices updated ${shortDate}. Check making charges, charts & buy tips.`.replace('{date}', shortDate),
+    // Putting exact search phrase "Gold Rate Today" first for better keyword matching
+    title: `Gold Rate Today ${config.name} (${shortDate}) - 22K & 24K Price | GoldMeter`,
+    // Description: Starts with exact search phrase for better CTR with ACTUAL PRICES
+    description: `Gold rate today ${config.name.toLowerCase()}: ₹${perGram22k.toLocaleString('en-IN')}/gram for 22K, ₹${perGram24k.toLocaleString('en-IN')}/gram for 24K. Live prices updated ${shortDate}. Check making charges, charts & buy tips.`,
     alternates: {
       canonical: `https://goldmeter.in/gold-rate/${config.slug}`,
     },
     openGraph: {
-      title: `Gold Rate Today ${config.name} - 22K & 24K Price (${shortDate})`,
-      description: `Gold rate today in ${config.name}: 22K & 24K prices per gram. Updated ${shortDate} from IBJA. Check live rates, charts & jeweller tips.`,
+      title: `Gold Rate Today ${config.name} - 22K ₹${perGram22k.toLocaleString('en-IN')}/g, 24K ₹${perGram24k.toLocaleString('en-IN')}/g (${shortDate})`,
+      description: `Gold rate today in ${config.name}: ₹${perGram22k.toLocaleString('en-IN')}/g for 22K, ₹${perGram24k.toLocaleString('en-IN')}/g for 24K. Updated ${shortDate} from IBJA. Check live rates, charts & jeweller tips.`,
       type: 'website',
       url: `https://goldmeter.in/gold-rate/${config.slug}`,
       siteName: 'GoldMeter',
@@ -142,12 +151,12 @@ export default async function GoldRateCityPage({ params }: Props) {
         <article className="mx-auto max-w-6xl px-4 pt-6">
           <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
             <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl" itemProp="name">
-              Gold Rate Today in {config.name} ({todayFormatted}) – 22K &amp; 24K
+              Gold Rate Today {config.name} ({todayFormatted}) – 22K &amp; 24K
             </h1>
             
             {/* Primary AIO answer - structured like competitors */}
             <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true" itemProp="description">
-              As of <time dateTime={rates.dateISO}>{todayFormatted}</time>, gold rates in {config.name} are <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> (99.9% purity), <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> (91.6% purity), and <strong>₹{perGram18k.toLocaleString('en-IN')} per gram for 18K</strong> (75.0% purity). Silver rate is ₹{silverPerGram.toLocaleString('en-IN')} per gram. For today&apos;s full gold rates, visit <strong>GoldMeter.in</strong>.
+              Today gold rates in {config.name} are <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> (99.9% purity), <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> (91.6% purity), and <strong>₹{perGram18k.toLocaleString('en-IN')} per gram for 18K</strong> (75.0% purity). Silver rate is ₹{silverPerGram.toLocaleString('en-IN')} per gram. Prices updated <time dateTime={rates.dateISO}>{todayFormatted}</time>. For today&apos;s full gold rates, visit <strong>GoldMeter.in</strong>.
             </p>
             
             {/* Structured price table for AI extraction */}
@@ -218,8 +227,8 @@ export default async function GoldRateCityPage({ params }: Props) {
 
             {/* SEO: Expanded intro paragraph (150-200 words) - Voice Search Optimized */}
             <div className="mt-4 pt-4 border-t border-amber-200 text-sm text-slate-600 leading-relaxed" data-speakable-summary="true">
-              <p>{config.introParagraph1}</p>
-              <p className="mt-2">{config.introParagraph2}</p>
+              <p>{config.introParagraph1.replace(/{perGram22k}/g, perGram22k.toLocaleString('en-IN')).replace(/{perGram24k}/g, perGram24k.toLocaleString('en-IN')).replace(/{todayDate}/g, todayFormatted)}</p>
+              <p className="mt-2">{config.introParagraph2.replace(/{perGram22k}/g, perGram22k.toLocaleString('en-IN')).replace(/{perGram24k}/g, perGram24k.toLocaleString('en-IN'))}</p>
               <div className="mt-3 flex flex-wrap gap-3">
                 <a href="/calculator" className="text-amber-600 hover:text-amber-700 font-medium">Calculate jewellery cost →</a>
                 <a href="/wastage-calculator" className="text-amber-600 hover:text-amber-700 font-medium">Making charges calculator →</a>

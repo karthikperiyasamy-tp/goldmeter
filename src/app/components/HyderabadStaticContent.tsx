@@ -11,12 +11,38 @@ interface HyderabadStaticContentProps {
 export default function HyderabadStaticContent({ perGram22k, perGram24k }: HyderabadStaticContentProps) {
   return (
     <div className="mt-8 space-y-6">
+      {/* Quick Answer Section for Search Query */}
+      <section className="rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-lg">
+        <h2 className="text-xl font-bold text-amber-900">Gold Rate Today Hyderabad - Quick Answer</h2>
+        <div className="mt-3 text-sm text-slate-700 leading-relaxed">
+          <p className="text-base font-semibold text-amber-800">
+            Looking for gold rate today Hyderabad? Here&apos;s the current price for Begum Bazaar and Abids:
+          </p>
+          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="bg-white p-4 rounded-xl border border-amber-200">
+              <p className="text-xs text-slate-600 uppercase tracking-wide">22K Gold (916) - Most Popular</p>
+              <p className="text-2xl font-bold text-amber-800 mt-1">₹{perGram22k.toLocaleString('en-IN')}/gram</p>
+              <p className="text-xs text-slate-500 mt-1">Per 10g: ₹{(perGram22k * 10).toLocaleString('en-IN')}</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-amber-200">
+              <p className="text-xs text-slate-600 uppercase tracking-wide">24K Gold (999) - Investment Grade</p>
+              <p className="text-2xl font-bold text-amber-800 mt-1">₹{perGram24k.toLocaleString('en-IN')}/gram</p>
+              <p className="text-xs text-slate-500 mt-1">Per 10g: ₹{(perGram24k * 10).toLocaleString('en-IN')}</p>
+            </div>
+          </div>
+          <p className="mt-3 text-xs text-slate-600">
+            <strong>Note:</strong> Gold rate today Hyderabad is updated multiple times daily from Telangana bullion market and IBJA. 
+            Making charges (₹180-500/g) and 3% GST are additional.
+          </p>
+        </div>
+      </section>
+
       {/* Introduction to Hyderabad Gold Market */}
       <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today in Hyderabad</h2>
+        <h2 className="text-xl font-bold text-charcoal">Gold Rate Today Hyderabad</h2>
         <div className="mt-4 text-sm text-slate-600 leading-relaxed space-y-4">
           <p>
-            Today&apos;s gold rate in Hyderabad is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
+            Gold rate today Hyderabad is <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> and <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> gold. 
             Hyderabad gold prices are among the most competitive in South India due to lower state taxes and 
             strong local competition—typically ₹20-40 lower than Chennai or Bangalore. Begum Bazaar and Abids 
             are the main jewellery markets. Prices are updated from IBJA multiple times daily.

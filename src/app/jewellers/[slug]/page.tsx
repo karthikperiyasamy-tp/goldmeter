@@ -154,4 +154,8 @@ export default async function JewellerPage({ params }: Props) {
 }
 
 // Static generation with revalidation
-export const revalidate = 86400; // Revalidate daily
+export const revalidate = 86400; // Revalidate daily (24 hours)
+
+// Force static generation at build time
+export const dynamic = 'force-static';
+export const dynamicParams = true;

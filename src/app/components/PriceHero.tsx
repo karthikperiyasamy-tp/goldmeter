@@ -101,33 +101,55 @@ export default function PriceHero({
             Per 10 grams • Updated daily by GoldMeter
           </p>
           <div className="mt-6 flex flex-wrap gap-4">
-            <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
+            {/* Enhanced with data attributes for AI/AIO extraction */}
+            <div className="rounded-2xl bg-white px-6 py-4 shadow-soft" 
+                 data-metal="gold" 
+                 data-purity="22k" 
+                 data-price={gold22k} 
+                 data-unit="per-10g" 
+                 data-currency="INR"
+                 data-price-change={priceChange.gold22k}
+                 data-city={city}>
               <p className="text-xs uppercase tracking-wide text-slate-500">
                 22K Gold
               </p>
-              <p className="text-3xl font-bold text-charcoal">
+              <p className="text-3xl font-bold text-charcoal" data-speakable-price="22k">
                 ₹{formatter.format(gold22k)}
               </p>
               <p className={`text-xs ${priceChange.gold22k >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
                 {priceChange.gold22k >= 0 ? '+' : ''}₹{priceChange.gold22k} vs yesterday
               </p>
             </div>
-            <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
+            <div className="rounded-2xl bg-white px-6 py-4 shadow-soft"
+                 data-metal="gold" 
+                 data-purity="24k" 
+                 data-price={gold24k} 
+                 data-unit="per-10g" 
+                 data-currency="INR"
+                 data-price-change={priceChange.gold24k}
+                 data-city={city}>
               <p className="text-xs uppercase tracking-wide text-slate-500">
                 24K Gold
               </p>
-              <p className="text-3xl font-bold text-charcoal">
+              <p className="text-3xl font-bold text-charcoal" data-speakable-price="24k">
                 ₹{formatter.format(gold24k)}
               </p>
               <p className={`text-xs ${priceChange.gold24k >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
                 {priceChange.gold24k >= 0 ? '+' : ''}₹{priceChange.gold24k} vs yesterday
               </p>
             </div>
-            <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
+            <div className="rounded-2xl bg-white px-6 py-4 shadow-soft"
+                 data-metal="gold" 
+                 data-purity="18k" 
+                 data-price={finalGold18k} 
+                 data-unit="per-10g" 
+                 data-currency="INR"
+                 data-price-change={priceChange.gold18k || 0}
+                 data-city={city}>
               <p className="text-xs uppercase tracking-wide text-slate-500">
                 18K Gold
               </p>
-              <p className="text-3xl font-bold text-charcoal">
+              <p className="text-3xl font-bold text-charcoal" data-speakable-price="18k">
                 ₹{formatter.format(finalGold18k)}
               </p>
               <p className={`text-xs ${(priceChange.gold18k || 0) >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
@@ -135,11 +157,18 @@ export default function PriceHero({
               </p>
             </div>
             {!!silver1kg && (
-              <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
+              <div className="rounded-2xl bg-white px-6 py-4 shadow-soft"
+                   data-metal="silver" 
+                   data-purity="999" 
+                   data-price={silver1kg} 
+                   data-unit="per-kg" 
+                   data-currency="INR"
+                   data-price-change={priceChange.silver1kg || 0}
+                   data-city={city}>
                 <p className="text-xs uppercase tracking-wide text-slate-500">
                   Silver (1kg)
                 </p>
-                <p className="text-3xl font-bold text-charcoal">
+                <p className="text-3xl font-bold text-charcoal" data-speakable-price="silver">
                   ₹{formatter.format(silver1kg)}
                 </p>
                 <p className={`text-xs ${(priceChange.silver1kg || 0) >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>

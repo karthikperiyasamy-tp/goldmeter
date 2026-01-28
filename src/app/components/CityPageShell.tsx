@@ -355,7 +355,7 @@ export default function CityPageShell({
                 <span className="normal-case text-slate-500">Updated {updated}</span>
               </div>
               <h2 className="mt-3 text-3xl font-extrabold text-amber-700 md:text-4xl">
-                {city} Gold Rate — Per 10 Grams
+                Gold Rate Today {city} — Per 10 Grams
               </h2>
               <p className="mt-2 text-sm text-slate-600">
                 Live prices updated daily

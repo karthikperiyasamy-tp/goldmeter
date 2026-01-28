@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState, useEffect } from "react";
 import CalculatorSwitcher from "../components/CalculatorSwitcher";
+import Script from "next/script";
 
 type CityRate = {
   name: string;
@@ -68,8 +69,93 @@ export default function CalculatorPage() {
     };
   }, [grams, makingCharges, pricePerGram]);
 
+  // HowTo Schema for AIO - helps AI understand the calculator process
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Calculate Gold Jewellery Cost with Making Charges and GST",
+    "description": "Step-by-step guide to calculate the exact cost of gold jewellery including gold value, making charges, and GST in India",
+    "image": "https://goldmeter.in/og-image.png",
+    "totalTime": "PT2M",
+    "estimatedCost": {
+      "@type": "MonetaryAmount",
+      "currency": "INR",
+      "value": "0"
+    },
+    "tool": [
+      {
+        "@type": "HowToTool",
+        "name": "GoldMeter Gold Calculator"
+      }
+    ],
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Select Your City",
+        "text": "Choose your city from the dropdown to get accurate local gold rates. Different cities have different gold prices based on transportation costs and local taxes.",
+        "position": 1,
+        "itemListElement": [{
+          "@type": "HowToDirection",
+          "text": "Select your city from the dropdown menu to see current gold rates"
+        }]
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Enter Weight in Grams",
+        "text": "Enter the weight of gold jewellery you want to purchase in grams. Common weights are 8 grams (1 sovereign), 10 grams, or the weight mentioned by your jeweller.",
+        "position": 2,
+        "itemListElement": [{
+          "@type": "HowToDirection",
+          "text": "Type the jewellery weight in the 'Weight (grams)' field"
+        }]
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Choose Gold Purity",
+        "text": "Select gold purity: 24K (99.9% pure, investment grade), 22K (91.6% pure, most common for jewellery), or 18K (75% pure, for diamond-studded designs).",
+        "position": 3,
+        "itemListElement": [{
+          "@type": "HowToDirection",
+          "text": "Choose between 24K or 22K purity from the dropdown"
+        }]
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Enter Making Charges Per Gram",
+        "text": "Making charges vary from ₹150-600 per gram depending on design complexity. Ask your jeweller for their making charges. Simple designs have lower charges (₹150-250/g), while intricate designs cost more (₹400-600/g).",
+        "position": 4,
+        "itemListElement": [{
+          "@type": "HowToDirection",
+          "text": "Enter the making charges per gram as quoted by your jeweller"
+        }]
+      },
+      {
+        "@type": "HowToStep",
+        "name": "View Cost Breakdown",
+        "text": "The calculator automatically shows: Gold value (weight × current rate), Making charges (weight × making charge per gram), GST at 3% (on gold value + making charges), and Total Payable Amount.",
+        "position": 5,
+        "itemListElement": [{
+          "@type": "HowToDirection",
+          "text": "Review the automatic calculation showing gold value, making charges, GST, and total cost"
+        }]
+      }
+    ],
+    "about": {
+      "@type": "Thing",
+      "name": "Gold Jewellery Price Calculation in India"
+    }
+  };
+
   return (
-    <main className="min-h-screen bg-amber-50 py-10">
+    <>
+      {/* HowTo Structured Data for AI/AIO */}
+      <Script
+        id="calculator-howto-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+      />
+      
+      <main className="min-h-screen bg-amber-50 py-10">
       <div className="mx-auto max-w-6xl px-4">
         <div className="grid gap-6 lg:grid-cols-[1fr,320px]">
           <div className="rounded-3xl border border-amber-100 bg-white p-6 shadow-soft">
@@ -237,6 +323,7 @@ export default function CalculatorPage() {
       </section>
       </div>
     </main>
+    </>
   );
 }
 

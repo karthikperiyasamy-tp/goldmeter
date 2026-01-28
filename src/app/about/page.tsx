@@ -2,13 +2,13 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "About GoldMeter - India's Trusted Gold Price Tracker",
+  title: "About GoldMeter - India's Trusted Gold Price Today",
   description: "Learn about GoldMeter, India's reliable source for daily gold and silver prices across major cities. Our mission, data sources, and commitment to accuracy.",
   alternates: {
     canonical: "https://goldmeter.in/about",
   },
   openGraph: {
-    title: "About GoldMeter - India's Trusted Gold Price Tracker",
+    title: "About GoldMeter - India's Trusted Gold Price Today",
     description: "Learn about GoldMeter, India's reliable source for daily gold and silver prices across major cities. Our mission, data sources, and commitment to accuracy.",
     type: "website",
     url: "https://goldmeter.in/about",

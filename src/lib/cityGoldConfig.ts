@@ -44,10 +44,10 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   chennai: {
     name: 'Chennai',
     slug: 'chennai',
-    metaDescription: 'Gold rate today Chennai ({date}): 22K & 24K per gram live prices. T Nagar jewellery rates, making charges ₹150-450/g. IBJA verified.',
-    intro: 'Gold rate today in Chennai per gram: 22K & 24K live prices with T Nagar and Anna Nagar trends, charts, and FAQs.',
-    introParagraph1: `The gold rate in Chennai is updated daily based on international market rates, USD/INR currency fluctuations, and local bullion market demand. Chennai's gold prices may vary slightly from national averages due to transport costs, regional demand during festivals like Pongal and weddings, and jeweller pricing policies. These rates reflect the spot metal price and do not include making charges (typically ₹150-450/gram in T Nagar) or 3% GST, which vary by retailer.`,
-    introParagraph2: `Chennai is one of India's largest gold markets, with major jewellery hubs in T Nagar (Usman Road), Pondy Bazaar, and Anna Nagar. The city follows Tamil Nadu Bullion Merchants Association rates, which are among the most competitive in South India. For accurate buying decisions, compare rates across multiple jewellers and factor in making charges for your chosen design.`,
+    metaDescription: 'Gold rate today Chennai: ₹{price22k}/g for 22K, ₹{price24k}/g for 24K. Today gold rate in Chennai updated {date}. T Nagar rates. IBJA verified.',
+    intro: 'Gold rate today Chennai | Today gold rate in Chennai - Get live 22K & 24K per gram prices for T Nagar, Anna Nagar with making charges & charts.',
+    introParagraph1: `Looking for the gold rate today Chennai or today gold rate in Chennai? Current prices are ₹{perGram22k}/gram for 22K and ₹{perGram24k}/gram for 24K gold as of {todayDate}, updated multiple times daily based on international spot rates, USD/INR currency fluctuations, and Tamil Nadu Bullion Merchants Association rates. Chennai is one of India's largest gold markets with T Nagar being South India's premier jewellery hub. These rates reflect pure gold prices and exclude making charges (typically ₹150-450/gram in T Nagar) and 3% GST.`,
+    introParagraph2: `Today gold rate in Chennai at ₹{perGram22k}/gram for 22K and ₹{perGram24k}/gram for 24K is among the most important benchmarks for South India - Tamil Nadu accounts for nearly 40% of India's gold consumption. The gold rate today Chennai updates throughout the day from T Nagar (Usman Road), Pondy Bazaar, and Anna Nagar markets. Chennai offers both traditional Tamil temple jewellery designs and modern gold ornaments at competitive prices. Always verify BIS hallmarking before purchasing.`,
     localInfo: [
       { title: 'Hallmarking centers', description: 'Tamil Nadu Hallmarking Center (T Nagar) and Regional Assay Office (Egmore).' },
       { title: 'Making charges', description: '₹150 – ₹450 per gram for 22K ornaments in T Nagar.' },
@@ -55,8 +55,12 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
     ],
     faqTemplates: [
       {
-        question: 'What is the gold rate today in Chennai?',
-        answerTemplate: `Gold rate today in Chennai is ₹{perGram22k} per gram for 22K and ₹{perGram24k} per gram for 24K gold. Prices are updated daily from Chennai bullion market and IBJA.`,
+        question: 'What is the gold rate today Chennai?',
+        answerTemplate: `Gold rate today Chennai is ₹{perGram22k} per gram for 22K and ₹{perGram24k} per gram for 24K gold. Today gold rate in Chennai is updated multiple times daily from T Nagar bullion market and IBJA rates.`,
+      },
+      {
+        question: 'What is today gold rate in Chennai?',
+        answerTemplate: `Today gold rate in Chennai is ₹{perGram22k}/gram for 22K and ₹{perGram24k}/gram for 24K. The gold rate today Chennai changes throughout the day based on international spot prices and currency movements.`,
       },
       {
         question: 'Why does Chennai gold rate change daily?',
@@ -90,10 +94,10 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   mumbai: {
     name: 'Mumbai',
     slug: 'mumbai',
-    metaDescription: 'Gold rate today Mumbai ({date}): 22K & 24K per gram live prices. Zaveri Bazaar rates, making charges ₹200-500/g. IBJA verified.',
-    intro: 'Gold rate today in Mumbai per gram: 22K & 24K live prices with Zaveri Bazaar and Dadar trends, charts, and FAQs.',
-    introParagraph1: `The gold rate in Mumbai is updated daily based on international market rates, USD/INR currency movements, and Zaveri Bazaar bullion market prices. Mumbai, being India's financial capital and home to MCX (Multi Commodity Exchange), often sets the benchmark for gold prices across India. These rates reflect spot metal prices without making charges (typically ₹200-500/gram in Zaveri Bazaar) or 3% GST.`,
-    introParagraph2: `Zaveri Bazaar in South Mumbai is Asia's oldest and largest bullion market, dating back over 150 years. Other popular jewellery destinations include Dadar, Borivali, and Malad. Mumbai's gold rates are typically ₹20-50 lower than South Indian cities due to proximity to international trade routes and wholesale trading volumes.`,
+    metaDescription: 'Gold rate today Mumbai: ₹{price22k}/g for 22K, ₹{price24k}/g for 24K. Live prices updated {date}. Zaveri Bazaar rates. IBJA verified.',
+    intro: 'Gold rate today Mumbai - Get live 22K & 24K per gram prices for Zaveri Bazaar, Dadar with making charges, historical trends & buying guide.',
+    introParagraph1: `Looking for the gold rate today Mumbai? Current prices are ₹{perGram22k}/gram for 22K and ₹{perGram24k}/gram for 24K gold as of {todayDate}, updated multiple times daily based on international spot rates, USD/INR currency movements, and IBJA (Indian Bullion & Jewellers Association) pricing from Zaveri Bazaar. Mumbai, being India's financial capital and home to MCX (Multi Commodity Exchange), sets the benchmark for gold prices nationwide. These rates reflect spot metal prices and exclude making charges (typically ₹200-500/gram in Zaveri Bazaar) and 3% GST.`,
+    introParagraph2: `Gold rate today Mumbai at ₹{perGram22k}/gram for 22K and ₹{perGram24k}/gram for 24K serves as the national reference - Zaveri Bazaar is Asia's oldest and largest bullion market with over 150 years of trading history. Mumbai's gold rates are typically ₹20-50 lower than South Indian cities due to proximity to international ports and wholesale trading volumes. Other popular jewellery destinations include Dadar, Borivali, and Malad for branded and traditional designs.`,
     localInfo: [
       { title: 'Hallmarking centers', description: 'BIS Regional Office (Andheri) and Zaveri Bazaar Assay Office.' },
       { title: 'Making charges', description: '₹200 – ₹500 per gram for 22K ornaments in Zaveri Bazaar.' },
@@ -101,8 +105,8 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
     ],
     faqTemplates: [
       {
-        question: 'What is the gold rate today in Mumbai?',
-        answerTemplate: `Gold rate today in Mumbai is ₹{perGram22k} per gram for 22K and ₹{perGram24k} per gram for 24K gold. Prices are updated daily from Zaveri Bazaar bullion market and IBJA.`,
+        question: 'What is the gold rate today Mumbai?',
+        answerTemplate: `Gold rate today Mumbai is ₹{perGram22k} per gram for 22K and ₹{perGram24k} per gram for 24K gold. Prices are updated multiple times daily from Zaveri Bazaar bullion market and IBJA rates.`,
       },
       {
         question: 'Why does Mumbai gold rate change daily?',
@@ -136,10 +140,10 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   bangalore: {
     name: 'Bangalore',
     slug: 'bangalore',
-    metaDescription: 'Gold rate today Bangalore ({date}): 22K & 24K per gram live prices. Commercial Street rates, making charges ₹180-450/g. IBJA verified.',
-    intro: 'Gold rate today in Bangalore per gram: 22K & 24K live prices with Jayanagar and Commercial Street trends, charts, and FAQs.',
-    introParagraph1: `The gold rate in Bangalore is updated daily based on international market rates, USD/INR exchange movements, and Karnataka Bullion Merchants Association pricing. Bangalore's gold prices are influenced by strong demand from IT professionals and the city's growing affluent population. These rates reflect spot metal prices and exclude making charges (typically ₹180-450/gram) and 3% GST.`,
-    introParagraph2: `Commercial Street and Jayanagar are Bangalore's premier gold jewellery destinations, offering both traditional South Indian designs and contemporary styles. The city follows Karnataka state gold rates, which are competitive with Chennai and Hyderabad. For investment-grade gold, look for BIS hallmarked products from established jewellers.`,
+    metaDescription: 'Gold rate today Bangalore: ₹{price22k}/g for 22K, ₹{price24k}/g for 24K. Live prices updated {date}. Commercial Street & Jayanagar rates. IBJA verified.',
+    intro: 'Gold rate today Bangalore - Get live 22K & 24K per gram prices for Commercial Street, Jayanagar with making charges, charts & buying tips.',
+    introParagraph1: `Looking for the gold rate today Bangalore? Current prices are ₹{perGram22k}/gram for 22K and ₹{perGram24k}/gram for 24K gold as of {todayDate}, updated multiple times daily based on international spot rates, USD/INR exchange rates, and Karnataka Bullion Merchants Association pricing. Bangalore's gold prices reflect strong demand from IT professionals and the city's affluent population. These rates are for pure gold and exclude making charges (typically ₹180-450/gram in Commercial Street and Jayanagar) and 3% GST.`,
+    introParagraph2: `Gold rate today Bangalore varies across jewellery markets - Commercial Street and Jayanagar offer competitive prices with both traditional Kannada designs and contemporary styles. At ₹{perGram22k}/gram for 22K gold and ₹{perGram24k}/gram for 24K gold, the city's rates are usually similar to Chennai and Hyderabad. Always verify BIS hallmarking and compare making charges before purchasing gold in Bangalore today.`,
     localInfo: [
       { title: 'Hallmarking centers', description: 'BIS Hallmarking Center (Indiranagar) and Regional Assay Office (Bangalore).' },
       { title: 'Making charges', description: '₹180 – ₹450 per gram for 22K ornaments in Commercial Street.' },
@@ -147,8 +151,8 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
     ],
     faqTemplates: [
       {
-        question: 'What is the gold rate today in Bangalore?',
-        answerTemplate: `Gold rate today in Bangalore is ₹{perGram22k} per gram for 22K and ₹{perGram24k} per gram for 24K gold. Prices are updated daily from Karnataka bullion market and IBJA.`,
+        question: 'What is the gold rate today Bangalore?',
+        answerTemplate: `Gold rate today Bangalore is ₹{perGram22k} per gram for 22K and ₹{perGram24k} per gram for 24K gold. These prices are updated multiple times daily from Karnataka bullion market and IBJA rates.`,
       },
       {
         question: 'Why does Bangalore gold rate change daily?',
@@ -228,10 +232,10 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
   hyderabad: {
     name: 'Hyderabad',
     slug: 'hyderabad',
-    metaDescription: 'Gold rate today Hyderabad ({date}): 22K & 24K per gram live prices. Abids jewellery rates, making charges ₹180-500/g. IBJA verified.',
-    intro: 'Gold rate today in Hyderabad per gram: 22K & 24K live prices with Abids and Banjara Hills trends, charts, and FAQs.',
-    introParagraph1: `The gold rate in Hyderabad is updated daily based on international market rates, USD/INR exchange movements, and Telangana Bullion Association pricing. Hyderabad is known for competitive gold rates due to lower state taxes and strong local competition. These prices exclude making charges (₹180-500/gram) and 3% GST.`,
-    introParagraph2: `Hyderabad's gold markets in Abids, Sultan Bazaar, and Begum Bazaar offer traditional Telugu and Hyderabadi designs at competitive prices. The city is famous for uncut diamond (Polki) and traditional temple jewellery. Gold demand peaks during Ugadi, Bonalu, and wedding season (November-February).`,
+    metaDescription: 'Gold rate today Hyderabad: ₹{price22k}/g for 22K, ₹{price24k}/g for 24K. Live prices updated {date}. Begum Bazaar & Abids rates. IBJA verified.',
+    intro: 'Gold rate today Hyderabad - Get live 22K & 24K per gram prices for Begum Bazaar, Abids with making charges, historical charts & buying tips.',
+    introParagraph1: `Looking for the gold rate today Hyderabad? Current prices are ₹{perGram22k}/gram for 22K and ₹{perGram24k}/gram for 24K gold as of {todayDate}, updated multiple times daily based on international spot rates, USD/INR exchange movements, and Telangana Bullion Association pricing. Hyderabad offers competitive gold rates due to lower state taxes and strong local market competition. These prices are for pure gold and exclude making charges (typically ₹180-500/gram in Begum Bazaar and Abids) and 3% GST.`,
+    introParagraph2: `Gold rate today Hyderabad is among the most competitive in South India at ₹{perGram22k}/gram for 22K and ₹{perGram24k}/gram for 24K - typically ₹20-40 lower than Chennai or Bangalore. The city's historic gold markets in Begum Bazaar, Abids, and Sultan Bazaar offer traditional Telugu and Hyderabadi temple jewellery at excellent prices. Gold demand peaks during Ugadi, Bonalu, and the wedding season (November-February).`,
     localInfo: [
       { title: 'Hallmarking centers', description: 'Telangana State Hallmarking Center and Regional Assay Office (Hyderabad).' },
       { title: 'Making charges', description: '₹180 – ₹500 per gram for 22K ornaments in Old City.' },
@@ -239,8 +243,8 @@ export const CITY_GOLD_CONFIGS: Record<string, CityGoldConfig> = {
     ],
     faqTemplates: [
       {
-        question: 'What is the gold rate today in Hyderabad?',
-        answerTemplate: `Gold rate today in Hyderabad is ₹{perGram22k} per gram for 22K and ₹{perGram24k} per gram for 24K gold. Prices are updated daily from Telangana bullion market and IBJA.`,
+        question: 'What is the gold rate today Hyderabad?',
+        answerTemplate: `Gold rate today Hyderabad is ₹{perGram22k} per gram for 22K and ₹{perGram24k} per gram for 24K gold. Prices are updated multiple times daily from Telangana bullion market and IBJA rates.`,
       },
       {
         question: 'Why does Hyderabad gold rate change daily?',
