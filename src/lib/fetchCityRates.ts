@@ -8,6 +8,76 @@ export type PriceChange = {
   silver1kg: number;
 };
 
+/**
+ * Check if a price change is suspicious (likely preliminary data from GoodReturns)
+ * GoodReturns often posts rates that differ by exactly ₹10/10g (₹1/gram) in the morning
+ * before updating to the final rate later.
+ * 
+ * @param change Price change per 10g
+ * @returns true if the change is suspicious and should be treated as 0
+ */
+export function isSuspiciousPriceChange(change: number): boolean {
+  // Ignore if change is exactly ₹10/10g (₹1/gram) - likely preliminary data
+  return Math.abs(change) === 10;
+}
+
+/**
+ * Check if any gold price change is suspicious
+ */
+export function hasSuspiciousPriceChange(priceChange: PriceChange): boolean {
+  return isSuspiciousPriceChange(priceChange.gold22k) || 
+         isSuspiciousPriceChange(priceChange.gold24k) || 
+         isSuspiciousPriceChange(priceChange.gold18k);
+}
+
+/**
+ * Calculate price change, using fallback rates when yesterday's change is suspicious
+ * 
+ * @param todayRates Today's rates
+ * @param yesterdayRates Yesterday's rates (may have suspicious preliminary data)
+ * @param fallbackRates Day-before-yesterday's rates (used when yesterday is suspicious)
+ * @returns Price change from the appropriate comparison date
+ */
+export function calculatePriceChangeWithFallback(
+  todayRates: { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null },
+  yesterdayRates: { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null } | null,
+  fallbackRates: { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null } | null
+): PriceChange {
+  if (!yesterdayRates) {
+    return { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: 0 };
+  }
+
+  // Calculate change vs yesterday
+  const changeVsYesterday: PriceChange = {
+    gold22k: todayRates.gold22k - yesterdayRates.gold22k,
+    gold24k: todayRates.gold24k - yesterdayRates.gold24k,
+    gold18k: todayRates.gold18k - yesterdayRates.gold18k,
+    silver1kg: (todayRates.silver1kg || 0) - (yesterdayRates.silver1kg || 0),
+  };
+
+  // Check if the change is suspicious (exactly ₹10/10g)
+  if (hasSuspiciousPriceChange(changeVsYesterday)) {
+    console.log(`⚠️ [PriceChange] Suspicious ₹10/10g change detected vs yesterday (22K=${changeVsYesterday.gold22k}, 24K=${changeVsYesterday.gold24k}, 18K=${changeVsYesterday.gold18k}).`);
+    
+    // Use day-before-yesterday as fallback
+    if (fallbackRates) {
+      const changeVsFallback: PriceChange = {
+        gold22k: todayRates.gold22k - fallbackRates.gold22k,
+        gold24k: todayRates.gold24k - fallbackRates.gold24k,
+        gold18k: todayRates.gold18k - fallbackRates.gold18k,
+        silver1kg: (todayRates.silver1kg || 0) - (fallbackRates.silver1kg || 0),
+      };
+      console.log(`📈 [PriceChange] Using day-before-yesterday as reference: 22K=${changeVsFallback.gold22k >= 0 ? '+' : ''}₹${changeVsFallback.gold22k}, 24K=${changeVsFallback.gold24k >= 0 ? '+' : ''}₹${changeVsFallback.gold24k}`);
+      return changeVsFallback;
+    } else {
+      console.log(`⚠️ [PriceChange] No day-before-yesterday data available, showing 0 change`);
+      return { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: changeVsYesterday.silver1kg };
+    }
+  }
+
+  return changeVsYesterday;
+}
+
 type RateHistory = {
   date: string;
   gold22k: number;
@@ -81,28 +151,30 @@ export async function fetchCityRates(
       }
       
       // Calculate price change from yesterday (using the same source city)
+      // If yesterday's change is suspicious (₹10/10g), use day-before-yesterday instead
       let priceChange: PriceChange = { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: 0 };
       
       if (dbData.yesterdayCities[dbCityName]) {
-        // Primary: Use yesterday's data from DB
-        priceChange = {
-          gold22k: dbData.cities[dbCityName].gold22k - dbData.yesterdayCities[dbCityName].gold22k,
-          gold24k: dbData.cities[dbCityName].gold24k - dbData.yesterdayCities[dbCityName].gold24k,
-          gold18k: dbData.cities[dbCityName].gold18k - dbData.yesterdayCities[dbCityName].gold18k,
-          silver1kg: (dbData.cities[dbCityName].silver1kg || 0) - (dbData.yesterdayCities[dbCityName].silver1kg || 0),
+        // Primary: Use yesterday's data from DB, with day-before-yesterday as fallback
+        const todayRates = {
+          gold22k: dbData.cities[dbCityName].gold22k,
+          gold24k: dbData.cities[dbCityName].gold24k,
+          gold18k: dbData.cities[dbCityName].gold18k,
+          silver1kg: dbData.cities[dbCityName].silver1kg,
         };
+        const yesterdayRates = dbData.yesterdayCities[dbCityName];
+        const dayBeforeYesterdayRates = dbData.dayBeforeYesterdayCities?.[dbCityName] || null;
+        
+        priceChange = calculatePriceChangeWithFallback(todayRates, yesterdayRates, dayBeforeYesterdayRates);
         console.log(`📈 [FetchCityRates] ${cityName} price change (from DB): 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}, 18K=${priceChange.gold18k >= 0 ? '+' : ''}₹${priceChange.gold18k}, Silver=${priceChange.silver1kg >= 0 ? '+' : ''}₹${priceChange.silver1kg}`);
       } else if (history.length >= 2) {
         // Fallback: Use history array if yesterday's specific city data is missing
         // History is sorted by date ascending, so last entry is today's, second-to-last is yesterday's
-        const yesterdayHistory = history[history.length - 2];
         const todayHistory = history[history.length - 1];
-        priceChange = {
-          gold22k: todayHistory.gold22k - yesterdayHistory.gold22k,
-          gold24k: todayHistory.gold24k - yesterdayHistory.gold24k,
-          gold18k: todayHistory.gold18k - yesterdayHistory.gold18k,
-          silver1kg: (todayHistory.silver1kg || 0) - (yesterdayHistory.silver1kg || 0),
-        };
+        const yesterdayHistory = history[history.length - 2];
+        const dayBeforeYesterdayHistory = history.length >= 3 ? history[history.length - 3] : null;
+        
+        priceChange = calculatePriceChangeWithFallback(todayHistory, yesterdayHistory, dayBeforeYesterdayHistory);
         console.log(`📈 [FetchCityRates] ${cityName} price change (from history fallback): 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}, 18K=${priceChange.gold18k >= 0 ? '+' : ''}₹${priceChange.gold18k}, Silver=${priceChange.silver1kg >= 0 ? '+' : ''}₹${priceChange.silver1kg}`);
       } else {
         console.log(`⚠️ [FetchCityRates] ${cityName}: No yesterday data in DB (yesterdayCities: ${Object.keys(dbData.yesterdayCities).length} cities) or history (${history.length} records), price change = ₹0`);

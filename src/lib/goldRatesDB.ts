@@ -183,38 +183,45 @@ export async function saveGoldRates(
 /**
  * Get latest gold rates for all cities (internal uncached version)
  * Returns dates as strings to work with Next.js cache serialization
- * Also returns yesterday's rates for calculating price changes
+ * Also returns yesterday's and day-before-yesterday's rates for calculating price changes
+ * (day-before-yesterday is used as fallback when yesterday's change is suspicious ₹10/10g)
  */
 async function getLatestGoldRatesUncached(): Promise<{
   india: { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null; date: string } | null;
   cities: Record<string, { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null; date: string }>;
   yesterdayIndia: { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null } | null;
   yesterdayCities: Record<string, { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null }>;
+  dayBeforeYesterdayIndia: { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null } | null;
+  dayBeforeYesterdayCities: Record<string, { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null }>;
 }> {
   try {
     const db = await getDatabase();
     const collection = db.collection<GoldRateDocument>(COLLECTION_NAME);
 
-    // Get the two most recent distinct dates
+    // Get the three most recent distinct dates (today, yesterday, day-before-yesterday)
     const recentDates = await collection
       .aggregate([
         { $group: { _id: '$date' } },
         { $sort: { _id: -1 } },
-        { $limit: 2 }
+        { $limit: 3 }
       ])
       .toArray();
 
     if (recentDates.length === 0) {
       console.log('⚠️  [DB] No data found in database');
-      return { india: null, cities: {}, yesterdayIndia: null, yesterdayCities: {} };
+      return { india: null, cities: {}, yesterdayIndia: null, yesterdayCities: {}, dayBeforeYesterdayIndia: null, dayBeforeYesterdayCities: {} };
     }
 
     const latestDate = recentDates[0]._id;
     const yesterdayDate = recentDates.length > 1 ? recentDates[1]._id : null;
+    const dayBeforeYesterdayDate = recentDates.length > 2 ? recentDates[2]._id : null;
     
     console.log(`📅 [DB] Fetching rates for date: ${latestDate.toISOString().split('T')[0]}`);
     if (yesterdayDate) {
       console.log(`📅 [DB] Yesterday's date: ${yesterdayDate.toISOString().split('T')[0]}`);
+    }
+    if (dayBeforeYesterdayDate) {
+      console.log(`📅 [DB] Day-before-yesterday's date: ${dayBeforeYesterdayDate.toISOString().split('T')[0]}`);
     }
 
     // Get all rates for today
@@ -225,6 +232,11 @@ async function getLatestGoldRatesUncached(): Promise<{
     // Get all rates for yesterday (if available)
     const yesterdayRates = yesterdayDate 
       ? await collection.find({ date: yesterdayDate }).toArray()
+      : [];
+
+    // Get all rates for day-before-yesterday (if available)
+    const dayBeforeYesterdayRates = dayBeforeYesterdayDate 
+      ? await collection.find({ date: dayBeforeYesterdayDate }).toArray()
       : [];
 
     let india = null;
@@ -265,17 +277,39 @@ async function getLatestGoldRatesUncached(): Promise<{
       }
     }
 
+    // Process day-before-yesterday's rates
+    let dayBeforeYesterdayIndia: { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null } | null = null;
+    const dayBeforeYesterdayCities: Record<string, { gold22k: number; gold24k: number; gold18k: number; silver1kg: number | null }> = {};
+
+    for (const rate of dayBeforeYesterdayRates) {
+      const rateData = {
+        gold22k: rate.gold_22k,
+        gold24k: rate.gold_24k,
+        gold18k: rate.gold_18k || Math.round((rate.gold_24k * 18) / 24),
+        silver1kg: rate.silver_1kg || null,
+      };
+
+      if (rate.city === 'India') {
+        dayBeforeYesterdayIndia = rateData;
+      } else {
+        dayBeforeYesterdayCities[rate.city] = rateData;
+      }
+    }
+
     console.log(`✅ [DB] Fetched India rate and ${Object.keys(cities).length} city rates for today`);
     if (yesterdayIndia || Object.keys(yesterdayCities).length > 0) {
       console.log(`✅ [DB] Yesterday's rates: India=${yesterdayIndia ? 'yes' : 'no'}, ${Object.keys(yesterdayCities).length} cities`);
     } else {
       console.log(`⚠️ [DB] No yesterday rates found (need at least 2 distinct dates in DB)`);
     }
+    if (dayBeforeYesterdayIndia || Object.keys(dayBeforeYesterdayCities).length > 0) {
+      console.log(`✅ [DB] Day-before-yesterday's rates: India=${dayBeforeYesterdayIndia ? 'yes' : 'no'}, ${Object.keys(dayBeforeYesterdayCities).length} cities`);
+    }
     
-    return { india, cities, yesterdayIndia, yesterdayCities };
+    return { india, cities, yesterdayIndia, yesterdayCities, dayBeforeYesterdayIndia, dayBeforeYesterdayCities };
   } catch (error) {
     console.error('❌ [DB] Error fetching rates:', error);
-    return { india: null, cities: {}, yesterdayIndia: null, yesterdayCities: {} };
+    return { india: null, cities: {}, yesterdayIndia: null, yesterdayCities: {}, dayBeforeYesterdayIndia: null, dayBeforeYesterdayCities: {} };
   }
 }
 
@@ -393,6 +427,7 @@ export async function createIndexes(): Promise<void> {
 /**
  * Get India gold rates for a specific date (for recap pages)
  * Returns rates and price change from previous day
+ * If previous day's change is suspicious (₹10/10g), uses day-before-yesterday as fallback
  * @param dateString Date string in format "YYYY-MM-DD"
  */
 export async function getGoldRatesForDate(dateString: string): Promise<{
@@ -410,9 +445,12 @@ export async function getGoldRatesForDate(dateString: string): Promise<{
     const targetDate = new Date(dateString);
     targetDate.setHours(0, 0, 0, 0);
 
-    // Get the previous day
+    // Get the previous day and day-before-yesterday
     const previousDate = new Date(targetDate);
     previousDate.setDate(previousDate.getDate() - 1);
+    
+    const dayBeforeYesterdayDate = new Date(targetDate);
+    dayBeforeYesterdayDate.setDate(dayBeforeYesterdayDate.getDate() - 2);
 
     // Fetch rates for target date (India)
     const targetRate = await collection.findOne({
@@ -431,12 +469,39 @@ export async function getGoldRatesForDate(dateString: string): Promise<{
       date: previousDate,
     });
 
-    const priceChange = {
+    // Calculate raw price change vs previous day
+    const rawPriceChange = {
       gold22k: previousRate ? targetRate.gold_22k - previousRate.gold_22k : 0,
       gold24k: previousRate ? targetRate.gold_24k - previousRate.gold_24k : 0,
     };
+    
+    // Check if the change is suspicious (₹10/10g = ₹1/gram)
+    const is22kSuspicious = isSuspiciousDifference(previousRate?.gold_22k || 0, targetRate.gold_22k);
+    const is24kSuspicious = isSuspiciousDifference(previousRate?.gold_24k || 0, targetRate.gold_24k);
+    
+    let priceChange = rawPriceChange;
+    
+    if (is22kSuspicious || is24kSuspicious) {
+      // Fetch day-before-yesterday rates as fallback
+      const dayBeforeYesterdayRate = await collection.findOne({
+        city: 'India',
+        date: dayBeforeYesterdayDate,
+      });
+      
+      if (dayBeforeYesterdayRate) {
+        priceChange = {
+          gold22k: targetRate.gold_22k - dayBeforeYesterdayRate.gold_22k,
+          gold24k: targetRate.gold_24k - dayBeforeYesterdayRate.gold_24k,
+        };
+        console.log(`⚠️ [DB] Suspicious ₹10 change for ${dateString}, using day-before-yesterday as reference`);
+      } else {
+        // No fallback available, show 0
+        priceChange = { gold22k: 0, gold24k: 0 };
+        console.log(`⚠️ [DB] Suspicious ₹10 change for ${dateString}, no fallback data available`);
+      }
+    }
 
-    console.log(`✅ [DB] Fetched India rate for ${dateString}: 22K=₹${targetRate.gold_22k}, 24K=₹${targetRate.gold_24k}`);
+    console.log(`✅ [DB] Fetched India rate for ${dateString}: 22K=₹${targetRate.gold_22k}, 24K=₹${targetRate.gold_24k}, change: 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}`);
 
     return {
       gold22k: targetRate.gold_22k,

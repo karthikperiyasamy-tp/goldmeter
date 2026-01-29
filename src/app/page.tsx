@@ -12,6 +12,7 @@ import { getLatestGoldRates, getHistoricalGoldRates } from "@/lib/goldRatesDB";
 import { getRecentNews } from "@/lib/newsDB";
 import { getInternationalRates } from "@/lib/internationalRates";
 import { getRecentRecaps, formatDateForDisplay } from "@/lib/recapDB";
+import { calculatePriceChangeWithFallback } from "@/lib/fetchCityRates";
 
 // Dynamic metadata for SEO - updates with today's date for freshness signals
 export async function generateMetadata(): Promise<Metadata> {
@@ -237,11 +238,28 @@ export default async function HomePage() {
     };
     
     // Calculate price change from yesterday (per 10g)
+    // If yesterday's change is suspicious (₹10/10g), use day-before-yesterday instead
     if (dbData.yesterdayIndia) {
+      const todayRates = {
+        gold22k: dbData.india.gold22k,
+        gold24k: dbData.india.gold24k,
+        gold18k: dbData.india.gold18k || Math.round((dbData.india.gold24k * 18) / 24),
+        silver1kg: dbData.india.silver1kg,
+      };
+      const yesterdayRates = {
+        ...dbData.yesterdayIndia,
+        gold18k: dbData.yesterdayIndia.gold18k || Math.round((dbData.yesterdayIndia.gold24k * 18) / 24),
+      };
+      const dayBeforeYesterdayRates = dbData.dayBeforeYesterdayIndia ? {
+        ...dbData.dayBeforeYesterdayIndia,
+        gold18k: dbData.dayBeforeYesterdayIndia.gold18k || Math.round((dbData.dayBeforeYesterdayIndia.gold24k * 18) / 24),
+      } : null;
+      
+      const calculatedChange = calculatePriceChangeWithFallback(todayRates, yesterdayRates, dayBeforeYesterdayRates);
       priceChange = {
-        gold22k: dbData.india.gold22k - dbData.yesterdayIndia.gold22k,
-        gold24k: dbData.india.gold24k - dbData.yesterdayIndia.gold24k,
-        silver1kg: (dbData.india.silver1kg || 0) - (dbData.yesterdayIndia.silver1kg || 0),
+        gold22k: calculatedChange.gold22k,
+        gold24k: calculatedChange.gold24k,
+        silver1kg: calculatedChange.silver1kg,
       };
       console.log(`📈 [HomePage] Price change: 22K=${priceChange.gold22k >= 0 ? '+' : ''}₹${priceChange.gold22k}, 24K=${priceChange.gold24k >= 0 ? '+' : ''}₹${priceChange.gold24k}, Silver=${(priceChange.silver1kg || 0) >= 0 ? '+' : ''}₹${priceChange.silver1kg}`);
     }
