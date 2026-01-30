@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Gold Purity Converter - 22K to 24K & Karat Calculator | GoldMeter",
   description:
-    "Convert gold purity between 22K, 24K, 18K karats instantly. Free gold purity calculator for India with accurate conversion rates.",
+    "Convert gold purity between 22K, 24K, 18K karats instantly. Free gold purity calculator for India with accurate conversion rates. Calculate pure gold content, alloy percentage, and weight in grams or tola.",
   alternates: {
     canonical: "https://goldmeter.in/purity-converter",
   },
@@ -13,10 +13,15 @@ export const metadata: Metadata = {
     "karat calculator",
     "gold karat converter",
     "gold purity calculator india",
+    "gold alloy calculator",
+    "tola to gram converter",
+    "24k gold calculator",
+    "gold weight converter",
+    "pure gold content calculator",
   ],
   openGraph: {
     title: "Gold Purity Converter - 22K to 24K & Karat Calculator | GoldMeter",
-    description: "Convert gold purity between 22K, 24K, 18K karats instantly. Free gold purity calculator for India with accurate conversion rates.",
+    description: "Convert gold purity between 22K, 24K, 18K karats instantly. Free gold purity calculator for India with accurate conversion rates. Calculate pure gold content, alloy percentage, and weight in grams or tola.",
     type: "website",
     url: "https://goldmeter.in/purity-converter",
     siteName: "GoldMeter",

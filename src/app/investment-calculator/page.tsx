@@ -126,15 +126,16 @@ export default function InvestmentCalculatorPage() {
               </label>
               <label className="text-sm font-medium text-slate-600">
                 Investment period (years)
-                <select
+                <input
+                  type="number"
                   className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"
                   value={years}
-                  onChange={(e) => setYears(Number(e.target.value))}
-                >
-                  {[1, 2, 3, 5, 7, 10, 15, 20].map((y) => (
-                    <option key={y} value={y}>{y} {y === 1 ? 'year' : 'years'}</option>
-                  ))}
-                </select>
+                  onChange={(e) => setYears(Math.max(1, Math.min(50, Number(e.target.value) || 1)))}
+                  min={1}
+                  max={50}
+                  step={1}
+                />
+                <span className="text-xs text-slate-400 mt-1 block">Enter 1-50 years</span>
               </label>
               <label className="text-sm font-medium text-slate-600">
                 Current gold price (₹/gram 24K)
@@ -147,16 +148,16 @@ export default function InvestmentCalculatorPage() {
               </label>
               <label className="text-sm font-medium text-slate-600">
                 Expected annual return (%)
-                <select
+                <input
+                  type="number"
                   className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"
                   value={expectedReturn}
-                  onChange={(e) => setExpectedReturn(Number(e.target.value))}
-                >
-                  <option value={5}>5% (Conservative)</option>
-                  <option value={8}>8% (Moderate)</option>
-                  <option value={10}>10% (Optimistic)</option>
-                  <option value={12}>12% (Aggressive)</option>
-                </select>
+                  onChange={(e) => setExpectedReturn(Math.max(0, Math.min(30, Number(e.target.value) || 0)))}
+                  min={0}
+                  max={30}
+                  step={0.5}
+                />
+                <span className="text-xs text-slate-400 mt-1 block">Historical avg: 8-10% (Enter 0-30%)</span>
               </label>
             </div>
 

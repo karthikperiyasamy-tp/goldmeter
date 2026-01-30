@@ -21,11 +21,24 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: 0,
   });
 
+// Purity options with their gold percentages
+const purityOptions = [
+  { karat: "24K", percentage: 99.9, description: "Pure gold (investment)" },
+  { karat: "23K", percentage: 95.8, description: "Very rare" },
+  { karat: "22K", percentage: 91.6, description: "Indian jewellery standard" },
+  { karat: "21K", percentage: 87.5, description: "Middle East standard" },
+  { karat: "20K", percentage: 83.3, description: "Less common" },
+  { karat: "18K", percentage: 75.0, description: "International standard" },
+  { karat: "14K", percentage: 58.3, description: "Western jewellery" },
+  { karat: "10K", percentage: 41.7, description: "Budget jewellery (US)" },
+  { karat: "9K", percentage: 37.5, description: "UK/Australia standard" },
+];
+
 export default function WastageCalculatorPage() {
   const [cityRates, setCityRates] = useState<CityRate[]>(defaultCityRates);
   const [city, setCity] = useState<CityRate>(defaultCityRates[0]);
   const [grams, setGrams] = useState(10);
-  const [purity, setPurity] = useState<"22K" | "24K">("24K");
+  const [purity, setPurity] = useState("22K");
   const [wastagePercent, setWastagePercent] = useState(8);
   const [makingCharges, setMakingCharges] = useState(150);
   const [loading, setLoading] = useState(true);
@@ -52,7 +65,14 @@ export default function WastageCalculatorPage() {
     fetchRates();
   }, []);
 
-  const pricePer10g = purity === "22K" ? city.gold22k : city.gold24k;
+  // Calculate price based on selected purity
+  const selectedPurity = purityOptions.find(p => p.karat === purity);
+  const pricePer10g24K = city.gold24k;
+  const pricePer10g = purity === "22K" 
+    ? city.gold22k 
+    : purity === "24K" 
+      ? city.gold24k 
+      : Math.round((pricePer10g24K * (selectedPurity?.percentage || 99.9)) / 99.9);
   const pricePerGram = pricePer10g / 10;
 
   const result = useMemo(() => {
@@ -133,10 +153,13 @@ export default function WastageCalculatorPage() {
             <select
               className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"
               value={purity}
-              onChange={(event) => setPurity(event.target.value as "22K" | "24K")}
+              onChange={(event) => setPurity(event.target.value)}
             >
-              <option value="24K">24K</option>
-              <option value="22K">22K</option>
+              {purityOptions.map((p) => (
+                <option key={p.karat} value={p.karat}>
+                  {p.karat} ({p.percentage}%) - {p.description}
+                </option>
+              ))}
             </select>
           </label>
           <label className="text-sm font-medium text-slate-600">

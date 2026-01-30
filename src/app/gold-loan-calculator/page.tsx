@@ -185,15 +185,16 @@ export default function GoldLoanCalculatorPage() {
               </label>
               <label className="text-sm font-medium text-slate-600">
                 Loan tenure (months)
-                <select
+                <input
+                  type="number"
                   className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"
                   value={tenure}
-                  onChange={(e) => setTenure(Number(e.target.value))}
-                >
-                  {[3, 6, 9, 12, 18, 24, 36].map((m) => (
-                    <option key={m} value={m}>{m} months</option>
-                  ))}
-                </select>
+                  onChange={(e) => setTenure(Math.max(1, Math.min(120, Number(e.target.value) || 1)))}
+                  min={1}
+                  max={120}
+                  step={1}
+                />
+                <span className="text-xs text-slate-400 mt-1 block">Enter 1-120 months (10 years max)</span>
               </label>
             </div>
 
