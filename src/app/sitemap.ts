@@ -99,6 +99,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }
 
+  // SIP Calculator page
+  const sipCalculator = {
+    url: `${baseUrl}/sip-calculator`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }
+
+  // SIP Calculator with Step Up page
+  const sipCalculatorStepUp = {
+    url: `${baseUrl}/sip-calculator-with-step-up`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }
+
+  // SWP Calculator with Inflation page
+  const swpCalculator = {
+    url: `${baseUrl}/swp-calculator-with-inflation`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }
+
   // News index page
   const news = {
     url: `${baseUrl}/news`,
@@ -204,6 +228,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     goldLoanCalculator,
     weddingGoldPlanner,
     hallmarkGuide,
+    sipCalculator,
+    sipCalculatorStepUp,
+    swpCalculator,
     news,
     recapListing,
     ...newsPages,

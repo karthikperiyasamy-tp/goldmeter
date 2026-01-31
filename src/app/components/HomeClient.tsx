@@ -720,7 +720,7 @@ export default function HomeClient({
 
       <section className="mx-auto w-full max-w-6xl px-4 py-10">
         <h3 className="text-lg font-semibold mb-4">🧮 Gold Calculators & Tools</h3>
-        <div className="grid gap-4 md:grid-cols-4 lg:grid-cols-7">
+        <div className="grid gap-4 md:grid-cols-4 lg:grid-cols-5">
           <Link href="/calculator" className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft hover:border-amber-200 transition-colors">
             <span className="text-2xl">🧮</span>
             <p className="text-sm font-semibold mt-2">Price Calculator</p>
@@ -738,23 +738,42 @@ export default function HomeClient({
           </Link>
           <Link href="/investment-calculator" className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft hover:border-amber-200 transition-colors">
             <span className="text-2xl">📈</span>
-            <p className="text-sm font-semibold mt-2">Investment SIP</p>
-            <p className="text-xs text-slate-500">Gold returns</p>
+            <p className="text-sm font-semibold mt-2">Gold Investment</p>
+            <p className="text-xs text-slate-500">Gold SIP returns</p>
+          </Link>
+          <Link href="/hallmark-guide" className="rounded-2xl border border-amber-200 bg-amber-50 p-4 shadow-soft hover:border-amber-300 transition-colors">
+            <span className="text-2xl">🔍</span>
+            <p className="text-sm font-semibold mt-2">Hallmark Verifier</p>
+            <p className="text-xs text-slate-500">Check gold purity</p>
+          </Link>
+        </div>
+
+        <h3 className="text-lg font-semibold mb-4 mt-8">💰 Financial Calculators</h3>
+        <div className="grid gap-4 md:grid-cols-4 lg:grid-cols-5">
+          <Link href="/sip-calculator" className="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-4 shadow-soft hover:border-emerald-200 transition-colors">
+            <span className="text-2xl">📊</span>
+            <p className="text-sm font-semibold mt-2">SIP Calculator</p>
+            <p className="text-xs text-slate-500">Mutual fund SIP</p>
+          </Link>
+          <Link href="/sip-calculator-with-step-up" className="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-4 shadow-soft hover:border-emerald-200 transition-colors">
+            <span className="text-2xl">📈</span>
+            <p className="text-sm font-semibold mt-2">Step-up SIP</p>
+            <p className="text-xs text-slate-500">SIP with yearly increase</p>
+          </Link>
+          <Link href="/swp-calculator-with-inflation" className="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-4 shadow-soft hover:border-emerald-200 transition-colors">
+            <span className="text-2xl">💸</span>
+            <p className="text-sm font-semibold mt-2">SWP Calculator</p>
+            <p className="text-xs text-slate-500">Withdrawal with inflation</p>
           </Link>
           <Link href="/gold-loan-calculator" className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft hover:border-amber-200 transition-colors">
             <span className="text-2xl">🏦</span>
-            <p className="text-sm font-semibold mt-2">Loan Calculator</p>
+            <p className="text-sm font-semibold mt-2">Gold Loan</p>
             <p className="text-xs text-slate-500">Loan against gold</p>
           </Link>
           <Link href="/wedding-gold-planner" className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft hover:border-amber-200 transition-colors">
             <span className="text-2xl">💍</span>
             <p className="text-sm font-semibold mt-2">Wedding Planner</p>
             <p className="text-xs text-slate-500">Plan wedding gold</p>
-          </Link>
-          <Link href="/hallmark-guide" className="rounded-2xl border border-amber-200 bg-amber-50 p-4 shadow-soft hover:border-amber-300 transition-colors">
-            <span className="text-2xl">🔍</span>
-            <p className="text-sm font-semibold mt-2">Hallmark Verifier</p>
-            <p className="text-xs text-slate-500">Check gold purity</p>
           </Link>
         </div>
       </section>

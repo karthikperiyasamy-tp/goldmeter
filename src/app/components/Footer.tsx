@@ -68,7 +68,7 @@ export default function Footer() {
 
           {/* Tools */}
           <div>
-            <p className="text-sm font-semibold text-charcoal mb-3">Calculators</p>
+            <p className="text-sm font-semibold text-charcoal mb-3">Gold Calculators</p>
             <nav className="flex flex-col gap-2">
               <Link href="/calculator" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
                 Gold Price Calculator
@@ -76,14 +76,32 @@ export default function Footer() {
               <Link href="/wastage-calculator" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
                 Wastage Calculator
               </Link>
-              <Link href="/investment-calculator" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
-                Investment Calculator
-              </Link>
               <Link href="/purity-converter" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
                 Purity Converter
               </Link>
+              <Link href="/investment-calculator" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
+                Gold Investment Calculator
+              </Link>
               <Link href="/gold-comparison" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
                 Gold Comparison
+              </Link>
+            </nav>
+            <p className="text-sm font-semibold text-charcoal mb-3 mt-4">Financial Calculators</p>
+            <nav className="flex flex-col gap-2">
+              <Link href="/sip-calculator" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
+                SIP Calculator
+              </Link>
+              <Link href="/sip-calculator-with-step-up" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
+                SIP Calculator with Step Up
+              </Link>
+              <Link href="/swp-calculator-with-inflation" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
+                SWP Calculator
+              </Link>
+              <Link href="/gold-loan-calculator" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
+                Gold Loan Calculator
+              </Link>
+              <Link href="/wedding-gold-planner" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
+                Wedding Gold Planner
               </Link>
             </nav>
           </div>
