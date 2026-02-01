@@ -304,6 +304,18 @@ export default function SilverCityPageShell({
               <p className="font-semibold text-charcoal">Purity converter</p>
               <p className="text-sm text-slate-600 mt-1">22K ↔ 24K instantly.</p>
             </Link>
+            <Link href="/sip-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">SIP Calculator</p>
+              <p className="text-sm text-slate-600 mt-1">Calculate SIP returns.</p>
+            </Link>
+            <Link href="/sip-calculator-with-step-up" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">Step-up SIP</p>
+              <p className="text-sm text-slate-600 mt-1">SIP with yearly increase.</p>
+            </Link>
+            <Link href="/swp-calculator-with-inflation" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
+              <p className="font-semibold text-charcoal">SWP Calculator</p>
+              <p className="text-sm text-slate-600 mt-1">Plan withdrawals.</p>
+            </Link>
             <Link href="/news" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
               <p className="font-semibold text-charcoal">Gold news</p>
               <p className="text-sm text-slate-600 mt-1">Daily headlines and price movers.</p>

@@ -240,30 +240,30 @@ export default function StepUpSIPCalculatorPage() {
             </p>
 
             {/* Mode Selector */}
-            <div className="mt-6 flex gap-2 p-1 bg-slate-100 rounded-2xl">
+            <div className="mt-6 grid grid-cols-3 gap-1 p-1 bg-slate-100 rounded-2xl">
               <button
                 onClick={() => setMode("sip")}
-                className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-medium transition-all ${
+                className={`py-2.5 px-1 rounded-xl text-xs sm:text-sm font-medium transition-all text-center ${
                   mode === "sip"
                     ? "bg-white text-charcoal shadow-sm"
                     : "text-slate-600 hover:text-charcoal"
                 }`}
               >
-                Regular SIP
+                Regular
               </button>
               <button
                 onClick={() => setMode("stepup")}
-                className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-medium transition-all ${
+                className={`py-2.5 px-1 rounded-xl text-xs sm:text-sm font-medium transition-all text-center ${
                   mode === "stepup"
                     ? "bg-white text-charcoal shadow-sm"
                     : "text-slate-600 hover:text-charcoal"
                 }`}
               >
-                Step-up SIP
+                Step-up
               </button>
               <button
                 onClick={() => setMode("lumpsum")}
-                className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-medium transition-all ${
+                className={`py-2.5 px-1 rounded-xl text-xs sm:text-sm font-medium transition-all text-center ${
                   mode === "lumpsum"
                     ? "bg-white text-charcoal shadow-sm"
                     : "text-slate-600 hover:text-charcoal"
@@ -762,7 +762,7 @@ export default function StepUpSIPCalculatorPage() {
                       {mode !== "lumpsum" && (
                         <>
                           <th className="px-4 py-3 text-right font-semibold text-slate-700">
-                            Monthly SIP (₹)
+                            Monthly (₹)
                           </th>
                           <th className="px-4 py-3 text-right font-semibold text-slate-700">
                             Yearly (₹)

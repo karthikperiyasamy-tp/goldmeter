@@ -400,7 +400,7 @@ export default function SWPCalculatorPage() {
                   </p>
                   {adjustForInflation && result.finalBalance > 0 && (
                     <p className="text-xs text-amber-100 mt-1">
-                      (₹{formatCurrency(result.inflationAdjustedFinalBalance)} / {formatInWords(result.inflationAdjustedFinalBalance)} in today&apos;s value)
+                      ({formatInWords(result.inflationAdjustedFinalBalance)} in today&apos;s value)
                     </p>
                   )}
                 </div>
@@ -412,7 +412,7 @@ export default function SWPCalculatorPage() {
                   Balance Over Time
                 </p>
                 <div className="bg-white rounded-xl p-4 border border-slate-100">
-                  <div className="relative h-40">
+                  <div className="relative h-48">
                     {/* Y-axis labels */}
                     <div className="absolute left-0 top-0 bottom-6 w-20 flex flex-col justify-between text-xs text-slate-400">
                       <span>{formatInWords(maxBalance)}</span>
@@ -509,7 +509,7 @@ export default function SWPCalculatorPage() {
                       </th>
                       {adjustForInflation && (
                         <th className="px-3 py-3 text-right font-semibold text-slate-700">
-                          Today&apos;s Value (₹)
+                          Today&apos;s (₹)
                         </th>
                       )}
                     </tr>

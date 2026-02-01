@@ -600,6 +600,21 @@ export default function CityPageShell({
               <p className="font-semibold text-charcoal mt-1">Wedding planner</p>
               <p className="text-sm text-slate-600">Plan wedding gold.</p>
             </Link>
+            <Link href="/sip-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
+              <span className="text-xl">📊</span>
+              <p className="font-semibold text-charcoal mt-1">SIP Calculator</p>
+              <p className="text-sm text-slate-600">Calculate SIP returns.</p>
+            </Link>
+            <Link href="/sip-calculator-with-step-up" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
+              <span className="text-xl">📈</span>
+              <p className="font-semibold text-charcoal mt-1">Step-up SIP</p>
+              <p className="text-sm text-slate-600">SIP with yearly increase.</p>
+            </Link>
+            <Link href="/swp-calculator-with-inflation" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
+              <span className="text-xl">💰</span>
+              <p className="font-semibold text-charcoal mt-1">SWP Calculator</p>
+              <p className="text-sm text-slate-600">Plan withdrawals.</p>
+            </Link>
           </div>
           <div className="mt-4 grid gap-3 md:grid-cols-3">
             <Link href="/silver-rate" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
