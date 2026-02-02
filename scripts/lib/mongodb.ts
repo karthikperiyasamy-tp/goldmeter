@@ -1,10 +1,12 @@
 import { MongoClient, Db } from 'mongodb';
 
-const uri = process.env.MONGODB_URI;
-
-if (!uri) {
-  console.error('❌ MONGODB_URI environment variable is not set');
-  process.exit(1);
+function getMongoUri(): string {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    console.error('❌ MONGODB_URI environment variable is not set');
+    process.exit(1);
+  }
+  return uri;
 }
 
 let client: MongoClient | null = null;
@@ -19,6 +21,7 @@ export async function getDatabase(): Promise<Db> {
     return db;
   }
 
+  const uri = getMongoUri();
   console.log('🔌 Connecting to MongoDB...');
   client = new MongoClient(uri);
   await client.connect();
