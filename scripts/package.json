@@ -1,0 +1,20 @@
+{
+  "name": "goldmeter-scripts",
+  "version": "1.0.0",
+  "description": "Standalone scripts for gold rate scraping (runs in GitHub Actions)",
+  "type": "module",
+  "scripts": {
+    "scrape": "tsx scrape-gold-rates.ts",
+    "fetch-news": "tsx scrape-news.ts",
+    "generate-recap": "tsx generate-recap.ts"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "mongodb": "^6.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  }
+}
