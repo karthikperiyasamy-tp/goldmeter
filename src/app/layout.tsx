@@ -99,6 +99,14 @@ export default function RootLayout({
             </Script>
           </>
         )}
+        
+        {/* Google AdSense - Auto Ads */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9466250290492650"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </head>
       <body className="bg-[#fffdf7] text-charcoal min-h-screen">
         <LayoutWrapper>{children}</LayoutWrapper>
