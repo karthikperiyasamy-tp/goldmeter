@@ -2,26 +2,35 @@ name: Gold Rate Scraping
 
 on:
   schedule:
-    # ===== OPTIMIZED SCHEDULE (reduced from ~23/day to ~12/day) =====
+    # ===== OPTIMIZED SCHEDULE =====
     
-    # Morning window: 9:00 AM - 10:00 AM IST (every 15 mins)
+    # Early morning: Get rates before market activity
+    - cron: '30 1 * * *'      # 7:00 AM IST
+    
+    # Critical morning window: 9:00 AM - 10:30 AM IST (every 10 mins)
     # Captures GoodReturns preliminary → final rate transition
     - cron: '30 3 * * *'      # 9:00 AM IST
-    - cron: '45 3 * * *'      # 9:15 AM IST
+    - cron: '40 3 * * *'      # 9:10 AM IST
+    - cron: '50 3 * * *'      # 9:20 AM IST
     - cron: '0 4 * * *'       # 9:30 AM IST
-    - cron: '15 4 * * *'      # 9:45 AM IST
+    - cron: '10 4 * * *'      # 9:40 AM IST
+    - cron: '20 4 * * *'      # 9:50 AM IST
     - cron: '30 4 * * *'      # 10:00 AM IST
+    - cron: '40 4 * * *'      # 10:10 AM IST
+    - cron: '50 4 * * *'      # 10:20 AM IST
+    - cron: '0 5 * * *'       # 10:30 AM IST
     
-    # Daytime: 11 AM - 7 PM IST (every 2 hours)
-    - cron: '30 5 * * *'      # 11:00 AM IST
-    - cron: '30 7 * * *'      # 1:00 PM IST
-    - cron: '30 9 * * *'      # 3:00 PM IST
-    - cron: '30 11 * * *'     # 5:00 PM IST
-    - cron: '30 13 * * *'     # 7:00 PM IST
+    # Daytime: 12 PM - 8 PM IST (every 2 hours)
+    - cron: '30 6 * * *'      # 12:00 PM IST
+    - cron: '30 8 * * *'      # 2:00 PM IST
+    - cron: '30 10 * * *'     # 4:00 PM IST
+    - cron: '30 12 * * *'     # 6:00 PM IST
+    - cron: '30 14 * * *'     # 8:00 PM IST
     
-    # Overnight: 9 PM - 7 AM IST (every 4 hours)
-    - cron: '30 15 * * *'     # 9:00 PM IST
-    - cron: '30 19 * * *'     # 1:00 AM IST
+    # Overnight: 10 PM - 6 AM IST (every 4 hours)
+    - cron: '30 16 * * *'     # 10:00 PM IST
+    - cron: '30 20 * * *'     # 2:00 AM IST
+    - cron: '0 0 * * *'       # 5:30 AM IST
     
   workflow_dispatch: # Allows manual trigger
 
