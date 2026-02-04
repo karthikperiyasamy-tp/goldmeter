@@ -94,7 +94,23 @@ export default function RootLayout({
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${GA_MEASUREMENT_ID}');
+                gtag('config', '${GA_MEASUREMENT_ID}', {
+                  page_path: window.location.pathname,
+                  // Enhanced measurement features
+                  send_page_view: true,
+                  // Campaign tracking (UTM parameters)
+                  campaign_tracking: true,
+                  // Track clicks to external domains
+                  link_attribution: true,
+                  // Enhanced e-commerce tracking (if needed later)
+                  enhanced_measurement: {
+                    scrolls: true,
+                    outbound_clicks: true,
+                    site_search: true,
+                    video_engagement: false,
+                    file_downloads: false
+                  }
+                });
               `}
             </Script>
           </>

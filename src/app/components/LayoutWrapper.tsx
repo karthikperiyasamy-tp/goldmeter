@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import TopBar from "./TopBar";
 import Footer from "./Footer";
 import PriceTicker from "./PriceTicker";
+import PageViewTracker from "./PageViewTracker";
+import { trackCityChange } from "@/lib/analytics";
 
 // Map URL slugs to city display names
 const SLUG_TO_CITY: Record<string, string> = {
@@ -72,11 +74,14 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     const cityFromPath = getCityFromPath(pathname);
     if (cityFromPath !== activeCity) {
       setActiveCity(cityFromPath);
+      // Track city change via URL
+      trackCityChange(cityFromPath, 'url');
     }
   }, [pathname, activeCity]);
 
   return (
     <>
+      <PageViewTracker />
       <PriceTicker />
       <TopBar city={activeCity} onCityChange={setActiveCity} />
       {children}
