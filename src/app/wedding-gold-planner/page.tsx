@@ -361,10 +361,11 @@ export default function WeddingGoldPlannerPage() {
             <div className="mt-4 text-sm text-slate-600">
               <p className="font-semibold">Tips for Wedding Gold Shopping:</p>
               <ul className="mt-2 list-disc list-inside space-y-1">
-                <li>Compare prices from <strong>multiple jewellers</strong> before buying</li>
-                <li>Ask for <strong>detailed bill</strong> showing gold weight, making charges, and GST separately</li>
-                <li>Check for <strong>BIS hallmark</strong> to ensure gold purity</li>
-                <li>Negotiate making charges - they&apos;re often negotiable</li>
+                <li><Link href="/jewellers" className="text-amber-600 hover:underline">Compare prices</Link> from multiple jewellers before buying</li>
+                <li>Ask for detailed bill showing gold weight, making charges, and GST separately</li>
+                <li>Check for <Link href="/hallmark-guide" className="text-amber-600 hover:underline">BIS hallmark</Link> to ensure gold purity</li>
+                <li>Use our <Link href="/wastage-calculator" className="text-amber-600 hover:underline">wastage calculator</Link> to verify jeweller quotes</li>
+                <li>Read our <Link href="/jewellers/buying-guide" className="text-amber-600 hover:underline">gold buying guide</Link> before shopping</li>
               </ul>
             </div>
 
@@ -392,8 +393,26 @@ export default function WeddingGoldPlannerPage() {
 
         <section className="mt-10 grid gap-3 md:grid-cols-3 print:hidden">
           <Link
-            href="/investment-calculator"
+            href="/calculator"
             className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
+          >
+            Gold Calculator → Calculate jewellery cost with GST.
+          </Link>
+          <Link
+            href="/hallmark-guide"
+            className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
+          >
+            Hallmark Guide → Verify BIS hallmark before buying.
+          </Link>
+          <Link
+            href="/jewellers"
+            className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
+          >
+            Compare Jewellers → Making charges across brands.
+          </Link>
+          <Link
+            href="/investment-calculator"
+            className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
           >
             Gold investment calculator → Plan your gold SIP.
           </Link>

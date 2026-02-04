@@ -92,7 +92,8 @@ export default function DisclaimerPage() {
 
           <h2 className="text-xl font-semibold text-charcoal mt-8 mb-4">Calculator Estimates</h2>
           <p className="text-slate-600 leading-relaxed">
-            The calculators on GoldMeter (jewellery cost calculator, wastage calculator, etc.) provide 
+            The calculators on GoldMeter (<Link href="/calculator" className="text-amber-600 hover:underline">gold calculator</Link>,{" "}
+            <Link href="/wastage-calculator" className="text-amber-600 hover:underline">wastage calculator</Link>, etc.) provide 
             <strong> estimates only</strong>. Actual costs may vary based on:
           </p>
           <ul className="text-slate-600 space-y-2">
@@ -120,7 +121,8 @@ export default function DisclaimerPage() {
           </ul>
           <p className="text-slate-600 leading-relaxed mt-4">
             While we strive for accuracy, we cannot guarantee that all information is error-free or 
-            up-to-date at all times.
+            up-to-date at all times. Learn more about our{" "}
+            <Link href="/about/methodology" className="text-amber-600 hover:underline">data methodology</Link>.
           </p>
 
           <h2 className="text-xl font-semibold text-charcoal mt-8 mb-4">Limitation of Liability</h2>
@@ -148,6 +150,17 @@ export default function DisclaimerPage() {
             <p className="text-sm text-slate-500">
               By using GoldMeter, you acknowledge that you have read and understood this disclaimer.
             </p>
+            <div className="mt-4 flex flex-wrap gap-3 text-sm">
+              <Link href="/privacy" className="text-amber-600 hover:underline">Privacy Policy</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/terms" className="text-amber-600 hover:underline">Terms of Service</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/about" className="text-amber-600 hover:underline">About Us</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/about/methodology" className="text-amber-600 hover:underline">Our Methodology</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/contact" className="text-amber-600 hover:underline">Contact</Link>
+            </div>
           </div>
         </article>
       </div>

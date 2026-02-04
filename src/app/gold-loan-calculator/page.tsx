@@ -255,9 +255,14 @@ export default function GoldLoanCalculatorPage() {
               <ul className="mt-2 list-disc list-inside space-y-1">
                 <li>Banks offer lower interest rates (7-12%) vs NBFCs (12-24%)</li>
                 <li>RBI allows max 75% LTV for gold loans</li>
-                <li>Keep gold valuation certificate handy for better rates</li>
+                <li>Ensure your gold has <Link href="/hallmark-guide" className="text-amber-600 hover:underline">valid BIS hallmark</Link> for better valuation</li>
                 <li>Compare processing fees (0.5-2% of loan amount)</li>
               </ul>
+              <p className="mt-3 text-xs text-slate-500">
+                <Link href="/gold-rate-today" className="text-amber-600 hover:underline">Check current gold rate</Link> • 
+                <Link href="/calculator" className="text-amber-600 hover:underline ml-1">Calculate gold value</Link> • 
+                <Link href="/purity-converter" className="text-amber-600 hover:underline ml-1">Convert purity</Link>
+              </p>
             </section>
           </div>
           
@@ -268,8 +273,20 @@ export default function GoldLoanCalculatorPage() {
 
         <section className="mt-10 grid gap-3 md:grid-cols-3 print:hidden">
           <Link
-            href="/investment-calculator"
+            href="/gold-rate-today"
             className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
+          >
+            Today&apos;s gold rate → Live 22K & 24K prices.
+          </Link>
+          <Link
+            href="/hallmark-guide"
+            className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
+          >
+            Hallmark Guide → Verify gold purity before pledging.
+          </Link>
+          <Link
+            href="/investment-calculator"
+            className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
           >
             Gold investment calculator → Plan your gold SIP.
           </Link>
@@ -284,6 +301,12 @@ export default function GoldLoanCalculatorPage() {
             className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
           >
             Gold price calculator → Calculate jewellery cost with GST.
+          </Link>
+          <Link
+            href="/jewellers"
+            className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
+          >
+            Compare Jewellers → Making charges across brands.
           </Link>
         </section>
       </div>

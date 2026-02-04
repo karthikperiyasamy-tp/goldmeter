@@ -539,15 +539,33 @@ export default function SIPCalculatorPage() {
           </Link>
           <Link
             href="/swp-calculator-with-inflation"
-            className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
+            className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
           >
             SWP Calculator → Plan systematic withdrawals with inflation.
           </Link>
           <Link
             href="/investment-calculator"
-            className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
+            className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
           >
             Gold Investment Calculator → Calculate gold SIP returns.
+          </Link>
+          <Link
+            href="/gold-rate-today"
+            className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
+          >
+            Today&apos;s gold rate → Compare gold vs mutual fund returns.
+          </Link>
+          <Link
+            href="/calculator"
+            className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
+          >
+            Gold Calculator → Calculate gold jewellery cost.
+          </Link>
+          <Link
+            href="/news"
+            className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
+          >
+            Market News → Gold market updates and analysis.
           </Link>
         </section>
 

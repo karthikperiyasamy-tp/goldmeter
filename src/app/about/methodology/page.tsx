@@ -243,7 +243,10 @@ export default function MethodologyPage() {
               </p>
               <p className="mt-4 text-xs text-slate-500">
                 <strong>Note:</strong> Displayed rates are for pure metal only and do NOT include making charges 
-                (₹150-600/gram) or GST (3% on gold value). Use our calculators for total jewellery cost estimation.
+                (₹150-600/gram) or GST (3% on gold value). Use our{" "}
+                <Link href="/calculator" className="text-amber-600 hover:underline">gold calculator</Link> or{" "}
+                <Link href="/wastage-calculator" className="text-amber-600 hover:underline">wastage calculator</Link>{" "}
+                for total jewellery cost estimation.
               </p>
             </div>
           </section>
@@ -299,10 +302,22 @@ export default function MethodologyPage() {
           {/* CTA */}
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
-              href="/"
+              href="/gold-rate-today"
               className="rounded-full bg-amber-600 px-6 py-3 text-sm font-semibold text-white hover:bg-amber-700 transition-colors"
             >
               View Live Gold Rates
+            </Link>
+            <Link
+              href="/calculator"
+              className="rounded-full border border-amber-300 bg-amber-50 px-6 py-3 text-sm font-semibold text-amber-700 hover:bg-amber-100 transition-colors"
+            >
+              Gold Calculator
+            </Link>
+            <Link
+              href="/news"
+              className="rounded-full border border-slate-200 px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+            >
+              Market News
             </Link>
             <Link
               href="/about"

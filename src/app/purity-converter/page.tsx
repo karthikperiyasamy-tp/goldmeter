@@ -519,12 +519,16 @@ export default function PurityConverterPage() {
                 This converter helps you understand equivalent weights when converting between purities.
               </p>
               <ul className="mt-3 text-xs text-blue-800 list-disc list-inside space-y-1">
-                <li><strong>24K Gold</strong> - 99.9% pure, best for investment</li>
+                <li><strong>24K Gold</strong> - 99.9% pure, best for <Link href="/investment-calculator" className="text-amber-600 hover:underline">gold investment</Link></li>
                 <li><strong>22K Gold</strong> - 91.6% pure, standard for Indian jewellery</li>
                 <li><strong>18K Gold</strong> - 75% pure, common in international markets</li>
                 <li><strong>14K Gold</strong> - 58.3% pure, popular in Western countries</li>
                 <li><strong>9K Gold</strong> - 37.5% pure, standard in UK/Australia</li>
               </ul>
+              <p className="mt-3 text-xs text-blue-700">
+                <Link href="/calculator" className="text-amber-600 hover:underline">Calculate jewellery cost</Link> with different purities • 
+                <Link href="/hallmark-guide" className="text-amber-600 hover:underline ml-1">Verify purity marks</Link>
+              </p>
             </div>
 
             {/* Gold Purity Reference Table */}
@@ -553,6 +557,24 @@ export default function PurityConverterPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </div>
+
+            {/* Related Tools */}
+            <div className="mt-6 rounded-2xl border border-green-100 bg-green-50/50 p-4">
+              <h2 className="text-sm font-semibold text-green-900">
+                🛠️ Related Tools
+              </h2>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <Link href="/calculator" className="text-xs text-green-700 hover:underline">Gold Calculator</Link>
+                <span className="text-slate-300">•</span>
+                <Link href="/wastage-calculator" className="text-xs text-green-700 hover:underline">Wastage Calculator</Link>
+                <span className="text-slate-300">•</span>
+                <Link href="/hallmark-guide" className="text-xs text-green-700 hover:underline">Hallmark Guide</Link>
+                <span className="text-slate-300">•</span>
+                <Link href="/investment-calculator" className="text-xs text-green-700 hover:underline">Investment Calculator</Link>
+                <span className="text-slate-300">•</span>
+                <Link href="/gold-rate-today" className="text-xs text-green-700 hover:underline">Today&apos;s Gold Rate</Link>
               </div>
             </div>
 

@@ -163,6 +163,15 @@ export default function TermsPage() {
             <p className="text-sm text-slate-500">
               By continuing to use GoldMeter, you acknowledge that you have read and agree to these Terms of Service.
             </p>
+            <div className="mt-4 flex flex-wrap gap-3 text-sm">
+              <Link href="/privacy" className="text-amber-600 hover:underline">Privacy Policy</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/disclaimer" className="text-amber-600 hover:underline">Disclaimer</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/about" className="text-amber-600 hover:underline">About Us</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/contact" className="text-amber-600 hover:underline">Contact</Link>
+            </div>
           </div>
         </article>
       </div>

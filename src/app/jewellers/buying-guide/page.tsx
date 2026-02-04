@@ -119,7 +119,8 @@ export default function BuyingGuidePage() {
               <div className="mt-6 p-4 bg-amber-50 rounded-xl border border-amber-100">
                 <p className="text-sm text-amber-800">
                   <strong>💡 Pro Tip:</strong> Always ask for making charges BEFORE browsing designs. 
-                  Some jewellers quote lower per-gram charges but add "wastage" (2-15%) separately.
+                  Some jewellers quote lower per-gram charges but add &quot;wastage&quot; (2-15%) separately.
+                  Use our <Link href="/wastage-calculator" className="text-amber-600 hover:underline font-medium">wastage calculator</Link> to estimate true costs.
                 </p>
               </div>
             </div>
@@ -396,7 +397,7 @@ export default function BuyingGuidePage() {
                 <ul className="space-y-2 text-sm text-slate-600">
                   <li className="flex items-start gap-2">
                     <span className="text-amber-500 font-bold">1.</span>
-                    <span>Check today&apos;s gold rate on GoldMeter</span>
+                    <span><Link href="/gold-rate-today" className="text-amber-600 hover:underline">Check today&apos;s gold rate</Link> on GoldMeter</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-amber-500 font-bold">2.</span>
@@ -404,7 +405,7 @@ export default function BuyingGuidePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-amber-500 font-bold">3.</span>
-                    <span>Compare making charges across 2-3 jewellers</span>
+                    <span><Link href="/jewellers" className="text-amber-600 hover:underline">Compare making charges</Link> across 2-3 jewellers</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-amber-500 font-bold">4.</span>
@@ -412,7 +413,7 @@ export default function BuyingGuidePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-amber-500 font-bold">5.</span>
-                    <span>Set a budget and stick to it</span>
+                    <span>Use our <Link href="/calculator" className="text-amber-600 hover:underline">gold calculator</Link> to estimate costs</span>
                   </li>
                 </ul>
               </div>
@@ -554,6 +555,18 @@ export default function BuyingGuidePage() {
                 className="px-6 py-3 rounded-xl border border-amber-400 text-amber-700 font-semibold hover:bg-amber-100 transition-colors"
               >
                 Calculate Cost →
+              </Link>
+              <Link
+                href="/wastage-calculator"
+                className="px-6 py-3 rounded-xl border border-amber-400 text-amber-700 font-semibold hover:bg-amber-100 transition-colors"
+              >
+                Wastage Calculator →
+              </Link>
+              <Link
+                href="/wedding-gold-planner"
+                className="px-6 py-3 rounded-xl border border-amber-400 text-amber-700 font-semibold hover:bg-amber-100 transition-colors"
+              >
+                Wedding Planner →
               </Link>
             </div>
           </section>

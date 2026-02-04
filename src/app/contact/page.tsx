@@ -96,6 +96,7 @@ export default function ContactPage() {
                 </summary>
                 <p className="mt-2 text-sm text-slate-600 pl-4">
                   Prices are updated daily in the morning, typically after 10:00 AM IST when IBJA releases official rates.
+                  <Link href="/gold-rate-today" className="text-amber-600 hover:underline ml-1">Check today&apos;s gold rate</Link>.
                 </p>
               </details>
 
@@ -105,7 +106,8 @@ export default function ContactPage() {
                 </summary>
                 <p className="mt-2 text-sm text-slate-600 pl-4">
                   Our rates show the base gold price. Jewellers add making charges (₹150-600/gram) and 3% GST. 
-                  Some also add wastage charges.
+                  Use our <Link href="/calculator" className="text-amber-600 hover:underline">gold calculator</Link> or{" "}
+                  <Link href="/wastage-calculator" className="text-amber-600 hover:underline">wastage calculator</Link> to estimate total cost.
                 </p>
               </details>
 
@@ -133,6 +135,21 @@ export default function ContactPage() {
                 Still have questions? Email us and we&apos;ll get back to you as soon as possible.
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Useful Links */}
+        <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6">
+          <h2 className="text-lg font-semibold text-charcoal mb-4">Useful Links</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <Link href="/gold-rate-today" className="text-sm text-amber-600 hover:underline">Today&apos;s Gold Rate</Link>
+            <Link href="/calculator" className="text-sm text-amber-600 hover:underline">Gold Calculator</Link>
+            <Link href="/jewellers" className="text-sm text-amber-600 hover:underline">Jewellers Directory</Link>
+            <Link href="/news" className="text-sm text-amber-600 hover:underline">Gold News</Link>
+            <Link href="/about" className="text-sm text-amber-600 hover:underline">About Us</Link>
+            <Link href="/about/methodology" className="text-sm text-amber-600 hover:underline">Our Methodology</Link>
+            <Link href="/privacy" className="text-sm text-amber-600 hover:underline">Privacy Policy</Link>
+            <Link href="/terms" className="text-sm text-amber-600 hover:underline">Terms of Service</Link>
           </div>
         </div>
       </div>

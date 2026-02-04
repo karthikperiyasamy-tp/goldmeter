@@ -293,11 +293,14 @@ export default function CalculatorPage() {
         <section className="mt-6 rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-slate-600">
           <h2 className="font-semibold text-charcoal">💡 How Jewellery Pricing Works</h2>
           <ul className="mt-3 list-disc list-inside space-y-1">
-            <li><strong>Gold Rate</strong> - Base price per gram (changes daily based on market)</li>
+            <li><strong>Gold Rate</strong> - Base price per gram (changes daily based on market). <Link href="/gold-rate-today" className="text-amber-600 hover:underline">Check today&apos;s gold rate</Link></li>
             <li><strong>Making Charges</strong> - Labour cost, typically ₹150-600 per gram</li>
             <li><strong>GST</strong> - 3% on gold value + 5% on making charges</li>
-            <li><strong>Wastage</strong> - Gold lost during manufacturing (3-20%)</li>
+            <li><strong>Wastage</strong> - Gold lost during manufacturing (3-20%). <Link href="/wastage-calculator" className="text-amber-600 hover:underline">Calculate wastage charges</Link></li>
           </ul>
+          <p className="mt-3 text-xs text-slate-500">
+            Need to <Link href="/purity-converter" className="text-amber-600 hover:underline">convert between gold purities</Link>? Always <Link href="/hallmark-guide" className="text-amber-600 hover:underline">verify BIS hallmark</Link> before buying.
+          </p>
         </section>
           </div>
           
@@ -309,8 +312,26 @@ export default function CalculatorPage() {
 
       <section className="mt-10 grid gap-3 md:grid-cols-3">
         <Link
-          href="/silver-rate"
+          href="/wastage-calculator"
           className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
+        >
+          Wastage Calculator → calculate wastage & making charges.
+        </Link>
+        <Link
+          href="/hallmark-guide"
+          className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
+        >
+          Hallmark Guide → verify BIS hallmark & purity codes.
+        </Link>
+        <Link
+          href="/jewellers"
+          className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
+        >
+          Compare Jewellers → making charges across brands.
+        </Link>
+        <Link
+          href="/silver-rate"
+          className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
         >
           Silver rate today → ₹/kg with 30-day history.
         </Link>

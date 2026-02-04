@@ -430,6 +430,10 @@ export default function HallmarkGuidePage() {
                 bis.gov.in
               </a>
             </p>
+            <p className="mt-2 text-sm text-slate-600">
+              <Link href="/jewellers" className="text-amber-600 hover:underline">Compare making charges</Link> across major jewellers • 
+              <Link href="/gold-rate-today" className="text-amber-600 hover:underline ml-1">Check today&apos;s gold rate</Link>
+            </p>
           </div>
         </section>
 
@@ -637,6 +641,9 @@ export default function HallmarkGuidePage() {
               <li>Contact the Legal Metrology Department</li>
               <li>Preserve all bills, receipts, and photographs as evidence</li>
             </ul>
+            <p className="mt-3 text-sm text-emerald-700">
+              Read our <Link href="/jewellers/buying-guide" className="text-amber-600 hover:underline font-medium">complete gold buying guide</Link> to protect yourself from common scams.
+            </p>
           </div>
         </section>
 

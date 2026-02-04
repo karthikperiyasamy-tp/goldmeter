@@ -271,6 +271,20 @@ export default function JewellersPage() {
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Link 
+              href="/jewellers/buying-guide" 
+              className="rounded-xl border border-amber-300 bg-amber-50 p-4 hover:border-amber-400 transition-colors"
+            >
+              <p className="font-semibold text-amber-800">Gold Buying Guide</p>
+              <p className="text-sm text-amber-700 mt-1">Complete guide before buying</p>
+            </Link>
+            <Link 
+              href="/hallmark-guide" 
+              className="rounded-xl border border-amber-300 bg-amber-50 p-4 hover:border-amber-400 transition-colors"
+            >
+              <p className="font-semibold text-amber-800">Hallmark Verification</p>
+              <p className="text-sm text-amber-700 mt-1">Verify BIS hallmark & HUID</p>
+            </Link>
+            <Link 
               href="/calculator" 
               className="rounded-xl border border-slate-100 bg-white p-4 hover:border-amber-200 transition-colors"
             >
@@ -283,6 +297,20 @@ export default function JewellersPage() {
             >
               <p className="font-semibold text-charcoal">Wastage Calculator</p>
               <p className="text-sm text-slate-600 mt-1">Estimate making & wastage charges</p>
+            </Link>
+            <Link 
+              href="/wedding-gold-planner" 
+              className="rounded-xl border border-slate-100 bg-white p-4 hover:border-amber-200 transition-colors"
+            >
+              <p className="font-semibold text-charcoal">Wedding Gold Planner</p>
+              <p className="text-sm text-slate-600 mt-1">Plan wedding gold purchase</p>
+            </Link>
+            <Link 
+              href="/gold-rate-today" 
+              className="rounded-xl border border-slate-100 bg-white p-4 hover:border-amber-200 transition-colors"
+            >
+              <p className="font-semibold text-charcoal">Today&apos;s Gold Rate</p>
+              <p className="text-sm text-slate-600 mt-1">Live 22K & 24K prices</p>
             </Link>
             <Link 
               href="/gold-rate/chennai" 

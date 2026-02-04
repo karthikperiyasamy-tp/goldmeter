@@ -207,9 +207,14 @@ export default function InvestmentCalculatorPage() {
               <ul className="mt-2 list-disc list-inside space-y-1">
                 <li>Gold has historically given 8-10% annual returns in India</li>
                 <li>Consider digital gold or Gold ETFs for easier SIP investments</li>
-                <li>Physical gold has additional making charges (8-25%)</li>
+                <li>Physical gold has additional <Link href="/wastage-calculator" className="text-amber-600 hover:underline">making charges (8-25%)</Link></li>
                 <li>Gold is a hedge against inflation and currency depreciation</li>
+                <li>Compare with <Link href="/sip-calculator" className="text-amber-600 hover:underline">mutual fund SIP returns</Link></li>
               </ul>
+              <p className="mt-3 text-xs text-slate-500">
+                <Link href="/gold-rate-today" className="text-amber-600 hover:underline">Check current gold rate</Link> • 
+                <Link href="/news" className="text-amber-600 hover:underline ml-1">Gold market news</Link>
+              </p>
             </section>
           </div>
           
@@ -220,8 +225,20 @@ export default function InvestmentCalculatorPage() {
 
         <section className="mt-10 grid gap-3 md:grid-cols-3 print:hidden">
           <Link
-            href="/gold-loan-calculator"
+            href="/sip-calculator"
             className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
+          >
+            Mutual Fund SIP → Compare with gold investment returns.
+          </Link>
+          <Link
+            href="/gold-rate-today"
+            className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
+          >
+            Today&apos;s gold rate → Live 22K & 24K prices.
+          </Link>
+          <Link
+            href="/gold-loan-calculator"
+            className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
           >
             Gold loan calculator → Check how much loan you can get.
           </Link>
@@ -236,6 +253,12 @@ export default function InvestmentCalculatorPage() {
             className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
           >
             Gold price calculator → Calculate jewellery cost with GST.
+          </Link>
+          <Link
+            href="/news"
+            className="rounded-2xl border border-slate-100 bg-white p-4 text-sm text-charcoal hover:border-amber-200"
+          >
+            Gold news → Daily market updates and analysis.
           </Link>
         </section>
       </div>

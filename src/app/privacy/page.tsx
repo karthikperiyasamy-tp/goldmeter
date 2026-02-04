@@ -147,6 +147,15 @@ export default function PrivacyPage() {
             <p className="text-sm text-slate-500">
               By using GoldMeter, you agree to the terms outlined in this privacy policy.
             </p>
+            <div className="mt-4 flex flex-wrap gap-3 text-sm">
+              <Link href="/terms" className="text-amber-600 hover:underline">Terms of Service</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/disclaimer" className="text-amber-600 hover:underline">Disclaimer</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/about" className="text-amber-600 hover:underline">About Us</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/contact" className="text-amber-600 hover:underline">Contact</Link>
+            </div>
           </div>
         </article>
       </div>

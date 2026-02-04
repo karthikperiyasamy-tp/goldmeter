@@ -56,12 +56,12 @@ export default function AboutPage() {
 
           <h2 className="text-xl font-semibold text-charcoal mt-8 mb-4">What We Offer</h2>
           <ul className="text-slate-600 space-y-3">
-            <li><strong>Daily Price Updates:</strong> Gold and silver rates updated every morning from trusted bullion market sources.</li>
-            <li><strong>City-wise Rates:</strong> Prices for 10+ major Indian cities including Chennai, Mumbai, Delhi, Bangalore, and more.</li>
-            <li><strong>Multiple Purities:</strong> 24K, 22K, and 18K gold prices per gram and per 10 grams.</li>
+            <li><strong><Link href="/gold-rate-today" className="text-amber-600 hover:underline">Daily Price Updates</Link>:</strong> Gold and silver rates updated every morning from trusted bullion market sources.</li>
+            <li><strong>City-wise Rates:</strong> Prices for 10+ major Indian cities including <Link href="/gold-rate/chennai" className="text-amber-600 hover:underline">Chennai</Link>, <Link href="/gold-rate/mumbai" className="text-amber-600 hover:underline">Mumbai</Link>, <Link href="/gold-rate/delhi" className="text-amber-600 hover:underline">Delhi</Link>, <Link href="/gold-rate/bangalore" className="text-amber-600 hover:underline">Bangalore</Link>, and more.</li>
+            <li><strong>Multiple Purities:</strong> 24K, 22K, and 18K gold prices per gram. Use our <Link href="/purity-converter" className="text-amber-600 hover:underline">purity converter</Link> for conversions.</li>
             <li><strong>Historical Data:</strong> 30-day price history with charts to track trends.</li>
-            <li><strong>Helpful Calculators:</strong> Tools for jewellery cost estimation, making charges, purity conversion, and more.</li>
-            <li><strong>Market Insights:</strong> Daily AI-powered recaps and news to understand price movements.</li>
+            <li><strong><Link href="/calculator" className="text-amber-600 hover:underline">Helpful Calculators</Link>:</strong> Tools for <Link href="/wastage-calculator" className="text-amber-600 hover:underline">making charges</Link>, <Link href="/investment-calculator" className="text-amber-600 hover:underline">gold investment</Link>, and more.</li>
+            <li><strong><Link href="/news" className="text-amber-600 hover:underline">Market Insights</Link>:</strong> Daily AI-powered <Link href="/news/recap" className="text-amber-600 hover:underline">recaps</Link> and news to understand price movements.</li>
           </ul>
 
           <h2 className="text-xl font-semibold text-charcoal mt-8 mb-4">Our Data Sources</h2>
@@ -80,8 +80,17 @@ export default function AboutPage() {
             Our prices are updated daily, typically in the morning after the IBJA releases official rates. 
             While we strive for accuracy, actual prices at jewellery shops may vary due to making charges, 
             GST, and individual jeweller pricing policies. We recommend using our rates as a reference 
-            point and confirming with your jeweller before purchase.
+            point and confirming with your jeweller before purchase. Learn more about our{" "}
+            <Link href="/about/methodology" className="text-amber-600 hover:underline font-medium">data methodology</Link>.
           </p>
+
+          <h2 className="text-xl font-semibold text-charcoal mt-8 mb-4">Jewellers Directory</h2>
+          <p className="text-slate-600 leading-relaxed">
+            Planning to buy gold? Check our{" "}
+            <Link href="/jewellers" className="text-amber-600 hover:underline font-medium">jewellers directory</Link>{" "}
+            to compare making charges across top jewellers in India, or read our{" "}
+            <Link href="/jewellers/buying-guide" className="text-amber-600 hover:underline font-medium">gold buying guide</Link>{" "}
+            for tips on making smart purchases.</p>
 
           <h2 className="text-xl font-semibold text-charcoal mt-8 mb-4">Contact Us</h2>
           <p className="text-slate-600 leading-relaxed">

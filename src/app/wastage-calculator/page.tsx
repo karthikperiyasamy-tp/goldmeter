@@ -266,8 +266,29 @@ export default function WastageCalculatorPage() {
               <strong>Making charges</strong> = Labour cost for craftsmanship (charged per gram or as % of gold value)<br />
               Both are added to the gold value, plus 3% GST, to calculate your final jewellery price.
             </p>
+            <p className="mt-2 text-xs text-slate-500">
+              <Link href="/calculator" className="text-amber-600 hover:underline">Calculate total jewellery cost</Link> • 
+              <Link href="/purity-converter" className="text-amber-600 hover:underline ml-1">Convert between purities</Link> • 
+              <Link href="/hallmark-guide" className="text-amber-600 hover:underline ml-1">Verify BIS hallmark</Link>
+            </p>
           </div>
           
+          {/* Related Tools */}
+          <div className="rounded-2xl border border-green-100 bg-green-50/50 p-4">
+            <h3 className="text-sm font-semibold text-green-900">
+              🛠️ Related Tools
+            </h3>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <Link href="/calculator" className="text-xs text-green-700 hover:underline">Gold Calculator</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/wedding-gold-planner" className="text-xs text-green-700 hover:underline">Wedding Gold Planner</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/jewellers" className="text-xs text-green-700 hover:underline">Compare Jewellers</Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/jewellers/buying-guide" className="text-xs text-green-700 hover:underline">Gold Buying Guide</Link>
+            </div>
+          </div>
+
           {/* Internal Links to City Pages */}
           <div className="rounded-2xl border border-amber-100 bg-white p-4">
             <h3 className="text-sm font-semibold text-charcoal">
