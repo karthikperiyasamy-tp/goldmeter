@@ -2,6 +2,10 @@
   "crons": [
     {
       "path": "/api/cron/daily-scrape",
+      "schedule": "1 4 * * *"
+    },
+    {
+      "path": "/api/cron/daily-scrape",
       "schedule": "5 4 * * *"
     }
   ],
