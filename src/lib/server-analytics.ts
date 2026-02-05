@@ -118,13 +118,29 @@ export async function getAnalyticsSummary(days: number | string = 7, range?: str
                     'direct',
                     {
                       $cond: [
-                        { $regexMatch: { input: '$referrer', regex: 'google' } },
-                        'google',
+                        // Check if referrer is from same domain (internal navigation)
+                        { $regexMatch: { input: '$referrer', regex: 'goldmeter\\.in' } },
+                        'direct', // Treat internal navigation as direct
                         {
                           $cond: [
-                            { $regexMatch: { input: '$referrer', regex: 'facebook|whatsapp|twitter|instagram|telegram' } },
-                            'social',
-                            'referral'
+                            // Google Search (more specific)
+                            { $regexMatch: { input: '$referrer', regex: 'google\\.(com|co\\.in|co\\.uk)/search|google\\.(com|co\\.in)/url' } },
+                            'google',
+                            {
+                              $cond: [
+                                // Other search engines
+                                { $regexMatch: { input: '$referrer', regex: 'bing\\.com|yahoo\\.com|duckduckgo\\.com|baidu\\.com' } },
+                                'search',
+                                {
+                                  $cond: [
+                                    // Social media
+                                    { $regexMatch: { input: '$referrer', regex: 'facebook|fb\\.com|whatsapp|twitter|t\\.co|instagram|telegram|linkedin|reddit' } },
+                                    'social',
+                                    'referral'
+                                  ]
+                                }
+                              ]
+                            }
                           ]
                         }
                       ]
@@ -213,13 +229,20 @@ export async function getAnalyticsSummary(days: number | string = 7, range?: str
                   'direct',
                   {
                     $cond: [
-                      { $regexMatch: { input: '$referrer', regex: 'google' } },
-                      'google',
+                      // Check if referrer is from same domain (internal navigation)
+                      { $regexMatch: { input: '$referrer', regex: 'goldmeter\\.in' } },
+                      'direct', // Treat internal navigation as direct
                       {
                         $cond: [
-                          { $regexMatch: { input: '$referrer', regex: 'facebook|whatsapp|twitter|instagram|telegram' } },
-                          'social',
-                          'referral'
+                          { $regexMatch: { input: '$referrer', regex: 'google' } },
+                          'google',
+                          {
+                            $cond: [
+                              { $regexMatch: { input: '$referrer', regex: 'facebook|whatsapp|twitter|instagram|telegram' } },
+                              'social',
+                              'referral'
+                            ]
+                          }
                         ]
                       }
                     ]
