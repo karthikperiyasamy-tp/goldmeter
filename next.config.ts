@@ -25,6 +25,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Block Next.js internal files from being indexed
+        source: "/_next/:path*",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow",
+          },
+        ],
+      },
+      {
         // Apply to all routes
         source: "/:path*",
         headers: [

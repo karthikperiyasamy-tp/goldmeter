@@ -3,6 +3,9 @@
 User-agent: *
 Allow: /
 
+# Block Next.js internal files (JavaScript chunks, build artifacts)
+Disallow: /_next/
+
 # Block admin pages from indexing
 Disallow: /admin/
 

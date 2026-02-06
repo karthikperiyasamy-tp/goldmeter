@@ -612,8 +612,8 @@ export default function CityPageShell({
             </Link>
             <Link href="/swp-calculator-with-inflation" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
               <span className="text-xl">💰</span>
-              <p className="font-semibold text-charcoal mt-1">SWP Calculator</p>
-              <p className="text-sm text-slate-600">Plan withdrawals.</p>
+              <p className="font-semibold text-charcoal mt-1">SWP Calculator with Inflation</p>
+              <p className="text-sm text-slate-600">Withdrawal plan with inflation.</p>
             </Link>
           </div>
           <div className="mt-4 grid gap-3 md:grid-cols-3">

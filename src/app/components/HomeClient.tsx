@@ -762,8 +762,8 @@ export default function HomeClient({
           </Link>
           <Link href="/swp-calculator-with-inflation" className="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-4 shadow-soft hover:border-emerald-200 transition-colors">
             <span className="text-2xl">💸</span>
-            <p className="text-sm font-semibold mt-2">SWP Calculator</p>
-            <p className="text-xs text-slate-500">Withdrawal with inflation</p>
+            <p className="text-sm font-semibold mt-2">SWP Calculator with Inflation</p>
+            <p className="text-xs text-slate-500">Withdrawal plan with inflation</p>
           </Link>
           <Link href="/gold-loan-calculator" className="rounded-2xl border border-slate-100 bg-white p-4 shadow-soft hover:border-amber-200 transition-colors">
             <span className="text-2xl">🏦</span>

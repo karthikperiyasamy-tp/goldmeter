@@ -589,6 +589,9 @@ export default function SWPCalculatorPage() {
               What is SWP Calculator with Inflation?
             </h2>
             <p className="text-slate-600 leading-relaxed mb-4">
+              SWP or Systematic Withdrawal Plan Calculator with Inflation lets you estimate your periodic withdrawals from a lump sum investment while accounting for inflation. It is a free online financial tool designed to help Indian investors plan regular withdrawals from mutual fund investments and see the impact of inflation on purchasing power.
+            </p>
+            <p className="text-slate-600 leading-relaxed mb-4">
               A Systematic Withdrawal Plan (SWP) Calculator with Inflation is a powerful financial tool designed to help investors plan their regular withdrawals from mutual fund investments while accounting for the impact of inflation on their purchasing power. This calculator is particularly useful for retirees, senior citizens, and anyone looking to generate a steady income stream from their existing investments. Unlike a simple SWP calculator, an inflation-adjusted SWP calculator provides a more realistic picture of your future financial situation by factoring in the rising cost of living over time.
             </p>
             <p className="text-slate-600 leading-relaxed mb-4">
@@ -632,6 +635,13 @@ export default function SWPCalculatorPage() {
               When planning SWP, it&apos;s important to understand the difference between nominal and real returns. Nominal return is the actual return your investment generates - say 10% per year. Real return is nominal return minus inflation. So if your fund returns 10% and inflation is 6%, your real return is only 4%. This means your wealth is growing at 4% in terms of actual purchasing power. Our calculator shows both the nominal balance and the inflation-adjusted (today&apos;s value) balance to give you a complete picture.
             </p>
 
+            <h3 className="text-xl font-semibold text-charcoal mb-3 mt-6">
+              How to measure inflation with the SWP Calculator
+            </h3>
+            <p className="text-slate-600 leading-relaxed mb-4">
+              Measuring inflation over investments is very important. Inflation reduces the value of the rupee over time. For example, ₹100 today may be worth only about ₹93 next year at 7% annual inflation. Taking inflation into account when calculating withdrawal plans is good financial practice. With this SWP calculator with inflation, you can do that easily: turn on &quot;Adjust for Inflation&quot;, enter your expected inflation rate (e.g. 5–7% for India), and run the calculation. The year-by-year table will show inflation-adjusted withdrawal amounts and the final balance in today&apos;s purchasing power.
+            </p>
+
             <h2 className="text-2xl font-bold text-charcoal mb-4 mt-8">
               Benefits of Using SWP Calculator with Inflation
             </h2>
@@ -642,6 +652,20 @@ export default function SWPCalculatorPage() {
               <p className="mb-3"><strong>4. Flexibility and Control:</strong> Unlike annuities or pension plans with fixed payouts, SWP gives you complete flexibility. You can increase, decrease, pause, or stop withdrawals anytime based on your needs.</p>
               <p className="mb-3"><strong>5. Continued Growth Potential:</strong> Your remaining corpus stays invested in the market and has the potential to grow. During bull markets, your corpus might actually increase despite regular withdrawals.</p>
             </div>
+
+            <h2 className="text-2xl font-bold text-charcoal mb-4 mt-8">
+              When an SWP can help
+            </h2>
+            <p className="text-slate-600 leading-relaxed mb-4">
+              An SWP calculator with inflation is useful in several situations: <strong>Retirement income</strong> — create a monthly pay-cheque from your corpus; <strong>Goal-based drawdown</strong> — fund education or a sabbatical over a fixed period; <strong>Bridge income</strong> — cover expenses until pension or annuity starts; and <strong>Senior citizens</strong> who need predictable income from mutual fund investments while keeping the remainder invested.
+            </p>
+
+            <h2 className="text-2xl font-bold text-charcoal mb-4 mt-8">
+              Who can use the SWP Calculator?
+            </h2>
+            <p className="text-slate-600 leading-relaxed mb-4">
+              This SWP calculator with inflation is free to use. Anyone who wants to estimate earnings from a Systematic Withdrawal Plan can use it — retirees, senior citizens, or investors planning a regular income from a lump sum. It is easy to use and saves time compared to manual calculations. You only need to enter your investment amount, monthly withdrawal, expected return, tenure, and optional inflation rate to get results in seconds.
+            </p>
 
             <h2 className="text-2xl font-bold text-charcoal mb-4 mt-8">
               How to Use This SWP Calculator
@@ -656,6 +680,30 @@ export default function SWPCalculatorPage() {
               <p className="mb-2"><strong>Step 4:</strong> Enter the time period in years - this is how long you want the SWP to continue.</p>
               <p className="mb-2"><strong>Step 5:</strong> Toggle inflation adjustment if desired and enter the expected inflation rate (typically 5-7% in India).</p>
               <p className="mb-2"><strong>Step 6:</strong> Review the results including total withdrawn, interest earned, final balance, and the year-by-year breakdown.</p>
+            </div>
+
+            <h3 className="text-xl font-semibold text-charcoal mb-3 mt-6">
+              Example: SWP calculation in India
+            </h3>
+            <p className="text-slate-600 leading-relaxed mb-3">
+              Suppose you invest ₹50 lakh, withdraw ₹60,000 per month for 10 years, expect 8% return and 6% inflation. Approximate outcomes: total withdrawal around ₹72 lakh, interest earned on the corpus, and a remaining balance that you can see in the calculator. The &quot;Today&apos;s value&quot; column shows what that balance is worth in current purchasing power. Use the calculator with your own numbers to get exact results.
+            </p>
+            <div className="overflow-x-auto rounded-xl border border-slate-200 mb-4">
+              <table className="w-full text-sm text-slate-600">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className="px-3 py-2 text-left font-semibold">Input</th>
+                    <th className="px-3 py-2 text-left font-semibold">Example</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  <tr><td className="px-3 py-2">Investment</td><td className="px-3 py-2">₹50,00,000 (50 Lakh)</td></tr>
+                  <tr><td className="px-3 py-2">Monthly withdrawal</td><td className="px-3 py-2">₹60,000</td></tr>
+                  <tr><td className="px-3 py-2">Duration</td><td className="px-3 py-2">10 years</td></tr>
+                  <tr><td className="px-3 py-2">Expected return (p.a.)</td><td className="px-3 py-2">8%</td></tr>
+                  <tr><td className="px-3 py-2">Inflation (p.a.)</td><td className="px-3 py-2">6% (optional)</td></tr>
+                </tbody>
+              </table>
             </div>
 
             <h2 className="text-2xl font-bold text-charcoal mb-4 mt-8">
@@ -683,6 +731,20 @@ export default function SWPCalculatorPage() {
             </p>
 
             <h2 className="text-2xl font-bold text-charcoal mb-4 mt-8">
+              SWP vs SIP vs STP
+            </h2>
+            <p className="text-slate-600 leading-relaxed mb-4">
+              <strong>SWP</strong> (Systematic Withdrawal Plan) means taking money out of a fund as regular withdrawals — ideal for retirement or regular income. <strong>SIP</strong> (Systematic Investment Plan) means putting money into a fund at regular intervals to build wealth. <strong>STP</strong> (Systematic Transfer Plan) means moving money from one fund to another on a schedule (e.g. from debt to equity). SWP is the opposite of SIP: SIP builds corpus, SWP uses it.
+            </p>
+
+            <h2 className="text-2xl font-bold text-charcoal mb-4 mt-8">
+              Tax basics for SWP in India
+            </h2>
+            <p className="text-slate-600 leading-relaxed mb-4">
+              Each SWP payout includes principal and gains. Only the gains are typically taxable. For equity funds held over 12 months, long-term capital gains (LTCG) up to ₹1 lakh per year are tax-free; above that, 10% applies. For debt funds, gains are taxed at your slab rate. Rules can change, so check current tax guidelines. SWP is often more tax-efficient than FD interest, which is fully taxable at your slab rate.
+            </p>
+
+            <h2 className="text-2xl font-bold text-charcoal mb-4 mt-8">
               Best Mutual Funds for SWP
             </h2>
             <p className="text-slate-600 leading-relaxed mb-4">
@@ -707,6 +769,20 @@ export default function SWPCalculatorPage() {
             </div>
 
             <h2 className="text-2xl font-bold text-charcoal mb-4 mt-8">
+              Understanding our SWP Calculator
+            </h2>
+            <p className="text-slate-600 leading-relaxed mb-4">
+              This SWP calculator uses monthly compounding to estimate growth. In real mutual funds, returns accrue daily and are reflected in the NAV; withdrawals are usually monthly. We use a monthly model that gives an annual-equivalent return, which is a reasonable approximation for market-linked investments. Actual results can vary with fund performance, market moves, NAV changes, and fees or exit loads. The tool is for planning and illustration only.
+            </p>
+
+            <h2 className="text-2xl font-bold text-charcoal mb-4 mt-8">
+              Tips for using the calculator
+            </h2>
+            <p className="text-slate-600 leading-relaxed mb-4">
+              Use a conservative expected return (e.g. 1–2% lower than you hope for). Enable inflation to see real purchasing power. If the corpus depletes too early, reduce the monthly withdrawal or extend the tenure. Review your plan periodically as markets and inflation change.
+            </p>
+
+            <h2 className="text-2xl font-bold text-charcoal mb-4 mt-8">
               SWP Calculator Formula
             </h2>
             <p className="text-slate-600 leading-relaxed mb-4">
@@ -727,23 +803,55 @@ export default function SWPCalculatorPage() {
             <h2 className="text-2xl font-bold text-charcoal mb-4 mt-8">
               Frequently Asked Questions
             </h2>
-            <div className="space-y-4">
-              <div>
-                <p className="font-semibold text-charcoal">What is the ideal SWP withdrawal rate?</p>
-                <p className="text-slate-600 mt-1">Financial experts recommend keeping your annual withdrawal rate between 4-6% of your total corpus. This rate, combined with expected investment returns of 8-10%, can help your corpus last 25-30 years or more.</p>
-              </div>
-              <div>
-                <p className="font-semibold text-charcoal">Is SWP taxable?</p>
-                <p className="text-slate-600 mt-1">Yes, but only the capital gains portion of each SWP withdrawal is taxable. For equity funds held over 12 months, gains up to ₹1 lakh annually are tax-free, and gains above that are taxed at 10%. This makes SWP more tax-efficient than FD interest.</p>
-              </div>
-              <div>
-                <p className="font-semibold text-charcoal">Can I change my SWP amount?</p>
-                <p className="text-slate-600 mt-1">Yes, most fund houses allow you to modify your SWP amount, frequency, or even stop it entirely without any penalty. This flexibility is one of the key advantages of SWP over annuities.</p>
-              </div>
-              <div>
-                <p className="font-semibold text-charcoal">What happens if my fund value drops significantly?</p>
-                <p className="text-slate-600 mt-1">During market downturns, more units will be redeemed to meet your withdrawal amount, depleting your corpus faster. Consider reducing withdrawals during prolonged bear markets or maintain a cash buffer to avoid selling at market lows.</p>
-              </div>
+            <div className="space-y-3">
+              <details className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
+                <summary className="cursor-pointer font-semibold text-charcoal">What is the ideal SWP withdrawal rate?</summary>
+                <p className="text-slate-600 mt-2">Financial experts recommend keeping your annual withdrawal rate between 4–6% of your total corpus. Combined with expected returns of 8–10%, this can help your corpus last 25–30 years or more. There is no single &quot;best&quot; rate; many retirees test 3–6% of starting corpus per year.</p>
+              </details>
+              <details className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
+                <summary className="cursor-pointer font-semibold text-charcoal">Is SWP taxable in India?</summary>
+                <p className="text-slate-600 mt-2">Only the capital gains portion of each SWP withdrawal is taxable. For equity funds held over 12 months, LTCG up to ₹1 lakh per year is tax-free; above that, 10% applies. For debt funds, gains are taxed at your income tax slab. SWP is typically more tax-efficient than FD interest, which is fully taxable.</p>
+              </details>
+              <details className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
+                <summary className="cursor-pointer font-semibold text-charcoal">Can I change my SWP amount or stop it?</summary>
+                <p className="text-slate-600 mt-2">Yes. Most fund houses let you modify the SWP amount, frequency, or stop it entirely without penalty. This flexibility is a key advantage over annuities. Review and adjust as your needs or markets change.</p>
+              </details>
+              <details className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
+                <summary className="cursor-pointer font-semibold text-charcoal">Can the corpus run out?</summary>
+                <p className="text-slate-600 mt-2">Yes. If withdrawals are too high or returns are low, the corpus can deplete before your planned period. This calculator shows when depletion is likely and warns you so you can reduce withdrawal or extend tenure.</p>
+              </details>
+              <details className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
+                <summary className="cursor-pointer font-semibold text-charcoal">What return rate should I use in the SWP calculator?</summary>
+                <p className="text-slate-600 mt-2">Use a conservative assumption. Many investors use 1–2% lower than their expected return. For balanced or hybrid funds, 8–10% is common; for equity-heavy portfolios, 10–12%. Actual returns will vary with market conditions.</p>
+              </details>
+              <details className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
+                <summary className="cursor-pointer font-semibold text-charcoal">What happens if my fund value drops significantly?</summary>
+                <p className="text-slate-600 mt-2">In a downturn, more units are redeemed to meet the same withdrawal amount, so the corpus depletes faster. Consider reducing withdrawals in prolonged bear markets or keeping a cash buffer to avoid selling at lows.</p>
+              </details>
+              <details className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
+                <summary className="cursor-pointer font-semibold text-charcoal">Does SWP affect the fund&apos;s NAV?</summary>
+                <p className="text-slate-600 mt-2">Units are sold at the fund&apos;s NAV. Your redemption reduces your units; the NAV for other investors is not directly affected by your SWP. Large redemptions can affect the fund only in extreme cases.</p>
+              </details>
+              <details className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
+                <summary className="cursor-pointer font-semibold text-charcoal">Is SWP the same as dividends (IDCW)?</summary>
+                <p className="text-slate-600 mt-2">No. SWP is a planned redemption of units to get a fixed amount at intervals. IDCW (Income Distribution Cum Capital Withdrawal) is a distribution decided by the fund. SWP gives you control over amount and timing; IDCW does not.</p>
+              </details>
+              <details className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
+                <summary className="cursor-pointer font-semibold text-charcoal">Does the calculator include expense ratio and exit load?</summary>
+                <p className="text-slate-600 mt-2">Ongoing expenses are reflected in the fund&apos;s NAV; we do not add them separately. Exit loads (if any) are not modelled. Use the calculator for planning; actual returns may differ.</p>
+              </details>
+              <details className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
+                <summary className="cursor-pointer font-semibold text-charcoal">Can I have monthly vs quarterly SWP payouts?</summary>
+                <p className="text-slate-600 mt-2">This tool models monthly withdrawals. Many funds offer monthly, quarterly, or annual SWP. Quarterly payouts work similarly but with lumpier cash flow. Choose the frequency that matches your expenses.</p>
+              </details>
+              <details className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
+                <summary className="cursor-pointer font-semibold text-charcoal">Can I delay the first withdrawal?</summary>
+                <p className="text-slate-600 mt-2">This calculator assumes withdrawals start from the first month. In practice, some platforms may allow you to set a start date; check with your fund or distributor.</p>
+              </details>
+              <details className="rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
+                <summary className="cursor-pointer font-semibold text-charcoal">Who should use an SWP calculator with inflation?</summary>
+                <p className="text-slate-600 mt-2">Retirees, senior citizens, and anyone planning regular income from a lump sum in mutual funds. If you want to see how inflation affects your purchasing power over time, use the inflation-adjusted option for a more realistic plan.</p>
+              </details>
             </div>
           </article>
         </section>

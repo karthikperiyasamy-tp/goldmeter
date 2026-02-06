@@ -541,7 +541,7 @@ export default function SIPCalculatorPage() {
             href="/swp-calculator-with-inflation"
             className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 text-sm text-charcoal hover:border-amber-200"
           >
-            SWP Calculator → Plan systematic withdrawals with inflation.
+            SWP Calculator with Inflation → Plan systematic withdrawals with inflation.
           </Link>
           <Link
             href="/investment-calculator"

@@ -70,7 +70,7 @@ const calculatorCategories: CalculatorCategory[] = [
         description: "SIP with yearly increase",
       },
       {
-        name: "SWP Calculator",
+        name: "SWP Calculator with Inflation",
         href: "/swp-calculator-with-inflation",
         icon: "💸",
         description: "Withdrawal plan with inflation",

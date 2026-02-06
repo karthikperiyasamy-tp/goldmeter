@@ -313,8 +313,8 @@ export default function SilverCityPageShell({
               <p className="text-sm text-slate-600 mt-1">SIP with yearly increase.</p>
             </Link>
             <Link href="/swp-calculator-with-inflation" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
-              <p className="font-semibold text-charcoal">SWP Calculator</p>
-              <p className="text-sm text-slate-600 mt-1">Plan withdrawals.</p>
+              <p className="font-semibold text-charcoal">SWP Calculator with Inflation</p>
+              <p className="text-sm text-slate-600 mt-1">Withdrawal plan with inflation.</p>
             </Link>
             <Link href="/news" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200">
               <p className="font-semibold text-charcoal">Gold news</p>

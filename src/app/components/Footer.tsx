@@ -95,7 +95,7 @@ export default function Footer() {
                 SIP Calculator with Step Up
               </Link>
               <Link href="/swp-calculator-with-inflation" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
-                SWP Calculator
+                SWP Calculator with Inflation
               </Link>
               <Link href="/gold-loan-calculator" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
                 Gold Loan Calculator
