@@ -6,6 +6,10 @@ import LayoutWrapper from "./components/LayoutWrapper";
 // Google Analytics Measurement ID
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
+// Adsterra Popunder (one per page) - set NEXT_PUBLIC_ADSTERRA_POPUNDER_ENABLED=false to disable
+const ADSTERRA_POPUNDER_ENABLED = process.env.NEXT_PUBLIC_ADSTERRA_POPUNDER_ENABLED !== "false";
+const ADSTERRA_POPUNDER_SRC = "https://pl28705733.effectivegatecpm.com/fd/07/a1/fd07a1598be3c7bcbf98d48db2cef76e.js";
+
 export const metadata: Metadata = {
   title: "GoldMeter — Daily India Gold Prices & Tools",
   description:
@@ -123,6 +127,14 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="beforeInteractive"
         />
+
+        {/* Adsterra Popunder - one per page; enable via NEXT_PUBLIC_ADSTERRA_POPUNDER_ENABLED=true */}
+        {ADSTERRA_POPUNDER_ENABLED && (
+          <Script
+            src={ADSTERRA_POPUNDER_SRC}
+            strategy="beforeInteractive"
+          />
+        )}
       </head>
       <body className="bg-[#fffdf7] text-charcoal min-h-screen">
         <LayoutWrapper>{children}</LayoutWrapper>
