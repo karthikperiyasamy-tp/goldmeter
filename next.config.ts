@@ -42,18 +42,17 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              // Scripts: self + Google Analytics/AdSense/Tag Manager + Adsterra + Firebase
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com https://adservice.google.com https://www.googleadservices.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.effectivegatecpm.com https://apis.google.com https://*.firebaseio.com https://*.googleapis.com",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              // Scripts: allow https for ad networks (Adsterra, AdSense) which load from many dynamic domains
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https:",
+              "style-src 'self' 'unsafe-inline' https:",
               "img-src 'self' data: https: blob:",
-              "font-src 'self' data: https://fonts.gstatic.com",
-              // Connections: analytics beacons, ad requests, Firebase, Adsterra
-              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://pagead2.googlesyndication.com https://*.googleapis.com https://*.firebaseio.com https://*.effectivegatecpm.com https:",
-              // Frames: ad iframes from Google AdSense, Adsterra, Google sign-in
-              "frame-src 'self' https://googleads.g.doubleclick.net https://www.google.com https://tpc.googlesyndication.com https://accounts.google.com https://*.effectivegatecpm.com",
+              "font-src 'self' data: https:",
+              "connect-src 'self' https:",
+              // Frames: allow https for ad iframes (AdSense, Adsterra, Google sign-in, etc.)
+              "frame-src 'self' https:",
               "frame-ancestors 'none'",
               "base-uri 'self'",
-              "form-action 'self' https://accounts.google.com",
+              "form-action 'self' https:",
             ].join("; "),
           },
           {
