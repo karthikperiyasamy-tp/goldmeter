@@ -775,6 +775,11 @@ export default function HomeClient({
             <p className="text-sm font-semibold mt-2">Wedding Planner</p>
             <p className="text-xs text-slate-500">Plan wedding gold</p>
           </Link>
+          <Link href="/portfolio" className="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-4 shadow-soft hover:border-emerald-200 transition-colors">
+            <span className="text-2xl">📂</span>
+            <p className="text-sm font-semibold mt-2">Gold Portfolio</p>
+            <p className="text-xs text-slate-500">Track gold investments</p>
+          </Link>
         </div>
       </section>
 

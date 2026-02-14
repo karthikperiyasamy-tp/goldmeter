@@ -123,6 +123,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }
 
+  // Portfolio Tracker page
+  const portfolio = {
+    url: `${baseUrl}/portfolio`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }
+
   // News index page
   const news = {
     url: `${baseUrl}/news`,
@@ -231,6 +239,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     sipCalculator,
     sipCalculatorStepUp,
     swpCalculator,
+    portfolio,
     news,
     recapListing,
     ...newsPages,

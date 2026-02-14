@@ -5,6 +5,7 @@ const mainLinks = [
   { label: "Jewellers Directory", href: "/jewellers" },
   { label: "Silver Rate", href: "/silver-rate" },
   { label: "Gold Calculator", href: "/calculator" },
+  { label: "Gold Portfolio", href: "/portfolio" },
   { label: "News", href: "/news" },
 ];
 

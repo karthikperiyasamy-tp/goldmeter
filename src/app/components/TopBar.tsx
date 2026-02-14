@@ -151,6 +151,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
             { label: "Gold Rate Today", href: goldHref },
             { label: "Silver Rate", href: silverHref },
             { label: "Calculator", href: "/calculator" },
+            { label: "Portfolio", href: "/portfolio" },
             { label: "News", href: "/news" },
           ].map((item) => {
             const isActive = item.label === "Gold Rate Today" 
@@ -268,6 +269,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                 { label: "Gold Rate Today", href: goldHref },
                 { label: "Silver Rate", href: silverHref },
                 { label: "Calculator", href: "/calculator" },
+                { label: "Portfolio", href: "/portfolio" },
                 { label: "News", href: "/news" },
                 { label: "Jewellers", href: "/jewellers" },
                 { label: "Compare Gold Rates", href: "/gold-comparison" },

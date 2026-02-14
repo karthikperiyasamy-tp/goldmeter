@@ -93,6 +93,12 @@ const calculatorCategories: CalculatorCategory[] = [
         icon: "💍",
         description: "Plan wedding gold",
       },
+      {
+        name: "Gold Portfolio",
+        href: "/portfolio",
+        icon: "📂",
+        description: "Track gold investments",
+      },
     ],
   },
 ];

@@ -42,14 +42,18 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
-              "style-src 'self' 'unsafe-inline'",
+              // Scripts: self + Google Analytics/AdSense/Tag Manager + Adsterra + Firebase
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com https://adservice.google.com https://www.googleadservices.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.effectivegatecpm.com https://apis.google.com https://*.firebaseio.com https://*.googleapis.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: https: blob:",
-              "font-src 'self' data:",
-              "connect-src 'self' https:",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              // Connections: analytics beacons, ad requests, Firebase, Adsterra
+              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://pagead2.googlesyndication.com https://*.googleapis.com https://*.firebaseio.com https://*.effectivegatecpm.com https:",
+              // Frames: ad iframes from Google AdSense, Adsterra, Google sign-in
+              "frame-src 'self' https://googleads.g.doubleclick.net https://www.google.com https://tpc.googlesyndication.com https://accounts.google.com https://*.effectivegatecpm.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",
-              "form-action 'self'",
+              "form-action 'self' https://accounts.google.com",
             ].join("; "),
           },
           {
