@@ -41,6 +41,9 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: [
         '/api/',
+        '/admin/',
+        '/_next/static/',
+        '/_next/image',
         // Disallow old city URLs - they redirect to /gold-rate/{city}
         ...OLD_CITY_URLS,
       ],
