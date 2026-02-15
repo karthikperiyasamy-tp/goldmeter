@@ -224,6 +224,47 @@ export default function CityPageShell({
   // Sidebar component for Top Cities (reusable)
   const TopCitiesSidebar = () => (
     <aside className="space-y-6">
+      {/* Gold Guides & Articles — prominent for ad network approval + SEO */}
+      <section className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-5 shadow-soft mt-1">
+        <h3 className="text-sm font-bold text-emerald-800 uppercase tracking-wide flex items-center gap-2 mb-1">
+          <span className="w-1 h-4 bg-emerald-500 rounded-full"></span>
+          📚 Gold Guides &amp; Articles
+        </h3>
+        <ul className="mt-4 space-y-2">
+          <li>
+            <Link href="/articles/gold-origins" className="block py-1 text-sm text-slate-600 hover:text-emerald-700 transition-colors font-medium">
+              → Where Does Gold Come From?
+            </Link>
+          </li>
+          <li>
+            <Link href="/articles/gold-special" className="block py-1 text-sm text-slate-600 hover:text-emerald-700 transition-colors font-medium">
+              → What Makes Gold So Special?
+            </Link>
+          </li>
+          <li>
+            <Link href="/articles/gold-hedge" className="block py-1 text-sm text-slate-600 hover:text-emerald-700 transition-colors font-medium">
+              → Gold as Inflation Hedge
+            </Link>
+          </li>
+          <li>
+            <Link href="/articles/gold-premiums" className="block py-1 text-sm text-slate-600 hover:text-emerald-700 transition-colors font-medium">
+              → Spot Prices &amp; Premiums
+            </Link>
+          </li>
+          <li>
+            <Link href="/articles/gold-hallmarking" className="block py-1 text-sm text-slate-600 hover:text-emerald-700 transition-colors font-medium">
+              → Gold Hallmarking in India
+            </Link>
+          </li>
+        </ul>
+        <Link
+          href="/articles"
+          className="mt-4 block text-center text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
+        >
+          View all articles →
+        </Link>
+      </section>
+
       {/* Gold Rate in Top Cities - Like goodreturns.in sidebar */}
       <section className="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-5 shadow-soft">
         <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wide flex items-center gap-2">

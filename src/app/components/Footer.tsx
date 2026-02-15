@@ -2,6 +2,7 @@ import Link from "next/link";
 
 const mainLinks = [
   { label: "Gold Rate Today", href: "/gold-rate-today" },
+  { label: "Articles & Guides", href: "/articles" },
   { label: "Jewellers Directory", href: "/jewellers" },
   { label: "Silver Rate", href: "/silver-rate" },
   { label: "Gold Calculator", href: "/calculator" },

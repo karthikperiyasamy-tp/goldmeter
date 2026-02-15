@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next'
 import { getAllRecaps } from '@/lib/recapDB'
 import { GOLD_RATE_CITIES, SILVER_RATE_CITIES, getCitySlug } from '@/lib/cities'
 import { getAllJewellerSlugs } from '@/lib/jewellerConfig'
+import { ARTICLES } from '@/lib/articles'
 
 // Regenerate the sitemap periodically so lastModified timestamps stay fresh
 // and new recap pages appear promptly for search engines.
@@ -90,6 +91,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }
+
+  // Articles hub page
+  const articlesHub = {
+    url: `${baseUrl}/articles`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.9,
+  }
+
+  // Individual article pages
+  const articlePages = ARTICLES.map((a) => ({
+    url: `${baseUrl}/articles/${a.slug}`,
+    lastModified: new Date('2025-12-14'),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }))
 
   // Hallmark verification guide page
   const hallmarkGuide = {
@@ -235,6 +252,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     investmentCalculator,
     goldLoanCalculator,
     weddingGoldPlanner,
+    articlesHub,
+    ...articlePages,
     hallmarkGuide,
     sipCalculator,
     sipCalculatorStepUp,
