@@ -9,7 +9,7 @@ import RateCard from "./RateCard";
 import PriceChartWrapper from "./PriceChartWrapper";
 import Last10DaysTable from "./Last10DaysTable";
 import MonthStatistics from "./MonthStatistics";
-import GoldArticle from "./GoldArticle";
+import { PUBLISHED_ARTICLES, ARTICLE_CATEGORIES } from "@/lib/articles";
 import { type InternationalRate, type InternationalRates } from "@/lib/internationalRates";
 import { getAllJewellers } from "@/lib/jewellerConfig";
 
@@ -616,8 +616,44 @@ export default function HomeClient({
         </div>
       </section>
 
-      {/* Featured Article - Gold Origins */}
-      <GoldArticle />
+      {/* Browse Articles */}
+      <section className="mx-auto w-full max-w-6xl px-4 pt-10">
+        <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-xl font-bold text-charcoal">Gold Guides & Articles</h2>
+            <Link
+              href="/articles"
+              className="text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors"
+            >
+              View all articles →
+            </Link>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {ARTICLE_CATEGORIES.map((cat) => {
+              const catArticles = PUBLISHED_ARTICLES.filter((a) => a.category === cat.key).slice(0, 3);
+              return (
+                <div key={cat.key} className="rounded-2xl border border-amber-100 bg-amber-50/50 p-4">
+                  <h3 className="text-sm font-semibold text-charcoal mb-3 flex items-center gap-2">
+                    <span>{cat.icon}</span> {cat.label}
+                  </h3>
+                  <ul className="space-y-2">
+                    {catArticles.map((a) => (
+                      <li key={a.slug}>
+                        <Link
+                          href={`/articles/${a.slug}`}
+                          className="text-sm text-amber-700 font-medium hover:text-amber-600 transition-colors"
+                        >
+                          → {a.shortTitle}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       {/* Homepage FAQ Section for SEO */}
       <section className="mx-auto w-full max-w-6xl px-4 py-6">

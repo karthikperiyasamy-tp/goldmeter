@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ARTICLES, ARTICLE_CATEGORIES } from "@/lib/articles";
+import { PUBLISHED_ARTICLES, ARTICLE_CATEGORIES, getArticleDateISO } from "@/lib/articles";
 import ArticlesListClient from "@/app/components/articles/ArticlesListClient";
 
 export default function ArticlesPage() {
@@ -32,7 +32,7 @@ export default function ArticlesPage() {
 
         {/* Client component handles sort + filter */}
         <ArticlesListClient
-          articles={ARTICLES}
+          articles={PUBLISHED_ARTICLES}
           categories={ARTICLE_CATEGORIES}
         />
 
@@ -52,15 +52,18 @@ export default function ArticlesPage() {
                 name: "GoldMeter",
                 url: "https://goldmeter.in",
               },
-              mainEntity: ARTICLES.map((a) => ({
-                "@type": "Article",
-                headline: a.title,
-                description: a.preview,
-                url: `https://goldmeter.in/articles/${a.slug}`,
-                datePublished: "2025-12-14",
-                dateModified: "2025-12-14",
-                author: { "@type": "Organization", name: "GoldMeter" },
-              })),
+              mainEntity: PUBLISHED_ARTICLES.map((a) => {
+                const isoDate = getArticleDateISO(a);
+                return {
+                  "@type": "Article",
+                  headline: a.title,
+                  description: a.preview,
+                  url: `https://goldmeter.in/articles/${a.slug}`,
+                  datePublished: isoDate,
+                  dateModified: isoDate,
+                  author: { "@type": "Organization", name: "GoldMeter" },
+                };
+              }),
             }),
           }}
         />

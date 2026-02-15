@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { getAllRecaps } from '@/lib/recapDB'
 import { GOLD_RATE_CITIES, SILVER_RATE_CITIES, getCitySlug } from '@/lib/cities'
 import { getAllJewellerSlugs } from '@/lib/jewellerConfig'
-import { ARTICLES } from '@/lib/articles'
+import { PUBLISHED_ARTICLES, getArticleDateISO } from '@/lib/articles'
 
 // Regenerate the sitemap periodically so lastModified timestamps stay fresh
 // and new recap pages appear promptly for search engines.
@@ -100,10 +100,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }
 
-  // Individual article pages
-  const articlePages = ARTICLES.map((a) => ({
+  // Individual article pages (only published)
+  const articlePages = PUBLISHED_ARTICLES.map((a) => ({
     url: `${baseUrl}/articles/${a.slug}`,
-    lastModified: new Date('2025-12-14'),
+    lastModified: new Date(getArticleDateISO(a)),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }))

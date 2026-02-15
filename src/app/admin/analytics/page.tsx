@@ -10,6 +10,7 @@ interface AnalyticsData {
   sources: Array<{ _id: string; count: number }>;
   topCities: Array<{ _id: string; count: number }>;
   hourlyTraffic: Array<{ _id: string; count: number }>;
+  sectionBreakdown?: Array<{ _id: string; count: number }>;
 }
 
 const TIME_RANGES = [
@@ -58,6 +59,28 @@ export default function AnalyticsPage() {
   }, [selectedRange]);
 
   const currentRange = TIME_RANGES.find(r => r.value === selectedRange)?.label || 'Last 7 days';
+
+  // Map section names from backend to display config
+  const sectionConfig: Record<string, { emoji: string; color: string }> = {
+    'Gold Rate': { emoji: '🥇', color: 'bg-amber-500' },
+    'Silver Rate': { emoji: '🥈', color: 'bg-slate-400' },
+    'Portfolio': { emoji: '💼', color: 'bg-purple-500' },
+    'Articles': { emoji: '📝', color: 'bg-blue-500' },
+    'News': { emoji: '📰', color: 'bg-emerald-500' },
+    'Calculator': { emoji: '🧮', color: 'bg-orange-500' },
+    'Jewellers': { emoji: '💎', color: 'bg-pink-500' },
+    'Compare': { emoji: '⚖️', color: 'bg-cyan-500' },
+    'Other': { emoji: '📁', color: 'bg-gray-400' },
+  };
+
+  const sectionBreakdown = (data?.sectionBreakdown || []).map((s) => ({
+    label: s._id,
+    count: s.count,
+    emoji: sectionConfig[s._id]?.emoji || '📁',
+    color: sectionConfig[s._id]?.color || 'bg-gray-400',
+  }));
+
+  const sectionTotal = sectionBreakdown.reduce((sum, s) => sum + s.count, 0);
 
   return (
     <div className="min-h-screen bg-cream p-4 md:p-8">
@@ -153,6 +176,60 @@ export default function AnalyticsPage() {
                 </p>
               </div>
             </div>
+
+            {/* Section Breakdown */}
+            {sectionBreakdown.length > 0 && (
+              <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 border border-slate-200 mb-8">
+                <h2 className="text-base md:text-lg font-semibold text-charcoal mb-4">📊 Section Breakdown</h2>
+                
+                {/* Stacked bar */}
+                <div className="flex rounded-full overflow-hidden h-4 mb-5 bg-slate-100">
+                  {sectionBreakdown.map((section, idx) => {
+                    const pct = sectionTotal > 0 ? (section.count / sectionTotal) * 100 : 0;
+                    return (
+                      <div
+                        key={idx}
+                        className={`${section.color} transition-all`}
+                        style={{ width: `${pct}%` }}
+                        title={`${section.label}: ${section.count} (${pct.toFixed(1)}%)`}
+                      />
+                    );
+                  })}
+                </div>
+
+                {/* Section rows */}
+                <div className="space-y-3">
+                  {sectionBreakdown.map((section, idx) => {
+                    const pct = sectionTotal > 0 ? ((section.count / sectionTotal) * 100).toFixed(1) : '0';
+                    return (
+                      <div key={idx} className="space-y-1">
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <span className={`inline-block w-3 h-3 rounded-full ${section.color}`}></span>
+                            <span className="text-xs md:text-sm text-slate-700 font-medium">
+                              {section.emoji} {section.label}
+                            </span>
+                          </div>
+                          <span className="text-xs md:text-sm font-semibold text-charcoal">
+                            {section.count.toLocaleString()} <span className="text-slate-400 font-normal">({pct}%)</span>
+                          </span>
+                        </div>
+                        <div className="w-full bg-slate-100 rounded-full h-1.5">
+                          <div 
+                            className={`${section.color} h-1.5 rounded-full transition-all`}
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <p className="text-[10px] text-slate-400 mt-4">
+                  Based on top pages data. Sections with 0 views are hidden.
+                </p>
+              </div>
+            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
               {/* Top Pages */}

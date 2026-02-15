@@ -19,14 +19,44 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+const REQUIRED_FIREBASE_FIELDS: Array<keyof typeof firebaseConfig> = [
+  "apiKey",
+  "authDomain",
+  "projectId",
+  "storageBucket",
+  "messagingSenderId",
+  "appId",
+];
+
+const FIREBASE_ENV_NAME_BY_FIELD: Record<keyof typeof firebaseConfig, string> = {
+  apiKey: "NEXT_PUBLIC_FIREBASE_API_KEY",
+  authDomain: "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN",
+  projectId: "NEXT_PUBLIC_FIREBASE_PROJECT_ID",
+  storageBucket: "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET",
+  messagingSenderId: "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID",
+  appId: "NEXT_PUBLIC_FIREBASE_APP_ID",
+};
+
+export function getFirebaseMissingConfigKeys(): string[] {
+  return REQUIRED_FIREBASE_FIELDS
+    .filter((field) => !firebaseConfig[field])
+    .map((field) => FIREBASE_ENV_NAME_BY_FIELD[field]);
+}
+
 /** Check if Firebase is configured (env vars present) */
 export function isFirebaseConfigured(): boolean {
-  return !!(firebaseConfig.apiKey && firebaseConfig.projectId);
+  return getFirebaseMissingConfigKeys().length === 0;
 }
 
 /** Lazy-init Firebase app (singleton) */
 function getApp(): FirebaseApp {
   if (getApps().length > 0) return getApps()[0];
+  const missing = getFirebaseMissingConfigKeys();
+  if (missing.length > 0) {
+    throw new Error(
+      `Firebase config missing: ${missing.join(", ")}. Restart dev server after updating .env.local.`
+    );
+  }
   return initializeApp(firebaseConfig);
 }
 

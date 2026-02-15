@@ -9,6 +9,13 @@ import {
 import { getFirebaseFirestore } from "@/lib/firebase/client";
 import type { PortfolioTransaction } from "@/types/portfolio";
 
+/** Firestore rejects undefined field values; remove them before writing. */
+function sanitizeTransaction(tx: PortfolioTransaction): PortfolioTransaction {
+  return Object.fromEntries(
+    Object.entries(tx).filter(([, value]) => value !== undefined)
+  ) as PortfolioTransaction;
+}
+
 /** Firestore collection path for a user's transactions */
 function txCollection(uid: string) {
   const db = getFirebaseFirestore();
@@ -29,7 +36,7 @@ export async function upsertCloudTransaction(
   tx: PortfolioTransaction
 ): Promise<void> {
   const ref = doc(txCollection(uid), tx.id);
-  await setDoc(ref, tx, { merge: true });
+  await setDoc(ref, sanitizeTransaction(tx), { merge: true });
 }
 
 /** Delete a single transaction */
@@ -61,7 +68,7 @@ export async function migrateLocalToCloud(
     const batch = writeBatch(db);
     for (const tx of newTxs) {
       const ref = doc(txCollection(uid), tx.id);
-      batch.set(ref, tx);
+      batch.set(ref, sanitizeTransaction(tx));
     }
     await batch.commit();
   }

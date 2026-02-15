@@ -46,7 +46,7 @@ export default function PortfolioPage() {
       <div className="mx-auto max-w-3xl px-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors mb-4"
+          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors mb-4 print:hidden"
         >
           ← Back to Home
         </Link>
@@ -85,7 +85,7 @@ export default function PortfolioPage() {
         </div>
 
         {/* SEO content */}
-        <section className="mt-12 rounded-3xl border border-slate-100 bg-white p-8 shadow-soft">
+        <section className="mt-12 rounded-3xl border border-slate-100 bg-white p-8 shadow-soft print:hidden">
           <article className="prose prose-slate max-w-none text-sm">
             <h2 className="text-xl font-bold text-charcoal mb-3">
               About Gold Portfolio Tracker

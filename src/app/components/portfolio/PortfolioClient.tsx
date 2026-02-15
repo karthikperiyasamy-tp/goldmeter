@@ -16,6 +16,7 @@ import {
 import { computeHoldings } from "@/lib/portfolio/calc";
 import {
   isFirebaseConfigured,
+  getFirebaseMissingConfigKeys,
   signInWithGoogle,
   signOut,
   onAuthChange,
@@ -27,6 +28,7 @@ import {
   migrateLocalToCloud,
 } from "@/lib/portfolio/cloudStore";
 import type { User } from "firebase/auth";
+import type { FirebaseError } from "firebase/app";
 
 // ---------- helpers ----------
 
@@ -56,6 +58,27 @@ const getItemLabelByType = (itemType?: GoldItemType) => {
   return found?.label ?? "Other";
 };
 
+function getSyncErrorMessage(err: unknown): string {
+  const code =
+    typeof err === "object" && err && "code" in err
+      ? String((err as FirebaseError).code)
+      : "";
+
+  if (code.includes("permission-denied")) {
+    return "Firestore rules blocked access. Allow the signed-in user to read/write their own transactions.";
+  }
+  if (code.includes("failed-precondition")) {
+    return "Firestore is not ready for this Firebase project yet. Create the Firestore database first.";
+  }
+  if (code.includes("unauthenticated")) {
+    return "Your session expired. Please sign in again.";
+  }
+  if (code.includes("unavailable")) {
+    return "Network issue while syncing. Please retry in a moment.";
+  }
+  return "Could not sync with Firebase. Check console for exact error details.";
+}
+
 // ---------- sub-components ----------
 
 function SyncBadge({ status }: { status: SyncStatus }) {
@@ -74,13 +97,18 @@ function SyncBadge({ status }: { status: SyncStatus }) {
   );
 }
 
-/** SVG Donut Chart */
-function DonutChart({ segments }: { segments: { label: string; value: number; color: string }[] }) {
+/** SVG Donut Chart — supports grams (default) or currency mode */
+function DonutChart({ segments, mode = "grams" }: {
+  segments: { label: string; value: number; color: string }[];
+  mode?: "grams" | "currency";
+}) {
   const total = segments.reduce((s, seg) => s + seg.value, 0);
   if (total === 0) return null;
   const radius = 40;
   const circumference = 2 * Math.PI * radius;
   let offset = 0;
+  const fmtValue = mode === "currency" ? (v: number) => `₹${fmt(v)}` : (v: number) => `${fmtG(v)}g`;
+  const centerText = mode === "currency" ? `₹${fmt(total)}` : `${fmtG(total)}g`;
   return (
     <div className="flex items-center gap-4">
       <svg viewBox="0 0 100 100" className="w-28 h-28 shrink-0">
@@ -96,8 +124,8 @@ function DonutChart({ segments }: { segments: { label: string; value: number; co
           );
         })}
         <text x="50" y="48" textAnchor="middle" className="text-[8px] fill-slate-500">Total</text>
-        <text x="50" y="58" textAnchor="middle" className="text-[10px] fill-charcoal font-bold">
-          {fmtG(total)}g
+        <text x="50" y="58" textAnchor="middle" className={`fill-charcoal font-bold ${mode === "currency" ? "text-[8px]" : "text-[10px]"}`}>
+          {centerText}
         </text>
       </svg>
       <div className="space-y-1.5">
@@ -105,7 +133,7 @@ function DonutChart({ segments }: { segments: { label: string; value: number; co
           <div key={seg.label} className="flex items-center gap-2 text-xs">
             <span className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: seg.color }} />
             <span className="text-slate-600">
-              {seg.label}: <strong className="text-charcoal">{fmtG(seg.value)}g</strong>
+              {seg.label}: <strong className="text-charcoal">{fmtValue(seg.value)}</strong>
               <span className="text-slate-400 ml-1">({total > 0 ? ((seg.value / total) * 100).toFixed(0) : 0}%)</span>
             </span>
           </div>
@@ -148,6 +176,7 @@ function ValueBar({ invested, current }: { invested: number; current: number }) 
 /** SVG Line Chart for portfolio value over time */
 function PortfolioLineChart({ dataPoints }: { dataPoints: { date: string; invested: number; value: number }[] }) {
   if (dataPoints.length < 2) return null;
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   const padding = { top: 10, right: 10, bottom: 24, left: 50 };
   const width = 500;
@@ -171,10 +200,35 @@ function PortfolioLineChart({ dataPoints }: { dataPoints: { date: string; invest
 
   // Y-axis labels
   const yLabels = [minVal, minVal + range / 2, maxVal];
+  const xLabelIndices = Array.from(
+    new Set([0, Math.floor((dataPoints.length - 1) / 2), dataPoints.length - 1])
+  );
+  const activeIndex = hoverIndex;
+  const activePoint = activeIndex !== null ? dataPoints[activeIndex] : null;
+
+  const getClosestIndexFromClientX = (clientX: number, svgElement: SVGSVGElement) => {
+    const rect = svgElement.getBoundingClientRect();
+    const relativeX = ((clientX - rect.left) / rect.width) * width;
+    const safeX = Math.min(width - padding.right, Math.max(padding.left, relativeX));
+    const ratio = (safeX - padding.left) / chartW;
+    return Math.round(ratio * (dataPoints.length - 1));
+  };
 
   return (
-    <div className="w-full overflow-x-auto">
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto min-w-[320px]" preserveAspectRatio="xMidYMid meet">
+    <div className="relative w-full overflow-x-auto">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="w-full h-auto min-w-[320px]"
+        preserveAspectRatio="xMidYMid meet"
+        onMouseMove={(e) => setHoverIndex(getClosestIndexFromClientX(e.clientX, e.currentTarget))}
+        onMouseLeave={() => setHoverIndex(null)}
+        onTouchMove={(e) => {
+          const touch = e.touches[0];
+          if (!touch) return;
+          setHoverIndex(getClosestIndexFromClientX(touch.clientX, e.currentTarget));
+        }}
+        onTouchEnd={() => setHoverIndex(null)}
+      >
         {/* Grid lines */}
         {yLabels.map((v) => (
           <g key={v}>
@@ -196,10 +250,31 @@ function PortfolioLineChart({ dataPoints }: { dataPoints: { date: string; invest
         {/* Dots on last point */}
         <circle cx={x(dataPoints.length - 1)} cy={y(dataPoints[dataPoints.length - 1].invested)} r="3" fill="#3b82f6" />
         <circle cx={x(dataPoints.length - 1)} cy={y(dataPoints[dataPoints.length - 1].value)} r="3" fill="#10b981" />
+        {activeIndex !== null && (
+          <>
+            <line
+              x1={x(activeIndex)}
+              y1={padding.top}
+              x2={x(activeIndex)}
+              y2={height - padding.bottom}
+              stroke="#94a3b8"
+              strokeDasharray="3 3"
+              strokeWidth="1"
+            />
+            <circle cx={x(activeIndex)} cy={y(dataPoints[activeIndex].invested)} r="4" fill="#3b82f6" />
+            <circle cx={x(activeIndex)} cy={y(dataPoints[activeIndex].value)} r="4" fill="#10b981" />
+          </>
+        )}
 
         {/* X-axis labels (first, middle, last) */}
-        {[0, Math.floor(dataPoints.length / 2), dataPoints.length - 1].map((i) => (
-          <text key={i} x={x(i)} y={height - 4} textAnchor="middle" className="text-[7px] fill-slate-400">
+        {xLabelIndices.map((i) => (
+          <text
+            key={`x-${i}-${dataPoints[i]?.date ?? "na"}`}
+            x={x(i)}
+            y={height - 4}
+            textAnchor="middle"
+            className="text-[7px] fill-slate-400"
+          >
             {new Date(dataPoints[i].date).toLocaleDateString("en-IN", { month: "short", year: "2-digit" })}
           </text>
         ))}
@@ -212,6 +287,24 @@ function PortfolioLineChart({ dataPoints }: { dataPoints: { date: string; invest
           </linearGradient>
         </defs>
       </svg>
+      {activePoint && activeIndex !== null && (
+        <div
+          className="pointer-events-none absolute top-2 z-10 -translate-x-1/2 rounded-xl border border-slate-200 bg-white/95 px-3 py-2 text-[11px] shadow-lg backdrop-blur"
+          style={{
+            left: `${((x(activeIndex) / width) * 100).toFixed(2)}%`,
+          }}
+        >
+          <p className="font-semibold text-charcoal">
+            {new Date(activePoint.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+          </p>
+          <p className="text-slate-600">
+            <span className="text-blue-600 font-semibold">Invested:</span> ₹{fmt(activePoint.invested)}
+          </p>
+          <p className="text-slate-600">
+            <span className="text-emerald-600 font-semibold">Value:</span> ₹{fmt(activePoint.value)}
+          </p>
+        </div>
+      )}
       <div className="flex justify-center gap-6 mt-1 text-[10px] text-slate-500">
         <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-blue-500 rounded-full inline-block" /> Invested</span>
         <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-emerald-500 rounded-full inline-block" /> Portfolio Value</span>
@@ -234,10 +327,14 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
     () => (typeof window !== "undefined" ? getLocalTransactions() : [])
   );
   const [syncStatus, setSyncStatus] = useState<SyncStatus>("local");
+  const [syncErrorMessage, setSyncErrorMessage] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [avatarLoadFailed, setAvatarLoadFailed] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<PortfolioTransaction | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Form fields
   const [formType, setFormType] = useState<TransactionType>("buy");
@@ -251,7 +348,37 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
   const [formCustomItemName, setFormCustomItemName] = useState("");
   const [formNote, setFormNote] = useState("");
 
+  // Goal tracker (persisted in localStorage)
+  const [goldGoal, setGoldGoal] = useState<number>(() => {
+    if (typeof window === "undefined") return 0;
+    return parseFloat(localStorage.getItem("portfolio-gold-goal") || "0");
+  });
+  const [showGoalInput, setShowGoalInput] = useState(false);
+  const [goalInput, setGoalInput] = useState("");
+
+  // Transaction filters
+  const [filterSearch, setFilterSearch] = useState("");
+  const [filterPurity, setFilterPurity] = useState<"all" | "22K" | "24K">("all");
+  const [filterType, setFilterType] = useState<"all" | "buy" | "sell">("all");
+  const [filterItemType, setFilterItemType] = useState<"all" | GoldItemType>("all");
+
   const fbReady = isFirebaseConfigured();
+  const missingFirebaseKeys = getFirebaseMissingConfigKeys();
+
+  useEffect(() => {
+    setAvatarLoadFailed(false);
+  }, [user?.uid, user?.photoURL]);
+
+  useEffect(() => {
+    if (!deleteTarget) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !deleteLoading) {
+        setDeleteTarget(null);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [deleteTarget, deleteLoading]);
 
   // ---- auth listener ----
   useEffect(() => {
@@ -264,6 +391,7 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
   const loadCloudTransactions = useCallback(async () => {
     if (!user) return;
     setSyncStatus("syncing");
+    setSyncErrorMessage(null);
     try {
       const localTxs = getLocalTransactions();
       let cloudTxs: PortfolioTransaction[];
@@ -278,6 +406,7 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
     } catch (err) {
       console.error("Cloud load error:", err);
       setSyncStatus("error");
+      setSyncErrorMessage(getSyncErrorMessage(err));
       // Fall back to whatever we already have (initialised from localStorage)
     }
   }, [user]);
@@ -413,8 +542,15 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
       setTransactions(newTxs);
       if (user) {
         setSyncStatus("syncing");
-        try { await upsertCloudTransaction(user.uid, updated); setSyncStatus("synced"); }
-        catch { setSyncStatus("error"); }
+        setSyncErrorMessage(null);
+        try {
+          await upsertCloudTransaction(user.uid, updated);
+          setSyncStatus("synced");
+        }
+        catch (err) {
+          setSyncStatus("error");
+          setSyncErrorMessage(getSyncErrorMessage(err));
+        }
       } else { setLocalTransactions(newTxs); }
     } else {
       const tx: PortfolioTransaction = { id: genId(), ...baseTx, createdAt: now };
@@ -422,23 +558,50 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
       setTransactions(newTxs);
       if (user) {
         setSyncStatus("syncing");
-        try { await upsertCloudTransaction(user.uid, tx); setSyncStatus("synced"); }
-        catch { setSyncStatus("error"); }
+        setSyncErrorMessage(null);
+        try {
+          await upsertCloudTransaction(user.uid, tx);
+          setSyncStatus("synced");
+        }
+        catch (err) {
+          setSyncStatus("error");
+          setSyncErrorMessage(getSyncErrorMessage(err));
+        }
       } else { setLocalTransactions(newTxs); }
     }
     resetForm();
     setShowForm(false);
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this transaction?")) return;
+  const openDeleteModal = (tx: PortfolioTransaction) => {
+    setDeleteTarget(tx);
+  };
+
+  const closeDeleteModal = () => {
+    if (deleteLoading) return;
+    setDeleteTarget(null);
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    const id = deleteTarget.id;
+    setDeleteLoading(true);
     const newTxs = transactions.filter((t) => t.id !== id);
     setTransactions(newTxs);
     if (user) {
       setSyncStatus("syncing");
-      try { await deleteCloudTransaction(user.uid, id); setSyncStatus("synced"); }
-      catch { setSyncStatus("error"); }
+      setSyncErrorMessage(null);
+      try {
+        await deleteCloudTransaction(user.uid, id);
+        setSyncStatus("synced");
+      }
+      catch (err) {
+        setSyncStatus("error");
+        setSyncErrorMessage(getSyncErrorMessage(err));
+      }
     } else { setLocalTransactions(newTxs); }
+    setDeleteLoading(false);
+    setDeleteTarget(null);
   };
 
   const startEdit = (tx: PortfolioTransaction) => {
@@ -464,12 +627,73 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
       const localTxs = getLocalTransactions();
       setTransactions(localTxs);
       setSyncStatus("local");
+      setSyncErrorMessage(null);
     } catch (err) {
       console.error("Sign-out error:", err);
     }
   };
 
   const sortedTxs = useMemo(() => [...transactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()), [transactions]);
+
+  // Purity allocation for donut (by current value)
+  const purityAllocation = useMemo(() => {
+    const segments: { label: string; value: number; color: string }[] = [];
+    if (holdings22k.currentValue > 0) segments.push({ label: "22K Gold", value: holdings22k.currentValue, color: "#f59e0b" });
+    if (holdings24k.currentValue > 0) segments.push({ label: "24K Gold", value: holdings24k.currentValue, color: "#3b82f6" });
+    return segments;
+  }, [holdings22k.currentValue, holdings24k.currentValue]);
+
+  // Realized P&L totals
+  const totalRealizedPL = holdings22k.realizedPL + holdings24k.realizedPL;
+  const totalSellProceeds = holdings22k.totalSellProceeds + holdings24k.totalSellProceeds;
+  const hasSells = holdings22k.totalSold > 0 || holdings24k.totalSold > 0;
+  const totalSoldGrams = holdings22k.totalSold + holdings24k.totalSold;
+
+  // Filtered transactions
+  const filteredTxs = useMemo(() => {
+    let txs = sortedTxs;
+    if (filterSearch) {
+      const q = filterSearch.toLowerCase();
+      txs = txs.filter(tx =>
+        tx.note.toLowerCase().includes(q) ||
+        getItemLabel(tx).toLowerCase().includes(q) ||
+        tx.date.includes(q)
+      );
+    }
+    if (filterPurity !== "all") txs = txs.filter(tx => tx.purity === filterPurity);
+    if (filterType !== "all") txs = txs.filter(tx => tx.type === filterType);
+    if (filterItemType !== "all") txs = txs.filter(tx => tx.itemType === filterItemType);
+    return txs;
+  }, [sortedTxs, filterSearch, filterPurity, filterType, filterItemType]);
+
+  const hasActiveFilters = filterSearch || filterPurity !== "all" || filterType !== "all" || filterItemType !== "all";
+
+  // Quick-add: pre-fill form with common scenarios
+  const quickAdd = (purity: "22K" | "24K", itemType: GoldItemType) => {
+    resetForm();
+    setFormType("buy");
+    setFormPurity(purity);
+    setFormItemType(itemType);
+    setFormPrice(String(purity === "22K" ? gold22k : gold24k));
+    setShowForm(true);
+  };
+
+  // Goal tracker helpers
+  const saveGoal = () => {
+    const g = parseFloat(goalInput);
+    if (g > 0) {
+      setGoldGoal(g);
+      localStorage.setItem("portfolio-gold-goal", String(g));
+      setShowGoalInput(false);
+    }
+  };
+  const clearGoal = () => {
+    setGoldGoal(0);
+    localStorage.removeItem("portfolio-gold-goal");
+    setShowGoalInput(false);
+  };
+
+  const handlePrint = () => window.print();
 
   // ================================================
   // RENDER
@@ -485,6 +709,9 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
               <p className="text-sm text-slate-600 mt-1">Sign in with Google to save your gold portfolio to the cloud.</p>
               <div className="flex items-center gap-2 mt-2">
                 <SyncBadge status={syncStatus} />
+                {syncStatus === "error" && syncErrorMessage && (
+                  <span className="text-xs text-red-600">{syncErrorMessage}</span>
+                )}
                 {transactions.length > 0 && (
                   <span className="text-xs text-slate-400">{transactions.length} transaction{transactions.length !== 1 ? "s" : ""} stored locally</span>
                 )}
@@ -502,7 +729,17 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
                 Sign in with Google
               </button>
             ) : (
-              <span className="text-xs text-slate-400 italic">Cloud sync not configured</span>
+              <span className="text-xs text-slate-400 italic text-right">
+                Cloud sync not configured
+                {missingFirebaseKeys.length > 0 && (
+                  <>
+                    <br />
+                    Missing: {missingFirebaseKeys.join(", ")}
+                    <br />
+                    Restart dev server after updating `.env.local`
+                  </>
+                )}
+              </span>
             )}
           </div>
         </div>
@@ -512,11 +749,25 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
             <div className="flex items-center gap-3 min-w-0">
               {user.photoURL && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={user.photoURL} alt="" className="w-9 h-9 rounded-full border border-slate-200" />
+                <img
+                  src={user.photoURL}
+                  alt=""
+                  referrerPolicy="no-referrer"
+                  onError={() => setAvatarLoadFailed(true)}
+                  className={`w-9 h-9 rounded-full border border-slate-200 ${avatarLoadFailed ? "hidden" : ""}`}
+                />
+              )}
+              {(!user.photoURL || avatarLoadFailed) && (
+                <span className="w-9 h-9 rounded-full border border-slate-200 bg-slate-100 text-slate-600 text-xs font-semibold inline-flex items-center justify-center">
+                  {(user.displayName || user.email || "U").trim().charAt(0).toUpperCase()}
+                </span>
               )}
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-charcoal truncate">{user.displayName || user.email}</p>
                 <SyncBadge status={syncStatus} />
+                {syncStatus === "error" && syncErrorMessage && (
+                  <p className="text-xs text-red-600 mt-1 max-w-lg">{syncErrorMessage}</p>
+                )}
               </div>
             </div>
             <button onClick={handleSignOut} className="text-xs text-slate-500 hover:text-red-600 transition-colors shrink-0">Sign out</button>
@@ -529,11 +780,20 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
         <div className="rounded-3xl border border-amber-100 bg-gradient-to-br from-white via-amber-50/40 to-orange-50/30 p-6 shadow-soft">
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-lg font-bold text-charcoal">Portfolio Summary</h2>
-            {!isNaN(displayXIRR) && (
-              <div className={`rounded-full px-3 py-1 text-xs font-bold ${displayXIRR >= 0 ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>
-                XIRR: {displayXIRR >= 0 ? "+" : ""}{displayXIRR.toFixed(1)}% p.a.
-              </div>
-            )}
+            <div className="flex items-center gap-2">
+              {!isNaN(displayXIRR) && (
+                <div className={`rounded-full px-3 py-1 text-xs font-bold ${displayXIRR >= 0 ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>
+                  XIRR: {displayXIRR >= 0 ? "+" : ""}{displayXIRR.toFixed(1)}% p.a.
+                </div>
+              )}
+              <button
+                onClick={handlePrint}
+                className="rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-500 hover:text-amber-600 hover:border-amber-300 transition-colors print:hidden"
+                title="Print / Export PDF"
+              >
+                🖨️ Print
+              </button>
+            </div>
           </div>
 
           {/* Hero metrics */}
@@ -574,6 +834,48 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
             </div>
           </div>
 
+          {/* Realized P&L + Charges row */}
+          {(hasSells || holdings22k.totalCharges + holdings24k.totalCharges > 0) && (
+            <div className="grid gap-3 grid-cols-2 lg:grid-cols-3 mt-3">
+              {hasSells && (
+                <div className={`rounded-2xl bg-white/80 backdrop-blur p-4 border shadow-sm ${totalRealizedPL >= 0 ? "border-emerald-100" : "border-red-100"}`}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-base">💵</span>
+                    <p className="text-[11px] text-slate-500 uppercase tracking-wide">Realized P&L</p>
+                  </div>
+                  <p className={`text-lg font-bold ${totalRealizedPL >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+                    {totalRealizedPL >= 0 ? "+" : ""}₹{fmt(Math.abs(totalRealizedPL))}
+                  </p>
+                  <p className="text-[11px] text-slate-400">
+                    Sold {fmtG(totalSoldGrams)}g &middot; Proceeds ₹{fmt(totalSellProceeds)}
+                  </p>
+                </div>
+              )}
+              {(holdings22k.totalCharges + holdings24k.totalCharges) > 0 && (
+                <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-100 shadow-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-base">🏷️</span>
+                    <p className="text-[11px] text-slate-500 uppercase tracking-wide">Total Charges</p>
+                  </div>
+                  <p className="text-lg font-bold text-charcoal">₹{fmt(holdings22k.totalCharges + holdings24k.totalCharges)}</p>
+                  <p className="text-[11px] text-slate-400">Wastage + making charges</p>
+                </div>
+              )}
+              {hasSells && (
+                <div className="rounded-2xl bg-white/80 backdrop-blur p-4 border border-slate-100 shadow-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-base">📊</span>
+                    <p className="text-[11px] text-slate-500 uppercase tracking-wide">Total P&L</p>
+                  </div>
+                  <p className={`text-lg font-bold ${(totalRealizedPL + totalUnrealizedPL) >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+                    {(totalRealizedPL + totalUnrealizedPL) >= 0 ? "+" : ""}₹{fmt(Math.abs(totalRealizedPL + totalUnrealizedPL))}
+                  </p>
+                  <p className="text-[11px] text-slate-400">Realized + Unrealized</p>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Charts */}
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             <div className="rounded-2xl bg-white/70 backdrop-blur border border-slate-100 p-4">
@@ -588,11 +890,22 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
             )}
           </div>
 
+          {/* Purity split donut */}
+          {purityAllocation.length > 1 && (
+            <div className="mt-4 rounded-2xl bg-white/70 backdrop-blur border border-slate-100 p-4">
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Value by Purity</p>
+              <DonutChart segments={purityAllocation} mode="currency" />
+            </div>
+          )}
+
           {/* Portfolio Value Over Time Line Chart */}
           {lineChartData.length >= 2 && (
             <div className="mt-5 rounded-2xl bg-white/70 backdrop-blur border border-slate-100 p-4">
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Portfolio Value Over Time</p>
               <PortfolioLineChart dataPoints={lineChartData} />
+              <p className="text-[10px] text-slate-400 mt-2 text-center">
+                Historical values are approximated using your transaction prices. The last data point uses today&apos;s live rate.
+              </p>
             </div>
           )}
 
@@ -654,6 +967,83 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
         </div>
       )}
 
+      {/* ============== GOAL TRACKER ============== */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm print:hidden">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-bold text-charcoal flex items-center gap-2">
+            🎯 Gold Goal
+          </h2>
+          {goldGoal > 0 && !showGoalInput && (
+            <div className="flex gap-2">
+              <button onClick={() => { setGoalInput(String(goldGoal)); setShowGoalInput(true); }}
+                className="text-[11px] text-slate-400 hover:text-amber-600 transition-colors">Edit</button>
+              <button onClick={clearGoal}
+                className="text-[11px] text-slate-400 hover:text-red-500 transition-colors">Remove</button>
+            </div>
+          )}
+        </div>
+        {goldGoal > 0 && !showGoalInput ? (
+          <div>
+            <div className="flex justify-between text-xs mb-1.5">
+              <span className="text-slate-500">
+                {fmtG(totalNetGrams)}g of {fmtG(goldGoal)}g
+              </span>
+              <span className="font-semibold text-charcoal">
+                {goldGoal > 0 ? Math.min(100, (totalNetGrams / goldGoal) * 100).toFixed(1) : 0}%
+              </span>
+            </div>
+            <div className="h-4 bg-slate-100 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-700 ${
+                  totalNetGrams >= goldGoal
+                    ? "bg-gradient-to-r from-emerald-400 to-emerald-500"
+                    : "bg-gradient-to-r from-amber-400 to-orange-500"
+                }`}
+                style={{ width: `${Math.min(100, (totalNetGrams / goldGoal) * 100)}%` }}
+              />
+            </div>
+            {totalNetGrams >= goldGoal ? (
+              <p className="text-xs text-emerald-600 font-semibold mt-2">Goal reached! You&apos;ve accumulated {fmtG(totalNetGrams)}g of gold.</p>
+            ) : (
+              <p className="text-xs text-slate-500 mt-2">
+                {fmtG(goldGoal - totalNetGrams)}g more to go &middot; Worth ~₹{fmt((goldGoal - totalNetGrams) * gold22k)} at today&apos;s 22K rate
+              </p>
+            )}
+          </div>
+        ) : (
+          <div>
+            {!showGoalInput ? (
+              <div className="text-center py-2">
+                <p className="text-xs text-slate-500 mb-3">Set a gold accumulation target to track your progress.</p>
+                <button onClick={() => { setGoalInput(""); setShowGoalInput(true); }}
+                  className="rounded-full bg-amber-50 border border-amber-200 px-4 py-2 text-xs font-semibold text-amber-700 hover:bg-amber-100 transition-colors">
+                  + Set Goal
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-end gap-3">
+                <label className="flex-1 text-xs font-medium text-slate-600">
+                  Target weight (grams)
+                  <input type="number" step="0.1" min="0.1" placeholder="e.g. 50"
+                    className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                    value={goalInput} onChange={(e) => setGoalInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && saveGoal()}
+                  />
+                </label>
+                <button onClick={saveGoal} disabled={!parseFloat(goalInput) || parseFloat(goalInput) <= 0}
+                  className="rounded-full bg-amber-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-amber-700 transition-colors disabled:opacity-40">
+                  Save
+                </button>
+                <button onClick={() => setShowGoalInput(false)}
+                  className="rounded-full border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
       {/* ============== ADD TRANSACTION ============== */}
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold text-charcoal">
@@ -661,10 +1051,37 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
           {transactions.length > 0 && <span className="ml-2 text-xs text-slate-400 font-normal">({transactions.length})</span>}
         </h2>
         <button onClick={() => { resetForm(); setShowForm(!showForm); }}
-          className="rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white shadow-soft hover:bg-amber-700 transition-colors">
+          className="rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white shadow-soft hover:bg-amber-700 transition-colors print:hidden">
           {showForm ? "Cancel" : "+ Add Transaction"}
         </button>
       </div>
+
+      {/* Quick-add shortcuts (when form is NOT open and has transactions) */}
+      {!showForm && transactions.length > 0 && (
+        <div className="flex flex-wrap gap-2 print:hidden">
+          <span className="text-[11px] text-slate-400 self-center mr-1">Quick add:</span>
+          <button onClick={() => quickAdd("22K", "coin")}
+            className="rounded-full border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600 hover:bg-amber-50 hover:border-amber-200 hover:text-amber-700 transition-colors">
+            🪙 22K Coin
+          </button>
+          <button onClick={() => quickAdd("24K", "bar")}
+            className="rounded-full border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-colors">
+            🧱 24K Bar
+          </button>
+          <button onClick={() => quickAdd("22K", "necklace")}
+            className="rounded-full border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600 hover:bg-purple-50 hover:border-purple-200 hover:text-purple-700 transition-colors">
+            📿 22K Necklace
+          </button>
+          <button onClick={() => quickAdd("22K", "ring")}
+            className="rounded-full border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600 hover:bg-pink-50 hover:border-pink-200 hover:text-pink-700 transition-colors">
+            💍 22K Ring
+          </button>
+          <button onClick={() => quickAdd("24K", "digital")}
+            className="rounded-full border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-colors">
+            📱 24K Digital
+          </button>
+        </div>
+      )}
 
       {/* ---- Transaction Form ---- */}
       {showForm && (
@@ -806,62 +1223,245 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
 
       {/* ============== TRANSACTIONS LIST ============== */}
       {transactions.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-10 text-center">
-          <p className="text-3xl mb-3">📦</p>
-          <p className="text-sm font-semibold text-charcoal">No transactions yet</p>
-          <p className="text-xs text-slate-500 mt-1">Add your first gold buy or sell to start tracking your portfolio.</p>
-          <button onClick={() => { resetForm(); setShowForm(true); }}
-            className="mt-4 rounded-full bg-amber-600 px-5 py-2 text-sm font-semibold text-white hover:bg-amber-700 transition-colors">
-            + Add Transaction
-          </button>
-        </div>
-      ) : (
-        <div className="space-y-2">
-          {sortedTxs.map((tx) => {
-            const totalAmount = tx.grams * tx.pricePerGram + (tx.type === "buy" ? tx.charges : 0);
-            return (
-              <div key={tx.id} className={`rounded-xl border p-4 transition-colors ${
-                tx.type === "buy"
-                  ? "border-emerald-100 bg-emerald-50/30 hover:border-emerald-200"
-                  : "border-red-100 bg-red-50/30 hover:border-red-200"
-              }`}>
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-lg shrink-0 ${
-                      tx.type === "buy" ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
-                    }`}>
-                      {getItemIcon(tx.itemType)}
-                    </span>
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-charcoal">
-                        <span className={`${tx.type === "buy" ? "text-emerald-700" : "text-red-600"}`}>
-                          {tx.type === "buy" ? "Bought" : "Sold / Gifted"}
-                        </span>
-                        {" "}{fmtG(tx.grams)}g{" "}
-                        <span className="text-slate-400 font-normal text-xs">
-                          {getItemLabel(tx)} &middot; {tx.purity}
-                        </span>
-                      </p>
-                      <p className="text-xs text-slate-500">
-                        {new Date(tx.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                        {tx.note && <span className="ml-2 text-slate-400">&middot; {tx.note}</span>}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className={`text-sm font-semibold ${tx.type === "buy" ? "text-emerald-700" : "text-red-600"}`}>
-                      {tx.type === "buy" ? "+" : "−"}₹{fmt(totalAmount)}
-                    </p>
-                    <p className="text-[11px] text-slate-400">@ ₹{fmt(tx.pricePerGram)}/g</p>
-                  </div>
+        <div className="space-y-6">
+          {/* Blurred mock dashboard preview */}
+          <div className="relative rounded-3xl border border-amber-100 bg-gradient-to-br from-white via-amber-50/40 to-orange-50/30 p-6 shadow-soft overflow-hidden">
+            <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center">
+              <p className="text-4xl mb-2">✨</p>
+              <p className="text-base font-bold text-charcoal">Your dashboard will appear here</p>
+              <p className="text-xs text-slate-500 mt-1">Add your first transaction to unlock charts, P&L tracking, and more.</p>
+            </div>
+            <div className="opacity-40 pointer-events-none select-none" aria-hidden="true">
+              <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+                <div className="rounded-2xl bg-white/80 p-4 border border-slate-100">
+                  <p className="text-[11px] text-slate-400 uppercase">Invested</p>
+                  <p className="text-xl font-bold text-slate-300">₹1,50,000</p>
                 </div>
-                <div className="mt-2 flex gap-2 justify-end">
-                  <button onClick={() => startEdit(tx)} className="text-xs text-slate-400 hover:text-amber-600 transition-colors">Edit</button>
-                  <button onClick={() => handleDelete(tx.id)} className="text-xs text-slate-400 hover:text-red-600 transition-colors">Delete</button>
+                <div className="rounded-2xl bg-white/80 p-4 border border-slate-100">
+                  <p className="text-[11px] text-slate-400 uppercase">Current Value</p>
+                  <p className="text-xl font-bold text-slate-300">₹1,72,500</p>
+                </div>
+                <div className="rounded-2xl bg-emerald-50/80 p-4 border border-emerald-100">
+                  <p className="text-[11px] text-slate-400 uppercase">Unrealized P&L</p>
+                  <p className="text-xl font-bold text-slate-300">+₹22,500</p>
+                </div>
+                <div className="rounded-2xl bg-amber-100/60 p-4">
+                  <p className="text-[11px] text-slate-300 uppercase">Net Holding</p>
+                  <p className="text-xl font-bold text-slate-300">25.000g</p>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          </div>
+
+          {/* Quick-start guide */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6">
+            <h3 className="text-sm font-bold text-charcoal mb-4">Get started in 3 easy steps</h3>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="flex gap-3 items-start">
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-700 text-sm font-bold shrink-0">1</span>
+                <div>
+                  <p className="text-sm font-semibold text-charcoal">Add a purchase</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Record your gold buy with weight, price, and item type.</p>
+                </div>
+              </div>
+              <div className="flex gap-3 items-start">
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-700 text-sm font-bold shrink-0">2</span>
+                <div>
+                  <p className="text-sm font-semibold text-charcoal">Track your portfolio</p>
+                  <p className="text-xs text-slate-500 mt-0.5">See live P&L, charts, and XIRR returns automatically.</p>
+                </div>
+              </div>
+              <div className="flex gap-3 items-start">
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-700 text-sm font-bold shrink-0">3</span>
+                <div>
+                  <p className="text-sm font-semibold text-charcoal">Sync across devices</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Sign in with Google to access your portfolio anywhere.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick-add shortcuts */}
+            <div className="mt-5 pt-4 border-t border-slate-100">
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Quick add at today&apos;s rate</p>
+              <div className="flex flex-wrap gap-2">
+                <button onClick={() => quickAdd("22K", "coin")}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-700 hover:bg-amber-100 transition-colors">
+                  🪙 22K Coin @ ₹{fmt(gold22k)}/g
+                </button>
+                <button onClick={() => quickAdd("24K", "bar")}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors">
+                  🧱 24K Bar @ ₹{fmt(gold24k)}/g
+                </button>
+                <button onClick={() => quickAdd("22K", "necklace")}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 bg-purple-50 px-3 py-1.5 text-xs font-medium text-purple-700 hover:bg-purple-100 transition-colors">
+                  📿 22K Necklace @ ₹{fmt(gold22k)}/g
+                </button>
+                <button onClick={() => quickAdd("22K", "ring")}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-pink-200 bg-pink-50 px-3 py-1.5 text-xs font-medium text-pink-700 hover:bg-pink-100 transition-colors">
+                  💍 22K Ring @ ₹{fmt(gold22k)}/g
+                </button>
+                <button onClick={() => quickAdd("24K", "digital")}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+                  📱 24K Digital @ ₹{fmt(gold24k)}/g
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Filter bar */}
+          {transactions.length > 3 && (
+            <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm space-y-3 print:hidden">
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400 text-sm">🔍</span>
+                <input
+                  type="text"
+                  placeholder="Search by note, item, or date..."
+                  className="flex-1 bg-transparent text-sm text-charcoal outline-none placeholder:text-slate-400"
+                  value={filterSearch}
+                  onChange={(e) => setFilterSearch(e.target.value)}
+                />
+                {hasActiveFilters && (
+                  <button onClick={() => { setFilterSearch(""); setFilterPurity("all"); setFilterType("all"); setFilterItemType("all"); }}
+                    className="text-[11px] text-amber-600 font-medium hover:text-amber-700 transition-colors shrink-0">
+                    Clear filters
+                  </button>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <select value={filterType} onChange={(e) => setFilterType(e.target.value as "all" | "buy" | "sell")}
+                  className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-600 bg-white focus:border-amber-400 focus:outline-none">
+                  <option value="all">All Types</option>
+                  <option value="buy">Buy</option>
+                  <option value="sell">Sell</option>
+                </select>
+                <select value={filterPurity} onChange={(e) => setFilterPurity(e.target.value as "all" | "22K" | "24K")}
+                  className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-600 bg-white focus:border-amber-400 focus:outline-none">
+                  <option value="all">All Purity</option>
+                  <option value="22K">22K</option>
+                  <option value="24K">24K</option>
+                </select>
+                <select value={filterItemType} onChange={(e) => setFilterItemType(e.target.value as "all" | GoldItemType)}
+                  className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-600 bg-white focus:border-amber-400 focus:outline-none">
+                  <option value="all">All Items</option>
+                  {GOLD_ITEM_TYPES.map((it) => (
+                    <option key={it.value} value={it.value}>{it.icon} {it.label}</option>
+                  ))}
+                </select>
+                {hasActiveFilters && (
+                  <span className="self-center text-[11px] text-slate-400">
+                    {filteredTxs.length} of {transactions.length} shown
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Transaction list */}
+          <div className="space-y-2">
+            {filteredTxs.length === 0 && hasActiveFilters ? (
+              <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-8 text-center">
+                <p className="text-2xl mb-2">🔍</p>
+                <p className="text-sm font-semibold text-charcoal">No matching transactions</p>
+                <p className="text-xs text-slate-500 mt-1">Try adjusting your filters or search query.</p>
+              </div>
+            ) : (
+              filteredTxs.map((tx) => {
+                const totalAmount = tx.grams * tx.pricePerGram + (tx.type === "buy" ? tx.charges : 0);
+                return (
+                  <div key={tx.id} className={`group rounded-xl border p-4 transition-colors ${
+                    tx.type === "buy"
+                      ? "border-emerald-100 bg-emerald-50/30 hover:border-emerald-200"
+                      : "border-red-100 bg-red-50/30 hover:border-red-200"
+                  }`}>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className={`inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl text-lg shrink-0 ${
+                          tx.type === "buy" ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
+                        }`}>
+                          {getItemIcon(tx.itemType)}
+                        </span>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-charcoal">
+                            <span className={`${tx.type === "buy" ? "text-emerald-700" : "text-red-600"}`}>
+                              {tx.type === "buy" ? "Bought" : "Sold / Gifted"}
+                            </span>
+                            {" "}{fmtG(tx.grams)}g{" "}
+                            <span className="text-slate-400 font-normal text-xs">
+                              {getItemLabel(tx)} &middot; {tx.purity}
+                            </span>
+                          </p>
+                          <p className="text-xs text-slate-500 mt-0.5">
+                            {new Date(tx.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                            {tx.note && <span className="ml-2 text-slate-400">&middot; {tx.note}</span>}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className={`text-sm font-semibold ${tx.type === "buy" ? "text-emerald-700" : "text-red-600"}`}>
+                          {tx.type === "buy" ? "+" : "−"}₹{fmt(totalAmount)}
+                        </p>
+                        <p className="text-[11px] text-slate-400">@ ₹{fmt(tx.pricePerGram)}/g</p>
+                      </div>
+                    </div>
+                    <div className="mt-2 flex gap-1 justify-end print:hidden">
+                      <button onClick={() => startEdit(tx)}
+                        className="rounded-lg px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors sm:opacity-0 sm:group-hover:opacity-100">
+                        ✏️ Edit
+                      </button>
+                      <button onClick={() => openDeleteModal(tx)}
+                        className="rounded-lg px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors sm:opacity-0 sm:group-hover:opacity-100">
+                        🗑️ Delete
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </>
+      )}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/45 p-4">
+          <div
+            className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-transaction-title"
+          >
+            <p id="delete-transaction-title" className="text-base font-semibold text-charcoal">
+              Delete this transaction?
+            </p>
+            <p className="mt-2 text-sm text-slate-600">
+              This will permanently remove
+              {" "}
+              <span className="font-semibold text-charcoal">
+                {deleteTarget.type === "buy" ? "buy" : "sell"} {fmtG(deleteTarget.grams)}g {getItemLabel(deleteTarget)}
+              </span>
+              {" "}
+              from your portfolio.
+            </p>
+            <p className="mt-1 text-xs text-slate-400">
+              Date: {new Date(deleteTarget.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+            </p>
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                onClick={closeDeleteModal}
+                disabled={deleteLoading}
+                className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleteLoading}
+                className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60"
+              >
+                {deleteLoading ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

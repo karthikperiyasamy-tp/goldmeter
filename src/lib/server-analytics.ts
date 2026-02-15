@@ -174,6 +174,31 @@ export async function getAnalyticsSummary(days: number | string = 7, range?: str
         },
         { $sort: { _id: 1 } }
       ]).toArray();
+
+      const sectionBreakdown = await collection.aggregate([
+        { $match: { timestamp: { $gte: startDate, $lte: endDate } } },
+        {
+          $group: {
+            _id: {
+              $switch: {
+                branches: [
+                  { case: { $or: [{ $eq: ['$path', '/'] }, { $regexMatch: { input: '$path', regex: '^/gold-rate' } }] }, then: 'Gold Rate' },
+                  { case: { $regexMatch: { input: '$path', regex: '^/silver-rate' } }, then: 'Silver Rate' },
+                  { case: { $regexMatch: { input: '$path', regex: '^/portfolio' } }, then: 'Portfolio' },
+                  { case: { $regexMatch: { input: '$path', regex: '^/articles' } }, then: 'Articles' },
+                  { case: { $regexMatch: { input: '$path', regex: '^/news' } }, then: 'News' },
+                  { case: { $regexMatch: { input: '$path', regex: '^/calculator' } }, then: 'Calculator' },
+                  { case: { $regexMatch: { input: '$path', regex: '^/jewellers' } }, then: 'Jewellers' },
+                  { case: { $regexMatch: { input: '$path', regex: '^/gold-comparison' } }, then: 'Compare' },
+                ],
+                default: 'Other'
+              }
+            },
+            count: { $sum: 1 }
+          }
+        },
+        { $sort: { count: -1 } }
+      ]).toArray();
       
       return {
         totalViews,
@@ -182,6 +207,7 @@ export async function getAnalyticsSummary(days: number | string = 7, range?: str
         sources,
         topCities,
         hourlyTraffic,
+        sectionBreakdown,
       };
     } else if (typeof days === 'number') {
       // For fractional days (minutes/hours)
@@ -295,6 +321,32 @@ export async function getAnalyticsSummary(days: number | string = 7, range?: str
       },
       { $sort: { _id: 1 } }
     ]).toArray();
+
+    // Section breakdown - aggregate all pages into sections
+    const sectionBreakdown = await collection.aggregate([
+      { $match: { timestamp: { $gte: startDate } } },
+      {
+        $group: {
+          _id: {
+            $switch: {
+              branches: [
+                { case: { $or: [{ $eq: ['$path', '/'] }, { $regexMatch: { input: '$path', regex: '^/gold-rate' } }] }, then: 'Gold Rate' },
+                { case: { $regexMatch: { input: '$path', regex: '^/silver-rate' } }, then: 'Silver Rate' },
+                { case: { $regexMatch: { input: '$path', regex: '^/portfolio' } }, then: 'Portfolio' },
+                { case: { $regexMatch: { input: '$path', regex: '^/articles' } }, then: 'Articles' },
+                { case: { $regexMatch: { input: '$path', regex: '^/news' } }, then: 'News' },
+                { case: { $regexMatch: { input: '$path', regex: '^/calculator' } }, then: 'Calculator' },
+                { case: { $regexMatch: { input: '$path', regex: '^/jewellers' } }, then: 'Jewellers' },
+                { case: { $regexMatch: { input: '$path', regex: '^/gold-comparison' } }, then: 'Compare' },
+              ],
+              default: 'Other'
+            }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { count: -1 } }
+    ]).toArray();
     
     return {
       totalViews,
@@ -303,6 +355,7 @@ export async function getAnalyticsSummary(days: number | string = 7, range?: str
       sources,
       topCities,
       hourlyTraffic,
+      sectionBreakdown,
     };
   } catch (error) {
     console.error('❌ [Analytics] Error getting summary:', error);

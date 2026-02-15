@@ -58,6 +58,14 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   const citySlug = city.toLowerCase();
   const goldHref = city === "India" ? "/" : `/gold-rate/${citySlug}`;
   const silverHref = city === "India" ? "/silver-rate" : `/silver-rate/${citySlug}`;
+  const primaryNavItems = [
+    { label: "Portfolio", href: "/portfolio", highlight: true },
+    { label: "Gold Rate Today", href: goldHref },
+    { label: "Silver Rate", href: silverHref },
+    { label: "Calculator", href: "/calculator" },
+    { label: "Articles", href: "/articles" },
+    { label: "News", href: "/news" },
+  ];
 
   // Filter cities based on search query
   const filteredCities = searchQuery
@@ -147,33 +155,52 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
         </div>
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 lg:flex">
-          {[
-            { label: "Gold Rate Today", href: goldHref },
-            { label: "Silver Rate", href: silverHref },
-            { label: "Calculator", href: "/calculator" },
-            { label: "Articles", href: "/articles" },
-            { label: "Portfolio", href: "/portfolio" },
-            { label: "News", href: "/news" },
-          ].map((item) => {
+          {primaryNavItems.map((item) => {
             const isActive = item.label === "Gold Rate Today" 
               ? isGoldRatePage 
               : item.label === "Silver Rate"
                 ? isSilverRoute
                 : pathname === item.href;
             
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`transition-colors ${
-                  isActive 
-                    ? "text-amber-600 font-semibold" 
-                    : "hover:text-amber-600"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
+            return item.highlight ? (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`transition-all rounded-full ${
+                    isActive
+                      ? "portfolio-btn portfolio-btn-active inline-flex items-center gap-2 px-3 py-1 text-white shadow-soft font-semibold"
+                      : "portfolio-btn portfolio-btn-rainbow"
+                  }`}
+                >
+                  {isActive ? (
+                    <>
+                      <span>Portfolio</span>
+                      <span className="new-badge rounded-full px-1.5 py-0.5 text-[10px] leading-none font-bold tracking-wide bg-white/30 text-white">
+                        NEW
+                      </span>
+                    </>
+                  ) : (
+                    <span className="portfolio-btn-inner">
+                      <span className="portfolio-rainbow-text">Portfolio</span>
+                      <span className="new-badge rounded-full px-1.5 py-0.5 text-[10px] leading-none font-bold tracking-wide bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm">
+                        NEW
+                      </span>
+                    </span>
+                  )}
+                </Link>
+              ) : (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`transition-all ${
+                    isActive
+                      ? "text-amber-600 font-semibold"
+                      : "hover:text-amber-600"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
           })}
           
           {/* More Menu (3-dot vertical) */}
@@ -233,6 +260,32 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
         </nav>
 
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+          {/* Compact Portfolio button — mobile only (visible below lg) */}
+          <Link
+            href="/portfolio"
+            className={`lg:hidden transition-all rounded-full ${
+              pathname === "/portfolio"
+                ? "portfolio-btn portfolio-btn-active inline-flex items-center gap-1 px-2 py-1 text-white shadow-soft font-semibold text-[11px]"
+                : "portfolio-btn portfolio-btn-rainbow"
+            }`}
+          >
+            {pathname === "/portfolio" ? (
+              <>
+                <span>Portfolio</span>
+                <span className="new-badge rounded-full px-1 py-0.5 text-[8px] leading-none font-bold tracking-wide bg-white/30 text-white">
+                  NEW
+                </span>
+              </>
+            ) : (
+              <span className="portfolio-btn-inner !px-2 !py-1">
+                <span className="portfolio-rainbow-text !text-[11px]">Portfolio</span>
+                <span className="new-badge rounded-full px-1 py-0.5 text-[8px] leading-none font-bold tracking-wide bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm">
+                  NEW
+                </span>
+              </span>
+            )}
+          </Link>
+
           <select
             value={city}
             onChange={(event) => {
@@ -267,12 +320,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
           <nav className="mx-auto max-w-6xl px-4 py-4">
             <div className="space-y-1">
               {[
-                { label: "Gold Rate Today", href: goldHref },
-                { label: "Silver Rate", href: silverHref },
-                { label: "Calculator", href: "/calculator" },
-                { label: "Articles", href: "/articles" },
-                { label: "Portfolio", href: "/portfolio" },
-                { label: "News", href: "/news" },
+                ...primaryNavItems.filter((item) => !item.highlight),
                 { label: "Jewellers", href: "/jewellers" },
                 { label: "Compare Gold Rates", href: "/gold-comparison" },
               ].map((item) => {

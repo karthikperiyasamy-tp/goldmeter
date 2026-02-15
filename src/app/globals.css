@@ -25,6 +25,156 @@
   }
 }
 
+/* Portfolio button animations */
+@keyframes portfolio-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes portfolio-glow {
+  0%, 100% {
+    box-shadow: 0 0 4px rgba(245, 158, 11, 0.3), 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+  50% {
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.5), 0 0 20px rgba(245, 158, 11, 0.15);
+  }
+}
+
+@keyframes new-badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.85;
+  }
+}
+
+@keyframes diagonal-sweep {
+  0% {
+    transform: translateX(-100%) rotate(-45deg);
+  }
+  100% {
+    transform: translateX(300%) rotate(-45deg);
+  }
+}
+
+.portfolio-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.portfolio-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  animation: diagonal-sweep 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.portfolio-btn:hover {
+  transform: translateY(-1px) scale(1.03);
+}
+
+.portfolio-btn:hover::before {
+  animation-duration: 1.2s;
+}
+
+/* Rainbow gradient border for non-active state */
+@keyframes rainbow-border {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.portfolio-btn-rainbow {
+  border: none !important;
+  background: linear-gradient(
+    90deg,
+    #f59e0b, #f97316, #ef4444, #ec4899, #a855f7, 
+    #6366f1, #3b82f6, #06b6d4, #10b981, #f59e0b
+  );
+  background-size: 300% 100%;
+  animation: rainbow-border 4s linear infinite;
+  padding: 2px;
+}
+
+.portfolio-btn-rainbow > .portfolio-btn-inner {
+  background: white;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  height: 100%;
+  transition: background 0.3s ease;
+}
+
+.portfolio-btn-rainbow:hover > .portfolio-btn-inner {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.portfolio-btn-rainbow:hover {
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.3), 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+/* Rainbow animated text for the label */
+@keyframes rainbow-text {
+  0% { color: #f59e0b; }
+  15% { color: #f97316; }
+  30% { color: #ef4444; }
+  45% { color: #a855f7; }
+  60% { color: #6366f1; }
+  75% { color: #06b6d4; }
+  90% { color: #10b981; }
+  100% { color: #f59e0b; }
+}
+
+.portfolio-rainbow-text {
+  animation: rainbow-text 4s linear infinite;
+  font-weight: 700;
+}
+
+.portfolio-btn-active {
+  background: linear-gradient(135deg, #f59e0b, #ea580c, #f59e0b, #ea580c);
+  background-size: 300% 300%;
+  animation: portfolio-glow 2.5s ease-in-out infinite, portfolio-gradient-shift 4s ease infinite;
+}
+
+@keyframes portfolio-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.new-badge {
+  animation: new-badge-pulse 2s ease-in-out infinite;
+  display: inline-block;
+}
+
 /* Print styles - using @media print for custom styles */
 /* Tailwind's print: utilities handle most cases automatically */
 @media print {
