@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { ArticleMeta } from "@/lib/articles";
+import { getArticleDateISO } from "@/lib/articles";
 
 type SortBy = "category" | "date" | "readTime";
 
@@ -21,8 +22,8 @@ export default function ArticlesListClient({ articles, categories }: Props) {
       list = list.filter((a) => a.category === filterCat);
     }
     if (sortBy === "date") {
-      // Newest first — parse the "Updated Dec 14, 2025" format
-      list.sort((a, b) => b.date.localeCompare(a.date));
+      // Newest first — parse "Updated Dec 14, 2025" → "2025-12-14" ISO strings
+      list.sort((a, b) => getArticleDateISO(b).localeCompare(getArticleDateISO(a)));
     } else if (sortBy === "readTime") {
       // Shortest first
       list.sort(

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type {
   PortfolioTransaction,
   SyncStatus,
@@ -313,6 +313,216 @@ function PortfolioLineChart({ dataPoints }: { dataPoints: { date: string; invest
   );
 }
 
+// ---------- tutorial ----------
+
+interface TutorialStep {
+  targetId: string | null;
+  title: string;
+  description: string;
+  icon: string;
+  position: "center" | "bottom" | "top";
+}
+
+const TUTORIAL_STEPS: TutorialStep[] = [
+  {
+    targetId: null,
+    title: "Welcome to Gold Portfolio Tracker!",
+    description: "Track all your gold investments in one place with live P&L, charts, and more. Let\u2019s take a quick 30-second tour.",
+    icon: "👋",
+    position: "center",
+  },
+  {
+    targetId: "tour-add-btn",
+    title: "Record Your Gold Purchases",
+    description: "Tap \u201c+ Add Transaction\u201d to log a gold buy or sell. Enter weight, price per gram, purity (22K/24K), item type, and any charges.",
+    icon: "➕",
+    position: "top",
+  },
+  {
+    targetId: "tour-quick-add",
+    title: "Quick-Add Shortcuts",
+    description: "Use these one-tap buttons to pre-fill common purchases at today\u2019s live rate. Just enter the weight and you\u2019re done!",
+    icon: "⚡",
+    position: "top",
+  },
+  {
+    targetId: "tour-signin",
+    title: "Sync Across All Devices",
+    description: "Sign in with Google (free, 2 seconds) to save your portfolio to the cloud. Access it from any phone, tablet, or laptop.",
+    icon: "☁️",
+    position: "bottom",
+  },
+  {
+    targetId: "tour-goal",
+    title: "Set a Gold Goal",
+    description: "Want to accumulate 50g? 100g? Set a target and watch the progress bar fill up as you add purchases.",
+    icon: "🎯",
+    position: "top",
+  },
+  {
+    targetId: null,
+    title: "Your Dashboard Awaits!",
+    description: "Once you add your first purchase, your dashboard appears with live P&L, XIRR returns, allocation charts, and portfolio value over time.",
+    icon: "📊",
+    position: "center",
+  },
+  {
+    targetId: null,
+    title: "You\u2019re All Set!",
+    description: "Start by adding your first gold purchase. Your data stays private \u2014 stored in your browser until you choose to sign in.",
+    icon: "🚀",
+    position: "center",
+  },
+];
+
+function TutorialOverlay({
+  step,
+  totalSteps,
+  currentStep,
+  onNext,
+  onPrev,
+  onSkip,
+}: {
+  step: TutorialStep;
+  totalSteps: number;
+  currentStep: number;
+  onNext: () => void;
+  onPrev: () => void;
+  onSkip: () => void;
+}) {
+  const [spotlightRect, setSpotlightRect] = useState<DOMRect | null>(null);
+
+  useEffect(() => {
+    if (!step.targetId) {
+      setSpotlightRect(null);
+      return;
+    }
+    const el = document.getElementById(step.targetId);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      const updateRect = () => setSpotlightRect(el.getBoundingClientRect());
+      setTimeout(updateRect, 350);
+      window.addEventListener("resize", updateRect);
+      return () => window.removeEventListener("resize", updateRect);
+    } else {
+      setSpotlightRect(null);
+    }
+  }, [step.targetId]);
+
+  const isCenter = !spotlightRect || step.position === "center";
+  const isFirst = currentStep === 0;
+  const isLast = currentStep === totalSteps - 1;
+
+  return (
+    <div className="fixed inset-0 z-[9999]" onClick={onSkip}>
+      {/* Dark overlay with spotlight cutout */}
+      {spotlightRect ? (
+        <div
+          className="fixed rounded-2xl z-[9998] transition-all duration-300 pointer-events-none"
+          style={{
+            top: spotlightRect.top - 8,
+            left: spotlightRect.left - 8,
+            width: spotlightRect.width + 16,
+            height: spotlightRect.height + 16,
+            boxShadow: "0 0 0 9999px rgba(15, 23, 42, 0.6)",
+          }}
+        />
+      ) : (
+        <div className="fixed inset-0 bg-slate-900/60 z-[9998]" />
+      )}
+
+      {/* Tooltip card */}
+      <div
+        className="fixed z-[9999] w-[calc(100vw-2rem)] max-w-sm"
+        style={
+          isCenter
+            ? { top: "50%", left: "50%", transform: "translate(-50%, -50%)" }
+            : step.position === "bottom"
+            ? {
+                top: (spotlightRect?.bottom ?? 0) + 16,
+                left: Math.max(
+                  16,
+                  Math.min(
+                    (spotlightRect?.left ?? 0) + (spotlightRect?.width ?? 0) / 2 - 176,
+                    window.innerWidth - 368
+                  )
+                ),
+              }
+            : {
+                top: Math.max(16, (spotlightRect?.top ?? 0) - 16),
+                left: Math.max(
+                  16,
+                  Math.min(
+                    (spotlightRect?.left ?? 0) + (spotlightRect?.width ?? 0) / 2 - 176,
+                    window.innerWidth - 368
+                  )
+                ),
+                transform: "translateY(-100%)",
+              }
+        }
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
+          {/* Step indicator */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex gap-1">
+              {Array.from({ length: totalSteps }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1.5 rounded-full transition-all ${
+                    i === currentStep
+                      ? "w-6 bg-amber-500"
+                      : i < currentStep
+                      ? "w-1.5 bg-amber-300"
+                      : "w-1.5 bg-slate-200"
+                  }`}
+                />
+              ))}
+            </div>
+            <button
+              onClick={onSkip}
+              className="text-[11px] text-slate-400 hover:text-slate-600 transition-colors"
+            >
+              Skip tour
+            </button>
+          </div>
+
+          <div className="text-center sm:text-left">
+            <p className="text-3xl mb-2">{step.icon}</p>
+            <h3 className="text-base font-bold text-charcoal">{step.title}</h3>
+            <p className="text-sm text-slate-600 mt-1.5 leading-relaxed">
+              {step.description}
+            </p>
+          </div>
+
+          <div className="mt-4 flex items-center justify-between gap-3">
+            {isFirst ? (
+              <span />
+            ) : (
+              <button
+                onClick={onPrev}
+                className="rounded-full border border-slate-200 px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+              >
+                ← Back
+              </button>
+            )}
+            <button
+              onClick={onNext}
+              className="rounded-full bg-amber-600 px-5 py-2 text-xs font-semibold text-white hover:bg-amber-700 transition-colors"
+            >
+              {isLast ? "Get Started!" : "Next →"}
+            </button>
+          </div>
+
+          <p className="text-[10px] text-slate-400 text-center mt-3">
+            {currentStep + 1} of {totalSteps}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ---------- main ----------
 
 interface Props {
@@ -355,6 +565,11 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
   });
   const [showGoalInput, setShowGoalInput] = useState(false);
   const [goalInput, setGoalInput] = useState("");
+
+  // Tutorial / onboarding
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialStep, setTutorialStep] = useState(0);
+  const tutorialTriggered = useRef(false);
 
   // Transaction filters
   const [filterSearch, setFilterSearch] = useState("");
@@ -695,6 +910,31 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
 
   const handlePrint = () => window.print();
 
+  // Auto-show tutorial for first-time visitors
+  useEffect(() => {
+    if (tutorialTriggered.current) return;
+    if (authLoading) return;
+    const seen = localStorage.getItem("portfolio-tour-seen");
+    if (!seen && transactions.length === 0) {
+      tutorialTriggered.current = true;
+      const timer = setTimeout(() => {
+        setTutorialStep(0);
+        setShowTutorial(true);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [authLoading, transactions.length]);
+
+  const startTutorial = () => {
+    setTutorialStep(0);
+    setShowTutorial(true);
+  };
+
+  const endTutorial = () => {
+    setShowTutorial(false);
+    localStorage.setItem("portfolio-tour-seen", "1");
+  };
+
   // ================================================
   // RENDER
   // ================================================
@@ -702,7 +942,7 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
     <div className="space-y-6">
       {/* ---- Sign-in / User Card ---- */}
       {!user ? (
-        <div className="rounded-2xl border-2 border-dashed border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 p-5">
+        <div id="tour-signin" className="rounded-2xl border-2 border-dashed border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 p-5">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="flex-1">
               <p className="text-base font-semibold text-charcoal">Sync your portfolio across devices</p>
@@ -968,7 +1208,7 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
       )}
 
       {/* ============== GOAL TRACKER ============== */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm print:hidden">
+      <div id="tour-goal" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm print:hidden">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-sm font-bold text-charcoal flex items-center gap-2">
             🎯 Gold Goal
@@ -1050,7 +1290,7 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
           Transactions
           {transactions.length > 0 && <span className="ml-2 text-xs text-slate-400 font-normal">({transactions.length})</span>}
         </h2>
-        <button onClick={() => { resetForm(); setShowForm(!showForm); }}
+        <button id="tour-add-btn" onClick={() => { resetForm(); setShowForm(!showForm); }}
           className="rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white shadow-soft hover:bg-amber-700 transition-colors print:hidden">
           {showForm ? "Cancel" : "+ Add Transaction"}
         </button>
@@ -1058,7 +1298,7 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
 
       {/* Quick-add shortcuts (when form is NOT open and has transactions) */}
       {!showForm && transactions.length > 0 && (
-        <div className="flex flex-wrap gap-2 print:hidden">
+        <div id="tour-quick-add" className="flex flex-wrap gap-2 print:hidden">
           <span className="text-[11px] text-slate-400 self-center mr-1">Quick add:</span>
           <button onClick={() => quickAdd("22K", "coin")}
             className="rounded-full border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600 hover:bg-amber-50 hover:border-amber-200 hover:text-amber-700 transition-colors">
@@ -1281,7 +1521,7 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
             </div>
 
             {/* Quick-add shortcuts */}
-            <div className="mt-5 pt-4 border-t border-slate-100">
+            <div id="tour-quick-add" className="mt-5 pt-4 border-t border-slate-100">
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Quick add at today&apos;s rate</p>
               <div className="flex flex-wrap gap-2">
                 <button onClick={() => quickAdd("22K", "coin")}
@@ -1463,6 +1703,38 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* ============== TUTORIAL OVERLAY ============== */}
+      {showTutorial && (
+        <TutorialOverlay
+          step={TUTORIAL_STEPS[tutorialStep]}
+          totalSteps={TUTORIAL_STEPS.length}
+          currentStep={tutorialStep}
+          onNext={() => {
+            if (tutorialStep < TUTORIAL_STEPS.length - 1) {
+              setTutorialStep(tutorialStep + 1);
+            } else {
+              endTutorial();
+            }
+          }}
+          onPrev={() => {
+            if (tutorialStep > 0) setTutorialStep(tutorialStep - 1);
+          }}
+          onSkip={endTutorial}
+        />
+      )}
+
+      {/* Help button to re-trigger tutorial */}
+      {!showTutorial && (
+        <button
+          onClick={startTutorial}
+          className="fixed bottom-6 right-6 z-40 w-11 h-11 rounded-full bg-amber-600 text-white shadow-lg hover:bg-amber-700 hover:scale-110 transition-all flex items-center justify-center text-lg font-bold print:hidden"
+          title="Take a tour"
+          aria-label="Show guided tour"
+        >
+          ?
+        </button>
       )}
     </div>
   );
