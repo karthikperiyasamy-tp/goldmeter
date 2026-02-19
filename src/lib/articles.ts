@@ -149,52 +149,57 @@ export const ARTICLES: ArticleMeta[] = [
     slug: "how-to-avoid-gold-jewellery-scams",
     title: "How to Avoid Gold Jewellery Scams in India",
     shortTitle: "Avoid Gold Scams",
-    date: "Updated Feb 15, 2026",
+    date: "Updated Dec 19, 2025",
     readTime: "12 min read",
     preview:
       "Learn the most common jewellery scam patterns and a practical buyer checklist to verify purity, billing transparency, and safe purchase practices.",
     category: "buying-tips",
+    published: true,
   },
   {
     slug: "why-gold-price-changes-daily-india",
     title: "Why Gold Price Changes Daily in India",
     shortTitle: "Why Gold Price Changes Daily",
-    date: "Updated Feb 15, 2026",
+    date: "Updated Jan 2, 2026",
     readTime: "12 min read",
     preview:
       "Understand daily gold price movement in India through global spot rates, USD-INR, local demand, import costs, and market sentiment.",
     category: "education",
+    published: true,
   },
   {
     slug: "how-gold-rate-is-calculated-india",
     title: "How Gold Rate Is Calculated in India (Simple Formula + Example)",
     shortTitle: "Gold Rate Calculation India",
-    date: "Updated Feb 15, 2026",
+    date: "Updated Jan 15, 2026",
     readTime: "12 min read",
     preview:
       "A simplified breakdown of how international prices become local Indian rates, including conversion, duties, taxes, and jeweller-level adjustments.",
     category: "education",
+    published: true,
   },
   {
     slug: "why-gold-price-differs-by-city",
     title: "Why Gold Price Differs by City in India",
     shortTitle: "Why Gold Price Differs by City",
-    date: "Updated Feb 15, 2026",
+    date: "Updated Jan 28, 2026",
     readTime: "11 min read",
     preview:
       "Gold rates are close but not identical across cities. Learn why city-level variation happens and how to compare effectively before buying.",
     category: "education",
+    published: true,
   },
   // ── Batch 2: Remaining HIGH-PRIORITY (Price/Search Intent) ──
   {
     slug: "gold-wastage-charges-explained",
     title: "Gold Wastage Charges Explained: What They Mean and How to Reduce Them",
     shortTitle: "Gold Wastage Charges",
-    date: "Updated Feb 16, 2026",
+    date: "Updated Feb 9, 2026",
     readTime: "11 min read",
     preview:
       "Wastage charges are a hidden cost that can significantly inflate your gold jewellery bill. Learn what wastage means, how it is calculated, and practical ways to minimise it.",
     category: "buying-tips",
+    published: true,
   },
   {
     slug: "best-day-to-buy-gold-india",
@@ -205,6 +210,7 @@ export const ARTICLES: ArticleMeta[] = [
     preview:
       "Is there really a best day to buy gold in India? We analyse cultural timing, weekly trends, and market patterns to help you plan smarter purchases.",
     category: "buying-tips",
+    published: true,
   },
   {
     slug: "best-time-of-year-to-buy-gold",
