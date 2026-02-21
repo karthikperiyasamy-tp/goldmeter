@@ -935,6 +935,11 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
     localStorage.setItem("portfolio-tour-seen", "1");
   };
 
+  const completeTutorial = () => {
+    endTutorial();
+    setShowForm(true);
+  };
+
   // ================================================
   // RENDER
   // ================================================
@@ -1715,13 +1720,13 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
             if (tutorialStep < TUTORIAL_STEPS.length - 1) {
               setTutorialStep(tutorialStep + 1);
             } else {
-              endTutorial();
+              completeTutorial();
             }
           }}
           onPrev={() => {
             if (tutorialStep > 0) setTutorialStep(tutorialStep - 1);
           }}
-          onSkip={endTutorial}
+          onSkip={completeTutorial}
         />
       )}
 

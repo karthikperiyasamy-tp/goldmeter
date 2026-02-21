@@ -109,6 +109,74 @@ export default function JewellerPageShell({ jeweller, goldRate, lastUpdated }: J
                 At <strong>{jeweller.name}</strong>, making charges start from <strong>₹{jeweller.makingChargesMin}/gram</strong> for simple designs 
                 and go up to <strong>₹{jeweller.makingChargesMax}/gram</strong> for intricate bridal and designer pieces.
               </p>
+
+              {jeweller.slug === "tanishq" && (
+                <div className="mt-5">
+                  <h3 className="text-sm font-bold text-amber-900 mb-3">
+                    Tanishq Making Charges Breakdown by Item Type
+                  </h3>
+                  <div className="overflow-x-auto rounded-xl border border-amber-200">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-amber-200/60 text-amber-900">
+                          <th className="text-left py-2.5 px-3 font-semibold">Item</th>
+                          <th className="text-left py-2.5 px-3 font-semibold">Weight</th>
+                          <th className="text-right py-2.5 px-3 font-semibold">Making Charges</th>
+                          <th className="text-right py-2.5 px-3 font-semibold">Per Gram</th>
+                          <th className="text-right py-2.5 px-3 font-semibold">% of Gold</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-amber-100">
+                        <tr className="bg-white/60">
+                          <td className="py-2.5 px-3 font-medium text-amber-900">22KT Ring</td>
+                          <td className="py-2.5 px-3 text-amber-800">2.5 g</td>
+                          <td className="py-2.5 px-3 text-right text-amber-800">₹3,675</td>
+                          <td className="py-2.5 px-3 text-right text-amber-800">~₹1,487/g</td>
+                          <td className="py-2.5 px-3 text-right font-semibold text-amber-700">10%</td>
+                        </tr>
+                        <tr className="bg-amber-50/40">
+                          <td className="py-2.5 px-3 font-medium text-amber-900">18KT Solitaire Ring</td>
+                          <td className="py-2.5 px-3 text-amber-800">9.8 g</td>
+                          <td className="py-2.5 px-3 text-right text-amber-800">₹10,000</td>
+                          <td className="py-2.5 px-3 text-right text-amber-800">~₹1,018/g</td>
+                          <td className="py-2.5 px-3 text-right font-semibold text-amber-700">8.5%</td>
+                        </tr>
+                        <tr className="bg-white/60">
+                          <td className="py-2.5 px-3 font-medium text-amber-900">22KT Necklace</td>
+                          <td className="py-2.5 px-3 text-amber-800">30.5 g</td>
+                          <td className="py-2.5 px-3 text-right text-amber-800">₹95,907</td>
+                          <td className="py-2.5 px-3 text-right text-amber-800">~₹3,148/g</td>
+                          <td className="py-2.5 px-3 text-right font-semibold text-amber-700">21.5%</td>
+                        </tr>
+                        <tr className="bg-amber-50/40">
+                          <td className="py-2.5 px-3 font-medium text-amber-900">22KT Jhumka Earrings</td>
+                          <td className="py-2.5 px-3 text-amber-800">3.1 g</td>
+                          <td className="py-2.5 px-3 text-right text-amber-800">₹9,685</td>
+                          <td className="py-2.5 px-3 text-right text-amber-800">~₹3,148/g</td>
+                          <td className="py-2.5 px-3 text-right font-semibold text-amber-700">21.5%</td>
+                        </tr>
+                        <tr className="bg-white/60">
+                          <td className="py-2.5 px-3 font-medium text-amber-900">18KT Chain</td>
+                          <td className="py-2.5 px-3 text-amber-800">7.6 g</td>
+                          <td className="py-2.5 px-3 text-right text-amber-800">₹22,768</td>
+                          <td className="py-2.5 px-3 text-right text-amber-800">~₹3,000/g</td>
+                          <td className="py-2.5 px-3 text-right font-semibold text-amber-700">25%</td>
+                        </tr>
+                        <tr className="bg-amber-50/40">
+                          <td className="py-2.5 px-3 font-medium text-amber-900">22KT Heavy Necklace</td>
+                          <td className="py-2.5 px-3 text-amber-800">67 g</td>
+                          <td className="py-2.5 px-3 text-right text-amber-800">₹2,79,530</td>
+                          <td className="py-2.5 px-3 text-right text-amber-800">~₹4,172/g</td>
+                          <td className="py-2.5 px-3 text-right font-semibold text-amber-700">28.5%</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="mt-2.5 text-xs text-amber-600">
+                    Based on actual Tanishq product pricing (Feb 2026). Making charges vary by design and are calculated as a percentage of gold value.
+                  </p>
+                </div>
+              )}
             </section>
 
             {/* Dynamic Gold Rate Section */}

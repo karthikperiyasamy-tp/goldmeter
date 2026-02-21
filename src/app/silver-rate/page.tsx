@@ -1,6 +1,10 @@
 import { headers } from "next/headers";
 import SilverCityPageShell from "../components/SilverCityPageShell";
 import { fetchCityRates } from "@/lib/fetchCityRates";
+import { getSilverConfig, generateSilverFAQs } from "@/lib/citySilverConfig";
+import { getSilverSections } from "@/lib/citySilverSections";
+import { getSilverExtra } from "@/lib/citySilverExtra";
+import { getSilverTitles } from "@/lib/citySilverTitles";
 
 type HistoryEntry = {
   date: string;
@@ -71,6 +75,15 @@ export default async function SilverIndiaPage() {
     }
   }
 
+  const silverConfig = getSilverConfig("India");
+  const silverSections = getSilverSections("India");
+  const silverExtra = getSilverExtra("India");
+  const silverTitles = getSilverTitles("India");
+  const perGramSilver = silver1kg / 1000;
+  const generatedFaqs = silverConfig
+    ? generateSilverFAQs(silverConfig, silver1kg, perGramSilver)
+    : [];
+
   return (
     <SilverCityPageShell
       city="India"
@@ -79,7 +92,7 @@ export default async function SilverIndiaPage() {
       silver1kg={silver1kg}
       priceChange={priceChange}
       history={history}
-      localInfo={[
+      localInfo={silverConfig?.localInfo ?? [
         {
           title: "Silver Purity",
           description:
@@ -90,7 +103,7 @@ export default async function SilverIndiaPage() {
           description: "Silver prices are heavily influenced by industrial demand in electronics and solar sectors.",
         },
       ]}
-      faqs={[
+      faqs={generatedFaqs.length > 0 ? generatedFaqs : [
         {
           question: "What is 1kg silver price in India today?",
           answer:
@@ -103,6 +116,11 @@ export default async function SilverIndiaPage() {
         },
       ]}
       similarCities={["Chennai", "Bangalore", "Mumbai", "Delhi", "Hyderabad", "Kolkata", "Jaipur", "Lucknow", "Kerala", "Pune"]}
+      silverConfig={silverConfig}
+      silverSections={silverSections}
+      silverExtra={silverExtra}
+      silverTitles={silverTitles}
+      generatedFaqs={generatedFaqs}
     />
   );
 }

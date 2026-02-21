@@ -43,9 +43,9 @@ export const JEWELLER_CONFIGS: Record<string, JewellerConfig> = {
     type: 'national',
     headquarters: 'Bangalore, Karnataka',
     foundedYear: 1994,
-    makingChargesRange: '₹350 - ₹800 per gram',
-    makingChargesMin: 350,
-    makingChargesMax: 800,
+    makingChargesRange: '8–28% of gold value (₹1,000 - ₹4,200 per gram)',
+    makingChargesMin: 1000,
+    makingChargesMax: 4200,
     purityStandards: 'All Tanishq jewellery is BIS hallmarked with 916 (22K) or 999 (24K) purity. They pioneered Karatmeter technology for instant purity verification in front of customers. Diamonds are certified by international labs (IGI, GIA).',
     popularCollections: ['Divyam', 'Rivaah (Bridal)', 'Mia by Tanishq', 'CaratLane', 'Zoya (Luxury)', 'Aveer (Men)', 'Mirayah', 'Shubham'],
     exchangePolicy: 'Tanishq offers lifetime exchange with full gold value for Tanishq jewellery. Old gold from any jeweller accepted at prevailing rates minus 2% deduction for impurity testing. Exchange bonus during special promotions.',
@@ -70,7 +70,7 @@ Tanishq's most significant contribution to the industry is the Karatmeter techno
 
 The brand's product portfolio spans multiple collections catering to diverse preferences, occasions, and regional traditions. Rivaah is their celebrated bridal collection featuring region-specific designs for Bengali, Maharashtrian, Tamil, Punjabi, Gujarati, Rajasthani, and other Indian weddings - understanding that bridal jewellery varies significantly across India's diverse communities. Divyam offers divine temple-inspired pieces featuring traditional motifs of Lakshmi, Ganesha, and other deities. Mia by Tanishq targets young working women with contemporary, lightweight, everyday jewellery priced affordably for the urban millennial. Zoya represents the luxury segment with high-end diamond creations for discerning customers who seek exclusivity. Aveer caters to men's jewellery needs with masculine designs in gold and platinum. Shubham offers collections for religious and auspicious occasions. CaratLane, their subsidiary acquired in 2016, provides affordable diamond jewellery through an online-first approach.
 
-Making charges at Tanishq typically range from ₹350 to ₹800 per gram, which is noticeably higher than regional jewellers. However, this premium includes the Tata Group's brand assurance (a 150+ year legacy of trust), pioneering purity verification technology, exceptional design quality created by skilled craftsmen, consistent service across 400+ stores in India, and a reliable lifetime exchange policy that works anywhere in the country. For customers prioritizing peace of mind over cost optimization, Tanishq delivers unmatched value. The premium is essentially insurance against the uncertainties of the traditional jewellery market.
+Making charges at Tanishq are calculated as a percentage of gold value rather than a flat per-gram rate, typically ranging from 8% to 28% depending on design complexity — translating to roughly ₹1,000 to ₹4,200 per gram at current 22KT rates. Simple solitaire settings and plain bands fall in the 8–12% range (~₹1,000–1,500/gram), regular jewellery like earrings and lightweight necklaces at 20–25% (~₹2,500–3,200/gram), and elaborate bridal necklaces with intricate craftsmanship at 25–28% (~₹3,500–4,200/gram). While this is noticeably higher than regional jewellers, the premium includes the Tata Group's brand assurance (a 150+ year legacy of trust), pioneering purity verification technology, exceptional design quality created by skilled craftsmen, consistent service across 400+ stores in India, and a reliable lifetime exchange policy that works anywhere in the country. For customers prioritizing peace of mind over cost optimization, Tanishq delivers unmatched value.
 
 Tanishq's exchange policy is industry-leading and sets the benchmark for organized jewellery retail. They accept old gold from any jeweller (not just Tanishq), applying current gold rates with only a 2% deduction for impurity testing - one of the lowest deductions in the industry. Tanishq jewellery itself can be exchanged at full gold value at any store nationwide, providing complete flexibility for customers who relocate or travel. During special promotions like Akshaya Tritiya and Dhanteras, they often offer exchange bonuses that further enhance value.
 
@@ -94,7 +94,7 @@ As part of Titan Company (India's largest watchmaker with brands like Fastrack, 
     faqs: [
       {
         question: 'What are Tanishq making charges per gram?',
-        answer: 'Tanishq making charges range from ₹350 to ₹800 per gram depending on design complexity. Simple chains and daily wear cost ₹350-450/gram, regular wedding jewellery ₹500-650/gram, and intricate bridal sets with detailed craftsmanship go up to ₹800/gram. Making charges are calculated on net gold weight only.',
+        answer: 'Tanishq making charges are calculated as a percentage of gold value, typically 8–28%. At current 22KT rates this translates to roughly ₹1,000–4,200 per gram. Simple rings and solitaire settings cost around ₹1,000–1,500/gram (8–12%), regular earrings and lightweight necklaces ₹2,500–3,200/gram (20–25%), and elaborate bridal necklaces with heavy craftsmanship up to ₹3,500–4,200/gram (25–28%). Making charges are calculated on net gold weight.',
       },
       {
         question: 'Does Tanishq buy back old gold?',
@@ -106,7 +106,7 @@ As part of Titan Company (India's largest watchmaker with brands like Fastrack, 
       },
       {
         question: 'Which is cheaper - Tanishq or local jewellers?',
-        answer: 'Local jewellers typically have lower making charges (₹150-300/gram) compared to Tanishq (₹350-800/gram). However, Tanishq offers certified purity (verifiable via Karatmeter), Tata Group backing, transparent billing, consistent quality across 400+ stores, and reliable nationwide exchange policies. Many customers find this premium worthwhile.',
+        answer: 'Local jewellers typically have lower making charges (₹150-300/gram) compared to Tanishq (₹1,000-4,200/gram, or 8–28% of gold value). However, Tanishq offers certified purity (verifiable via Karatmeter), Tata Group backing, transparent billing, consistent quality across 400+ stores, and reliable nationwide exchange policies. Many customers find this premium worthwhile.',
       },
       {
         question: 'What is Tanishq Golden Harvest scheme?',
@@ -201,7 +201,7 @@ The company maintains state-of-the-art manufacturing facilities with over 4,000 
       },
       {
         question: 'Is Kalyan Jewellers cheaper than Tanishq?',
-        answer: 'Generally yes - Kalyan\'s making charges (₹250-600/gram) are lower than Tanishq (₹350-800/gram). Both are BIS hallmarked with certified purity. Kalyan offers good value with its 4-level certification and extensive network while being more competitively priced.',
+        answer: 'Generally yes - Kalyan\'s making charges (₹250-600/gram) are significantly lower than Tanishq (₹1,000-4,200/gram, or 8–28% of gold value). Both are BIS hallmarked with certified purity. Kalyan offers good value with its 4-level certification and extensive network while being more competitively priced.',
       },
       {
         question: 'Where are Kalyan Jewellers showrooms located?',
@@ -272,7 +272,7 @@ With employee count exceeding 18,000 globally and revenues consistently among th
       },
       {
         question: 'Is Malabar Gold cheaper than Tanishq and Kalyan?',
-        answer: 'Generally yes - Malabar has lower making charges (₹200-550/gram) compared to Tanishq (₹350-800/gram). They\'re comparable to Kalyan (₹250-600/gram) but often slightly lower. Gold rates are similar across all, so making charges drive the price difference.',
+        answer: 'Generally yes - Malabar has lower making charges (₹200-550/gram) compared to Tanishq (₹1,000-4,200/gram, or 8–28% of gold value). They\'re comparable to Kalyan (₹250-600/gram) but often slightly lower. Gold rates are similar across all, so making charges drive the price difference.',
       },
       {
         question: 'Where does Malabar Gold have stores globally?',
@@ -421,7 +421,7 @@ GRT's flagship showroom in T Nagar, Chennai, has achieved legendary status among
 
 The brand's product portfolio is remarkably diverse, covering gold, silver, platinum, and diamond jewellery across every price point and occasion. Collections include traditional temple designs featuring deities like Lakshmi, Ganesha, and traditional motifs, contemporary pieces for everyday wear, elaborate bridal collections for South Indian weddings, lightweight office wear, children's jewellery, men's gold chains and rings, and ceremonial pieces for religious occasions. Named collections like Adore (contemporary gold), Elena (diamond cocktail rings), Mayuri (peacock-inspired designs), Zeva (modern minimalist), Viha (wedding collection), Laya (layered necklaces), Oriana (precious gemstones), GRT Brides (comprehensive bridal trousseau), and GRT Verse (fusion designs) cater to different aesthetic preferences and occasions. The company also offers an extensive range of silver articles including pooja items, dinner sets, gift articles, and decorative pieces.
 
-Making charges at GRT range from ₹180 to ₹450 per gram - significantly more competitive than national chains like Tanishq (₹350-800/gram) while maintaining equivalent quality standards with BIS hallmarking. This value proposition, combined with trusted purity, exceptional design variety, and deep understanding of South Indian wedding traditions, has made GRT the default choice for Tamil Nadu weddings and celebrations. A typical 50-gram bridal necklace could cost ₹5,000-15,000 less at GRT compared to national chains, making a substantial difference for families purchasing complete wedding sets.
+Making charges at GRT range from ₹180 to ₹450 per gram - significantly more competitive than national chains like Tanishq (₹1,000-4,200/gram, or 8–28% of gold value) while maintaining equivalent quality standards with BIS hallmarking. This value proposition, combined with trusted purity, exceptional design variety, and deep understanding of South Indian wedding traditions, has made GRT the default choice for Tamil Nadu weddings and celebrations. A typical 50-gram bridal necklace could cost ₹40,000-1,50,000 less at GRT compared to Tanishq, making a substantial difference for families purchasing complete wedding sets.
 
 GRT has invested heavily in digital transformation, recognizing the changing preferences of modern customers. Their e-commerce platform (grtjewels.com) features over 8,000 ready-to-ship products across all categories. Digital features include free shipping across India, international delivery to select locations including the USA, UK, UAE, and Singapore, a mobile app for iOS and Android with virtual try-on capabilities, video shopping consultations through GRT Live where customers can connect with jewellery experts, reserve-online-pick-up-in-store functionality, 360-degree product views, and real-time gold rate tracking. The digital platform has become particularly popular for gifts and lightweight everyday jewellery purchases.
 
@@ -449,11 +449,11 @@ GRT's strength lies in understanding the nuances of South Indian wedding traditi
     faqs: [
       {
         question: 'What are GRT Jewellers making charges per gram?',
-        answer: 'GRT making charges range from ₹180 to ₹450 per gram depending on design complexity. Simple chains and plain bangles are around ₹180-220/gram, lightweight daily wear ₹250-300/gram, and elaborate bridal sets ₹350-450/gram. This is significantly lower than national chains like Tanishq.',
+        answer: 'GRT making charges range from ₹180 to ₹450 per gram depending on design complexity. Simple chains and plain bangles are around ₹180-220/gram, lightweight daily wear ₹250-300/gram, and elaborate bridal sets ₹350-450/gram. This is significantly lower than Tanishq, which charges 8–28% of gold value (₹1,000-4,200/gram).',
       },
       {
         question: 'Is GRT cheaper than Tanishq?',
-        answer: 'Yes, GRT typically has lower making charges (₹180-450/gram) compared to Tanishq (₹350-800/gram). Since gold rates are similar (both follow IBJA rates), you can save ₹150-350 per gram on making charges at GRT while getting equivalent BIS hallmarked quality.',
+        answer: 'Yes, GRT typically has much lower making charges (₹180-450/gram) compared to Tanishq (₹1,000-4,200/gram, or 8–28% of gold value). Since gold rates are similar (both follow IBJA rates), you can save ₹800-3,700 per gram on making charges at GRT while getting equivalent BIS hallmarked quality.',
       },
       {
         question: 'Where are GRT Jewellers showrooms located?',
@@ -513,7 +513,7 @@ The Aham collection caters specifically to men's jewellery needs - an often-unde
 
 The brand also offers extensive collections of traditional Polki, Kundan, antique, and Meenakari work - techniques that require exceptional craftsmanship and are particularly popular for wedding and festive occasions. These heritage techniques, combined with Senco's quality standards, result in pieces that serve as both beautiful ornaments and family heirlooms to be passed down through generations. Additionally, Senco offers gold coins in various weights for investment purposes and gifting, silver jewellery and articles for customers seeking alternatives to gold, and platinum jewellery for those preferring the white metal's understated elegance.
 
-Making charges at Senco range from ₹200 to ₹500 per gram, which is competitive for a branded jeweller with national presence and public listing. The Everlite collection often has lower making charges due to design optimization for weight efficiency. This pricing structure makes Senco accessible to middle-class families while delivering the brand assurance, certified quality, and consistent experience that organized retail provides. For customers in Eastern India comparing options, Senco typically offers better value than national chains like Tanishq while providing significantly more trust and consistency than local goldsmiths.
+Making charges at Senco range from ₹200 to ₹500 per gram, which is very competitive compared to premium chains like Tanishq (₹1,000-4,200/gram). The Everlite collection often has lower making charges due to design optimization for weight efficiency. This pricing structure makes Senco accessible to middle-class families while delivering the brand assurance, certified quality, and consistent experience that organized retail provides. For customers in Eastern India comparing options, Senco typically offers significantly better value than Tanishq while providing more trust and consistency than local goldsmiths.
 
 The retail footprint of Senco has expanded significantly in recent years. As of FY2025, the company operates approximately 175 showrooms across India, including 72 franchise stores and an international presence in Dubai. The geographic distribution reflects their Eastern India heritage - West Bengal alone accounts for approximately 94 stores (about 57% of their total network), with particularly strong presence in Kolkata across neighborhoods like BBD Bag, Beadon Street, Gariahat, New Town, and numerous suburban locations. Beyond Bengal, Senco has substantial presence in Bihar, Odisha (around 10 stores each), Jharkhand, Uttar Pradesh, Delhi NCR (8 stores), and has been expanding into other Northern Indian states.
 
@@ -1057,7 +1057,7 @@ As a publicly listed company since listing on NSE and BSE, Thangamayil operates 
 
 The company's financial performance demonstrates both scale and growth trajectory. Revenue for FY2024-25 reached approximately ₹4,910 crore, up significantly from ₹3,826 crore in FY2023-24 - representing substantial growth driven by store expansion, increased customer base, and higher gold prices. Q4 FY25 sales of approximately ₹1,380 crore represented a 40.70% year-over-year increase. While net profit moderated slightly to ₹118.71 crore (FY25) from ₹123.24 crore (FY24), the company demonstrated ability to maintain profitability while investing in growth. The business model's strength was evident in Q2 FY25 when a significant swing to profit of approximately ₹58.50 crore positively surprised markets.
 
-Thangamayil's most distinctive competitive advantage lies in their aggressive yet sustainable pricing strategy. Making charges ranging from just ₹160 to ₹420 per gram position them among the most affordable branded jewellers in India - significantly lower than national chains like Tanishq (₹350-800/gram) and even below most regional competitors. Simple chains and bangles start from around ₹160/gram, regular traditional pieces fall in the middle range, and intricate bridal sets with complex craftsmanship reach up to ₹420/gram. For a typical 50-gram bridal necklace, this pricing could mean savings of ₹10,000-20,000 compared to premium chains - a meaningful difference for middle-class Tamil families purchasing complete wedding sets.
+Thangamayil's most distinctive competitive advantage lies in their aggressive yet sustainable pricing strategy. Making charges ranging from just ₹160 to ₹420 per gram position them among the most affordable branded jewellers in India - significantly lower than national chains like Tanishq (₹1,000-4,200/gram, or 8–28% of gold value) and even below most regional competitors. Simple chains and bangles start from around ₹160/gram, regular traditional pieces fall in the middle range, and intricate bridal sets with complex craftsmanship reach up to ₹420/gram. For a typical 50-gram bridal necklace, this pricing could mean savings of ₹50,000-1,50,000 compared to Tanishq - a meaningful difference for middle-class Tamil families purchasing complete wedding sets.
 
 The retail network has grown strategically to serve customers across Tamil Nadu's diverse urban landscape. With approximately 60 stores (including both Thangamayil and silver-exclusive Sil-wear Smile showrooms) spanning approximately 78,000 square feet of retail space collectively, the brand has achieved significant presence in the state. Beyond metros like Chennai and Coimbatore, Thangamayil's expansion strategy particularly focuses on tier-2 and tier-3 cities - Dindigul, Sivakasi, Nagercoil, Karur, Thanjavur, Tiruvannamalai, Cuddalore, Pollachi, and numerous other towns where organized jewellery retail options were previously limited to local goldsmiths. This expansion brings BIS hallmarked quality, transparent pricing, and organized retail benefits to customers who previously had to travel to larger cities or accept the uncertainties of unorganized retail.
 

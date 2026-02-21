@@ -96,7 +96,7 @@ export default function JewellersPage() {
           <p className="mt-2 text-slate-600 max-w-3xl leading-relaxed">
             Our comprehensive directory covers <strong>{allJewellers.length} trusted jewellery chains</strong> across 
             India - from national giants like Tanishq and Kalyan Jewellers to beloved regional brands 
-            like GRT and Lalithaa Jewellery. Compare making charges (ranging from ₹140 to ₹800 per gram), 
+            like GRT and Lalithaa Jewellery. Compare making charges (ranging from ₹140 to ₹4,200+ per gram), 
             understand exchange policies, and make informed decisions.
           </p>
 
@@ -341,10 +341,9 @@ export default function JewellersPage() {
               is crucial because they can significantly impact the total cost of your jewellery purchase.
             </p>
             <p className="text-slate-600 leading-relaxed mb-4">
-              Making charges in India typically range from <strong>₹140 to ₹800 per gram</strong> depending on the jeweller, 
-              design complexity, and whether the piece is mass-produced or handcrafted. Simple chains and plain bangles 
-              have lower charges (₹140-250/gram), while intricate bridal sets with detailed craftsmanship command 
-              premium charges (₹500-800/gram).
+              Making charges in India vary widely — from <strong>₹140 per gram at value-focused chains to over ₹4,000 per gram at premium brands like Tanishq</strong> (which charges 8–28% of gold value). Simple chains and plain bangles 
+              at regional jewellers have lower charges (₹140-250/gram), while intricate bridal sets at premium brands can command 
+              charges of ₹2,500-4,200/gram.
             </p>
             
             <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">Impact of Making Charges on Total Cost</h3>
@@ -367,9 +366,8 @@ export default function JewellersPage() {
 
             <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">Comparing National Chains vs Regional Jewellers</h3>
             <p className="text-slate-600 leading-relaxed">
-              <strong>National chains</strong> like Tanishq (₹350-800/gram) and Kalyan (₹250-600/gram) offer brand assurance, 
-              pan-India exchange, and certified purity but charge premium making charges. <strong>Regional chains</strong> like 
-              GRT (₹180-450/gram), Lalithaa (₹150-400/gram), and Thangamayil (₹160-420/gram) offer competitive pricing 
+              <strong>Premium national chains</strong> like Tanishq charge 8–28% of gold value as making charges (₹1,000-4,200/gram), while <strong>mid-tier national chains</strong> like Kalyan (₹250-600/gram) and Joyalukkas (₹280-650/gram) offer brand assurance at more moderate rates. <strong>Regional chains</strong> like 
+              GRT (₹180-450/gram), Lalithaa (₹150-400/gram), and Thangamayil (₹160-420/gram) offer the most competitive pricing 
               with BIS hallmarked quality, making them excellent value for budget-conscious buyers.
             </p>
           </div>
@@ -668,10 +666,10 @@ export default function JewellersPage() {
 
             <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">How Making Charges Vary by Jeweller Type</h3>
             <p className="text-slate-600 leading-relaxed">
-              Making charges represent the cost of transforming raw gold into finished jewellery. These charges vary based on multiple factors: the jeweller&apos;s brand positioning, design complexity, manufacturing process (handcrafted vs. machine-made), and regional market dynamics. National chains like Tanishq charge premium making charges (₹350-800 per gram) reflecting their brand value, quality assurance, and pan-India service network.
+              Making charges represent the cost of transforming raw gold into finished jewellery. These charges vary based on multiple factors: the jeweller&apos;s brand positioning, design complexity, manufacturing process (handcrafted vs. machine-made), and regional market dynamics. Premium chains like Tanishq charge making charges as a percentage of gold value (8–28%, translating to ₹1,000-4,200 per gram at current 22KT rates), reflecting their brand value, quality assurance, and pan-India service network.
             </p>
             <p className="text-slate-600 leading-relaxed">
-              Regional jewellers often offer significantly lower making charges. For instance, GRT Jewellers (₹180-450/gram), Lalithaa Jewellery (₹150-400/gram), and Thangamayil (₹160-420/gram) provide competitive pricing while maintaining BIS hallmarked quality. For a 50-gram bridal set, this difference in making charges can translate to savings of ₹10,000-20,000 or more.
+              Regional jewellers often offer significantly lower making charges. For instance, GRT Jewellers (₹180-450/gram), Lalithaa Jewellery (₹150-400/gram), and Thangamayil (₹160-420/gram) provide competitive pricing while maintaining BIS hallmarked quality. For a 50-gram bridal set, the difference between Tanishq and a regional jeweller can translate to savings of ₹40,000-1,50,000 or more.
             </p>
 
             <h3 className="text-lg font-semibold text-charcoal mt-6 mb-3">Exchange and Buyback: What to Expect</h3>

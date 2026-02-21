@@ -2,6 +2,10 @@ import { headers } from "next/headers";
 import SilverCityPageShell from "../../components/SilverCityPageShell";
 import { fetchCityRates } from "@/lib/fetchCityRates";
 import { getLatestGoldRates, getHistoricalGoldRates } from "@/lib/goldRatesDB";
+import { getSilverConfig, generateSilverFAQs } from "@/lib/citySilverConfig";
+import { getSilverSections } from "@/lib/citySilverSections";
+import { getSilverExtra } from "@/lib/citySilverExtra";
+import { getSilverTitles } from "@/lib/citySilverTitles";
 
 type HistoryEntry = {
   date: string;
@@ -111,6 +115,15 @@ export default async function SilverCityPage({ params }: Props) {
     }
   }
 
+  const silverConfig = getSilverConfig(cityName);
+  const silverSections = getSilverSections(cityName);
+  const silverExtra = getSilverExtra(cityName);
+  const silverTitles = getSilverTitles(cityName);
+  const perGramSilver = silver1kg / 1000;
+  const generatedFaqs = silverConfig
+    ? generateSilverFAQs(silverConfig, silver1kg, perGramSilver)
+    : [];
+
   return (
     <SilverCityPageShell
       city={cityName}
@@ -119,7 +132,7 @@ export default async function SilverCityPage({ params }: Props) {
       silver1kg={silver1kg}
       priceChange={priceChange}
       history={outputHistory}
-      localInfo={[
+      localInfo={silverConfig?.localInfo ?? [
         {
           title: "Local Silver Market",
           description:
@@ -131,7 +144,7 @@ export default async function SilverCityPage({ params }: Props) {
             "Standard silver rates are usually for 99.9% purity (Fine Silver).",
         },
       ]}
-      faqs={[
+      faqs={generatedFaqs.length > 0 ? generatedFaqs : [
         {
           question: `What is today's silver rate in ${cityName}?`,
           answer:
@@ -144,6 +157,11 @@ export default async function SilverCityPage({ params }: Props) {
         },
       ]}
       similarCities={supportedCities.filter(c => c !== cityName).slice(0, 5)}
+      silverConfig={silverConfig}
+      silverSections={silverSections}
+      silverExtra={silverExtra}
+      silverTitles={silverTitles}
+      generatedFaqs={generatedFaqs}
     />
   );
 }

@@ -4,8 +4,13 @@ import Link from "next/link";
 import RateCard from "./RateCard";
 import SilverLast10DaysTable from "./SilverLast10DaysTable";
 import SimplePriceChart from "./SimplePriceChart";
+import SilverStaticContent from "./SilverStaticContent";
 import { GOLD_RATE_CITIES, SILVER_RATE_CITIES } from "@/lib/cities";
 import { getAllJewellers, type JewellerConfig } from "@/lib/jewellerConfig";
+import type { CitySilverConfig } from "@/lib/citySilverConfig";
+import type { CitySilverSections } from "@/lib/citySilverSections";
+import type { CitySilverExtra } from "@/lib/citySilverExtra";
+import type { CitySilverTitles } from "@/lib/citySilverTitles";
 
 type LocalInfo = {
   title: string;
@@ -27,6 +32,11 @@ type SilverCityPageShellProps = {
   faqs: FAQ[];
   similarCities?: string[]; // Deprecated - now using shared SILVER_RATE_CITIES config
   intro?: string;
+  silverConfig?: CitySilverConfig;
+  silverSections?: CitySilverSections;
+  silverExtra?: CitySilverExtra;
+  silverTitles?: CitySilverTitles;
+  generatedFaqs?: { question: string; answer: string }[];
 };
 
 const inr = new Intl.NumberFormat("en-IN", {
@@ -50,6 +60,11 @@ export default function SilverCityPageShell({
   faqs,
   similarCities: _similarCities, // Deprecated - kept for backward compatibility
   intro,
+  silverConfig,
+  silverSections,
+  silverExtra,
+  silverTitles,
+  generatedFaqs,
 }: SilverCityPageShellProps) {
   const citySlug = city.toLowerCase();
   const goldHref = city === 'India' ? '/' : `/gold-rate/${citySlug}`;
@@ -368,6 +383,22 @@ export default function SilverCityPageShell({
           </div>
         </section>
 
+        {/* Comprehensive Silver Content */}
+        {silverConfig && silverSections && generatedFaqs && (
+          <SilverStaticContent
+            city={city}
+            silver1kg={silver1kg}
+            silverPerGram={perGramSilver}
+            config={silverConfig}
+            sections={silverSections}
+            extra={silverExtra}
+            titles={silverTitles}
+            faqs={generatedFaqs}
+          />
+        )}
+
+        {/* Fallback FAQ section when no config is provided */}
+        {!silverConfig && (
         <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
           <h2 className="text-lg font-semibold">Frequently Asked Questions</h2>
           <div className="mt-4 space-y-3 text-sm text-slate-600">
@@ -381,6 +412,7 @@ export default function SilverCityPageShell({
             ))}
           </div>
         </section>
+        )}
           </div>
 
           {/* Right Sidebar - Top Cities (visible on desktop, below content on mobile) */}
