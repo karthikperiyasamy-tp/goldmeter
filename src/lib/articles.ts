@@ -294,61 +294,67 @@ export const ARTICLES: ArticleMeta[] = [
     slug: "sovereign-gold-bond-vs-physical-gold",
     title: "Sovereign Gold Bond (SGB) vs Physical Gold: Which Is Better?",
     shortTitle: "SGB vs Physical Gold",
-    date: "Updated Feb 16, 2026",
+    date: "Updated Jan 3, 2026",
     readTime: "12 min read",
     preview:
       "SGBs offer interest income and no storage hassle, while physical gold provides tangible ownership. Compare both to choose the right gold format for your needs.",
     category: "investment",
+    published: true,
   },
   {
     slug: "digital-gold-vs-physical-gold",
     title: "Digital Gold vs Physical Gold: Pros, Cons & Which to Choose",
     shortTitle: "Digital vs Physical Gold",
-    date: "Updated Feb 16, 2026",
+    date: "Updated Jan 10, 2026",
     readTime: "11 min read",
     preview:
       "Digital gold lets you buy from ₹1, but is it as safe as physical gold? Compare convenience, costs, regulation, and liquidity to make an informed choice.",
     category: "investment",
+    published: true,
   },
   {
     slug: "how-much-gold-should-you-own",
     title: "How Much Gold Should You Own? Portfolio Allocation Guide for India",
     shortTitle: "How Much Gold to Own",
-    date: "Updated Feb 16, 2026",
+    date: "Updated Jan 17, 2026",
     readTime: "11 min read",
     preview:
       "Financial experts recommend 5-15% gold allocation, but the right amount depends on your goals, risk profile, and life stage. Here's how to decide.",
     category: "investment",
+    published: true,
   },
   {
     slug: "long-term-gold-returns-india",
     title: "Long-Term Gold Returns in India: 10, 20 & 30-Year Performance",
     shortTitle: "Long-Term Gold Returns",
-    date: "Updated Feb 16, 2026",
+    date: "Updated Jan 23, 2026",
     readTime: "12 min read",
     preview:
       "How has gold performed over 10, 20, and 30 years in India? We analyse historical data to put gold returns in perspective against inflation and other assets.",
     category: "investment",
+    published: true,
   },
   {
     slug: "when-to-sell-gold",
     title: "When to Sell Gold: Timing, Tax Rules & Smart Exit Strategies",
     shortTitle: "When to Sell Gold",
-    date: "Updated Feb 16, 2026",
+    date: "Updated Feb 7, 2026",
     readTime: "11 min read",
     preview:
       "Knowing when to sell gold is as important as knowing when to buy. Learn about market timing signals, capital gains tax, and practical exit strategies for Indian investors.",
     category: "investment",
+    published: true,
   },
   {
     slug: "how-to-build-gold-portfolio",
     title: "How to Build a Gold Portfolio: Step-by-Step Guide for Indian Investors",
     shortTitle: "Build a Gold Portfolio",
-    date: "Updated Feb 16, 2026",
+    date: "Updated Feb 14, 2026",
     readTime: "12 min read",
     preview:
       "Building a gold portfolio requires balancing physical gold, SGBs, ETFs, and digital gold. Follow this step-by-step guide to create a diversified gold strategy.",
     category: "investment",
+    published: true,
   },
 ];
 
