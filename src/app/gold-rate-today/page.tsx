@@ -2,13 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
 import { getLatestGoldRates, getHistoricalGoldRates } from "@/lib/goldRatesDB";
-import { getRecentNews } from "@/lib/newsDB";
-import { getInternationalRates } from "@/lib/internationalRates";
 import { getAllJewellers } from "@/lib/jewellerConfig";
-import HomeClient, {
+import {
   type CityRate,
-  type InternationalRates,
-  type NewsItem,
   type RateResponse,
   type PriceChange,
 } from "../components/HomeClient";
@@ -66,50 +62,14 @@ type HistoryRate = {
   timestamp: number;
 };
 
-// Fallback mock news
-const fallbackNews: NewsItem[] = [
-  {
-    id: 1,
-    title: "Gold Market Update",
-    date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }),
-    summary: "Stay tuned for the latest gold market updates and price movements.",
-    city: "India",
-    slug: "gold-market-update",
-  },
-];
-
 export default async function GoldRateTodayPage() {
-  // Fetch all data in parallel (including international rates like homepage)
-  const [dbDataResult, historyResult, newsResult, intlRatesResult] = await Promise.allSettled([
+  const [dbDataResult, historyResult] = await Promise.allSettled([
     getLatestGoldRates(),
     getHistoricalGoldRates("India", 30),
-    getRecentNews(3),
-    getInternationalRates(),
   ]);
 
-  // Process international rates
-  let internationalRates: InternationalRates | null = intlRatesResult.status === 'fulfilled' ? intlRatesResult.value : null;
-
-  // Process database rates
   const dbData = dbDataResult.status === 'fulfilled' ? dbDataResult.value : null;
   const history: HistoryRate[] = historyResult.status === 'fulfilled' ? historyResult.value : [];
-
-  // Process news
-  let newsItems: NewsItem[] = fallbackNews;
-  if (newsResult.status === 'fulfilled' && newsResult.value.length > 0) {
-    newsItems = newsResult.value.map((article, index) => ({
-      id: index + 1,
-      title: article.title,
-      date: article.publishedAt.toLocaleDateString("en-IN", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      }),
-      summary: article.summary,
-      city: article.sourceName,
-      slug: article.slug,
-    }));
-  }
 
   // Prepare rates
   let baseRates: RateResponse;
@@ -152,15 +112,6 @@ export default async function GoldRateTodayPage() {
     };
   }
 
-  const normalizedHistory: HistoryRate[] = (history || []).map((h) => ({
-    date: h.date,
-    gold22k: h.gold22k,
-    gold24k: h.gold24k,
-    gold18k: h.gold18k,
-    silver1kg: h.silver1kg ?? 0,
-    timestamp: h.timestamp,
-  }));
-
   // Calculate per-gram prices
   const perGram24k = Math.round(baseRates.gold_24k / 10);
   const perGram22k = Math.round(baseRates.gold_22k / 10);
@@ -183,6 +134,17 @@ export default async function GoldRateTodayPage() {
     minute: '2-digit',
     hour12: true
   });
+
+  // Weekly trend from history
+  const weekAgoRate = history.length >= 7 ? history[history.length - 7]?.gold24k : history[history.length - 1]?.gold24k;
+  const weeklyChange = weekAgoRate ? ((baseRates.gold_24k - weekAgoRate) / weekAgoRate) * 100 : 0;
+  const weeklyChangeAbs = Math.abs(Math.round((baseRates.gold_24k - (weekAgoRate || baseRates.gold_24k)) / 10));
+
+  // Weight-based pricing (Indian units)
+  const tola24k = Math.round(perGram24k * 11.66);
+  const tola22k = Math.round(perGram22k * 11.66);
+  const sovereign24k = perGram24k * 8;
+  const sovereign22k = perGram22k * 8;
 
   // Consolidated Structured Data using @graph - ALL schemas in ONE block
   // This prevents Next.js RSC serialization from creating duplicate FAQPage entries
@@ -219,8 +181,9 @@ export default async function GoldRateTodayPage() {
         "@type": "WebPage",
         "@id": "https://goldmeter.in/gold-rate-today/#webpage",
         "name": `Gold Rate Today in India (${todayFormatted}) - Live 22K & 24K Price per Gram`,
-        "description": `Today's gold rate in India: ₹${perGram24k.toLocaleString('en-IN')}/gram for 24K, ₹${perGram22k.toLocaleString('en-IN')}/gram for 22K. Updated ${todayFormatted}.`,
         "url": "https://goldmeter.in/gold-rate-today",
+        "description": `Today's gold rate in India: ₹${perGram24k.toLocaleString('en-IN')}/gram for 24K, ₹${perGram22k.toLocaleString('en-IN')}/gram for 22K. Updated ${todayFormatted}.`,
+        "mainEntityOfPage": { "@id": "https://goldmeter.in/gold-rate-today/#dataset" },
         "datePublished": "2024-01-01",
         "dateModified": new Date().toISOString(),
         "inLanguage": "en-IN",
@@ -637,15 +600,91 @@ export default async function GoldRateTodayPage() {
         </div>
       </div>
 
-      {/* Full interactive UI (with international rates like homepage) */}
-      <HomeClient 
-        baseRates={baseRates} 
-        cities={cityRates} 
-        newsItems={newsItems} 
-        priceChange={priceChange} 
-        history={normalizedHistory}
-        internationalRates={internationalRates ?? undefined}
-      />
+      {/* Gold Rate Today - Explanatory Content for SEO */}
+      <div className="bg-[#fffdf7]">
+        <div className="mx-auto max-w-6xl px-4 py-6">
+          <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-soft">
+            <h2 className="text-xl font-bold text-charcoal mb-4">
+              Understanding Gold Rate Today in India
+            </h2>
+            <div className="space-y-4 text-[15px] text-slate-700 leading-7">
+              <p>
+                The gold rate today in India is determined by a combination of international benchmark prices and domestic factors. Global gold prices are set in US dollars per troy ounce on exchanges like COMEX (New York) and the London Bullion Market. These prices fluctuate throughout the day based on supply-demand dynamics, central bank activity, inflation expectations, and geopolitical developments.
+              </p>
+              <p>
+                In India, the international price is converted to Indian rupees using the prevailing USD/INR exchange rate. Import duties (currently around 6%), GST (3%), and handling margins are then added. This is why the gold rate today in India can move even when global prices remain stable — a weakening rupee alone can push domestic gold prices higher. The India Bullion and Jewellers Association (IBJA) publishes daily reference rates that most jewellers and exchanges follow.
+              </p>
+
+              <h3 className="text-lg font-semibold text-charcoal mt-6 mb-2">
+                Gold Rate Today by Weight (Indian Units)
+              </h3>
+              <p>
+                Indian buyers commonly purchase gold in grams, but traditional units like tola (11.66 grams), sovereign, and pavan (both 8 grams) remain widely used in different regions. The table below shows today&apos;s gold rate across all common weight units.
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm border-collapse">
+                  <thead>
+                    <tr className="bg-amber-100 text-amber-900">
+                      <th className="px-3 py-2 text-left border border-amber-200">Weight</th>
+                      <th className="px-3 py-2 text-left border border-amber-200">22K Rate Today</th>
+                      <th className="px-3 py-2 text-left border border-amber-200">24K Rate Today</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-slate-700">
+                    <tr className="bg-white">
+                      <td className="px-3 py-2 border border-amber-200 font-medium">1 gram</td>
+                      <td className="px-3 py-2 border border-amber-200 font-semibold">₹{perGram22k.toLocaleString('en-IN')}</td>
+                      <td className="px-3 py-2 border border-amber-200 font-semibold">₹{perGram24k.toLocaleString('en-IN')}</td>
+                    </tr>
+                    <tr className="bg-amber-50/50">
+                      <td className="px-3 py-2 border border-amber-200 font-medium">1 sovereign / pavan (8g)</td>
+                      <td className="px-3 py-2 border border-amber-200 font-semibold">₹{sovereign22k.toLocaleString('en-IN')}</td>
+                      <td className="px-3 py-2 border border-amber-200 font-semibold">₹{sovereign24k.toLocaleString('en-IN')}</td>
+                    </tr>
+                    <tr className="bg-white">
+                      <td className="px-3 py-2 border border-amber-200 font-medium">10 gram</td>
+                      <td className="px-3 py-2 border border-amber-200 font-semibold">₹{baseRates.gold_22k.toLocaleString('en-IN')}</td>
+                      <td className="px-3 py-2 border border-amber-200 font-semibold">₹{baseRates.gold_24k.toLocaleString('en-IN')}</td>
+                    </tr>
+                    <tr className="bg-amber-50/50">
+                      <td className="px-3 py-2 border border-amber-200 font-medium">1 tola (11.66g)</td>
+                      <td className="px-3 py-2 border border-amber-200 font-semibold">₹{tola22k.toLocaleString('en-IN')}</td>
+                      <td className="px-3 py-2 border border-amber-200 font-semibold">₹{tola24k.toLocaleString('en-IN')}</td>
+                    </tr>
+                    <tr className="bg-white">
+                      <td className="px-3 py-2 border border-amber-200 font-medium">100 gram</td>
+                      <td className="px-3 py-2 border border-amber-200 font-semibold">₹{(perGram22k * 100).toLocaleString('en-IN')}</td>
+                      <td className="px-3 py-2 border border-amber-200 font-semibold">₹{(perGram24k * 100).toLocaleString('en-IN')}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h3 className="text-lg font-semibold text-charcoal mt-6 mb-2">
+                Gold Rate Today vs Last 7 Days
+              </h3>
+              <p>
+                Over the past 7 days, 24K gold in India has moved <strong>{weeklyChange >= 0 ? 'up' : 'down'} by {Math.abs(weeklyChange).toFixed(1)}%</strong> (₹{weeklyChangeAbs.toLocaleString('en-IN')}/gram). Daily fluctuations are normal and driven by overnight international market activity and morning INR movements. For consistent tracking, compare the gold rate today against the <Link href="/" className="text-amber-600 hover:text-amber-700 font-medium">30-day price chart on GoldMeter</Link>.
+              </p>
+
+              <h3 className="text-lg font-semibold text-charcoal mt-6 mb-2">
+                How Gold Rate Is Calculated in India
+              </h3>
+              <p>
+                The simplified formula is: <em>International gold price (USD/oz) × USD/INR rate ÷ 31.1035 = price per gram in INR</em>. Import duty, GST, and jeweller margins are added on top. This is why the retail gold rate today will always be higher than the raw calculated benchmark. To understand the full breakdown with worked examples, read our detailed guide on <Link href="/articles/how-gold-rate-is-calculated-india" className="text-amber-600 hover:text-amber-700 font-medium">how gold rate is calculated in India</Link>.
+              </p>
+
+              <h3 className="text-lg font-semibold text-charcoal mt-6 mb-2">
+                Factors That Affect Today&apos;s Gold Rate
+              </h3>
+              <p>
+                Several interconnected factors determine the gold rate today: (1) global spot price movements on COMEX and London markets, (2) USD/INR exchange rate fluctuations managed by RBI interventions, (3) Indian import duty policy changes by the government, (4) seasonal demand from wedding and festival buying, (5) central bank gold reserve activity globally, and (6) inflation and interest rate expectations that shift investor appetite between gold and yield-bearing assets. Understanding these drivers helps buyers time purchases and interpret daily rate movements. For a deeper analysis, see our guide on <Link href="/articles/why-gold-price-changes-daily-india" className="text-amber-600 hover:text-amber-700 font-medium">why gold price changes daily in India</Link>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </>
   );
 }

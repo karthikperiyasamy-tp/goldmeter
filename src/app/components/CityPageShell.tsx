@@ -804,6 +804,11 @@ export default function CityPageShell({
               <li>• <strong>30-day history:</strong> Track trends and patterns</li>
               <li>• <strong>All major cities:</strong> Pan-India coverage</li>
             </ul>
+            <p className="mt-3">
+              <Link href="/gold-rate-today" className="text-amber-600 hover:text-amber-700 font-semibold text-sm">
+                → Gold Rate Today in India (all cities)
+              </Link>
+            </p>
             <p className="mt-4 text-xs text-slate-500">
               Note: Shop prices may vary due to making charges and GST.
             </p>

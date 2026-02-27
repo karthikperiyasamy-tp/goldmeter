@@ -395,8 +395,8 @@ export default async function HomePage() {
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": `Gold Rate Today in India (${todayFormatted}) - Live 22K & 24K Price`,
-    "description": `Today's gold rate in India: ₹${perGram24k.toLocaleString('en-IN')}/gram for 24K, ₹${perGram22k.toLocaleString('en-IN')}/gram for 22K. Updated ${todayFormatted}.`,
+    "name": `GoldMeter - Live Gold & Silver Prices India (${todayFormatted})`,
+    "description": `GoldMeter: Track live 22K & 24K gold prices across 25+ Indian cities. 24K ₹${perGram24k.toLocaleString('en-IN')}/gram, 22K ₹${perGram22k.toLocaleString('en-IN')}/gram. Updated ${todayFormatted}.`,
     "url": "https://goldmeter.in",
     "datePublished": "2024-01-01",
     "dateModified": new Date().toISOString(),
@@ -412,8 +412,8 @@ export default async function HomePage() {
     },
     "mainEntity": {
       "@type": "Dataset",
-      "name": "India Gold Rate Today",
-      "description": `Live 22K and 24K gold prices in India as of ${todayFormatted}. Current rates: 24K gold at ₹${perGram24k.toLocaleString('en-IN')} per gram, 22K gold at ₹${perGram22k.toLocaleString('en-IN')} per gram. Updated daily from Indian bullion markets.`,
+      "name": "GoldMeter India Gold & Silver Prices",
+      "description": `Live 22K and 24K gold prices across Indian cities as of ${todayFormatted}. 24K at ₹${perGram24k.toLocaleString('en-IN')} per gram, 22K at ₹${perGram22k.toLocaleString('en-IN')} per gram. Updated daily from IBJA.`,
       "temporalCoverage": todayISO,
       "creator": {
         "@type": "Organization",

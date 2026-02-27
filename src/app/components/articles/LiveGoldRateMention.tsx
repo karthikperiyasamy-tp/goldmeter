@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 type LiveRateState = {
   gold22k: number | null;
@@ -52,10 +53,10 @@ export default function LiveGoldRateMention() {
         <p className="text-sm text-slate-600 mt-1">Loading live gold rates...</p>
       ) : (
         <p className="text-sm text-slate-700 mt-1 leading-6">
-          Looking for <strong>today gold rate</strong> or <strong>today gold price</strong>? In India, the current
+          Looking for <Link href="/gold-rate-today" className="text-amber-700 font-semibold hover:text-amber-600">today gold rate</Link> or <strong>today gold price</strong>? In India, the current
           reference is about <strong>22K: Rs {state.gold22k?.toLocaleString("en-IN")}/g</strong> and{" "}
           <strong>24K: Rs {state.gold24k?.toLocaleString("en-IN")}/g</strong>. Final jewellery pricing can vary by
-          city rates, purity, making charges, and taxes.
+          city rates, purity, making charges, and taxes. See full <Link href="/gold-rate-today" className="text-amber-700 font-semibold hover:text-amber-600">gold rate today</Link> with city-wise breakdown.
         </p>
       )}
     </section>
