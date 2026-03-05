@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getRecapBySlug, getAllRecaps, formatDateForDisplay, getAdjacentRecaps } from "@/lib/recapDB";
 import type { Metadata } from "next";
 import StructuredData from "@/app/components/StructuredData";
+import CommentSection from "@/app/components/community/CommentSection";
 import type { GoldRateSnapshot, DailyRecap } from "@/lib/recapTypes";
 
 // Gold Rate Card Component for displaying historical prices
@@ -311,12 +312,6 @@ export default async function RecapPage({ params }: Props) {
           </div>
         </section>
 
-        {/* Disclaimer */}
-        <div className="mt-8 p-4 rounded-xl bg-slate-100 text-sm text-slate-600">
-          <strong>Disclaimer:</strong> This is an AI-generated summary based on news headlines from {displayDate}. 
-          For investment decisions, please consult with a financial advisor and verify information from primary sources.
-        </div>
-
         {/* Previous/Next Navigation */}
         <nav className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
           {previous ? (
@@ -424,6 +419,8 @@ export default async function RecapPage({ params }: Props) {
             </Link>
           </div>
         </div>
+
+        <CommentSection target={`recap:${recap.slug}`} />
       </article>
     </main>
   );

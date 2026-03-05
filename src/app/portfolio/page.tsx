@@ -43,7 +43,7 @@ export default function PortfolioPage() {
 
   return (
     <main className="min-h-screen bg-amber-50 py-10 print:bg-white print:py-0">
-      <div className="mx-auto max-w-3xl px-4">
+      <div className="mx-auto max-w-5xl px-4">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors mb-4 print:hidden"
@@ -84,6 +84,81 @@ export default function PortfolioPage() {
           )}
         </div>
 
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "SoftwareApplication",
+                  "name": "Gold Portfolio Tracker",
+                  "applicationCategory": "FinanceApplication",
+                  "operatingSystem": "Web",
+                  "description": "Free gold portfolio tracker with XIRR returns, P&L calculation, 22K/24K holdings, and cloud sync via Google.",
+                  "url": "https://goldmeter.in/portfolio",
+                  "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "INR",
+                  },
+                  "publisher": {
+                    "@type": "Organization",
+                    "name": "GoldMeter",
+                    "url": "https://goldmeter.in",
+                  },
+                },
+                {
+                  "@type": "FAQPage",
+                  "mainEntity": [
+                    {
+                      "@type": "Question",
+                      "name": "Is the Gold Portfolio Tracker free?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes, GoldMeter's Gold Portfolio Tracker is completely free. There are no hidden charges, subscriptions, or premium tiers.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "How does the Gold Portfolio Tracker calculate XIRR?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "XIRR (Extended Internal Rate of Return) is computed using the dates and amounts of all your buy/sell transactions along with the current market value of your holdings, giving you an annualized return percentage.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Is my portfolio data safe?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Your data starts in your browser's local storage and never leaves your device unless you choose to sign in with Google. With Google sign-in, data syncs securely to Firebase (Google Cloud) and is tied to your Google account.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Can I track both 22K and 24K gold?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. Every transaction lets you select 22K or 24K purity. The tracker maintains separate average prices and P&L for each purity, plus a combined portfolio view.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Does it work on mobile?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. The Gold Portfolio Tracker is fully responsive and works on all devices — phones, tablets, and desktops. You can also export your data as CSV or print a PDF report.",
+                      },
+                    },
+                  ],
+                },
+              ],
+            }),
+          }}
+        />
+
         {/* SEO content */}
         <section className="mt-12 rounded-3xl border border-slate-100 bg-white p-8 shadow-soft print:hidden">
           <article className="prose prose-slate max-w-none text-sm">
@@ -103,28 +178,64 @@ export default function PortfolioPage() {
               and access it from any device.
             </p>
 
-            <h3 className="text-lg font-semibold text-charcoal mt-6 mb-2">
-              Features
-            </h3>
+            <h2 className="text-lg font-semibold text-charcoal mt-6 mb-2">
+              Gold Portfolio Features
+            </h2>
             <ul className="list-disc pl-5 text-slate-600 space-y-1">
               <li>Add buy and sell transactions with date, weight, price, charges, and notes</li>
               <li>Supports both 22K and 24K gold tracking</li>
               <li>Auto-computed average buy price, invested amount, and current value</li>
+              <li>XIRR calculation for annualized portfolio returns</li>
               <li>Live unrealized P&amp;L based on today&apos;s gold rate</li>
+              <li>Export to CSV or print a PDF portfolio report</li>
+              <li>Monthly and yearly performance breakdown</li>
               <li>Local-first: works without sign-in, data stays in your browser</li>
               <li>Optional Google sign-in to sync across devices via Firebase</li>
             </ul>
 
-            <h3 className="text-lg font-semibold text-charcoal mt-6 mb-2">
-              How It Works
-            </h3>
-            <p className="text-slate-600 leading-relaxed">
+            <h2 className="text-lg font-semibold text-charcoal mt-6 mb-2">
+              How to Track Gold Investments
+            </h2>
+            <p className="text-slate-600 leading-relaxed mb-3">
               Every time you add a transaction, the tracker recalculates your
               net grams, average cost, and current value. Buy entries increase
               your holdings; sell entries reduce them. The unrealized P&amp;L
               shows the difference between what you paid (cost basis) and what
               your gold is worth right now at India&apos;s live price.
             </p>
+            <p className="text-slate-600 leading-relaxed mb-3">
+              Use the sort and filter controls to quickly find specific
+              transactions by date, type, purity, or item. The date range
+              filter lets you focus on a specific period. You can export
+              your filtered transactions as CSV for record-keeping or
+              print a clean report using the export dropdown.
+            </p>
+
+            <h3 className="text-lg font-semibold text-charcoal mt-6 mb-2">
+              Frequently Asked Questions
+            </h3>
+            <div className="space-y-3 text-slate-600">
+              <div>
+                <p className="font-semibold text-charcoal">Is the Gold Portfolio Tracker free?</p>
+                <p>Yes — completely free with no hidden charges, subscriptions, or premium tiers.</p>
+              </div>
+              <div>
+                <p className="font-semibold text-charcoal">How is XIRR calculated?</p>
+                <p>XIRR uses the dates and amounts of all your transactions along with today&apos;s market value to compute an annualized return percentage.</p>
+              </div>
+              <div>
+                <p className="font-semibold text-charcoal">Is my data safe?</p>
+                <p>Your data stays in your browser until you sign in with Google. With sign-in, it syncs securely to Firebase (Google Cloud).</p>
+              </div>
+              <div>
+                <p className="font-semibold text-charcoal">Can I track 22K and 24K gold separately?</p>
+                <p>Yes — separate average prices and P&L are maintained for each purity, with a combined portfolio view.</p>
+              </div>
+              <div>
+                <p className="font-semibold text-charcoal">Does it work on mobile?</p>
+                <p>Fully responsive — works on phones, tablets, and desktops. You can also export CSV or print a PDF report.</p>
+              </div>
+            </div>
           </article>
         </section>
       </div>

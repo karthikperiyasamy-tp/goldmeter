@@ -111,7 +111,7 @@ function DonutChart({ segments, mode = "grams" }: {
   const centerText = mode === "currency" ? `₹${fmt(total)}` : `${fmtG(total)}g`;
   return (
     <div className="flex items-center gap-4">
-      <svg viewBox="0 0 100 100" className="w-28 h-28 shrink-0">
+      <svg viewBox="0 0 100 100" className="w-28 h-28 shrink-0" role="img" aria-label={`Gold allocation donut chart — ${mode === "currency" ? "by value" : "by weight"}`}>
         {segments.filter((s) => s.value > 0).map((seg) => {
           const pct = seg.value / total;
           const dash = pct * circumference;
@@ -180,7 +180,7 @@ function PortfolioLineChart({ dataPoints }: { dataPoints: { date: string; invest
 
   const padding = { top: 10, right: 10, bottom: 24, left: 50 };
   const width = 500;
-  const height = 180;
+  const height = 220;
   const chartW = width - padding.left - padding.right;
   const chartH = height - padding.top - padding.bottom;
 
@@ -199,7 +199,7 @@ function PortfolioLineChart({ dataPoints }: { dataPoints: { date: string; invest
   const valueAreaPath = `${valuePath} L${x(dataPoints.length - 1)},${y(minVal)} L${x(0)},${y(minVal)} Z`;
 
   // Y-axis labels
-  const yLabels = [minVal, minVal + range / 2, maxVal];
+  const yLabels = [minVal, minVal + range * 0.25, minVal + range * 0.5, minVal + range * 0.75, maxVal];
   const xLabelIndices = Array.from(
     new Set([0, Math.floor((dataPoints.length - 1) / 2), dataPoints.length - 1])
   );
@@ -219,6 +219,8 @@ function PortfolioLineChart({ dataPoints }: { dataPoints: { date: string; invest
       <svg
         viewBox={`0 0 ${width} ${height}`}
         className="w-full h-auto min-w-[320px]"
+        role="img"
+        aria-label="Portfolio value over time chart showing invested amount and current value"
         preserveAspectRatio="xMidYMid meet"
         onMouseMove={(e) => setHoverIndex(getClosestIndexFromClientX(e.clientX, e.currentTarget))}
         onMouseLeave={() => setHoverIndex(null)}
@@ -232,7 +234,7 @@ function PortfolioLineChart({ dataPoints }: { dataPoints: { date: string; invest
         {/* Grid lines */}
         {yLabels.map((v) => (
           <g key={v}>
-            <line x1={padding.left} y1={y(v)} x2={width - padding.right} y2={y(v)} stroke="#e2e8f0" strokeWidth="0.5" />
+            <line x1={padding.left} y1={y(v)} x2={width - padding.right} y2={y(v)} stroke="#e2e8f0" strokeWidth="0.5" strokeDasharray="4 3" />
             <text x={padding.left - 4} y={y(v) + 3} textAnchor="end" className="text-[7px] fill-slate-400">
               ₹{v >= 100000 ? `${(v / 100000).toFixed(1)}L` : fmt(v)}
             </text>
@@ -577,6 +579,20 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
   const [filterType, setFilterType] = useState<"all" | "buy" | "sell">("all");
   const [filterItemType, setFilterItemType] = useState<"all" | GoldItemType>("all");
 
+  // Sort control
+  const [sortKey, setSortKey] = useState<"date-desc" | "date-asc" | "amount-desc" | "amount-asc" | "weight-desc">("date-desc");
+
+  // Date range filter
+  const [filterDateFrom, setFilterDateFrom] = useState("");
+  const [filterDateTo, setFilterDateTo] = useState("");
+
+  // Export dropdown
+  const [showExportMenu, setShowExportMenu] = useState(false);
+
+  // Monthly/yearly P&L breakdown
+  const [showMonthlyBreakdown, setShowMonthlyBreakdown] = useState(false);
+  const [monthlyViewMode, setMonthlyViewMode] = useState<"monthly" | "yearly">("monthly");
+
   const fbReady = isFirebaseConfigured();
   const missingFirebaseKeys = getFirebaseMissingConfigKeys();
 
@@ -848,7 +864,16 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
     }
   };
 
-  const sortedTxs = useMemo(() => [...transactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()), [transactions]);
+  const sortedTxs = useMemo(() => {
+    const txs = [...transactions];
+    switch (sortKey) {
+      case "date-asc": return txs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      case "amount-desc": return txs.sort((a, b) => (b.grams * b.pricePerGram + b.charges) - (a.grams * a.pricePerGram + a.charges));
+      case "amount-asc": return txs.sort((a, b) => (a.grams * a.pricePerGram + a.charges) - (b.grams * b.pricePerGram + b.charges));
+      case "weight-desc": return txs.sort((a, b) => b.grams - a.grams);
+      default: return txs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }
+  }, [transactions, sortKey]);
 
   // Purity allocation for donut (by current value)
   const purityAllocation = useMemo(() => {
@@ -878,10 +903,12 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
     if (filterPurity !== "all") txs = txs.filter(tx => tx.purity === filterPurity);
     if (filterType !== "all") txs = txs.filter(tx => tx.type === filterType);
     if (filterItemType !== "all") txs = txs.filter(tx => tx.itemType === filterItemType);
+    if (filterDateFrom) txs = txs.filter(tx => tx.date >= filterDateFrom);
+    if (filterDateTo) txs = txs.filter(tx => tx.date <= filterDateTo);
     return txs;
-  }, [sortedTxs, filterSearch, filterPurity, filterType, filterItemType]);
+  }, [sortedTxs, filterSearch, filterPurity, filterType, filterItemType, filterDateFrom, filterDateTo]);
 
-  const hasActiveFilters = filterSearch || filterPurity !== "all" || filterType !== "all" || filterItemType !== "all";
+  const hasActiveFilters = filterSearch || filterPurity !== "all" || filterType !== "all" || filterItemType !== "all" || filterDateFrom || filterDateTo;
 
   // Quick-add: pre-fill form with common scenarios
   const quickAdd = (purity: "22K" | "24K", itemType: GoldItemType) => {
@@ -908,7 +935,48 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
     setShowGoalInput(false);
   };
 
-  const handlePrint = () => window.print();
+  const handleExportCSV = () => {
+    const headers = ["Date", "Type", "Purity", "Item", "Weight(g)", "Price/g", "Charges", "Total", "Note"];
+    const rows = filteredTxs.map(tx => [
+      tx.date,
+      tx.type,
+      tx.purity,
+      getItemLabel(tx),
+      tx.grams.toFixed(3),
+      tx.pricePerGram.toFixed(0),
+      tx.charges.toFixed(0),
+      (tx.grams * tx.pricePerGram + (tx.type === "buy" ? tx.charges : 0)).toFixed(0),
+      tx.note || "",
+    ]);
+    const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `gold-portfolio-${today()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setShowExportMenu(false);
+  };
+
+  const monthlyBreakdown = useMemo(() => {
+    if (transactions.length === 0) return [];
+    const map = new Map<string, { buysGrams: number; buysAmount: number; sellsGrams: number; sellsAmount: number }>();
+    const sorted = [...transactions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    for (const tx of sorted) {
+      const key = monthlyViewMode === "monthly" ? tx.date.slice(0, 7) : tx.date.slice(0, 4);
+      const entry = map.get(key) || { buysGrams: 0, buysAmount: 0, sellsGrams: 0, sellsAmount: 0 };
+      const amount = tx.grams * tx.pricePerGram + (tx.type === "buy" ? tx.charges : 0);
+      if (tx.type === "buy") { entry.buysGrams += tx.grams; entry.buysAmount += amount; }
+      else { entry.sellsGrams += tx.grams; entry.sellsAmount += amount; }
+      map.set(key, entry);
+    }
+    let cumGrams = 0;
+    return Array.from(map.entries()).map(([period, d]) => {
+      cumGrams += d.buysGrams - d.sellsGrams;
+      return { period, ...d, netGrams: d.buysGrams - d.sellsGrams, cumGrams };
+    });
+  }, [transactions, monthlyViewMode]);
 
   // Auto-show tutorial for first-time visitors
   useEffect(() => {
@@ -945,6 +1013,23 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
   // ================================================
   return (
     <div className="space-y-6">
+      {/* Print-only header */}
+      <div className="hidden print:block mb-4">
+        <h1 className="text-xl font-bold text-charcoal">GoldMeter Portfolio Report</h1>
+        <p className="text-xs text-slate-500">
+          {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}
+          {user ? ` — ${user.displayName || user.email}` : ""}
+        </p>
+        {transactions.length > 0 && (
+          <div className="mt-3 grid grid-cols-4 gap-3 text-xs">
+            <div><span className="text-slate-500">Invested:</span> <strong>₹{fmt(totalInvested)}</strong></div>
+            <div><span className="text-slate-500">Current Value:</span> <strong>₹{fmt(totalCurrentValue)}</strong></div>
+            <div><span className="text-slate-500">P&L:</span> <strong className={totalUnrealizedPL >= 0 ? "text-emerald-600" : "text-red-600"}>{totalUnrealizedPL >= 0 ? "+" : ""}₹{fmt(Math.abs(totalUnrealizedPL))} ({totalPLPercent.toFixed(2)}%)</strong></div>
+            <div><span className="text-slate-500">Holding:</span> <strong>{fmtG(totalNetGrams)}g</strong></div>
+          </div>
+        )}
+      </div>
+
       {/* ---- Sign-in / User Card ---- */}
       {!user ? (
         <div id="tour-signin" className="rounded-2xl border-2 border-dashed border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 p-5">
@@ -1011,7 +1096,13 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
                 <p className="text-sm font-semibold text-charcoal truncate">{user.displayName || user.email}</p>
                 <SyncBadge status={syncStatus} />
                 {syncStatus === "error" && syncErrorMessage && (
-                  <p className="text-xs text-red-600 mt-1 max-w-lg">{syncErrorMessage}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <p className="text-xs text-red-600 max-w-lg">{syncErrorMessage}</p>
+                    <button onClick={loadCloudTransactions}
+                      className="text-[11px] font-medium text-amber-600 hover:text-amber-700 underline underline-offset-2 shrink-0">
+                      Retry
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
@@ -1031,13 +1122,30 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
                   XIRR: {displayXIRR >= 0 ? "+" : ""}{displayXIRR.toFixed(1)}% p.a.
                 </div>
               )}
-              <button
-                onClick={handlePrint}
-                className="rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-500 hover:text-amber-600 hover:border-amber-300 transition-colors print:hidden"
-                title="Print / Export PDF"
-              >
-                🖨️ Print
-              </button>
+              <div className="relative print:hidden">
+                <button
+                  onClick={() => setShowExportMenu(!showExportMenu)}
+                  className="rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-500 hover:text-amber-600 hover:border-amber-300 transition-colors"
+                  title="Export Portfolio"
+                >
+                  📤 Export ▾
+                </button>
+                {showExportMenu && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setShowExportMenu(false)} />
+                    <div className="absolute right-0 top-full mt-1 w-44 rounded-xl border border-slate-200 bg-white shadow-lg z-20">
+                      <button onClick={handleExportCSV}
+                        className="w-full text-left px-4 py-2.5 text-xs text-slate-600 hover:bg-amber-50 hover:text-amber-700 rounded-t-xl transition-colors">
+                        📊 Download CSV
+                      </button>
+                      <button onClick={() => { setShowExportMenu(false); window.print(); }}
+                        className="w-full text-left px-4 py-2.5 text-xs text-slate-600 hover:bg-amber-50 hover:text-amber-700 rounded-b-xl transition-colors border-t border-slate-100">
+                        🖨️ Print / PDF
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
 
@@ -1122,7 +1230,7 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
           )}
 
           {/* Charts */}
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
+          <div className="mt-5 grid gap-4 md:grid-cols-2 print:hidden">
             <div className="rounded-2xl bg-white/70 backdrop-blur border border-slate-100 p-4">
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Invested vs Current Value</p>
               <ValueBar invested={totalInvested} current={totalCurrentValue} />
@@ -1137,7 +1245,7 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
 
           {/* Purity split donut */}
           {purityAllocation.length > 1 && (
-            <div className="mt-4 rounded-2xl bg-white/70 backdrop-blur border border-slate-100 p-4">
+            <div className="mt-4 rounded-2xl bg-white/70 backdrop-blur border border-slate-100 p-4 print:hidden">
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Value by Purity</p>
               <DonutChart segments={purityAllocation} mode="currency" />
             </div>
@@ -1145,7 +1253,7 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
 
           {/* Portfolio Value Over Time Line Chart */}
           {lineChartData.length >= 2 && (
-            <div className="mt-5 rounded-2xl bg-white/70 backdrop-blur border border-slate-100 p-4">
+            <div className="mt-5 rounded-2xl bg-white/70 backdrop-blur border border-slate-100 p-4 print:hidden">
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Portfolio Value Over Time</p>
               <PortfolioLineChart dataPoints={lineChartData} />
               <p className="text-[10px] text-slate-400 mt-2 text-center">
@@ -1207,6 +1315,69 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
                   </div>
                 </div>
               )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ============== MONTHLY/YEARLY P&L BREAKDOWN ============== */}
+      {transactions.length > 0 && monthlyBreakdown.length >= 2 && (
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm print:hidden">
+          <div className="flex items-center justify-between mb-3">
+            <button onClick={() => setShowMonthlyBreakdown(!showMonthlyBreakdown)}
+              className="flex items-center gap-2 text-sm font-bold text-charcoal hover:text-amber-600 transition-colors">
+              <span className={`text-xs transition-transform ${showMonthlyBreakdown ? "rotate-90" : ""}`}>▶</span>
+              Performance by {monthlyViewMode === "monthly" ? "Month" : "Year"}
+            </button>
+            <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-0.5">
+              <button onClick={() => setMonthlyViewMode("monthly")}
+                className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-colors ${monthlyViewMode === "monthly" ? "bg-white text-charcoal shadow-sm" : "text-slate-500"}`}>
+                Monthly
+              </button>
+              <button onClick={() => setMonthlyViewMode("yearly")}
+                className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-colors ${monthlyViewMode === "yearly" ? "bg-white text-charcoal shadow-sm" : "text-slate-500"}`}>
+                Yearly
+              </button>
+            </div>
+          </div>
+          {showMonthlyBreakdown && (
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-slate-200 text-slate-500">
+                    <th className="text-left py-2 pr-3 font-medium">Period</th>
+                    <th className="text-right py-2 px-2 font-medium">Bought</th>
+                    <th className="text-right py-2 px-2 font-medium">Sold</th>
+                    <th className="text-right py-2 px-2 font-medium">Net</th>
+                    <th className="text-right py-2 pl-2 font-medium">Cumulative</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {monthlyBreakdown.map((row, i) => (
+                    <tr key={row.period} className={i % 2 === 0 ? "bg-slate-50/50" : ""}>
+                      <td className="py-2 pr-3 font-medium text-charcoal">
+                        {monthlyViewMode === "monthly"
+                          ? new Date(row.period + "-01").toLocaleDateString("en-IN", { month: "short", year: "numeric" })
+                          : row.period}
+                      </td>
+                      <td className="text-right py-2 px-2 text-emerald-600">
+                        {row.buysGrams > 0 ? `${fmtG(row.buysGrams)}g` : "—"}
+                        {row.buysAmount > 0 && <span className="text-slate-400 ml-1">(₹{fmt(row.buysAmount)})</span>}
+                      </td>
+                      <td className="text-right py-2 px-2 text-red-500">
+                        {row.sellsGrams > 0 ? `${fmtG(row.sellsGrams)}g` : "—"}
+                        {row.sellsAmount > 0 && <span className="text-slate-400 ml-1">(₹{fmt(row.sellsAmount)})</span>}
+                      </td>
+                      <td className={`text-right py-2 px-2 font-semibold ${row.netGrams >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+                        {row.netGrams >= 0 ? "+" : ""}{fmtG(row.netGrams)}g
+                      </td>
+                      <td className="text-right py-2 pl-2 font-semibold text-charcoal">
+                        {fmtG(row.cumGrams)}g
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
@@ -1469,87 +1640,62 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
       {/* ============== TRANSACTIONS LIST ============== */}
       {transactions.length === 0 ? (
         <div className="space-y-6">
-          {/* Blurred mock dashboard preview */}
-          <div className="relative rounded-3xl border border-amber-100 bg-gradient-to-br from-white via-amber-50/40 to-orange-50/30 p-6 shadow-soft overflow-hidden">
-            <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center">
-              <p className="text-4xl mb-2">✨</p>
-              <p className="text-base font-bold text-charcoal">Your dashboard will appear here</p>
-              <p className="text-xs text-slate-500 mt-1">Add your first transaction to unlock charts, P&L tracking, and more.</p>
+          {/* Action-oriented hero */}
+          <div className="rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 via-orange-50/60 to-white p-8 text-center">
+            <p className="text-5xl mb-3">🏆</p>
+            <h3 className="text-xl font-bold text-charcoal">Start tracking your gold in 30 seconds</h3>
+            <p className="text-sm text-slate-600 mt-2 max-w-md mx-auto">
+              Record your first purchase and instantly see live P&L, charts, and XIRR returns.
+            </p>
+            <button onClick={() => { resetForm(); setShowForm(true); }}
+              className="mt-5 inline-flex items-center gap-2 rounded-full bg-amber-600 px-6 py-3 text-sm font-semibold text-white shadow-soft hover:bg-amber-700 transition-colors">
+              + Add Your First Transaction
+            </button>
+          </div>
+
+          {/* Benefit cards */}
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 text-center">
+              <p className="text-2xl mb-2">📈</p>
+              <p className="text-sm font-semibold text-charcoal">Track P&L in real time</p>
+              <p className="text-xs text-slate-500 mt-1">See unrealized profit or loss based on live gold rates.</p>
             </div>
-            <div className="opacity-40 pointer-events-none select-none" aria-hidden="true">
-              <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
-                <div className="rounded-2xl bg-white/80 p-4 border border-slate-100">
-                  <p className="text-[11px] text-slate-400 uppercase">Invested</p>
-                  <p className="text-xl font-bold text-slate-300">₹1,50,000</p>
-                </div>
-                <div className="rounded-2xl bg-white/80 p-4 border border-slate-100">
-                  <p className="text-[11px] text-slate-400 uppercase">Current Value</p>
-                  <p className="text-xl font-bold text-slate-300">₹1,72,500</p>
-                </div>
-                <div className="rounded-2xl bg-emerald-50/80 p-4 border border-emerald-100">
-                  <p className="text-[11px] text-slate-400 uppercase">Unrealized P&L</p>
-                  <p className="text-xl font-bold text-slate-300">+₹22,500</p>
-                </div>
-                <div className="rounded-2xl bg-amber-100/60 p-4">
-                  <p className="text-[11px] text-slate-300 uppercase">Net Holding</p>
-                  <p className="text-xl font-bold text-slate-300">25.000g</p>
-                </div>
-              </div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 text-center">
+              <p className="text-2xl mb-2">⚖️</p>
+              <p className="text-sm font-semibold text-charcoal">Compare 22K vs 24K holdings</p>
+              <p className="text-xs text-slate-500 mt-1">Track different purities with separate average prices.</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 text-center">
+              <p className="text-2xl mb-2">☁️</p>
+              <p className="text-sm font-semibold text-charcoal">Sync across devices</p>
+              <p className="text-xs text-slate-500 mt-1">Sign in with Google to access your portfolio anywhere.</p>
             </div>
           </div>
 
-          {/* Quick-start guide */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-6">
-            <h3 className="text-sm font-bold text-charcoal mb-4">Get started in 3 easy steps</h3>
-            <div className="grid gap-4 sm:grid-cols-3">
-              <div className="flex gap-3 items-start">
-                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-700 text-sm font-bold shrink-0">1</span>
-                <div>
-                  <p className="text-sm font-semibold text-charcoal">Add a purchase</p>
-                  <p className="text-xs text-slate-500 mt-0.5">Record your gold buy with weight, price, and item type.</p>
-                </div>
-              </div>
-              <div className="flex gap-3 items-start">
-                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-700 text-sm font-bold shrink-0">2</span>
-                <div>
-                  <p className="text-sm font-semibold text-charcoal">Track your portfolio</p>
-                  <p className="text-xs text-slate-500 mt-0.5">See live P&L, charts, and XIRR returns automatically.</p>
-                </div>
-              </div>
-              <div className="flex gap-3 items-start">
-                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-700 text-sm font-bold shrink-0">3</span>
-                <div>
-                  <p className="text-sm font-semibold text-charcoal">Sync across devices</p>
-                  <p className="text-xs text-slate-500 mt-0.5">Sign in with Google to access your portfolio anywhere.</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick-add shortcuts */}
-            <div id="tour-quick-add" className="mt-5 pt-4 border-t border-slate-100">
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Quick add at today&apos;s rate</p>
-              <div className="flex flex-wrap gap-2">
-                <button onClick={() => quickAdd("22K", "coin")}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-700 hover:bg-amber-100 transition-colors">
-                  🪙 22K Coin @ ₹{fmt(gold22k)}/g
-                </button>
-                <button onClick={() => quickAdd("24K", "bar")}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors">
-                  🧱 24K Bar @ ₹{fmt(gold24k)}/g
-                </button>
-                <button onClick={() => quickAdd("22K", "necklace")}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 bg-purple-50 px-3 py-1.5 text-xs font-medium text-purple-700 hover:bg-purple-100 transition-colors">
-                  📿 22K Necklace @ ₹{fmt(gold22k)}/g
-                </button>
-                <button onClick={() => quickAdd("22K", "ring")}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-pink-200 bg-pink-50 px-3 py-1.5 text-xs font-medium text-pink-700 hover:bg-pink-100 transition-colors">
-                  💍 22K Ring @ ₹{fmt(gold22k)}/g
-                </button>
-                <button onClick={() => quickAdd("24K", "digital")}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 transition-colors">
-                  📱 24K Digital @ ₹{fmt(gold24k)}/g
-                </button>
-              </div>
+          {/* Quick-add shortcuts */}
+          <div id="tour-quick-add" className="rounded-2xl border border-slate-200 bg-white p-5">
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Quick add at today&apos;s rate</p>
+            <div className="flex flex-wrap gap-2">
+              <button onClick={() => quickAdd("22K", "coin")}
+                className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-700 hover:bg-amber-100 transition-colors">
+                🪙 22K Coin @ ₹{fmt(gold22k)}/g
+              </button>
+              <button onClick={() => quickAdd("24K", "bar")}
+                className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors">
+                🧱 24K Bar @ ₹{fmt(gold24k)}/g
+              </button>
+              <button onClick={() => quickAdd("22K", "necklace")}
+                className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 bg-purple-50 px-3 py-1.5 text-xs font-medium text-purple-700 hover:bg-purple-100 transition-colors">
+                📿 22K Necklace @ ₹{fmt(gold22k)}/g
+              </button>
+              <button onClick={() => quickAdd("22K", "ring")}
+                className="inline-flex items-center gap-1.5 rounded-full border border-pink-200 bg-pink-50 px-3 py-1.5 text-xs font-medium text-pink-700 hover:bg-pink-100 transition-colors">
+                💍 22K Ring @ ₹{fmt(gold22k)}/g
+              </button>
+              <button onClick={() => quickAdd("24K", "digital")}
+                className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+                📱 24K Digital @ ₹{fmt(gold24k)}/g
+              </button>
             </div>
           </div>
         </div>
@@ -1568,9 +1714,9 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
                   onChange={(e) => setFilterSearch(e.target.value)}
                 />
                 {hasActiveFilters && (
-                  <button onClick={() => { setFilterSearch(""); setFilterPurity("all"); setFilterType("all"); setFilterItemType("all"); }}
+                  <button onClick={() => { setFilterSearch(""); setFilterPurity("all"); setFilterType("all"); setFilterItemType("all"); setFilterDateFrom(""); setFilterDateTo(""); setSortKey("date-desc"); }}
                     className="text-[11px] text-amber-600 font-medium hover:text-amber-700 transition-colors shrink-0">
-                    Clear filters
+                    Clear all
                   </button>
                 )}
               </div>
@@ -1594,8 +1740,24 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
                     <option key={it.value} value={it.value}>{it.icon} {it.label}</option>
                   ))}
                 </select>
+                <select value={sortKey} onChange={(e) => setSortKey(e.target.value as typeof sortKey)}
+                  className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-600 bg-white focus:border-amber-400 focus:outline-none">
+                  <option value="date-desc">Date (newest)</option>
+                  <option value="date-asc">Date (oldest)</option>
+                  <option value="amount-desc">Amount (high→low)</option>
+                  <option value="amount-asc">Amount (low→high)</option>
+                  <option value="weight-desc">Weight (high→low)</option>
+                </select>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[11px] text-slate-400">Date range:</span>
+                <input type="date" value={filterDateFrom} onChange={(e) => setFilterDateFrom(e.target.value)} max={filterDateTo || today()}
+                  className="rounded-lg border border-slate-200 px-2 py-1.5 text-xs text-slate-600 bg-white focus:border-amber-400 focus:outline-none" />
+                <span className="text-[11px] text-slate-400">to</span>
+                <input type="date" value={filterDateTo} onChange={(e) => setFilterDateTo(e.target.value)} min={filterDateFrom} max={today()}
+                  className="rounded-lg border border-slate-200 px-2 py-1.5 text-xs text-slate-600 bg-white focus:border-amber-400 focus:outline-none" />
                 {hasActiveFilters && (
-                  <span className="self-center text-[11px] text-slate-400">
+                  <span className="self-center text-[11px] text-slate-400 ml-auto">
                     {filteredTxs.length} of {transactions.length} shown
                   </span>
                 )}
@@ -1603,8 +1765,44 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
             </div>
           )}
 
-          {/* Transaction list */}
-          <div className="space-y-2">
+          {/* Print-only transaction table */}
+          <div className="hidden print:block">
+            <h3 className="text-sm font-bold text-charcoal mb-2">Transactions</h3>
+            <table className="w-full text-[10px] border-collapse">
+              <thead>
+                <tr className="border-b border-slate-300 text-slate-600">
+                  <th className="text-left py-1.5 pr-2 font-semibold">Date</th>
+                  <th className="text-left py-1.5 px-1 font-semibold">Type</th>
+                  <th className="text-left py-1.5 px-1 font-semibold">Item</th>
+                  <th className="text-left py-1.5 px-1 font-semibold">Purity</th>
+                  <th className="text-right py-1.5 px-1 font-semibold">Weight</th>
+                  <th className="text-right py-1.5 px-1 font-semibold">Price/g</th>
+                  <th className="text-right py-1.5 px-1 font-semibold">Charges</th>
+                  <th className="text-right py-1.5 pl-1 font-semibold">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredTxs.map((tx, i) => {
+                  const total = tx.grams * tx.pricePerGram + (tx.type === "buy" ? tx.charges : 0);
+                  return (
+                    <tr key={tx.id} className={i % 2 === 0 ? "bg-slate-50" : ""}>
+                      <td className="py-1 pr-2">{tx.date}</td>
+                      <td className="py-1 px-1 capitalize">{tx.type}</td>
+                      <td className="py-1 px-1">{getItemLabel(tx)}</td>
+                      <td className="py-1 px-1">{tx.purity}</td>
+                      <td className="py-1 px-1 text-right">{fmtG(tx.grams)}g</td>
+                      <td className="py-1 px-1 text-right">₹{fmt(tx.pricePerGram)}</td>
+                      <td className="py-1 px-1 text-right">₹{fmt(tx.charges)}</td>
+                      <td className="py-1 pl-1 text-right font-semibold">₹{fmt(total)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Transaction list (screen) */}
+          <div className="space-y-2 print:hidden">
             {filteredTxs.length === 0 && hasActiveFilters ? (
               <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-8 text-center">
                 <p className="text-2xl mb-2">🔍</p>

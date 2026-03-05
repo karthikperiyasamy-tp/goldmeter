@@ -60,6 +60,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   const silverHref = city === "India" ? "/silver-rate" : `/silver-rate/${citySlug}`;
   const primaryNavItems = [
     { label: "Portfolio", href: "/portfolio" },
+    { label: "Community", href: "/community" },
     { label: "Gold Rate Today", href: goldHref },
     { label: "Silver Rate", href: silverHref },
     { label: "Calculator", href: "/calculator" },

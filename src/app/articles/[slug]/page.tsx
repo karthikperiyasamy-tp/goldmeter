@@ -5,6 +5,7 @@ import { ARTICLES, PUBLISHED_ARTICLES, getArticleDateISO } from "@/lib/articles"
 import { ARTICLE_CONTENT_MAP } from "@/app/components/articles/ArticleContentMap";
 import LiveGoldRateMention from "@/app/components/articles/LiveGoldRateMention";
 import ArticleCityRatesSidebar from "@/app/components/articles/ArticleCityRatesSidebar";
+import CommentSection from "@/app/components/community/CommentSection";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -231,6 +232,8 @@ export default async function ArticlePage({ params }: Props) {
                 ))}
               </div>
             </section>
+
+            <CommentSection target={`article:${slug}`} />
 
         {/* Related Articles */}
             {related.length > 0 && (

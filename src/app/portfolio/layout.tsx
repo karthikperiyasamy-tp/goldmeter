@@ -1,24 +1,28 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Gold Portfolio Tracker - Track Your Gold Investments | GoldMeter",
+  title: "Free Gold Portfolio Tracker — XIRR, P&L & Holdings | GoldMeter",
   description:
-    "Track your gold investments with GoldMeter's free portfolio tracker. Add buy/sell transactions, view holdings, average price, current value and P&L. Sign in with Google to sync across devices.",
+    "Track your gold investments for free with GoldMeter's portfolio tracker. Add buy/sell transactions, view XIRR returns, average price, current value, unrealized P&L, and sync across devices with Google.",
   alternates: {
     canonical: "https://goldmeter.in/portfolio",
   },
   keywords: [
     "gold portfolio tracker",
     "gold investment tracker",
+    "gold tracker app india",
+    "gold P&L calculator",
+    "gold XIRR calculator",
     "track gold holdings",
     "gold buy sell tracker",
     "gold profit loss calculator",
     "gold investment portfolio india",
+    "free gold tracker",
   ],
   openGraph: {
-    title: "Gold Portfolio Tracker | GoldMeter",
+    title: "Free Gold Portfolio Tracker — XIRR & P&L | GoldMeter",
     description:
-      "Track your gold investments — holdings, P&L, and current value. Sync with Google to access from any device.",
+      "Track your gold investments for free — XIRR returns, P&L, holdings, and current value. Sync with Google to access from any device.",
     url: "https://goldmeter.in/portfolio",
     siteName: "GoldMeter",
     type: "website",
@@ -34,9 +38,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Gold Portfolio Tracker | GoldMeter",
+    title: "Free Gold Portfolio Tracker — XIRR & P&L | GoldMeter",
     description:
-      "Track your gold investments — holdings, P&L, and current value.",
+      "Track your gold investments for free — XIRR returns, P&L, and current value.",
   },
 };
 
