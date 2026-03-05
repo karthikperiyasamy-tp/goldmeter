@@ -1,337 +1,566 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import Link from "next/link";
 
+interface BucketItem {
+  _id: string;
+  count: number;
+}
+interface CommunityStats {
+  totalComments: number;
+  totalQuestions: number;
+  todaySentimentVotes: number;
+}
 interface AnalyticsData {
   totalViews: number;
   uniqueUsers: number;
-  topPages: Array<{ _id: string; count: number }>;
-  sources: Array<{ _id: string; count: number }>;
-  topCities: Array<{ _id: string; count: number }>;
-  hourlyTraffic: Array<{ _id: string; count: number }>;
-  sectionBreakdown?: Array<{ _id: string; count: number }>;
+  topPages: BucketItem[];
+  sources: BucketItem[];
+  topCities: BucketItem[];
+  hourlyTraffic: BucketItem[];
+  sectionBreakdown: BucketItem[];
+  deviceBreakdown: BucketItem[];
+  browserBreakdown: BucketItem[];
+  topArticles: BucketItem[];
+  topRecaps: BucketItem[];
+  calculatorBreakdown: BucketItem[];
+  bounceRate: number;
+  newUsers: number;
+  returningUsers: number;
+  realtimeUsers: number;
+  communityStats: CommunityStats;
 }
 
 const TIME_RANGES = [
-  { value: '5m', label: 'Last 5 minutes' },
-  { value: '15m', label: 'Last 15 minutes' },
-  { value: '30m', label: 'Last 30 minutes' },
-  { value: '1h', label: 'Last 1 hour' },
-  { value: '4h', label: 'Last 4 hours' },
-  { value: '12h', label: 'Last 12 hours' },
-  { value: '24h', label: 'Last 24 hours' },
-  { value: 'today', label: 'Today' },
-  { value: 'yesterday', label: 'Yesterday' },
-  { value: '7d', label: 'Last 7 days' },
-  { value: '30d', label: 'Last 30 days' },
+  { value: "5m", label: "5 min" },
+  { value: "15m", label: "15 min" },
+  { value: "30m", label: "30 min" },
+  { value: "1h", label: "1 hr" },
+  { value: "4h", label: "4 hr" },
+  { value: "12h", label: "12 hr" },
+  { value: "24h", label: "24 hr" },
+  { value: "today", label: "Today" },
+  { value: "yesterday", label: "Yesterday" },
+  { value: "7d", label: "7 days" },
+  { value: "30d", label: "30 days" },
 ];
 
+const DEVICE_COLORS: Record<string, string> = {
+  desktop: "#f59e0b",
+  mobile: "#6366f1",
+  tablet: "#10b981",
+  bot: "#94a3b8",
+  unknown: "#d1d5db",
+};
+
+const BROWSER_COLORS: Record<string, string> = {
+  Chrome: "#4285F4",
+  Safari: "#000000",
+  Firefox: "#FF7139",
+  Edge: "#0078D7",
+  Opera: "#FF1B2D",
+  IE: "#0076D6",
+  Bot: "#94a3b8",
+  Other: "#d1d5db",
+  unknown: "#d1d5db",
+};
+
+const SECTION_CFG: Record<string, { emoji: string; color: string }> = {
+  "Gold Rate": { emoji: "🥇", color: "bg-amber-500" },
+  "Silver Rate": { emoji: "🥈", color: "bg-slate-400" },
+  Portfolio: { emoji: "💼", color: "bg-purple-500" },
+  Articles: { emoji: "📝", color: "bg-blue-500" },
+  News: { emoji: "📰", color: "bg-emerald-500" },
+  Calculator: { emoji: "🧮", color: "bg-orange-500" },
+  Community: { emoji: "💬", color: "bg-teal-500" },
+  Jewellers: { emoji: "💎", color: "bg-pink-500" },
+  Compare: { emoji: "⚖️", color: "bg-cyan-500" },
+  Other: { emoji: "📁", color: "bg-gray-400" },
+};
+
+/* ---------- tiny helpers ---------- */
+
+function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`bg-white rounded-xl shadow-sm border border-slate-200 p-4 md:p-5 ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h2 className="text-sm font-semibold text-slate-700 mb-3">{children}</h2>;
+}
+
+function EmptyRow() {
+  return <p className="text-xs text-slate-400 italic">No data</p>;
+}
+
+function formatSlug(path: string) {
+  return path.replace(/^\/(articles|news\/recap)\//, "").replace(/-/g, " ");
+}
+
+/* ---------- donut ---------- */
+
+function Donut({ items, colorMap }: { items: BucketItem[]; colorMap: Record<string, string> }) {
+  const total = items.reduce((s, i) => s + i.count, 0);
+  if (total === 0) return <EmptyRow />;
+
+  let cumulative = 0;
+  const segments = items.map((item) => {
+    const pct = (item.count / total) * 100;
+    const offset = cumulative;
+    cumulative += pct;
+    return { ...item, pct, offset };
+  });
+
+  return (
+    <div className="flex items-center gap-4">
+      <svg viewBox="0 0 42 42" className="w-28 h-28 flex-shrink-0">
+        <circle cx="21" cy="21" r="15.91549" fill="transparent" stroke="#f1f5f9" strokeWidth="5" />
+        {segments.map((seg, i) => (
+          <circle
+            key={i}
+            cx="21"
+            cy="21"
+            r="15.91549"
+            fill="transparent"
+            stroke={colorMap[seg._id] || "#d1d5db"}
+            strokeWidth="5"
+            strokeDasharray={`${seg.pct} ${100 - seg.pct}`}
+            strokeDashoffset={`${100 - seg.offset + 25}`}
+          />
+        ))}
+      </svg>
+      <div className="space-y-1.5 flex-1 min-w-0">
+        {segments.map((seg, i) => (
+          <div key={i} className="flex items-center gap-2 text-xs">
+            <span
+              className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+              style={{ backgroundColor: colorMap[seg._id] || "#d1d5db" }}
+            />
+            <span className="text-slate-600 capitalize truncate">{seg._id}</span>
+            <span className="ml-auto font-semibold text-slate-800">{seg.pct.toFixed(1)}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ---------- horizontal bar list ---------- */
+
+function HBarList({
+  items,
+  colorMap,
+  max: maxProp,
+}: {
+  items: BucketItem[];
+  colorMap?: Record<string, string>;
+  max?: number;
+}) {
+  const biggest = maxProp || Math.max(...items.map((i) => i.count), 1);
+  if (items.length === 0) return <EmptyRow />;
+  return (
+    <div className="space-y-2">
+      {items.map((item, idx) => {
+        const pct = (item.count / biggest) * 100;
+        const color = colorMap?.[item._id] || "#f59e0b";
+        return (
+          <div key={idx}>
+            <div className="flex justify-between text-xs mb-0.5">
+              <span className="text-slate-600 truncate mr-2 capitalize">{item._id || "unknown"}</span>
+              <span className="font-semibold text-slate-800 flex-shrink-0">{item.count.toLocaleString()}</span>
+            </div>
+            <div className="w-full bg-slate-100 rounded-full h-1.5">
+              <div className="h-1.5 rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ---------- slug table ---------- */
+
+function SlugTable({ items, label }: { items: BucketItem[]; label: string }) {
+  if (items.length === 0) return <EmptyRow />;
+  return (
+    <div className="overflow-x-auto -mx-4 md:-mx-5">
+      <table className="w-full text-xs">
+        <thead>
+          <tr className="border-b border-slate-100">
+            <th className="text-left font-medium text-slate-500 px-4 md:px-5 pb-2">{label}</th>
+            <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Views</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item, idx) => (
+            <tr key={idx} className="border-b border-slate-50 last:border-0">
+              <td className="px-4 md:px-5 py-2 text-slate-700 capitalize truncate max-w-[200px]">
+                {formatSlug(item._id)}
+              </td>
+              <td className="px-4 md:px-5 py-2 text-right font-semibold text-slate-800">
+                {item.count.toLocaleString()}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* =================================================================
+   MAIN PAGE
+   ================================================================= */
+
 export default function AnalyticsPage() {
-  const [selectedRange, setSelectedRange] = useState('7d');
+  const [selectedRange, setSelectedRange] = useState("7d");
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchData() {
+    let cancelled = false;
+    (async () => {
       setLoading(true);
       setError(null);
-      
       try {
-        const response = await fetch(`/api/analytics/summary?range=${selectedRange}`);
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch analytics data');
-        }
-        
-        const result = await response.json();
-        setData(result);
-      } catch (err) {
-        console.error('[Analytics] Error:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load data');
+        const res = await fetch(`/api/analytics/summary?range=${selectedRange}`);
+        if (!res.ok) throw new Error("Failed to fetch");
+        const result = await res.json();
+        if (!cancelled) setData(result);
+      } catch (err: unknown) {
+        if (!cancelled) setError(err instanceof Error ? err.message : "Failed to load data");
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
-    }
-    
-    fetchData();
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [selectedRange]);
 
-  const currentRange = TIME_RANGES.find(r => r.value === selectedRange)?.label || 'Last 7 days';
-
-  // Map section names from backend to display config
-  const sectionConfig: Record<string, { emoji: string; color: string }> = {
-    'Gold Rate': { emoji: '🥇', color: 'bg-amber-500' },
-    'Silver Rate': { emoji: '🥈', color: 'bg-slate-400' },
-    'Portfolio': { emoji: '💼', color: 'bg-purple-500' },
-    'Articles': { emoji: '📝', color: 'bg-blue-500' },
-    'News': { emoji: '📰', color: 'bg-emerald-500' },
-    'Calculator': { emoji: '🧮', color: 'bg-orange-500' },
-    'Jewellers': { emoji: '💎', color: 'bg-pink-500' },
-    'Compare': { emoji: '⚖️', color: 'bg-cyan-500' },
-    'Other': { emoji: '📁', color: 'bg-gray-400' },
-  };
-
   const sectionBreakdown = (data?.sectionBreakdown || []).map((s) => ({
+    ...s,
     label: s._id,
-    count: s.count,
-    emoji: sectionConfig[s._id]?.emoji || '📁',
-    color: sectionConfig[s._id]?.color || 'bg-gray-400',
+    emoji: SECTION_CFG[s._id]?.emoji || "📁",
+    color: SECTION_CFG[s._id]?.color || "bg-gray-400",
   }));
-
-  const sectionTotal = sectionBreakdown.reduce((sum, s) => sum + s.count, 0);
+  const sectionTotal = sectionBreakdown.reduce((s, i) => s + i.count, 0);
 
   return (
-    <div className="min-h-screen bg-cream p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-charcoal">Analytics Dashboard</h1>
-          <Link 
-            href="/"
-            className="text-amber-600 hover:underline text-sm"
-          >
+    <div className="min-h-screen bg-slate-50 p-3 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-5">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-4">
+            <h1 className="text-xl md:text-2xl font-bold text-slate-800">Analytics</h1>
+            {data && (
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full border border-emerald-200">
+                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                {data.realtimeUsers} live
+              </span>
+            )}
+          </div>
+          <Link href="/" className="text-amber-600 hover:underline text-xs">
             ← Back to Home
           </Link>
         </div>
 
-        {/* Security Warning */}
-        <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-3 md:p-4">
-          <p className="text-xs md:text-sm text-amber-900">
-            🔒 <strong>Admin Page:</strong> Blocked from search engines. Don&apos;t share this URL publicly.
-          </p>
-        </div>
-
-        {/* Time Range Filter */}
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex items-center gap-3">
-            <label htmlFor="timeRange" className="text-sm font-medium text-slate-700">
-              Time Range:
-            </label>
-            <select
-              id="timeRange"
-              value={selectedRange}
-              onChange={(e) => setSelectedRange(e.target.value)}
-              className="px-4 py-2 border border-slate-300 rounded-lg text-sm bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-amber-500"
+        {/* Range picker */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          {TIME_RANGES.map((r) => (
+            <button
+              key={r.value}
+              onClick={() => setSelectedRange(r.value)}
+              className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${
+                selectedRange === r.value
+                  ? "bg-amber-500 text-white shadow-sm"
+                  : "bg-white text-slate-600 border border-slate-200 hover:border-amber-300"
+              }`}
             >
-              {TIME_RANGES.map((range) => (
-                <option key={range.value} value={range.value}>
-                  {range.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          
-          <div className="flex items-center gap-2 text-xs text-slate-600">
-            <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-            <span>Server-side tracking (can&apos;t be blocked)</span>
-          </div>
+              {r.label}
+            </button>
+          ))}
         </div>
 
-        {/* Loading State */}
+        {/* Loading */}
         {loading && (
-          <div className="flex items-center justify-center py-20">
-            <div className="text-center">
-              <div className="inline-block w-8 h-8 border-4 border-amber-200 border-t-amber-600 rounded-full animate-spin mb-4"></div>
-              <p className="text-slate-600">Loading analytics...</p>
-            </div>
+          <div className="flex items-center justify-center py-24">
+            <div className="w-8 h-8 border-4 border-amber-200 border-t-amber-600 rounded-full animate-spin" />
           </div>
         )}
 
-        {/* Error State */}
+        {/* Error */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-            <p className="text-red-600 font-medium mb-2">Failed to load analytics data</p>
-            <p className="text-sm text-red-500">{error}</p>
+          <Card>
+            <p className="text-red-600 font-medium text-sm mb-1">Failed to load analytics</p>
+            <p className="text-xs text-red-400">{error}</p>
             <button
-              onClick={() => setSelectedRange(selectedRange)} // Trigger refetch
-              className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm"
+              onClick={() => setSelectedRange(selectedRange)}
+              className="mt-3 px-4 py-1.5 bg-red-600 text-white rounded-lg text-xs hover:bg-red-700"
             >
               Retry
             </button>
-          </div>
+          </Card>
         )}
 
-        {/* Data Display */}
+        {/* Dashboard */}
         {!loading && !error && data && (
           <>
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
-              <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 border border-slate-200">
-                <h3 className="text-xs md:text-sm font-medium text-slate-600 mb-2">Total Page Views</h3>
-                <p className="text-3xl md:text-4xl font-bold text-charcoal">{data.totalViews.toLocaleString()}</p>
-                <p className="text-xs text-slate-500 mt-1">{currentRange}</p>
-              </div>
-              
-              <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 border border-slate-200">
-                <h3 className="text-xs md:text-sm font-medium text-slate-600 mb-2">Unique Visitors</h3>
-                <p className="text-3xl md:text-4xl font-bold text-charcoal">{data.uniqueUsers.toLocaleString()}</p>
-                <p className="text-xs text-slate-500 mt-1">Based on unique IPs</p>
-              </div>
-              
-              <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 border border-slate-200">
-                <h3 className="text-xs md:text-sm font-medium text-slate-600 mb-2">Avg. Pages per User</h3>
-                <p className="text-3xl md:text-4xl font-bold text-charcoal">
-                  {data.uniqueUsers > 0 ? (data.totalViews / data.uniqueUsers).toFixed(1) : '0'}
+            {/* ---- Row 1: KPI cards ---- */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              <Card>
+                <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-1">Page Views</p>
+                <p className="text-2xl font-bold text-slate-800">{data.totalViews.toLocaleString()}</p>
+              </Card>
+              <Card>
+                <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-1">Unique Visitors</p>
+                <p className="text-2xl font-bold text-slate-800">{data.uniqueUsers.toLocaleString()}</p>
+              </Card>
+              <Card>
+                <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-1">Pages / User</p>
+                <p className="text-2xl font-bold text-slate-800">
+                  {data.uniqueUsers > 0 ? (data.totalViews / data.uniqueUsers).toFixed(1) : "0"}
                 </p>
-              </div>
+              </Card>
+              <Card>
+                <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-1">Bounce Rate</p>
+                <p className="text-2xl font-bold text-slate-800">{data.bounceRate}%</p>
+              </Card>
+              <Card>
+                <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-1">New Visitors</p>
+                <p className="text-2xl font-bold text-indigo-600">{data.newUsers.toLocaleString()}</p>
+              </Card>
+              <Card>
+                <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-1">Returning</p>
+                <p className="text-2xl font-bold text-amber-600">{data.returningUsers.toLocaleString()}</p>
+              </Card>
             </div>
 
-            {/* Section Breakdown */}
+            {/* ---- Row 2: Section breakdown ---- */}
             {sectionBreakdown.length > 0 && (
-              <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 border border-slate-200 mb-8">
-                <h2 className="text-base md:text-lg font-semibold text-charcoal mb-4">📊 Section Breakdown</h2>
-                
-                {/* Stacked bar */}
-                <div className="flex rounded-full overflow-hidden h-4 mb-5 bg-slate-100">
-                  {sectionBreakdown.map((section, idx) => {
-                    const pct = sectionTotal > 0 ? (section.count / sectionTotal) * 100 : 0;
+              <Card>
+                <SectionTitle>Section Breakdown</SectionTitle>
+                <div className="flex rounded-full overflow-hidden h-3 mb-4 bg-slate-100">
+                  {sectionBreakdown.map((sec, i) => {
+                    const pct = sectionTotal > 0 ? (sec.count / sectionTotal) * 100 : 0;
                     return (
                       <div
-                        key={idx}
-                        className={`${section.color} transition-all`}
+                        key={i}
+                        className={`${sec.color} transition-all`}
                         style={{ width: `${pct}%` }}
-                        title={`${section.label}: ${section.count} (${pct.toFixed(1)}%)`}
+                        title={`${sec.label}: ${sec.count} (${pct.toFixed(1)}%)`}
                       />
                     );
                   })}
                 </div>
-
-                {/* Section rows */}
-                <div className="space-y-3">
-                  {sectionBreakdown.map((section, idx) => {
-                    const pct = sectionTotal > 0 ? ((section.count / sectionTotal) * 100).toFixed(1) : '0';
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-2">
+                  {sectionBreakdown.map((sec, i) => {
+                    const pct = sectionTotal > 0 ? ((sec.count / sectionTotal) * 100).toFixed(1) : "0";
                     return (
-                      <div key={idx} className="space-y-1">
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <span className={`inline-block w-3 h-3 rounded-full ${section.color}`}></span>
-                            <span className="text-xs md:text-sm text-slate-700 font-medium">
-                              {section.emoji} {section.label}
-                            </span>
-                          </div>
-                          <span className="text-xs md:text-sm font-semibold text-charcoal">
-                            {section.count.toLocaleString()} <span className="text-slate-400 font-normal">({pct}%)</span>
-                          </span>
-                        </div>
-                        <div className="w-full bg-slate-100 rounded-full h-1.5">
-                          <div 
-                            className={`${section.color} h-1.5 rounded-full transition-all`}
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
+                      <div key={i} className="flex items-center gap-2 text-xs">
+                        <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${sec.color}`} />
+                        <span className="text-slate-600">
+                          {sec.emoji} {sec.label}
+                        </span>
+                        <span className="ml-auto font-semibold text-slate-800">
+                          {sec.count.toLocaleString()}{" "}
+                          <span className="text-slate-400 font-normal">({pct}%)</span>
+                        </span>
                       </div>
                     );
                   })}
                 </div>
-
-                <p className="text-[10px] text-slate-400 mt-4">
-                  Based on top pages data. Sections with 0 views are hidden.
-                </p>
-              </div>
+              </Card>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-              {/* Top Pages */}
-              <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 border border-slate-200">
-                <h2 className="text-base md:text-lg font-semibold text-charcoal mb-4">📄 Top Pages</h2>
-                <div className="space-y-2">
-                  {data.topPages.map((page: any, idx: number) => (
-                    <div key={idx} className="flex justify-between items-center py-2 border-b border-slate-100 last:border-0">
-                      <span className="text-xs md:text-sm text-slate-700 font-mono truncate mr-2">{page._id || '/'}</span>
-                      <span className="text-xs md:text-sm font-semibold text-charcoal flex-shrink-0">{page.count}</span>
-                    </div>
-                  ))}
-                  {data.topPages.length === 0 && (
-                    <p className="text-sm text-slate-500">No data for this time range</p>
-                  )}
-                </div>
-              </div>
+            {/* ---- Row 3: Device + Browser + New/Returning ---- */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <Card>
+                <SectionTitle>Device Breakdown</SectionTitle>
+                <Donut items={data.deviceBreakdown || []} colorMap={DEVICE_COLORS} />
+              </Card>
 
-              {/* Traffic Sources */}
-              <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 border border-slate-200">
-                <h2 className="text-base md:text-lg font-semibold text-charcoal mb-4">🌐 Traffic Sources</h2>
-                <div className="space-y-3">
-                  {data.sources.map((source: any, idx: number) => {
-                    const percentage = data.totalViews > 0 ? ((source.count / data.totalViews) * 100).toFixed(1) : '0';
-                    return (
-                      <div key={idx} className="space-y-1">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs md:text-sm text-slate-700 capitalize">{source._id || 'unknown'}</span>
-                          <span className="text-xs md:text-sm font-semibold text-charcoal">
-                            {source.count} ({percentage}%)
-                          </span>
-                        </div>
-                        <div className="w-full bg-slate-100 rounded-full h-2">
-                          <div 
-                            className="bg-amber-500 h-2 rounded-full transition-all"
-                            style={{ width: `${percentage}%` }}
-                          />
-                        </div>
+              <Card>
+                <SectionTitle>Browser Breakdown</SectionTitle>
+                <HBarList items={data.browserBreakdown || []} colorMap={BROWSER_COLORS} />
+              </Card>
+
+              <Card>
+                <SectionTitle>New vs Returning</SectionTitle>
+                {data.newUsers + data.returningUsers > 0 ? (
+                  <>
+                    <div className="flex rounded-full overflow-hidden h-3 mb-4 bg-slate-100">
+                      <div
+                        className="bg-indigo-500"
+                        style={{
+                          width: `${(data.newUsers / (data.newUsers + data.returningUsers)) * 100}%`,
+                        }}
+                      />
+                      <div className="bg-amber-500 flex-1" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 text-center">
+                      <div>
+                        <p className="text-2xl font-bold text-indigo-600">{data.newUsers.toLocaleString()}</p>
+                        <p className="text-[10px] text-slate-500 uppercase tracking-wide">New</p>
                       </div>
-                    );
-                  })}
-                  {data.sources.length === 0 && (
-                    <p className="text-sm text-slate-500">No data for this time range</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Top Cities */}
-              <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 border border-slate-200">
-                <h2 className="text-base md:text-lg font-semibold text-charcoal mb-4">🏙️ Top Cities</h2>
-                <div className="space-y-2">
-                  {data.topCities.map((city: any, idx: number) => (
-                    <div key={idx} className="flex justify-between items-center py-2 border-b border-slate-100 last:border-0">
-                      <span className="text-xs md:text-sm text-slate-700">{city._id}</span>
-                      <span className="text-xs md:text-sm font-semibold text-charcoal">{city.count}</span>
+                      <div>
+                        <p className="text-2xl font-bold text-amber-600">{data.returningUsers.toLocaleString()}</p>
+                        <p className="text-[10px] text-slate-500 uppercase tracking-wide">Returning</p>
+                      </div>
                     </div>
-                  ))}
-                  {data.topCities.length === 0 && (
-                    <p className="text-sm text-slate-500">No geo data for this time range</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Time-based Traffic */}
-              <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 border border-slate-200">
-                <h2 className="text-base md:text-lg font-semibold text-charcoal mb-4">
-                  ⏰ Traffic Over Time
-                </h2>
-                <div className="space-y-1 max-h-64 overflow-y-auto">
-                  {data.hourlyTraffic.map((hour: any, idx: number) => (
-                    <div key={idx} className="flex justify-between items-center py-1 text-xs">
-                      <span className="text-slate-600 font-mono">{hour._id}</span>
-                      <span className="font-semibold text-charcoal">{hour.count}</span>
-                    </div>
-                  ))}
-                  {data.hourlyTraffic.length === 0 && (
-                    <p className="text-sm text-slate-500">No data for this time range</p>
-                  )}
-                </div>
-              </div>
+                  </>
+                ) : (
+                  <EmptyRow />
+                )}
+              </Card>
             </div>
 
-            {/* Comparison with GA */}
-            <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4 md:p-6">
-              <h3 className="text-base md:text-lg font-semibold text-blue-900 mb-2">
-                📊 Why This Shows More Traffic Than Google Analytics
+            {/* ---- Row 4: Top Articles + Top Recaps ---- */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              <Card>
+                <SectionTitle>Top Articles</SectionTitle>
+                <SlugTable items={data.topArticles || []} label="Article" />
+              </Card>
+              <Card>
+                <SectionTitle>Top News Recaps</SectionTitle>
+                <SlugTable items={data.topRecaps || []} label="Recap" />
+              </Card>
+            </div>
+
+            {/* ---- Row 5: Calculator + Community Stats ---- */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <Card>
+                <SectionTitle>Calculator Usage</SectionTitle>
+                {(data.calculatorBreakdown || []).length > 0 ? (
+                  <HBarList
+                    items={(data.calculatorBreakdown || []).map((c) => ({
+                      _id: c._id
+                        .replace(/^\/(calculator|wastage-calculator|purity-converter|investment-calculator|gold-loan-calculator|swp-calculator|sip-calculator).*/, "$1")
+                        .replace(/-/g, " "),
+                      count: c.count,
+                    }))}
+                  />
+                ) : (
+                  <EmptyRow />
+                )}
+              </Card>
+
+              <Card>
+                <SectionTitle>Community</SectionTitle>
+                {data.communityStats ? (
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                      <p className="text-2xl font-bold text-teal-600">
+                        {data.communityStats.totalComments}
+                      </p>
+                      <p className="text-[10px] text-slate-500 uppercase tracking-wide">Comments</p>
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-teal-600">
+                        {data.communityStats.totalQuestions}
+                      </p>
+                      <p className="text-[10px] text-slate-500 uppercase tracking-wide">Questions</p>
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-teal-600">
+                        {data.communityStats.todaySentimentVotes}
+                      </p>
+                      <p className="text-[10px] text-slate-500 uppercase tracking-wide">Votes Today</p>
+                    </div>
+                  </div>
+                ) : (
+                  <EmptyRow />
+                )}
+              </Card>
+            </div>
+
+            {/* ---- Row 6: Existing — Top Pages + Sources ---- */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              <Card>
+                <SectionTitle>Top Pages</SectionTitle>
+                {data.topPages.length > 0 ? (
+                  <div className="space-y-1.5 max-h-72 overflow-y-auto">
+                    {data.topPages.map((p, i) => (
+                      <div key={i} className="flex justify-between items-center text-xs py-1 border-b border-slate-50 last:border-0">
+                        <span className="text-slate-600 font-mono truncate mr-2">{p._id || "/"}</span>
+                        <span className="font-semibold text-slate-800 flex-shrink-0">{p.count.toLocaleString()}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyRow />
+                )}
+              </Card>
+
+              <Card>
+                <SectionTitle>Traffic Sources</SectionTitle>
+                <HBarList items={data.sources} />
+              </Card>
+            </div>
+
+            {/* ---- Row 7: Cities + Hourly ---- */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              <Card>
+                <SectionTitle>Top Cities</SectionTitle>
+                {data.topCities.length > 0 ? (
+                  <div className="space-y-1.5">
+                    {data.topCities.map((c, i) => (
+                      <div key={i} className="flex justify-between text-xs py-1 border-b border-slate-50 last:border-0">
+                        <span className="text-slate-600">{c._id}</span>
+                        <span className="font-semibold text-slate-800">{c.count.toLocaleString()}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyRow />
+                )}
+              </Card>
+
+              <Card>
+                <SectionTitle>Traffic Over Time</SectionTitle>
+                {data.hourlyTraffic.length > 0 ? (
+                  <div className="space-y-0.5 max-h-64 overflow-y-auto">
+                    {data.hourlyTraffic.map((h, i) => (
+                      <div key={i} className="flex justify-between text-[11px] py-0.5">
+                        <span className="text-slate-500 font-mono">{h._id}</span>
+                        <span className="font-semibold text-slate-800">{h.count}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyRow />
+                )}
+              </Card>
+            </div>
+
+            {/* GA comparison */}
+            <Card className="bg-blue-50 border-blue-200">
+              <h3 className="text-sm font-semibold text-blue-900 mb-1">
+                Why This Shows More Traffic Than Google Analytics
               </h3>
-              <ul className="text-xs md:text-sm text-blue-800 space-y-2">
-                <li>✅ <strong>Server-side tracking</strong> - Can&apos;t be blocked by ad blockers (30-50% of users)</li>
-                <li>✅ <strong>Privacy browsers</strong> - Captures Brave, Firefox Enhanced Protection users</li>
-                <li>✅ <strong>DNS blocking</strong> - Works even when users block Google Analytics via Pi-hole/NextDNS</li>
-                <li>✅ <strong>All traffic</strong> - Shows the actual traffic your server is receiving</li>
+              <ul className="text-xs text-blue-800 space-y-1">
+                <li>
+                  <strong>Server-side tracking</strong> — can&apos;t be blocked by ad blockers (30-50% of
+                  users)
+                </li>
+                <li>
+                  <strong>Privacy browsers</strong> — captures Brave, Firefox Enhanced Protection users
+                </li>
+                <li>
+                  <strong>All traffic</strong> — shows the actual traffic your server receives
+                </li>
               </ul>
-              <p className="text-xs text-blue-700 mt-4">
-                💡 <strong>Tip:</strong> Use this dashboard for accurate traffic numbers. Use Google Analytics for detailed behavior analysis of users who don&apos;t block it.
-              </p>
-            </div>
+            </Card>
 
-            {/* Footer */}
-            <div className="mt-8 text-center text-xs text-slate-500">
-              <p>Data stored in MongoDB • Real-time updates • Privacy-friendly</p>
-            </div>
+            <p className="text-center text-[10px] text-slate-400 pb-4">
+              MongoDB server-side tracking · real-time · privacy-friendly
+            </p>
           </>
         )}
       </div>
