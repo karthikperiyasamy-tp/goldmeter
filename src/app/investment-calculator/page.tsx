@@ -107,6 +107,13 @@ export default function InvestmentCalculatorPage() {
             <p className="text-sm text-slate-600">
               Plan your monthly gold investment and see potential returns over time.
             </p>
+            <p className="mt-3 text-sm text-amber-800">
+              Anchor your plan to the live benchmark:{" "}
+              <Link href="/gold-rate-today" className="font-semibold underline hover:text-amber-700">
+                gold rate today in India
+              </Link>
+              .
+            </p>
             
             {loading && (
               <div className="mt-4 text-sm text-amber-600">Loading latest gold rate...</div>

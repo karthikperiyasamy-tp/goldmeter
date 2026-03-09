@@ -155,7 +155,7 @@ export default function HomeClient({
 
         if (data.success && data.detected && data.slug) {
           console.log(`✅ [HomeClient] Detected ${data.city}, redirecting...`);
-          router.push(`/${data.slug}`);
+          router.push(`/gold-rate/${data.slug}`);
         } else {
            // Mark as checked even if failed (for 1 hour) so we don't spam API on every refresh
            console.log("⚠️ [HomeClient] Location detection failed or no city found.");

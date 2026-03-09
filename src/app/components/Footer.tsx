@@ -23,6 +23,16 @@ export default function Footer() {
   return (
     <footer className="mt-12 border-t border-slate-200 bg-white">
       <div className="mx-auto max-w-6xl px-4 py-8">
+        <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+          <p className="text-sm text-amber-900">
+            Looking for the latest benchmark?{" "}
+            <Link href="/gold-rate-today" className="font-semibold underline hover:text-amber-700">
+              Gold rate today in India
+            </Link>
+            {" "}with live 22K and 24K prices.
+          </p>
+        </div>
+
         {/* E-E-A-T: Data Source Attribution */}
         <div className="mb-6 rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
           <div className="flex items-start gap-3">

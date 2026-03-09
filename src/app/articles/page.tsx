@@ -28,6 +28,13 @@ export default function ArticlesPage() {
             prices, and everything you need to make smarter gold decisions in
             India.
           </p>
+          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+            Start with the live benchmark:{' '}
+            <Link href="/gold-rate-today" className="font-semibold underline hover:text-amber-700">
+              Gold rate today in India
+            </Link>
+            .
+          </div>
         </header>
 
         {/* Client component handles sort + filter */}

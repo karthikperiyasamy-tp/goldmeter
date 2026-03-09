@@ -195,6 +195,13 @@ export default function CalculatorPage() {
         <p className="text-sm text-slate-600">
           Estimate real-time payable amount including making charges & GST.
         </p>
+        <p className="mt-3 text-sm text-amber-800">
+          Before calculating, check the live benchmark:{" "}
+          <Link href="/gold-rate-today" className="font-semibold underline hover:text-amber-700">
+            gold rate today in India
+          </Link>
+          .
+        </p>
         
         {loading && (
           <div className="mt-4 text-sm text-amber-600">Loading latest rates...</div>

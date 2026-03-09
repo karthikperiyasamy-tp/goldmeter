@@ -1,3 +1,4 @@
+import Link from "next/link";
 import CommunityClient from "./CommunityClient";
 
 const communityJsonLd = {
@@ -35,6 +36,13 @@ export default function CommunityPage() {
           </h1>
           <p className="mt-1.5 text-sm text-slate-600">
             Discuss gold markets, share insights, and get answers from fellow Indian gold investors.
+          </p>
+          <p className="mt-3 text-sm text-amber-800">
+            Need the latest benchmark first?{" "}
+            <Link href="/gold-rate-today" className="font-semibold underline hover:text-amber-700">
+              Check gold rate today in India
+            </Link>
+            .
           </p>
         </header>
 

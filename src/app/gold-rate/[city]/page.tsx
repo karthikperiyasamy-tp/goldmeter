@@ -33,6 +33,7 @@ import TrichyStaticContent from "../../components/TrichyStaticContent";
 import VadodaraStaticContent from "../../components/VadodaraStaticContent";
 import VijayawadaStaticContent from "../../components/VijayawadaStaticContent";
 import VisakhapatnamStaticContent from "../../components/VisakhapatnamStaticContent";
+import FreshnessTrustBar from "../../components/FreshnessTrustBar";
 import { fetchCityRates } from "@/lib/fetchCityRates";
 import { getCityGoldConfig, getAllCitySlugs, generateFAQs } from "@/lib/cityGoldConfig";
 
@@ -211,19 +212,11 @@ export default async function GoldRateCityPage({ params }: Props) {
               </table>
             </div>
             
-            {/* IBJA Verification Timestamp - E-E-A-T Signal */}
-            <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-emerald-700 border border-emerald-200">
-                <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                Verified from IBJA
-              </span>
-              <span>|</span>
-              <span>Updated: <time dateTime={rates.dateISO}>{todayFormatted}, {timeFormatted}</time></span>
-              <span>|</span>
-              <span>Source: <strong>GoldMeter.in</strong></span>
-            </div>
+            <FreshnessTrustBar
+              dateISO={rates.dateISO}
+              dateLabel={todayFormatted}
+              timeLabel={timeFormatted}
+            />
 
             {/* SEO: Expanded intro paragraph (150-200 words) - Voice Search Optimized */}
             <div className="mt-4 pt-4 border-t border-amber-200 text-sm text-slate-600 leading-relaxed" data-speakable-summary="true">

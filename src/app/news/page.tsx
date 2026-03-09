@@ -105,7 +105,11 @@ export default async function NewsPage() {
         {/* Explicit deferral to city pages - tells AI this is NOT the answer page */}
         <div className="mb-6 rounded-2xl bg-amber-100 border border-amber-300 p-4">
           <p className="text-sm text-amber-900">
-            <strong>Looking for today&apos;s gold rate?</strong> See the dedicated price page:{' '}
+            <strong>Looking for today&apos;s gold rate?</strong>{' '}
+            <Link href="/gold-rate-today" className="underline font-semibold hover:text-amber-700">
+              Gold rate today in India
+            </Link>
+            . For city prices, see:{' '}
             <Link href="/gold-rate/chennai" className="underline font-semibold hover:text-amber-700">Gold Rate in Chennai</Link>,{' '}
             <Link href="/gold-rate/mumbai" className="underline font-semibold hover:text-amber-700">Gold Rate in Mumbai</Link>,{' '}
             <Link href="/gold-rate/delhi" className="underline font-semibold hover:text-amber-700">Gold Rate in Delhi</Link>, or{' '}

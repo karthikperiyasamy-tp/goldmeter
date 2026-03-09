@@ -201,6 +201,13 @@ export default function PurityConverterPage() {
             <p className="text-sm text-slate-600">
               22K ↔ 24K in one tap
             </p>
+            <p className="mt-3 text-sm text-amber-800">
+              Check the current benchmark first:{" "}
+              <Link href="/gold-rate-today" className="font-semibold underline hover:text-amber-700">
+                gold rate today in India
+              </Link>
+              .
+            </p>
             
             {loading && (
               <div className="mt-4 text-sm text-amber-600">Loading latest rates...</div>

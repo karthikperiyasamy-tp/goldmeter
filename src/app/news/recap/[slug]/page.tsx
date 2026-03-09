@@ -80,10 +80,10 @@ function GoldRateCard({
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         <Link 
-          href="/" 
+          href="/gold-rate-today" 
           className="text-xs text-amber-600 hover:text-amber-700 font-medium underline"
         >
-          See today&apos;s live rates →
+          See gold rate today in India →
         </Link>
       </div>
     </section>
@@ -226,7 +226,8 @@ export default async function RecapPage({ params }: Props) {
 
         {/* Explicit deferral - tells AI this is NOT the answer page for gold rate queries */}
         <div className="mb-6 rounded-xl bg-amber-100 border border-amber-300 p-3 text-sm text-amber-900">
-          <strong>Looking for today&apos;s gold rate?</strong> See:{' '}
+          <strong>Looking for today&apos;s gold rate?</strong>{' '}
+          <Link href="/gold-rate-today" className="underline font-semibold">Gold rate today in India</Link>. For city rates see:{' '}
           <Link href="/gold-rate/chennai" className="underline font-semibold">Gold Rate in Chennai</Link>,{' '}
           <Link href="/gold-rate/mumbai" className="underline font-semibold">Gold Rate in Mumbai</Link>,{' '}
           <Link href="/gold-rate/delhi" className="underline font-semibold">Gold Rate in Delhi</Link>
@@ -351,10 +352,10 @@ export default async function RecapPage({ params }: Props) {
         {/* Related Links */}
         <div className="mt-8 flex flex-wrap gap-4">
           <Link
-            href="/"
+            href="/gold-rate-today"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500 text-white text-sm font-semibold hover:bg-amber-600 transition-colors"
           >
-            View Today&apos;s Gold Rates →
+            View Gold Rate Today →
           </Link>
           <Link
             href="/news"
