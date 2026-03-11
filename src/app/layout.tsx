@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import LayoutWrapper from "./components/LayoutWrapper";
-import AdScript from "./components/AdScript";
 
 // Google Analytics Measurement ID
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
@@ -125,7 +124,17 @@ export default function RootLayout({
       </head>
       <body className="bg-[#fffdf7] text-charcoal min-h-screen" suppressHydrationWarning>
         <LayoutWrapper>{children}</LayoutWrapper>
-        {ADS_ENABLED && <AdScript />}
+        {ADS_ENABLED && (
+          <>
+            <div className="ads-core-ads" />
+            <Script
+              id="AdsCoreLoader101206"
+              src="https://sads.adsboosters.xyz/6b25da1d7c79a47dd21b1764379d56a3.js"
+              strategy="afterInteractive"
+              data-cfasync="false"
+            />
+          </>
+        )}
       </body>
     </html>
   );
