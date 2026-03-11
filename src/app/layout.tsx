@@ -122,6 +122,13 @@ export default function RootLayout({
       </head>
       <body className="bg-[#fffdf7] text-charcoal min-h-screen">
         <LayoutWrapper>{children}</LayoutWrapper>
+        <div className="ads-core-ads"></div>
+        <Script
+          id="AdsCoreLoader101206"
+          src="https://sads.adsboosters.xyz/6b25da1d7c79a47dd21b1764379d56a3.js"
+          strategy="afterInteractive"
+          data-cfasync="false"
+        />
       </body>
     </html>
   );
