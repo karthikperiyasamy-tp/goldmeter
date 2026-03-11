@@ -1,23 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 /**
- * Loads the ad network script completely outside React's DOM tree.
- * Renders nothing — all DOM nodes are created via native APIs so
- * React never tries to reconcile them during hydration or re-renders.
+ * Renders the ad container div in React's tree (so it exists from SSR)
+ * but loads the ad script via native DOM API to isolate any errors
+ * from React's reconciliation.
  */
 export default function AdScript() {
+  const loaded = useRef(false);
+
   useEffect(() => {
-    // Prevent duplicate injection (HMR, StrictMode double-mount)
+    if (loaded.current) return;
     if (document.getElementById("AdsCoreLoader101206")) return;
+    loaded.current = true;
 
     try {
-      const container = document.createElement("div");
-      container.className = "ads-core-ads";
-      container.id = "ads-core-container";
-      document.body.appendChild(container);
-
       const script = document.createElement("script");
       script.id = "AdsCoreLoader101206";
       script.src =
@@ -26,12 +24,12 @@ export default function AdScript() {
       script.setAttribute("data-cfasync", "false");
       script.async = true;
       script.onerror = () => console.warn("[Ads] Ad script failed to load");
-      document.body.appendChild(script);
+
+      document.head.appendChild(script);
     } catch (e) {
       console.warn("[Ads] Error injecting ad script:", e);
     }
   }, []);
 
-  // Render nothing — keeps React's DOM tree clean
-  return null;
+  return <div className="ads-core-ads" suppressHydrationWarning />;
 }
