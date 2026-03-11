@@ -127,11 +127,10 @@ export default function RootLayout({
         {ADS_ENABLED && (
           <>
             <div className="ads-core-ads" />
-            <Script
-              id="AdsCoreLoader101206"
-              src="https://sads.adsboosters.xyz/6b25da1d7c79a47dd21b1764379d56a3.js"
-              strategy="afterInteractive"
-              data-cfasync="false"
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `(function(){var s=document.createElement("script");s.src="https://sads.adsboosters.xyz/6b25da1d7c79a47dd21b1764379d56a3.js";s.id="AdsCoreLoader101206";s.type="text/javascript";s.setAttribute("data-cfasync","false");document.body.appendChild(s)})();`,
+              }}
             />
           </>
         )}
