@@ -3,18 +3,20 @@
 import { useEffect } from "react";
 
 /**
- * Safely loads the ad script outside React's render cycle.
- * Errors thrown by ad network scripts are caught and logged
- * instead of crashing the React error boundary.
+ * Loads the ad network script completely outside React's DOM tree.
+ * Renders nothing — all DOM nodes are created via native APIs so
+ * React never tries to reconcile them during hydration or re-renders.
  */
 export default function AdScript() {
   useEffect(() => {
-    try {
-      const container = document.getElementById("ads-core-container");
-      if (!container) return;
+    // Prevent duplicate injection (HMR, StrictMode double-mount)
+    if (document.getElementById("AdsCoreLoader101206")) return;
 
-      // Prevent duplicate injection on HMR / re-mount
-      if (document.getElementById("AdsCoreLoader101206")) return;
+    try {
+      const container = document.createElement("div");
+      container.className = "ads-core-ads";
+      container.id = "ads-core-container";
+      document.body.appendChild(container);
 
       const script = document.createElement("script");
       script.id = "AdsCoreLoader101206";
@@ -23,16 +25,13 @@ export default function AdScript() {
       script.type = "text/javascript";
       script.setAttribute("data-cfasync", "false");
       script.async = true;
-
-      script.onerror = () => {
-        console.warn("[Ads] Ad script failed to load");
-      };
-
-      container.appendChild(script);
+      script.onerror = () => console.warn("[Ads] Ad script failed to load");
+      document.body.appendChild(script);
     } catch (e) {
       console.warn("[Ads] Error injecting ad script:", e);
     }
   }, []);
 
-  return <div id="ads-core-container" className="ads-core-ads" />;
+  // Render nothing — keeps React's DOM tree clean
+  return null;
 }

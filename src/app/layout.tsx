@@ -123,7 +123,7 @@ export default function RootLayout({
 
 
       </head>
-      <body className="bg-[#fffdf7] text-charcoal min-h-screen">
+      <body className="bg-[#fffdf7] text-charcoal min-h-screen" suppressHydrationWarning>
         <LayoutWrapper>{children}</LayoutWrapper>
         {ADS_ENABLED && <AdScript />}
       </body>
