@@ -31,6 +31,7 @@ import type { User } from "firebase/auth";
 import type { FirebaseError } from "firebase/app";
 
 // ---------- helpers ----------
+const PORTFOLIO_COMPLETED_KEY = "portfolioOnboarded:v1";
 
 const genId = () => crypto.randomUUID();
 
@@ -992,6 +993,12 @@ export default function PortfolioClient({ gold22k, gold24k }: Props) {
       return () => clearTimeout(timer);
     }
   }, [authLoading, transactions.length]);
+
+  useEffect(() => {
+    if (transactions.length > 0) {
+      localStorage.setItem(PORTFOLIO_COMPLETED_KEY, "1");
+    }
+  }, [transactions.length]);
 
   const startTutorial = () => {
     setTutorialStep(0);

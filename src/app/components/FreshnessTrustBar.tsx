@@ -1,3 +1,8 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+import RelativeTime from "./RelativeTime";
+
 type FreshnessTrustBarProps = {
   dateISO: string;
   dateLabel: string;
@@ -11,6 +16,8 @@ export default function FreshnessTrustBar({
   timeLabel,
   sourceLabel = "GoldMeter.in",
 }: FreshnessTrustBarProps) {
+  const t = useTranslations("common");
+
   return (
     <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-emerald-700 border border-emerald-200">
@@ -21,15 +28,16 @@ export default function FreshnessTrustBar({
             clipRule="evenodd"
           />
         </svg>
-        Verified from IBJA
+        {t("verifiedFromIBJA")}
+      </span>
+      <RelativeTime dateISO={dateISO} />
+      <span>|</span>
+      <span>
+        <time dateTime={dateISO}>{dateLabel}{timeLabel ? `, ${timeLabel}` : ""}</time>
       </span>
       <span>|</span>
       <span>
-        Updated: <time dateTime={dateISO}>{dateLabel}{timeLabel ? `, ${timeLabel}` : ""}</time>
-      </span>
-      <span>|</span>
-      <span>
-        Source: <strong>{sourceLabel}</strong>
+        {t("source")}: <strong>{sourceLabel}</strong>
       </span>
     </div>
   );

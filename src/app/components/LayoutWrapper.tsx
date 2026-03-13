@@ -7,6 +7,7 @@ import Footer from "./Footer";
 import PriceTicker from "./PriceTicker";
 import PageViewTracker from "./PageViewTracker";
 import SentimentGauge from "./community/SentimentGauge";
+import PortfolioPromoBanner from "./PortfolioPromoBanner";
 import { trackCityChange } from "@/lib/analytics";
 
 // Map URL slugs to city display names
@@ -83,6 +84,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   return (
     <>
       <PageViewTracker />
+      <PortfolioPromoBanner />
       <PriceTicker />
       <TopBar city={activeCity} onCityChange={setActiveCity} />
       {children}

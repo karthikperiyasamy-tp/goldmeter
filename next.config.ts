@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   // Performance optimizations
   compiler: {
-    removeConsole: false,
+    removeConsole: process.env.NODE_ENV === 'production',
   },
   
   // Optimize images
@@ -111,12 +114,24 @@ const nextConfig: NextConfig = {
       'visakhapatnam',
     ];
 
-    return cities.map((city) => ({
+    const locales = ['hi', 'ta', 'te'];
+
+    const englishRedirects = cities.map((city) => ({
       source: `/${city}`,
       destination: `/gold-rate/${city}`,
-      permanent: true, // 301 redirect - transfers SEO equity
+      permanent: true,
     }));
+
+    const localeRedirects = locales.flatMap((locale) =>
+      cities.map((city) => ({
+        source: `/${locale}/${city}`,
+        destination: `/${locale}/gold-rate/${city}`,
+        permanent: true,
+      }))
+    );
+
+    return [...englishRedirects, ...localeRedirects];
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

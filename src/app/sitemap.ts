@@ -3,171 +3,197 @@ import { getAllRecaps } from '@/lib/recapDB'
 import { GOLD_RATE_CITIES, SILVER_RATE_CITIES, getCitySlug } from '@/lib/cities'
 import { getAllJewellerSlugs } from '@/lib/jewellerConfig'
 import { PUBLISHED_ARTICLES, getArticleDateISO } from '@/lib/articles'
+import { getRecentNews } from '@/lib/newsDB'
 
-// Regenerate the sitemap periodically so lastModified timestamps stay fresh
-// and new recap pages appear promptly for search engines.
-export const revalidate = 3600 // 1 hour
+export const revalidate = 3600
 
 const baseUrl = 'https://goldmeter.in'
+const nonDefaultLocales = ['hi', 'ta', 'te'] as const
 
-// Use shared city config (converted to lowercase slugs)
 const cities = GOLD_RATE_CITIES.map(getCitySlug)
 const silverCities = SILVER_RATE_CITIES.map(getCitySlug)
 
-// List of static news article slugs
-// Note: Only include articles that actually exist to avoid 404 errors
-// Removed: 'gold-price-increase-today', 'gold-rate-prediction-2025', '22k-vs-24k-guide' (404)
-const newsArticles: string[] = []
+function withLocaleAlternates(path: string) {
+  return {
+    languages: Object.fromEntries([
+      ['en', `${baseUrl}${path}`],
+      ...nonDefaultLocales.map((l) => [l, `${baseUrl}/${l}${path}`]),
+    ]),
+  }
+}
+
+function localeEntries(
+  path: string,
+  options: { lastModified: Date; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency']; priority: number }
+): MetadataRoute.Sitemap {
+  return nonDefaultLocales.map((locale) => ({
+    url: `${baseUrl}/${locale}${path}`,
+    lastModified: options.lastModified,
+    changeFrequency: options.changeFrequency,
+    priority: options.priority,
+    alternates: withLocaleAlternates(path),
+  }))
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Fetch all recaps for sitemap
+  // Fetch recaps and news articles from DB in parallel
   let recaps: Array<{ slug: string; publishedAt: Date }> = []
+  let newsArticles: Array<{ slug: string; publishedAt: Date }> = []
   try {
-    recaps = await getAllRecaps(60) // Get last 60 recaps
+    const [recapsResult, newsResult] = await Promise.allSettled([
+      getAllRecaps(60),
+      getRecentNews(100),
+    ])
+    if (recapsResult.status === 'fulfilled') recaps = recapsResult.value
+    if (newsResult.status === 'fulfilled') {
+      newsArticles = newsResult.value
+        .filter((a) => a.slug)
+        .map((a) => ({ slug: a.slug, publishedAt: new Date(a.publishedAt) }))
+    }
   } catch (error) {
-    console.error('Error fetching recaps for sitemap:', error)
+    console.error('Error fetching data for sitemap:', error)
   }
 
-  // Homepage (with https://goldmeter.in/ canonical)
   const homepage = {
     url: baseUrl,
     lastModified: new Date(),
     changeFrequency: 'hourly' as const,
     priority: 1,
+    alternates: withLocaleAlternates('/'),
   }
 
-  // Gold Rate Today - Primary landing page for "gold rate today" query
   const goldRateToday = {
     url: `${baseUrl}/gold-rate-today`,
     lastModified: new Date(),
     changeFrequency: 'hourly' as const,
     priority: 1,
+    alternates: withLocaleAlternates('/gold-rate-today'),
   }
 
-  // Calculator page
   const calculator = {
     url: `${baseUrl}/calculator`,
     lastModified: new Date('2025-12-18'),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/calculator'),
   }
 
-  // Wastage calculator page
   const wastageCalculator = {
     url: `${baseUrl}/wastage-calculator`,
     lastModified: new Date('2025-12-18'),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/wastage-calculator'),
   }
 
-  // Purity converter page
   const purityConverter = {
     url: `${baseUrl}/purity-converter`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/purity-converter'),
   }
 
-  // Investment calculator page
   const investmentCalculator = {
     url: `${baseUrl}/investment-calculator`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/investment-calculator'),
   }
 
-  // Gold loan calculator page
   const goldLoanCalculator = {
     url: `${baseUrl}/gold-loan-calculator`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/gold-loan-calculator'),
   }
 
-  // Wedding gold planner page
   const weddingGoldPlanner = {
     url: `${baseUrl}/wedding-gold-planner`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/wedding-gold-planner'),
   }
 
-  // Articles hub page
   const articlesHub = {
     url: `${baseUrl}/articles`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.9,
+    alternates: withLocaleAlternates('/articles'),
   }
 
-  // Individual article pages (only published)
   const articlePages = PUBLISHED_ARTICLES.map((a) => ({
     url: `${baseUrl}/articles/${a.slug}`,
     lastModified: new Date(getArticleDateISO(a)),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates(`/articles/${a.slug}`),
   }))
 
-  // Hallmark verification guide page
   const hallmarkGuide = {
     url: `${baseUrl}/hallmark-guide`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/hallmark-guide'),
   }
 
-  // SIP Calculator page
   const sipCalculator = {
     url: `${baseUrl}/sip-calculator`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/sip-calculator'),
   }
 
-  // SIP Calculator with Step Up page
   const sipCalculatorStepUp = {
     url: `${baseUrl}/sip-calculator-with-step-up`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/sip-calculator-with-step-up'),
   }
 
-  // SWP Calculator with Inflation page
   const swpCalculator = {
     url: `${baseUrl}/swp-calculator-with-inflation`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/swp-calculator-with-inflation'),
   }
 
-  // Portfolio Tracker page
   const portfolio = {
     url: `${baseUrl}/portfolio`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/portfolio'),
   }
 
-  // News index page
   const news = {
     url: `${baseUrl}/news`,
     lastModified: new Date('2025-12-18'),
     changeFrequency: 'daily' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/news'),
   }
 
-  // Recap listing page
   const recapListing = {
     url: `${baseUrl}/news/recap`,
     lastModified: new Date(),
     changeFrequency: 'daily' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/news/recap'),
   }
 
-  // Static news article pages
-  const newsPages = newsArticles.map((slug) => ({
-    url: `${baseUrl}/news/${slug}`,
-    lastModified: new Date(),
+  // Dynamic news article pages (from DB)
+  const newsPages = newsArticles.map((article) => ({
+    url: `${baseUrl}/news/${article.slug}`,
+    lastModified: new Date(article.publishedAt),
     changeFrequency: 'monthly' as const,
     priority: 0.6,
   }))
@@ -187,14 +213,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
     changeFrequency: 'hourly' as const,
     priority: 0.95,
+    alternates: withLocaleAlternates(`/gold-rate/${city}`),
   }))
 
-  // Silver rate index page
   const silverRateIndex = {
     url: `${baseUrl}/silver-rate`,
     lastModified: new Date(),
     changeFrequency: 'daily' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/silver-rate'),
   }
 
   // Silver rate city pages
@@ -203,46 +230,85 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date('2025-12-18'),
     changeFrequency: 'daily' as const,
     priority: 0.75,
+    alternates: withLocaleAlternates(`/silver-rate/${city}`),
   }))
 
-  // Jewellers index page
   const jewellersIndex = {
     url: `${baseUrl}/jewellers`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
+    alternates: withLocaleAlternates('/jewellers'),
   }
 
-  // Jewellers buying guide page
   const jewellersBuyingGuide = {
     url: `${baseUrl}/jewellers/buying-guide`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.75,
+    alternates: withLocaleAlternates('/jewellers/buying-guide'),
   }
 
-  // Individual jeweller pages
   const jewellerPages = getAllJewellerSlugs().map((slug) => ({
     url: `${baseUrl}/jewellers/${slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
+    alternates: withLocaleAlternates(`/jewellers/${slug}`),
   }))
 
-  // Footer/Legal pages
-  const footerPages = [
-    { url: `${baseUrl}/about`, priority: 0.5 },
-    { url: `${baseUrl}/contact`, priority: 0.5 },
-    { url: `${baseUrl}/privacy`, priority: 0.3 },
-    { url: `${baseUrl}/terms`, priority: 0.3 },
-    { url: `${baseUrl}/disclaimer`, priority: 0.3 },
-  ].map((page) => ({
-    ...page,
+  const footerPaths = ['/about', '/contact', '/privacy', '/terms', '/disclaimer']
+  const footerPages = footerPaths.map((path) => ({
+    url: `${baseUrl}${path}`,
+    priority: path === '/about' || path === '/contact' ? 0.5 : 0.3,
     lastModified: new Date('2024-12-29'),
     changeFrequency: 'yearly' as const,
+    alternates: withLocaleAlternates(path),
   }))
 
+  // Locale variant URLs for all translatable pages (hi, ta, te)
+  const now = new Date()
+  const toolDate = new Date('2025-12-18')
+
+  const localePages = [
+    // High-priority pages
+    ...localeEntries('/', { lastModified: now, changeFrequency: 'hourly', priority: 1 }),
+    ...localeEntries('/gold-rate-today', { lastModified: now, changeFrequency: 'hourly', priority: 1 }),
+    // Gold rate city pages
+    ...cities.flatMap((city) =>
+      localeEntries(`/gold-rate/${city}`, { lastModified: now, changeFrequency: 'hourly', priority: 0.9 })
+    ),
+    // Silver rate pages
+    ...localeEntries('/silver-rate', { lastModified: now, changeFrequency: 'daily', priority: 0.75 }),
+    ...silverCities.flatMap((city) =>
+      localeEntries(`/silver-rate/${city}`, { lastModified: toolDate, changeFrequency: 'daily', priority: 0.7 })
+    ),
+    // Calculator & tool pages
+    ...localeEntries('/calculator', { lastModified: toolDate, changeFrequency: 'monthly', priority: 0.8 }),
+    ...localeEntries('/wastage-calculator', { lastModified: toolDate, changeFrequency: 'monthly', priority: 0.75 }),
+    ...localeEntries('/purity-converter', { lastModified: now, changeFrequency: 'monthly', priority: 0.75 }),
+    ...localeEntries('/investment-calculator', { lastModified: now, changeFrequency: 'monthly', priority: 0.75 }),
+    ...localeEntries('/gold-loan-calculator', { lastModified: now, changeFrequency: 'monthly', priority: 0.75 }),
+    ...localeEntries('/wedding-gold-planner', { lastModified: now, changeFrequency: 'monthly', priority: 0.75 }),
+    ...localeEntries('/hallmark-guide', { lastModified: now, changeFrequency: 'monthly', priority: 0.75 }),
+    ...localeEntries('/sip-calculator', { lastModified: now, changeFrequency: 'monthly', priority: 0.75 }),
+    ...localeEntries('/sip-calculator-with-step-up', { lastModified: now, changeFrequency: 'monthly', priority: 0.75 }),
+    ...localeEntries('/swp-calculator-with-inflation', { lastModified: now, changeFrequency: 'monthly', priority: 0.75 }),
+    // Content pages
+    ...localeEntries('/articles', { lastModified: now, changeFrequency: 'weekly', priority: 0.8 }),
+    ...localeEntries('/news', { lastModified: toolDate, changeFrequency: 'daily', priority: 0.75 }),
+    ...localeEntries('/news/recap', { lastModified: now, changeFrequency: 'daily', priority: 0.75 }),
+    ...localeEntries('/portfolio', { lastModified: now, changeFrequency: 'monthly', priority: 0.75 }),
+    // Jewellers
+    ...localeEntries('/jewellers', { lastModified: now, changeFrequency: 'weekly', priority: 0.75 }),
+    ...localeEntries('/jewellers/buying-guide', { lastModified: now, changeFrequency: 'monthly', priority: 0.7 }),
+    ...getAllJewellerSlugs().flatMap((slug) =>
+      localeEntries(`/jewellers/${slug}`, { lastModified: now, changeFrequency: 'monthly', priority: 0.65 })
+    ),
+  ]
+
   return [
+    // English (default) pages
     homepage,
     goldRateToday,
     ...cityPages,
@@ -269,5 +335,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     jewellersBuyingGuide,
     ...jewellerPages,
     ...footerPages,
+    // Hindi, Tamil, Telugu locale pages
+    ...localePages,
   ]
 }

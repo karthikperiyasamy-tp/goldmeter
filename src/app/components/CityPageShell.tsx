@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useRouter } from "next/navigation";
 import RateCard from "./RateCard";
 import PriceChartWrapper from "./PriceChartWrapper";
@@ -8,9 +8,11 @@ import Last10DaysTable from "./Last10DaysTable";
 import MonthStatistics from "./MonthStatistics";
 import StructuredData from "./StructuredData";
 import CityLocalSEOBlock from "./CityLocalSEOBlock";
+import ShareButtons from "./ShareButtons";
 import { GOLD_RATE_CITIES, SILVER_RATE_CITIES } from "@/lib/cities";
 import { getAllJewellers, type JewellerConfig } from "@/lib/jewellerConfig";
 import { getCityMarketData } from "@/lib/cityMarketData";
+import { useTranslations } from "next-intl";
 
 type LocalInfo = {
   title: string;
@@ -105,26 +107,12 @@ export default function CityPageShell({
   children,
 }: CityPageShellProps) {
   const router = useRouter();
+  const t = useTranslations("goldRate");
+  const tc = useTranslations("common");
 
   // Handle "Back to India" click - uses noredirect param to bypass geo-redirect
   const handleBackToIndia = () => {
     router.push("/?noredirect=true");
-  };
-
-  // Handle share
-  const handleShare = async () => {
-    const shareData = {
-      title: `${city} Gold Rate Today - GoldMeter`,
-      text: `${city} Gold Rate Today: 22K ₹${gold22k?.toLocaleString('en-IN')}/10g, 24K ₹${gold24k?.toLocaleString('en-IN')}/10g. Check live prices!`,
-      url: window.location.href,
-    };
-    
-    if (navigator.share) {
-      await navigator.share(shareData);
-    } else {
-      navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
-      alert('Link copied to clipboard!');
-    }
   };
 
   // Handle print
@@ -228,7 +216,7 @@ export default function CityPageShell({
       <section className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-5 shadow-soft mt-1">
         <h3 className="text-sm font-bold text-emerald-800 uppercase tracking-wide flex items-center gap-2 mb-1">
           <span className="w-1 h-4 bg-emerald-500 rounded-full"></span>
-          📚 Gold Guides &amp; Articles
+          📚 {t("goldGuidesArticles")}
         </h3>
         <ul className="mt-4 space-y-2">
           <li>
@@ -261,15 +249,14 @@ export default function CityPageShell({
           href="/articles"
           className="mt-4 block text-center text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
         >
-          View all articles →
+          {tc("viewAllArticles")}
         </Link>
       </section>
 
-      {/* Gold Rate in Top Cities - Like goodreturns.in sidebar */}
       <section className="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-5 shadow-soft">
         <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wide flex items-center gap-2">
           <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
-          Gold Rate in Top Cities of India
+          {t("goldRateTopCities")}
         </h3>
         <ul className="mt-4 space-y-1">
           {GOLD_RATE_CITIES.map((cityItem) => {
@@ -284,7 +271,7 @@ export default function CityPageShell({
                       : 'text-slate-600 hover:text-amber-600'
                   }`}
                 >
-                  Gold rate in {cityItem} {isCurrentCity && '←'}
+                  {t("goldRateIn", { city: cityItem })} {isCurrentCity && '←'}
                 </Link>
               </li>
             );
@@ -296,7 +283,7 @@ export default function CityPageShell({
       <section className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-5 shadow-soft">
         <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wide flex items-center gap-2">
           <span className="w-1 h-4 bg-slate-400 rounded-full"></span>
-          Silver Rate in Top Cities of India
+          {t("silverRateTopCities")}
         </h3>
         <ul className="mt-4 space-y-1">
           {SILVER_RATE_CITIES.map((cityItem) => (
@@ -305,7 +292,7 @@ export default function CityPageShell({
                 href={`/silver-rate/${cityItem.toLowerCase()}`}
                 className="block py-1.5 text-sm text-slate-500 hover:text-slate-700 transition-colors"
               >
-                Silver price in {cityItem}
+                {t("silverPriceIn", { city: cityItem })}
               </Link>
             </li>
           ))}
@@ -316,7 +303,7 @@ export default function CityPageShell({
       <section className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-5 shadow-soft">
         <h3 className="text-sm font-bold text-amber-800 uppercase tracking-wide flex items-center gap-2">
           <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
-          Popular Jewellers in {city}
+          {t("popularJewellersIn", { city })}
         </h3>
         <ul className="mt-4 space-y-2">
           {popularJewellers.map((jeweller) => (
@@ -327,7 +314,7 @@ export default function CityPageShell({
               >
                 <span className="font-medium">{jeweller.name}</span>
                 <span className="block text-xs text-slate-400 mt-0.5">
-                  Making: {jeweller.makingChargesRange.split(' - ')[0]}+
+                  {t("making")} {jeweller.makingChargesRange.split(' - ')[0]}+
                 </span>
               </Link>
             </li>
@@ -337,7 +324,7 @@ export default function CityPageShell({
           href="/jewellers"
           className="mt-4 block text-center text-sm font-semibold text-amber-600 hover:text-amber-700 transition-colors"
         >
-          View all jewellers →
+          {tc("viewAllJewellers")}
         </Link>
       </section>
     </aside>
@@ -363,7 +350,7 @@ export default function CityPageShell({
         {!hideAnswerBlock && (
           <article className="mb-6 rounded-3xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-white p-6 shadow-soft">
             <h1 className="text-2xl font-extrabold text-amber-800 md:text-3xl">
-              Gold Rate Today in {city}
+              {t("title", { city })}
             </h1>
             
             {/* Primary answer paragraph - AI scrapers prioritize this */}
@@ -391,60 +378,60 @@ export default function CityPageShell({
                   onClick={handleBackToIndia}
                   className="inline-flex items-center gap-1 rounded-full border border-slate-200 px-3 py-1 font-semibold text-slate-700 hover:bg-slate-50 transition-colors lowercase cursor-pointer"
                 >
-                  ← back to india
+                  {tc("backToIndia")}
                 </button>
-                <span className="normal-case text-slate-500">Updated {updated}</span>
+                <span className="normal-case text-slate-500">{tc("updated")} {updated}</span>
               </div>
               <h2 className="mt-3 text-3xl font-extrabold text-amber-700 md:text-4xl">
-                Gold Rate Today {city} — Per 10 Grams
+                {t("heroTitle", { city })}
               </h2>
               <p className="mt-2 text-sm text-slate-600">
-                Live prices updated daily
+                {t("livePrices")}
               </p>
               <div className="mt-6 flex flex-wrap gap-4">
                 <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
                   <p className="text-xs uppercase tracking-wide text-slate-500">
-                    22K Gold
+                    {t("gold22k")}
                   </p>
                   <p className="text-3xl font-bold text-charcoal">
                     ₹{inr.format(safeGold22k)}
                   </p>
                   <p className={`text-xs ${priceChange.gold22k >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                    {priceChange.gold22k >= 0 ? '+' : ''}₹{priceChange.gold22k} vs yesterday
+                    {priceChange.gold22k >= 0 ? '+' : ''}₹{priceChange.gold22k} {tc("vsYesterday")}
                   </p>
                 </div>
                 <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
                   <p className="text-xs uppercase tracking-wide text-slate-500">
-                    24K Gold
+                    {t("gold24k")}
                   </p>
                   <p className="text-3xl font-bold text-charcoal">
                     ₹{inr.format(safeGold24k)}
                   </p>
                   <p className={`text-xs ${priceChange.gold24k >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                    {priceChange.gold24k >= 0 ? '+' : ''}₹{priceChange.gold24k} vs yesterday
+                    {priceChange.gold24k >= 0 ? '+' : ''}₹{priceChange.gold24k} {tc("vsYesterday")}
                   </p>
                 </div>
                 <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
                   <p className="text-xs uppercase tracking-wide text-slate-500">
-                    18K Gold
+                    {t("gold18k")}
                   </p>
                   <p className="text-3xl font-bold text-charcoal">
                     ₹{inr.format(finalGold18k)}
                   </p>
                   <p className={`text-xs ${priceChange.gold18k >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                    {priceChange.gold18k >= 0 ? '+' : ''}₹{priceChange.gold18k} vs yesterday
+                    {priceChange.gold18k >= 0 ? '+' : ''}₹{priceChange.gold18k} {tc("vsYesterday")}
                   </p>
                 </div>
                 {!!silver1kg && (
                   <div className="rounded-2xl bg-white px-6 py-4 shadow-soft">
                     <p className="text-xs uppercase tracking-wide text-slate-500">
-                      Silver (1kg)
+                      {t("silver1kg")}
                     </p>
                     <p className="text-3xl font-bold text-charcoal">
                       ₹{inr.format(silver1kg)}
                     </p>
                     <p className={`text-xs ${(priceChange.silver1kg || 0) >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                      {(priceChange.silver1kg || 0) >= 0 ? '+' : ''}₹{priceChange.silver1kg || 0} vs yesterday
+                      {(priceChange.silver1kg || 0) >= 0 ? '+' : ''}₹{priceChange.silver1kg || 0} {tc("vsYesterday")}
                     </p>
                   </div>
                 )}
@@ -454,26 +441,26 @@ export default function CityPageShell({
                   href="#price-chart"
                   className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                 >
-                  View Charts
+                  {t("viewCharts")}
                 </Link>
                 <Link 
                   href="/calculator"
                   className="rounded-full bg-amber-600 px-4 py-2 font-semibold text-white shadow-soft hover:bg-amber-700 transition-colors"
                 >
-                  Calculate Price
+                  {t("calculatePrice")}
                 </Link>
-                <button
-                  onClick={handleShare}
-                  className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
-                >
-                  📤 Share
-                </button>
                 <button
                   onClick={handlePrint}
                   className="rounded-full border border-slate-200 px-4 py-2 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                 >
-                  🖨️ Print
+                  🖨️ {tc("print")}
                 </button>
+              </div>
+              <div className="mt-4 print:hidden">
+                <ShareButtons
+                  title={`${city} Gold Rate Today - GoldMeter`}
+                  text={`${city} Gold Rate Today: 22K ₹${gold22k?.toLocaleString('en-IN')}/10g, 24K ₹${gold24k?.toLocaleString('en-IN')}/10g`}
+                />
               </div>
               <p className="mt-4 max-w-2xl text-sm text-slate-600">
                 {heroIntro}
@@ -481,19 +468,19 @@ export default function CityPageShell({
             </div>
             {/* Quick Calculator Card */}
             <div className="w-full rounded-3xl border border-amber-100 bg-white p-5 shadow-soft md:w-1/3">
-              <p className="text-xs uppercase text-slate-400">Quick Calculator</p>
+              <p className="text-xs uppercase text-slate-400">{t("quickCalculator")}</p>
               <p className="mt-3 text-3xl font-bold text-amber-600">
                 ₹{(safeGold24k / 10).toFixed(2)}
                 <span className="text-sm font-medium text-slate-500">/ gram</span>
               </p>
               <p className="mt-2 text-sm text-slate-500">
-                Estimate jewellery cost with making + GST
+                {t("estimateJewelleryCost")}
               </p>
               <Link 
                 href="/wastage-calculator"
                 className="mt-4 block w-full rounded-2xl bg-amber-100 py-2 text-center text-sm font-semibold text-amber-700 hover:bg-amber-200 transition-colors"
               >
-                Open Jewellery Wastage Tool
+                {t("openWastageTool")}
               </Link>
             </div>
           </div>
@@ -502,8 +489,8 @@ export default function CityPageShell({
         {/* 22K Quick Cards */}
         <section className="mt-8">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">22K Gold - Quick Cards</h3>
-            <p className="text-sm text-slate-500">{city} price</p>
+            <h3 className="text-lg font-semibold">{t("quickCards", { purity: "22K" })}</h3>
+            <p className="text-sm text-slate-500">{t("cityPrice", { city })}</p>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
             {quickPresets.map((preset) => (
@@ -521,8 +508,8 @@ export default function CityPageShell({
         {/* 24K Quick Cards */}
         <section className="mt-8">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">24K Gold - Quick Cards</h3>
-            <p className="text-sm text-slate-500">{city} price</p>
+            <h3 className="text-lg font-semibold">{t("quickCards", { purity: "24K" })}</h3>
+            <p className="text-sm text-slate-500">{t("cityPrice", { city })}</p>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
             {quickPresets.map((preset) => (
@@ -540,8 +527,8 @@ export default function CityPageShell({
         {/* 18K Quick Cards */}
         <section className="mt-8">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">18K Gold - Quick Cards</h3>
-            <p className="text-sm text-slate-500">{city} price</p>
+            <h3 className="text-lg font-semibold">{t("quickCards", { purity: "18K" })}</h3>
+            <p className="text-sm text-slate-500">{t("cityPrice", { city })}</p>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
             {quickPresets.map((preset) => (
@@ -560,8 +547,8 @@ export default function CityPageShell({
         {!!silver1kg && (
           <section id="silver-rate" className="mt-8">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Silver - Quick Cards</h3>
-              <p className="text-sm text-slate-500">{city} price</p>
+              <h3 className="text-lg font-semibold">{t("silverQuickCards")}</h3>
+              <p className="text-sm text-slate-500">{t("cityPrice", { city })}</p>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
               {silverPresets.map((preset) => (
@@ -609,72 +596,72 @@ export default function CityPageShell({
         </section>
 
         <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft print:hidden">
-          <h3 className="text-lg font-semibold">Tools & Calculators</h3>
+          <h3 className="text-lg font-semibold">{t("toolsCalculators")}</h3>
           <div className="mt-4 grid gap-3 md:grid-cols-3">
             <Link href="/calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
               <span className="text-xl">🧮</span>
-              <p className="font-semibold text-charcoal mt-1">Price calculator</p>
-              <p className="text-sm text-slate-600">Get cost with GST.</p>
+              <p className="font-semibold text-charcoal mt-1">{t("priceCalculator")}</p>
+              <p className="text-sm text-slate-600">{t("getCostWithGST")}</p>
             </Link>
             <Link href="/wastage-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
               <span className="text-xl">💎</span>
-              <p className="font-semibold text-charcoal mt-1">Wastage & making</p>
-              <p className="text-sm text-slate-600">Compare jeweller quotes.</p>
+              <p className="font-semibold text-charcoal mt-1">{t("wastageMaking")}</p>
+              <p className="text-sm text-slate-600">{t("compareJewellerQuotes")}</p>
             </Link>
             <Link href="/purity-converter" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
               <span className="text-xl">⚖️</span>
-              <p className="font-semibold text-charcoal mt-1">Purity converter</p>
-              <p className="text-sm text-slate-600">22K ↔ 24K instantly.</p>
+              <p className="font-semibold text-charcoal mt-1">{t("purityConverter")}</p>
+              <p className="text-sm text-slate-600">{t("purityConvert22k24k")}</p>
             </Link>
             <Link href="/investment-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
               <span className="text-xl">📈</span>
-              <p className="font-semibold text-charcoal mt-1">Investment SIP</p>
-              <p className="text-sm text-slate-600">Plan gold SIP returns.</p>
+              <p className="font-semibold text-charcoal mt-1">{t("investmentSIP")}</p>
+              <p className="text-sm text-slate-600">{t("planGoldSIPReturns")}</p>
             </Link>
             <Link href="/gold-loan-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
               <span className="text-xl">🏦</span>
-              <p className="font-semibold text-charcoal mt-1">Loan calculator</p>
-              <p className="text-sm text-slate-600">Check loan eligibility.</p>
+              <p className="font-semibold text-charcoal mt-1">{t("loanCalculator")}</p>
+              <p className="text-sm text-slate-600">{t("checkLoanEligibility")}</p>
             </Link>
             <Link href="/wedding-gold-planner" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
               <span className="text-xl">💍</span>
-              <p className="font-semibold text-charcoal mt-1">Wedding planner</p>
-              <p className="text-sm text-slate-600">Plan wedding gold.</p>
+              <p className="font-semibold text-charcoal mt-1">{t("weddingPlanner")}</p>
+              <p className="text-sm text-slate-600">{t("planWeddingGold")}</p>
             </Link>
             <Link href="/sip-calculator" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
               <span className="text-xl">📊</span>
-              <p className="font-semibold text-charcoal mt-1">SIP Calculator</p>
-              <p className="text-sm text-slate-600">Calculate SIP returns.</p>
+              <p className="font-semibold text-charcoal mt-1">{t("sipCalculator")}</p>
+              <p className="text-sm text-slate-600">{t("calculateSIPReturns")}</p>
             </Link>
             <Link href="/sip-calculator-with-step-up" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
               <span className="text-xl">📈</span>
-              <p className="font-semibold text-charcoal mt-1">Step-up SIP</p>
-              <p className="text-sm text-slate-600">SIP with yearly increase.</p>
+              <p className="font-semibold text-charcoal mt-1">{t("stepUpSIP")}</p>
+              <p className="text-sm text-slate-600">{t("sipWithYearlyIncrease")}</p>
             </Link>
             <Link href="/swp-calculator-with-inflation" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
               <span className="text-xl">💰</span>
-              <p className="font-semibold text-charcoal mt-1">SWP Calculator with Inflation</p>
-              <p className="text-sm text-slate-600">Withdrawal plan with inflation.</p>
+              <p className="font-semibold text-charcoal mt-1">{t("swpCalculator")}</p>
+              <p className="text-sm text-slate-600">{t("withdrawalPlanInflation")}</p>
             </Link>
           </div>
           <div className="mt-4 grid gap-3 md:grid-cols-3">
             <Link href="/silver-rate" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
-              <p className="font-semibold text-charcoal">Silver rate India</p>
-              <p className="text-sm text-slate-600">Track ₹/kg silver.</p>
+              <p className="font-semibold text-charcoal">{t("silverRateIndia")}</p>
+              <p className="text-sm text-slate-600">{t("trackSilverRate")}</p>
             </Link>
             <Link href="/news" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
-              <p className="font-semibold text-charcoal">Gold news</p>
-              <p className="text-sm text-slate-600">Daily headlines.</p>
+              <p className="font-semibold text-charcoal">{t("goldNews")}</p>
+              <p className="text-sm text-slate-600">{t("dailyHeadlines")}</p>
             </Link>
             <Link href="/news/recap" className="rounded-2xl border border-slate-100 p-4 hover:border-amber-200 transition-colors">
-              <p className="font-semibold text-charcoal">Daily recap</p>
-              <p className="text-sm text-slate-600">AI market summary.</p>
+              <p className="font-semibold text-charcoal">{t("dailyRecap")}</p>
+              <p className="text-sm text-slate-600">{t("aiMarketSummary")}</p>
             </Link>
           </div>
         </section>
 
         <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-          <h3 className="text-lg font-semibold">FAQs</h3>
+          <h3 className="text-lg font-semibold">{t("faqs")}</h3>
           <div className="mt-4 space-y-3 text-sm text-slate-600">
             {enhancedFaqs.map((faq) => (
               <details key={faq.question} className="rounded-2xl border border-slate-100 p-4">
@@ -691,7 +678,7 @@ export default function CityPageShell({
         <section className="mt-8 grid gap-6 md:grid-cols-2">
           {/* Why Prices Change */}
           <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-            <h3 className="text-lg font-semibold text-charcoal">Why Gold Prices Change in {city}</h3>
+            <h3 className="text-lg font-semibold text-charcoal">{t("whyPricesChange", { city })}</h3>
             <p className="mt-3 text-sm text-slate-600 leading-relaxed">
               Gold prices in {city} fluctuate based on several key factors:
             </p>
@@ -721,7 +708,7 @@ export default function CityPageShell({
 
           {/* Is Today Good to Buy */}
           <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-            <h3 className="text-lg font-semibold text-charcoal">Is Today a Good Day to Buy Gold in {city}?</h3>
+            <h3 className="text-lg font-semibold text-charcoal">{t("isTodayGoodDay", { city })}</h3>
             <div className="mt-3 text-sm text-slate-600 leading-relaxed">
               <p>
                 Today&apos;s {city} gold rate is{' '}
@@ -755,7 +742,7 @@ export default function CityPageShell({
 
         {/* 22K vs 24K Explanation */}
         <section className="mt-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-          <h3 className="text-lg font-semibold text-charcoal">Difference Between 22K and 24K Gold</h3>
+          <h3 className="text-lg font-semibold text-charcoal">{t("difference22k24k")}</h3>
           <div className="mt-4 grid gap-4 md:grid-cols-3 text-sm">
             <div className="rounded-2xl bg-amber-50 p-4">
               <p className="font-semibold text-amber-800">24K Gold (99.9% pure)</p>
@@ -793,24 +780,24 @@ export default function CityPageShell({
 
         {/* E-E-A-T: About GoldMeter - moved lower for SEO, not in answer block */}
         <section className="mt-6 rounded-3xl border border-slate-100 bg-white p-6 shadow-soft">
-          <h3 className="text-lg font-semibold text-charcoal">About GoldMeter</h3>
+          <h3 className="text-lg font-semibold text-charcoal">{t("aboutGoldMeter")}</h3>
           <div className="mt-4 text-sm text-slate-600 leading-relaxed">
             <p>
-              GoldMeter is India&apos;s gold price tracker, updating {city} rates daily.
+              {t("aboutGoldMeterDesc", { city })}
             </p>
             <ul className="mt-3 space-y-2">
-              <li>• <strong>Daily updates:</strong> Fresh prices every morning</li>
-              <li>• <strong>All purities:</strong> 24K, 22K, and 18K per gram</li>
-              <li>• <strong>30-day history:</strong> Track trends and patterns</li>
-              <li>• <strong>All major cities:</strong> Pan-India coverage</li>
+              <li>• <strong>{t("dailyUpdates")}</strong> {t("dailyUpdatesDesc")}</li>
+              <li>• <strong>{t("allPurities")}</strong> {t("allPuritiesDesc")}</li>
+              <li>• <strong>{t("thirtyDayHistory")}</strong> {t("thirtyDayHistoryDesc")}</li>
+              <li>• <strong>{t("allMajorCities")}</strong> {t("allMajorCitiesDesc")}</li>
             </ul>
             <p className="mt-3">
               <Link href="/gold-rate-today" className="text-amber-600 hover:text-amber-700 font-semibold text-sm">
-                → Gold Rate Today in India (all cities)
+                {t("goldRateTodayIndia")}
               </Link>
             </p>
             <p className="mt-4 text-xs text-slate-500">
-              Note: Shop prices may vary due to making charges and GST.
+              {t("shopPricesMayVary")}
             </p>
           </div>
         </section>

@@ -1,123 +1,71 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 type Calculator = {
-  name: string;
+  nameKey: string;
   href: string;
   icon: string;
-  description: string;
+  descKey: string;
 };
 
 type CalculatorCategory = {
-  name: string;
+  nameKey: string;
   icon: string;
   calculators: Calculator[];
 };
 
 const calculatorCategories: CalculatorCategory[] = [
   {
-    name: "Gold Calculators",
+    nameKey: "goldCalculators",
     icon: "📊",
     calculators: [
-      {
-        name: "Price Calculator",
-        href: "/calculator",
-        icon: "🧮",
-        description: "Get price with GST",
-      },
-      {
-        name: "Wastage Tool",
-        href: "/wastage-calculator",
-        icon: "💎",
-        description: "Making + wastage charges",
-      },
-      {
-        name: "Purity Converter",
-        href: "/purity-converter",
-        icon: "⚖️",
-        description: "22K ↔ 24K conversion",
-      },
-      {
-        name: "Hallmark Verifier",
-        href: "/hallmark-guide",
-        icon: "🔍",
-        description: "Check gold purity",
-      },
-      {
-        name: "Investment Calculator",
-        href: "/investment-calculator",
-        icon: "📈",
-        description: "Gold SIP returns",
-      },
+      { nameKey: "priceCalculator", href: "/calculator", icon: "🧮", descKey: "getCostWithGST" },
+      { nameKey: "wastageTool", href: "/wastage-calculator", icon: "💎", descKey: "makingWastageCharges" },
+      { nameKey: "purityConverter", href: "/purity-converter", icon: "⚖️", descKey: "convert22k24k" },
+      { nameKey: "hallmarkVerifier", href: "/hallmark-guide", icon: "🔍", descKey: "checkGoldPurity" },
+      { nameKey: "investmentCalculator", href: "/investment-calculator", icon: "📈", descKey: "goldSIPReturns" },
     ],
   },
   {
-    name: "Financial Calculators",
+    nameKey: "financialCalculators",
     icon: "💰",
     calculators: [
-      {
-        name: "SIP Calculator",
-        href: "/sip-calculator",
-        icon: "📊",
-        description: "Calculate SIP returns",
-      },
-      {
-        name: "SIP Calculator with Step Up",
-        href: "/sip-calculator-with-step-up",
-        icon: "📈",
-        description: "SIP with yearly increase",
-      },
-      {
-        name: "SWP Calculator with Inflation",
-        href: "/swp-calculator-with-inflation",
-        icon: "💸",
-        description: "Withdrawal plan with inflation",
-      },
-      {
-        name: "Gold Loan Calculator",
-        href: "/gold-loan-calculator",
-        icon: "🏦",
-        description: "Loan against gold",
-      },
+      { nameKey: "sipCalculator", href: "/sip-calculator", icon: "📊", descKey: "calculateSIPReturns" },
+      { nameKey: "sipWithStepUp", href: "/sip-calculator-with-step-up", icon: "📈", descKey: "sipWithYearlyIncrease" },
+      { nameKey: "swpWithInflation", href: "/swp-calculator-with-inflation", icon: "💸", descKey: "withdrawalPlanInflation" },
+      { nameKey: "goldLoanCalculator", href: "/gold-loan-calculator", icon: "🏦", descKey: "loanAgainstGold" },
     ],
   },
   {
-    name: "Planning Tools",
+    nameKey: "planningTools",
     icon: "💍",
     calculators: [
-      {
-        name: "Wedding Planner",
-        href: "/wedding-gold-planner",
-        icon: "💍",
-        description: "Plan wedding gold",
-      },
-      {
-        name: "Gold Portfolio",
-        href: "/portfolio",
-        icon: "📂",
-        description: "Track gold investments",
-      },
+      { nameKey: "weddingPlanner", href: "/wedding-gold-planner", icon: "💍", descKey: "planWeddingGold" },
+      { nameKey: "goldPortfolio", href: "/portfolio", icon: "📂", descKey: "trackGoldInvestments" },
     ],
   },
 ];
 
 export default function CalculatorSwitcher() {
-  const pathname = usePathname();
+  const rawPathname = usePathname();
+  const pathname = rawPathname.replace(/^\/(hi|ta|te)\//, '/');
+  const t = useTranslations("tools");
 
   return (
     <div className="rounded-2xl border border-slate-100 bg-gradient-to-br from-slate-50 to-white p-4">
       <h3 className="text-sm font-semibold text-slate-700 mb-3">
-        All Calculators
+        {t("allCalculators")}
       </h3>
       <div className="space-y-4">
         {calculatorCategories.map((category) => (
-          <div key={category.name}>
+          <div key={category.nameKey}>
             <div className="flex items-center gap-2 mb-2">
               <span className="text-sm">{category.icon}</span>
               <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                {category.name}
+                {t(category.nameKey)}
               </h4>
             </div>
             <div className="space-y-1.5">
@@ -142,15 +90,15 @@ export default function CalculatorSwitcher() {
                             isActive ? "text-amber-900" : "text-slate-700"
                           }`}
                         >
-                          {calc.name}
+                          {t(calc.nameKey)}
                         </p>
                         <p className="text-xs text-slate-500 truncate">
-                          {calc.description}
+                          {t(calc.descKey)}
                         </p>
                       </div>
                       {isActive && (
                         <span className="text-amber-600 text-xs font-semibold shrink-0">
-                          Active
+                          {t("active")}
                         </span>
                       )}
                     </div>
@@ -164,4 +112,3 @@ export default function CalculatorSwitcher() {
     </div>
   );
 }
-

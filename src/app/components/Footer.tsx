@@ -1,70 +1,68 @@
-import Link from "next/link";
+"use client";
 
-const mainLinks = [
-  { label: "Gold Rate Today", href: "/gold-rate-today" },
-  { label: "Articles & Guides", href: "/articles" },
-  { label: "Jewellers Directory", href: "/jewellers" },
-  { label: "Silver Rate", href: "/silver-rate" },
-  { label: "Gold Calculator", href: "/calculator" },
-  { label: "Gold Portfolio", href: "/portfolio" },
-  { label: "News", href: "/news" },
-];
-
-const footerLinks = [
-  { label: "About Us", href: "/about" },
-  { label: "Contact Us", href: "/contact" },
-  { label: "Methodology", href: "/about/methodology" }, // E-E-A-T: Data sourcing transparency
-  { label: "Privacy Policy", href: "/privacy" },
-  { label: "Terms of Service", href: "/terms" },
-  { label: "Disclaimer", href: "/disclaimer" },
-];
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export default function Footer() {
+  const t = useTranslations("footer");
+
+  const mainLinks = [
+    { label: t("goldRateToday"), href: "/gold-rate-today" },
+    { label: t("articlesGuides"), href: "/articles" },
+    { label: t("jewellersDirectory"), href: "/jewellers" },
+    { label: t("silverRate"), href: "/silver-rate" },
+    { label: t("goldCalculator"), href: "/calculator" },
+    { label: t("goldPortfolio"), href: "/portfolio" },
+    { label: t("news"), href: "/news" },
+  ];
+
+  const footerLinks = [
+    { label: t("aboutUs"), href: "/about" },
+    { label: t("contactUs"), href: "/contact" },
+    { label: t("methodology"), href: "/about/methodology" },
+    { label: t("privacyPolicy"), href: "/privacy" },
+    { label: t("termsOfService"), href: "/terms" },
+    { label: t("disclaimer"), href: "/disclaimer" },
+  ];
+
   return (
     <footer className="mt-12 border-t border-slate-200 bg-white">
       <div className="mx-auto max-w-6xl px-4 py-8">
         <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">
           <p className="text-sm text-amber-900">
-            Looking for the latest benchmark?{" "}
+            {t("lookingForBenchmark")}{" "}
             <Link href="/gold-rate-today" className="font-semibold underline hover:text-amber-700">
-              Gold rate today in India
+              {t("goldRateTodayIndia")}
             </Link>
-            {" "}with live 22K and 24K prices.
+            {" "}{t("withLivePrices")}
           </p>
         </div>
 
-        {/* E-E-A-T: Data Source Attribution */}
         <div className="mb-6 rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
           <div className="flex items-start gap-3">
             <svg className="h-5 w-5 text-emerald-600 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
             <div className="flex-1">
-              <h3 className="text-sm font-semibold text-emerald-900">Trusted Data Sources</h3>
+              <h3 className="text-sm font-semibold text-emerald-900">{t("trustedDataSources")}</h3>
               <p className="mt-1 text-xs text-slate-600 leading-relaxed">
-                GoldMeter sources gold and silver prices directly from authoritative bodies: 
-                <strong> Indian Bullion & Jewellers Association (IBJA)</strong> for national benchmarks, 
-                <strong> Multi Commodity Exchange (MCX)</strong> for futures data, and regional bullion associations 
-                for city-specific rates. All prices are verified and updated multiple times daily.
-                {" "}<Link href="/about/methodology" className="text-emerald-700 underline font-medium">Learn about our methodology →</Link>
+                {t("trustedDataSourcesDesc")}
+                {" "}<Link href="/about/methodology" className="text-emerald-700 underline font-medium">{t("learnMethodology")}</Link>
               </p>
             </div>
           </div>
         </div>
 
         <div className="grid gap-8 md:grid-cols-4">
-          {/* Brand */}
           <div>
             <p className="text-lg font-semibold text-charcoal">GoldMeter</p>
             <p className="text-xs text-slate-500 mt-2 leading-relaxed">
-              India&apos;s trusted source for live gold & silver prices across 25+ cities. 
-              Updated daily from IBJA and regional bullion associations.
+              {t("footerDescription")}
             </p>
           </div>
           
-          {/* Main Navigation */}
           <div>
-            <p className="text-sm font-semibold text-charcoal mb-3">Quick Links</p>
+            <p className="text-sm font-semibold text-charcoal mb-3">{t("quickLinks")}</p>
             <nav className="flex flex-col gap-2">
               {mainLinks.map((link) => (
                 <Link
@@ -78,49 +76,47 @@ export default function Footer() {
             </nav>
           </div>
 
-          {/* Tools */}
           <div>
-            <p className="text-sm font-semibold text-charcoal mb-3">Gold Calculators</p>
+            <p className="text-sm font-semibold text-charcoal mb-3">{t("goldCalculators")}</p>
             <nav className="flex flex-col gap-2">
               <Link href="/calculator" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
-                Gold Price Calculator
+                {t("goldPriceCalculator")}
               </Link>
               <Link href="/wastage-calculator" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
-                Wastage Calculator
+                {t("wastageCalculator")}
               </Link>
               <Link href="/purity-converter" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
-                Purity Converter
+                {t("purityConverter")}
               </Link>
               <Link href="/investment-calculator" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
-                Gold Investment Calculator
+                {t("goldInvestmentCalculator")}
               </Link>
               <Link href="/gold-comparison" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
-                Gold Comparison
+                {t("goldComparison")}
               </Link>
             </nav>
-            <p className="text-sm font-semibold text-charcoal mb-3 mt-4">Financial Calculators</p>
+            <p className="text-sm font-semibold text-charcoal mb-3 mt-4">{t("financialCalculators")}</p>
             <nav className="flex flex-col gap-2">
               <Link href="/sip-calculator" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
-                SIP Calculator
+                {t("sipCalculator")}
               </Link>
               <Link href="/sip-calculator-with-step-up" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
-                SIP Calculator with Step Up
+                {t("sipWithStepUp")}
               </Link>
               <Link href="/swp-calculator-with-inflation" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
-                SWP Calculator with Inflation
+                {t("swpWithInflation")}
               </Link>
               <Link href="/gold-loan-calculator" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
-                Gold Loan Calculator
+                {t("goldLoanCalculator")}
               </Link>
               <Link href="/wedding-gold-planner" className="text-sm text-slate-600 hover:text-amber-600 transition-colors">
-                Wedding Gold Planner
+                {t("weddingGoldPlanner")}
               </Link>
             </nav>
           </div>
 
-          {/* Legal Links */}
           <div>
-            <p className="text-sm font-semibold text-charcoal mb-3">Legal & Info</p>
+            <p className="text-sm font-semibold text-charcoal mb-3">{t("legalInfo")}</p>
             <nav className="flex flex-col gap-2">
               {footerLinks.map((link) => (
                 <Link
@@ -136,16 +132,15 @@ export default function Footer() {
         </div>
       </div>
       
-      {/* Copyright and Update Info */}
       <div className="bg-slate-50 py-4">
         <div className="mx-auto max-w-6xl px-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-xs text-slate-500">
             <p>
-              © {new Date().getFullYear()} GoldMeter. All rights reserved. Not affiliated with IBJA or MCX.
+              {t("copyright", { year: new Date().getFullYear() })}
             </p>
             <p className="flex items-center gap-2">
               <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
-              Rates updated every 2-4 hours from verified sources
+              {t("ratesUpdated")}
             </p>
           </div>
         </div>

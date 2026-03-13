@@ -1,9 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
+import { Link } from "@/i18n/navigation";
 import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 type TopBarProps = {
   city: string;
@@ -45,11 +47,14 @@ const cityOptions = [
 
 export default function TopBar({ city, onCityChange }: TopBarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
+  const rawPathname = usePathname();
+  const pathname = rawPathname.replace(/^\/(hi|ta|te)\//, '/');
+  const t = useTranslations("nav");
   
   // List of city pages for highlighting "Gold Rate Today"
   const cityPages = ["ahmedabad", "ayodhya", "bangalore", "bhubaneswar", "chandigarh", "chennai", "coimbatore", "delhi", "hyderabad", "jaipur", "kerala", "kolkata", "lucknow", "madurai", "mangalore", "moodbidri", "mumbai", "mysore", "nagpur", "nashik", "patna", "pune", "rajkot", "salem", "surat", "trichy", "vadodara", "vijayawada", "visakhapatnam"];
@@ -59,21 +64,20 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   const goldHref = city === "India" ? "/" : `/gold-rate/${citySlug}`;
   const silverHref = city === "India" ? "/silver-rate" : `/silver-rate/${citySlug}`;
   const primaryNavItems = [
-    { label: "Portfolio", href: "/portfolio" },
-    { label: "Community", href: "/community" },
-    { label: "Gold Rate Today", href: goldHref },
-    { label: "Silver Rate", href: silverHref },
-    { label: "Calculator", href: "/calculator" },
-    { label: "Articles", href: "/articles" },
-    { label: "News", href: "/news" },
+    { label: t("portfolio"), href: "/portfolio" },
+    { label: t("community"), href: "/community" },
+    { label: t("goldRateToday"), href: goldHref },
+    { label: t("silverRate"), href: silverHref },
+    { label: t("calculator"), href: "/calculator" },
+    { label: t("articles"), href: "/articles" },
+    { label: t("news"), href: "/news" },
   ];
 
   // Filter cities based on search query
-  const filteredCities = searchQuery
-    ? cityOptions.filter((c) =>
-        c.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
+  const trimmedQuery = searchQuery.trim().toLowerCase();
+  const filteredCities = trimmedQuery
+    ? cityOptions.filter((c) => c.name.toLowerCase().includes(trimmedQuery))
+    : cityOptions.slice(0, 10);
 
   const handleCitySelect = (citySlug: string, cityName: string) => {
     onCityChange(cityName);
@@ -95,18 +99,19 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
     
     setSearchQuery("");
     setShowSearchResults(false);
+    setSearchModalOpen(false);
   };
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 gap-4">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5">
         <button 
           onClick={() => {
             onCityChange("India");
             // Navigate to homepage with noredirect param to bypass geo-redirect
             router.push("/?noredirect=true");
           }}
-          className="flex items-center gap-2 sm:gap-3 hover:opacity-90 transition-opacity shrink-0 min-w-0 cursor-pointer"
+          className="flex min-w-0 shrink-0 cursor-pointer items-center gap-2.5 transition-opacity hover:opacity-90 sm:gap-3"
         >
           <Image
             src="/logo.png"
@@ -114,48 +119,58 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
             title="GoldMeter - India's Gold Price Today"
             width={56}
             height={56}
-            className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain shrink-0"
+            className="h-10 w-10 shrink-0 object-contain sm:h-12 sm:w-12 md:h-14 md:w-14"
             priority
           />
           <div className="min-w-0 text-left" aria-hidden="true">
             <div className="text-sm sm:text-base md:text-lg font-semibold text-charcoal truncate">GoldMeter</div>
-            <p className="text-[9px] sm:text-[10px] md:text-xs text-slate-500 truncate">Gold Price Today</p>
+            <p className="text-[9px] sm:text-[10px] md:text-xs text-slate-500 truncate">{t("goldPriceToday")}</p>
           </div>
         </button>
 
-        <div className="relative hidden flex-1 md:block">
+        <div className="relative hidden flex-1 xl:block">
           <div className="flex items-center gap-4 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-600">
             <span className="text-slate-400">⌕</span>
             <input
               className="w-full bg-transparent text-sm text-charcoal outline-none"
-              placeholder="Search city (e.g., Chennai, Mumbai)"
-              aria-label="Search city"
+              placeholder={t("searchCityPlaceholder")}
+              aria-label={t("searchCity")}
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
                 setShowSearchResults(e.target.value.length > 0);
               }}
-              onFocus={() => searchQuery && setShowSearchResults(true)}
+              onFocus={() => setShowSearchResults(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && filteredCities[0]) {
+                  e.preventDefault();
+                  handleCitySelect(filteredCities[0].slug, filteredCities[0].name);
+                }
+              }}
             />
           </div>
 
           {/* Search Results Dropdown */}
-          {showSearchResults && filteredCities.length > 0 && (
+          {showSearchResults && (
             <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-64 overflow-auto rounded-2xl border border-slate-200 bg-white shadow-lg">
-              {filteredCities.map((cityOption) => (
-                <button
-                  key={cityOption.slug}
-                  onClick={() => handleCitySelect(cityOption.slug, cityOption.name)}
-                  className="block w-full px-4 py-3 text-left text-sm text-slate-700 hover:bg-amber-50 hover:text-amber-700 transition-colors"
-                >
-                  {cityOption.name}
-                </button>
-              ))}
+              {filteredCities.length > 0 ? (
+                filteredCities.map((cityOption) => (
+                  <button
+                    key={cityOption.slug}
+                    onClick={() => handleCitySelect(cityOption.slug, cityOption.name)}
+                    className="block w-full px-4 py-3 text-left text-sm text-slate-700 hover:bg-amber-50 hover:text-amber-700 transition-colors"
+                  >
+                    {cityOption.name}
+                  </button>
+                ))
+              ) : (
+                <div className="px-4 py-3 text-sm text-slate-500">No city found</div>
+              )}
             </div>
           )}
         </div>
 
-        <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 lg:flex">
+        <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 xl:gap-8 lg:flex">
           {primaryNavItems.map((item) => {
             const isActive = item.label === "Gold Rate Today" 
               ? isGoldRatePage 
@@ -188,7 +203,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                   ? "text-amber-600"
                   : "text-slate-500 hover:text-amber-600 hover:bg-slate-50"
               }`}
-              aria-label="More options"
+              aria-label={t("moreOptions")}
               aria-expanded={moreMenuOpen}
             >
               <span className="w-1 h-1 bg-current rounded-full"></span>
@@ -212,7 +227,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                     router.push("/jewellers");
                   }}
                 >
-                  Jewellers Directory
+                  {t("jewellersDirectory")}
                 </Link>
                 <Link
                   href="/gold-comparison"
@@ -227,14 +242,31 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                     router.push("/gold-comparison");
                   }}
                 >
-                  Compare Gold Rates
+                  {t("compareGoldRates")}
                 </Link>
               </div>
             )}
           </div>
         </nav>
 
-        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            className="hidden h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:border-amber-300 hover:text-amber-600 md:inline-flex xl:hidden"
+            onClick={() => {
+              setSearchModalOpen((prev) => {
+                const next = !prev;
+                if (!next) {
+                  setShowSearchResults(false);
+                  setSearchQuery("");
+                }
+                return next;
+              });
+            }}
+            aria-label={t("searchCity")}
+            aria-expanded={searchModalOpen}
+          >
+            <span className="text-sm">⌕</span>
+          </button>
           <select
             value={city}
             onChange={(event) => {
@@ -245,7 +277,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
             }}
             className="rounded-full border border-slate-200 bg-white pl-2 pr-6 sm:pl-4 sm:pr-8 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-slate-700 shadow-sm appearance-none cursor-pointer hover:border-amber-300 transition-colors max-w-[100px] sm:max-w-none"
             style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 0.25rem center", backgroundSize: "1rem" }}
-            aria-label="Select city"
+            aria-label={t("selectCity")}
           >
             {cityOptions.map((option) => (
               <option key={option.slug} value={option.name}>
@@ -253,15 +285,75 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
               </option>
             ))}
           </select>
+          <LanguageSwitcher />
           <button 
             className="rounded-full border border-slate-200 p-1.5 sm:p-2 text-base sm:text-lg lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
+            aria-label={t("toggleMenu")}
           >
             {mobileMenuOpen ? "✕" : "☰"}
           </button>
         </div>
       </div>
+
+      {/* Tablet/Laptop Search Modal */}
+      {searchModalOpen && (
+        <div className="absolute left-0 right-0 top-full z-50 border-b border-slate-200 bg-white shadow-lg xl:hidden">
+          <div className="mx-auto max-w-6xl px-4 py-3">
+            <div className="relative">
+              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-600">
+                <span className="text-slate-400">⌕</span>
+                <input
+                  className="w-full bg-transparent text-sm text-charcoal outline-none"
+                  placeholder={t("searchCityPlaceholder")}
+                  aria-label={t("searchCity")}
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowSearchResults(e.target.value.length > 0);
+                  }}
+                  onFocus={() => setShowSearchResults(true)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && filteredCities[0]) {
+                      e.preventDefault();
+                      handleCitySelect(filteredCities[0].slug, filteredCities[0].name);
+                    }
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    setSearchModalOpen(false);
+                    setShowSearchResults(false);
+                    setSearchQuery("");
+                  }}
+                  className="rounded-md px-2 py-1 text-xs font-medium text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                  aria-label="Close city search"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {showSearchResults && (
+                <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-64 overflow-auto rounded-2xl border border-slate-200 bg-white shadow-lg">
+                  {filteredCities.length > 0 ? (
+                    filteredCities.map((cityOption) => (
+                      <button
+                        key={cityOption.slug}
+                        onClick={() => handleCitySelect(cityOption.slug, cityOption.name)}
+                        className="block w-full px-4 py-3 text-left text-sm text-slate-700 transition-colors hover:bg-amber-50 hover:text-amber-700"
+                      >
+                        {cityOption.name}
+                      </button>
+                    ))
+                  ) : (
+                    <div className="px-4 py-3 text-sm text-slate-500">No city found</div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
@@ -270,8 +362,8 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
             <div className="space-y-1">
               {[
                 ...primaryNavItems,
-                { label: "Jewellers", href: "/jewellers" },
-                { label: "Compare Gold Rates", href: "/gold-comparison" },
+                { label: t("jewellers"), href: "/jewellers" },
+                { label: t("compareGoldRates"), href: "/gold-comparison" },
               ].map((item) => {
                 const isActive = item.label === "Gold Rate Today" 
                   ? isGoldRatePage 
