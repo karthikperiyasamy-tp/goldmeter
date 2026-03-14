@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -56,9 +55,9 @@ function getFallbackRates() {
   };
 }
 
-async function fetchCityRatesSafe(cityName: string, host: string) {
+async function fetchCityRatesSafe(cityName: string) {
   try {
-    return await fetchCityRates(cityName, host);
+    return await fetchCityRates(cityName);
   } catch (error) {
     console.error(`[GoldRateCityPage] Failed fetching rates for ${cityName}:`, error);
     return getFallbackRates();
@@ -85,9 +84,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const t = await getTranslations({ locale, namespace: "meta" });
 
     // Fetch actual rates for metadata
-    const headersList = await headers();
-    const host = headersList.get("host") ?? "localhost:3000";
-    const rates = await fetchCityRatesSafe(config.name, host);
+    const rates = await fetchCityRatesSafe(config.name);
     
     // Calculate per-gram prices for metadata
     const perGram24k = Math.round((rates.gold24k || 0) / 10);
@@ -148,37 +145,35 @@ export default async function GoldRateCityPage({ params }: Props) {
     notFound();
   }
 
-  const headersList = await headers();
-  const host = headersList.get("host") ?? "localhost:3000";
-  
-  // Fetch rates from DB, scraping API, or fallback to resilient defaults
-  const rates = await fetchCityRatesSafe(config.name, host);
+  try {
+    // Fetch rates from DB, scraping API, or fallback to resilient defaults
+    const rates = await fetchCityRatesSafe(config.name);
 
-  // Calculate per-gram prices for AIO answer block
-  const perGram24k = Math.round((rates.gold24k || 0) / 10);
-  const perGram22k = Math.round((rates.gold22k || 0) / 10);
-  const perGram18k = Math.round(((rates.gold24k || 0) * 18) / 24 / 10);
-  const silverPerGram = Math.round((rates.silver1kg || 0) / 1000);
-  
-  // Format date for display
-  const todayFormatted = new Date().toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
-  
-  // Format time for display
-  const timeFormatted = new Date().toLocaleTimeString('en-IN', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true
-  });
+    // Calculate per-gram prices for AIO answer block
+    const perGram24k = Math.round((rates.gold24k || 0) / 10);
+    const perGram22k = Math.round((rates.gold22k || 0) / 10);
+    const perGram18k = Math.round(((rates.gold24k || 0) * 18) / 24 / 10);
+    const silverPerGram = Math.round((rates.silver1kg || 0) / 1000);
+    
+    // Format date for display
+    const todayFormatted = new Date().toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+    
+    // Format time for display
+    const timeFormatted = new Date().toLocaleTimeString('en-IN', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
 
-  // Generate FAQs with actual prices
-  const faqs = generateFAQs(config, perGram24k, perGram22k);
+    // Generate FAQs with actual prices
+    const faqs = generateFAQs(config, perGram24k, perGram22k);
 
-  return (
-    <>
+    return (
+      <>
       {/* 🔥 AIO ANSWER BLOCK - Server-rendered plain HTML for AI scrapers */}
       <div className="bg-[#fffdf7]" itemScope itemType="https://schema.org/Product">
         <article className="mx-auto max-w-6xl px-4 pt-6">
@@ -335,8 +330,35 @@ export default async function GoldRateCityPage({ params }: Props) {
         {config.slug === 'vijayawada' && <VijayawadaStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
         {config.slug === 'visakhapatnam' && <VisakhapatnamStaticContent perGram22k={perGram22k} perGram24k={perGram24k} />}
       </CityPageShell>
-    </>
-  );
+      </>
+    );
+  } catch (error) {
+    console.error(`[GoldRateCityPage] Render failed for city ${config.slug}:`, error);
+
+    const fallbackRates = getFallbackRates();
+    const fallbackFaqs = generateFAQs(
+      config,
+      Math.round(fallbackRates.gold24k / 10),
+      Math.round(fallbackRates.gold22k / 10)
+    );
+
+    return (
+      <CityPageShell
+        city={config.name}
+        intro={config.intro}
+        updated={fallbackRates.date}
+        dateISO={fallbackRates.dateISO}
+        gold22k={fallbackRates.gold22k}
+        gold24k={fallbackRates.gold24k}
+        silver1kg={fallbackRates.silver1kg}
+        priceChange={fallbackRates.priceChange}
+        history={fallbackRates.history}
+        localInfo={config.localInfo}
+        faqs={fallbackFaqs}
+        similarCities={config.similarCities}
+      />
+    );
+  }
 }
 
 // Cache page for 5 minutes - combined with DB-level caching

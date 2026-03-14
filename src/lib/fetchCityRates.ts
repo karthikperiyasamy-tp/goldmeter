@@ -105,7 +105,7 @@ const CITY_FALLBACKS: Record<string, string> = {
  */
 export async function fetchCityRates(
   cityName: string,
-  host: string = 'localhost:3000'
+  host?: string
 ): Promise<{
   gold22k: number;
   gold24k: number;
@@ -198,10 +198,25 @@ export async function fetchCityRates(
     console.error(`❌ [FetchCityRates] DB error for ${cityName}:`, dbDataResult.reason);
   }
   
+  // Resolve host without requiring request headers (works in SSG/ISR on production)
+  const resolvedHost = (() => {
+    if (host && host.trim()) return host.trim();
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    if (siteUrl) {
+      try {
+        return new URL(siteUrl).host;
+      } catch {
+        return siteUrl.replace(/^https?:\/\//, "");
+      }
+    }
+    if (process.env.VERCEL_URL) return process.env.VERCEL_URL;
+    return process.env.NODE_ENV === "production" ? "goldmeter.in" : "localhost:3000";
+  })();
+
   // Fallback to scraping API
   try {
-    const protocol = host.startsWith('localhost') ? 'http' : 'https';
-    const response = await fetch(`${protocol}://${host}/api/scrape-rates`, {
+    const protocol = resolvedHost.startsWith('localhost') ? 'http' : 'https';
+    const response = await fetch(`${protocol}://${resolvedHost}/api/scrape-rates`, {
       cache: 'no-store',
     });
     

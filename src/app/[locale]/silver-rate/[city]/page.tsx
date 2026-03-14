@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import SilverCityPageShell from "@/app/components/SilverCityPageShell";
@@ -68,9 +67,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cityName = city.charAt(0).toUpperCase() + city.slice(1);
   const t = await getTranslations({ locale, namespace: "meta" });
 
-  const headersList = await headers();
-  const host = headersList.get("host") ?? "localhost:3000";
-  const rates = await fetchCityRates(cityName, host);
+  const rates = await fetchCityRates(cityName);
   const silver1kg = rates.silver1kg || 0;
   const pricePerGram = Math.round(silver1kg / 1000);
   const pricePerKg = silver1kg;
@@ -128,13 +125,11 @@ export async function generateStaticParams() {
 
 export default async function SilverCityPage({ params }: Props) {
   const { city } = await params;
-  const headersList = await headers();
-  const host = headersList.get("host") ?? "localhost:3000";
   
   // Capitalize city name for display/fetching
   const cityName = city.charAt(0).toUpperCase() + city.slice(1);
   
-  const rates = await fetchCityRates(cityName, host);
+  const rates = await fetchCityRates(cityName);
   const history = dedupeHistory(rates.history || []);
 
   // Fallbacks when silver is missing for the city snapshot
