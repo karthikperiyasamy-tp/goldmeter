@@ -42,6 +42,29 @@ type Props = {
   params: Promise<{ locale: string; city: string }>;
 };
 
+function getFallbackRates() {
+  return {
+    gold22k: 59500,
+    gold24k: 64700,
+    gold18k: Math.round((64700 * 18) / 24),
+    silver1kg: 76000,
+    source: "mock" as const,
+    date: new Date().toLocaleDateString("en-IN"),
+    dateISO: new Date().toISOString().split("T")[0],
+    priceChange: { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: 0 },
+    history: [],
+  };
+}
+
+async function fetchCityRatesSafe(cityName: string, host: string) {
+  try {
+    return await fetchCityRates(cityName, host);
+  } catch (error) {
+    console.error(`[GoldRateCityPage] Failed fetching rates for ${cityName}:`, error);
+    return getFallbackRates();
+  }
+}
+
 // Generate static params for all cities
 export async function generateStaticParams() {
   return getAllCitySlugs().map((city) => ({
@@ -51,62 +74,70 @@ export async function generateStaticParams() {
 
 // Dynamic metadata with date for AIO freshness signals
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale, city } = await params;
-  const config = getCityGoldConfig(city);
-  
-  if (!config) {
-    return { title: 'City Not Found' };
-  }
+  try {
+    const { locale, city } = await params;
+    const config = getCityGoldConfig(city);
+    
+    if (!config) {
+      return { title: "City Not Found" };
+    }
 
-  const t = await getTranslations({ locale, namespace: "meta" });
+    const t = await getTranslations({ locale, namespace: "meta" });
 
-  // Fetch actual rates for metadata
-  const headersList = await headers();
-  const host = headersList.get("host") ?? "localhost:3000";
-  const rates = await fetchCityRates(config.name, host);
-  
-  // Calculate per-gram prices for metadata
-  const perGram24k = Math.round((rates.gold24k || 0) / 10);
-  const perGram22k = Math.round((rates.gold22k || 0) / 10);
-  
-  const todayFormatted = new Date().toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
-  
-  const price22k = perGram22k.toLocaleString('en-IN');
-  const price24k = perGram24k.toLocaleString('en-IN');
-  
-  return {
-    title: t("cityTitle", { city: config.name, date: todayFormatted }),
-    description: t("cityDescription", { city: config.name, price22k, price24k }),
-    alternates: {
-      canonical: `https://goldmeter.in/gold-rate/${config.slug}`,
-      languages: {
-        en: `/gold-rate/${config.slug}`,
-        hi: `/hi/gold-rate/${config.slug}`,
-        ta: `/ta/gold-rate/${config.slug}`,
-        te: `/te/gold-rate/${config.slug}`,
-      },
-    },
-    openGraph: {
+    // Fetch actual rates for metadata
+    const headersList = await headers();
+    const host = headersList.get("host") ?? "localhost:3000";
+    const rates = await fetchCityRatesSafe(config.name, host);
+    
+    // Calculate per-gram prices for metadata
+    const perGram24k = Math.round((rates.gold24k || 0) / 10);
+    const perGram22k = Math.round((rates.gold22k || 0) / 10);
+    
+    const todayFormatted = new Date().toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    
+    const price22k = perGram22k.toLocaleString("en-IN");
+    const price24k = perGram24k.toLocaleString("en-IN");
+    
+    return {
       title: t("cityTitle", { city: config.name, date: todayFormatted }),
       description: t("cityDescription", { city: config.name, price22k, price24k }),
-      type: 'website',
-      url: `https://goldmeter.in/gold-rate/${config.slug}`,
-      siteName: 'GoldMeter',
-      locale: 'en_IN',
-      images: [
-        {
-          url: 'https://goldmeter.in/og-image.png',
-          width: 1200,
-          height: 630,
-          alt: `Gold Rate Today ${config.name}`,
+      alternates: {
+        canonical: `https://goldmeter.in/gold-rate/${config.slug}`,
+        languages: {
+          en: `/gold-rate/${config.slug}`,
+          hi: `/hi/gold-rate/${config.slug}`,
+          ta: `/ta/gold-rate/${config.slug}`,
+          te: `/te/gold-rate/${config.slug}`,
         },
-      ],
-    },
-  };
+      },
+      openGraph: {
+        title: t("cityTitle", { city: config.name, date: todayFormatted }),
+        description: t("cityDescription", { city: config.name, price22k, price24k }),
+        type: "website",
+        url: `https://goldmeter.in/gold-rate/${config.slug}`,
+        siteName: "GoldMeter",
+        locale: "en_IN",
+        images: [
+          {
+            url: "https://goldmeter.in/og-image.png",
+            width: 1200,
+            height: 630,
+            alt: `Gold Rate Today ${config.name}`,
+          },
+        ],
+      },
+    };
+  } catch (error) {
+    console.error("[GoldRateCityPage] generateMetadata failed:", error);
+    return {
+      title: "Gold Rate Today | GoldMeter",
+      description: "Track live 22K and 24K gold rates in Indian cities with GoldMeter.",
+    };
+  }
 }
 
 export default async function GoldRateCityPage({ params }: Props) {
@@ -120,8 +151,8 @@ export default async function GoldRateCityPage({ params }: Props) {
   const headersList = await headers();
   const host = headersList.get("host") ?? "localhost:3000";
   
-  // Fetch rates from DB, scraping API, or fallback to mock
-  const rates = await fetchCityRates(config.name, host);
+  // Fetch rates from DB, scraping API, or fallback to resilient defaults
+  const rates = await fetchCityRatesSafe(config.name, host);
 
   // Calculate per-gram prices for AIO answer block
   const perGram24k = Math.round((rates.gold24k || 0) / 10);

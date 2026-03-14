@@ -97,60 +97,80 @@ type Props = {
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const recap = await getRecapBySlug(slug);
-  
-  if (!recap) {
+  try {
+    const { slug } = await params;
+    const recap = await getRecapBySlug(slug);
+    
+    if (!recap) {
+      return {
+        title: "Recap Not Found | GoldMeter",
+      };
+    }
+
+    // Enhance description with price data if available (SEO boost)
+    let description = recap.summary;
+    if (recap.goldRates) {
+      const perGram24k = Math.round(recap.goldRates.gold24k / 10);
+      const perGram22k = Math.round(recap.goldRates.gold22k / 10);
+      description = `Gold rate on this day: 24K ₹${perGram24k.toLocaleString('en-IN')}/g, 22K ₹${perGram22k.toLocaleString('en-IN')}/g. ${recap.summary}`;
+    }
+
     return {
-      title: "Recap Not Found | GoldMeter",
+      title: `${recap.title} | GoldMeter`,
+      description,
+      alternates: {
+        canonical: `https://goldmeter.in/news/recap/${slug}`,
+      },
+      openGraph: {
+        title: recap.title,
+        description,
+        type: "article",
+        url: `https://goldmeter.in/news/recap/${slug}`,
+        siteName: "GoldMeter",
+        locale: "en_IN",
+        publishedTime: recap.publishedAt.toISOString(),
+        images: [
+          {
+            url: "https://goldmeter.in/og-image.png",
+            width: 1200,
+            height: 630,
+            alt: recap.title,
+          },
+        ],
+      },
+    };
+  } catch (error) {
+    console.error("[RecapPage] generateMetadata failed:", error);
+    return {
+      title: "Gold Market Recap | GoldMeter",
+      description: "Daily gold market recap and key highlights from GoldMeter.",
     };
   }
-
-  // Enhance description with price data if available (SEO boost)
-  let description = recap.summary;
-  if (recap.goldRates) {
-    const perGram24k = Math.round(recap.goldRates.gold24k / 10);
-    const perGram22k = Math.round(recap.goldRates.gold22k / 10);
-    description = `Gold rate on this day: 24K ₹${perGram24k.toLocaleString('en-IN')}/g, 22K ₹${perGram22k.toLocaleString('en-IN')}/g. ${recap.summary}`;
-  }
-
-  return {
-    title: `${recap.title} | GoldMeter`,
-    description,
-    alternates: {
-      canonical: `https://goldmeter.in/news/recap/${slug}`,
-    },
-    openGraph: {
-      title: recap.title,
-      description,
-      type: "article",
-      url: `https://goldmeter.in/news/recap/${slug}`,
-      siteName: "GoldMeter",
-      locale: "en_IN",
-      publishedTime: recap.publishedAt.toISOString(),
-      images: [
-        {
-          url: "https://goldmeter.in/og-image.png",
-          width: 1200,
-          height: 630,
-          alt: recap.title,
-        },
-      ],
-    },
-  };
 }
 
 // Generate static params for all existing recaps
 export async function generateStaticParams() {
-  const recaps = await getAllRecaps(30);
-  return recaps.map((recap) => ({
-    slug: recap.slug,
-  }));
+  try {
+    const recaps = await getAllRecaps(30);
+    return recaps.map((recap) => ({
+      slug: recap.slug,
+    }));
+  } catch (error) {
+    console.error("[RecapPage] generateStaticParams failed:", error);
+    return [];
+  }
 }
 
 export default async function RecapPage({ params }: Props) {
   const { slug } = await params;
-  const recap = await getRecapBySlug(slug);
+  let recap: DailyRecap | null = null;
+
+  try {
+    recap = await getRecapBySlug(slug);
+  } catch (error) {
+    console.error(`[RecapPage] Failed to load recap for slug ${slug}:`, error);
+    notFound();
+  }
 
   if (!recap) {
     notFound();
@@ -168,7 +188,15 @@ export default async function RecapPage({ params }: Props) {
   ];
   
   // Get previous and next recaps for navigation
-  const { previous, next } = await getAdjacentRecaps(slug);
+  let previous: DailyRecap | null = null;
+  let next: DailyRecap | null = null;
+  try {
+    const adjacent = await getAdjacentRecaps(slug);
+    previous = adjacent.previous;
+    next = adjacent.next;
+  } catch (error) {
+    console.error(`[RecapPage] Failed to load adjacent recaps for slug ${slug}:`, error);
+  }
 
   // Generate price structured data for SEO
   const priceStructuredData = recap.goldRates ? {

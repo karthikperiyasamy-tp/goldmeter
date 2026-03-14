@@ -1,39 +1,104 @@
-import { MongoClient, Db } from 'mongodb';
+import { MongoClient, Db, MongoClientOptions } from "mongodb";
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Please add your MongoDB URI to .env.local');
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri) {
+  throw new Error("Please add your MongoDB URI to .env.local");
+}
+const uri: string = mongoUri;
+
+const DB_NAME = "goldrate";
+const MAX_CONNECT_ATTEMPTS = 2;
+const RETRY_DELAY_MS = 750;
+
+// Use conservative timeouts/pool limits for serverless runtimes.
+const options: MongoClientOptions = {
+  appName: "goldmeter-web",
+  maxPoolSize: 8,
+  minPoolSize: 0,
+  maxIdleTimeMS: 60_000,
+  serverSelectionTimeoutMS: 8_000,
+  connectTimeoutMS: 8_000,
+  socketTimeoutMS: 20_000,
+  retryWrites: true,
+};
+
+type GlobalMongo = typeof globalThis & {
+  _mongoClient?: MongoClient;
+  _mongoClientPromise?: Promise<MongoClient>;
+};
+
+const globalMongo = global as GlobalMongo;
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const uri = process.env.MONGODB_URI;
-const options = {};
+function shouldRetryMongoError(error: unknown): boolean {
+  const msg = String(error ?? "");
+  return (
+    msg.includes("MongoServerSelectionError") ||
+    msg.includes("MongoNetworkTimeoutError") ||
+    msg.includes("timed out") ||
+    msg.includes("ECONNRESET") ||
+    msg.includes("ETIMEDOUT")
+  );
+}
 
-let client: MongoClient;
-let clientPromise: Promise<MongoClient>;
+async function connectWithRetry(): Promise<MongoClient> {
+  let lastError: unknown;
 
-if (process.env.NODE_ENV === 'development') {
-  // In development mode, use a global variable to preserve the connection
-  // across hot reloads in Next.js
-  let globalWithMongo = global as typeof globalThis & {
-    _mongoClientPromise?: Promise<MongoClient>;
-  };
+  for (let attempt = 1; attempt <= MAX_CONNECT_ATTEMPTS; attempt++) {
+    try {
+      const client = new MongoClient(uri, options);
+      await client.connect();
+      return client;
+    } catch (error) {
+      lastError = error;
+      console.error(
+        `[MongoDB] connect attempt ${attempt}/${MAX_CONNECT_ATTEMPTS} failed:`,
+        error
+      );
 
-  if (!globalWithMongo._mongoClientPromise) {
-    client = new MongoClient(uri, options);
-    globalWithMongo._mongoClientPromise = client.connect();
+      if (attempt < MAX_CONNECT_ATTEMPTS && shouldRetryMongoError(error)) {
+        await sleep(RETRY_DELAY_MS * attempt);
+        continue;
+      }
+      break;
+    }
   }
-  clientPromise = globalWithMongo._mongoClientPromise;
-} else {
-  // In production mode, it's best to not use a global variable
-  client = new MongoClient(uri, options);
-  clientPromise = client.connect();
+
+  throw lastError;
+}
+
+function getClientPromise(): Promise<MongoClient> {
+  if (!globalMongo._mongoClientPromise) {
+    globalMongo._mongoClientPromise = connectWithRetry()
+      .then((client) => {
+        globalMongo._mongoClient = client;
+        return client;
+      })
+      .catch((error) => {
+        // Reset cached promise so future requests can retry.
+        globalMongo._mongoClientPromise = undefined;
+        throw error;
+      });
+  }
+  return globalMongo._mongoClientPromise;
 }
 
 // Export a module-scoped MongoClient promise
+const clientPromise = getClientPromise();
 export default clientPromise;
 
 // Helper to get the database
 export async function getDatabase(): Promise<Db> {
-  const client = await clientPromise;
-  return client.db('goldrate'); // Database name
+  try {
+    const client = await getClientPromise();
+    return client.db(DB_NAME);
+  } catch (error) {
+    // Force reconnect attempt on next call after failure.
+    globalMongo._mongoClientPromise = undefined;
+    throw error;
+  }
 }
 
