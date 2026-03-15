@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import SilverCityPageShell from "@/app/components/SilverCityPageShell";
 import { fetchCityRates } from "@/lib/fetchCityRates";
 import { getSilverConfig, generateSilverFAQs } from "@/lib/citySilverConfig";
@@ -25,9 +24,6 @@ function dedupeHistory(history: HistoryEntry[]) {
 }
 
 export default async function SilverIndiaPage() {
-  const headersList = await headers();
-  const host = headersList.get("host") ?? "localhost:3000";
-  
   // Fetch rates for India (using "India" or a default city fallback for India aggregate)
   // fetchCityRates actually fetches specific city or falls back.
   // For India, we should ideally use the India data from DB. 

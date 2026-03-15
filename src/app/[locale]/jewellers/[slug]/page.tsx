@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import JewellerPageShell from "@/app/components/JewellerPageShell";
 import { getJewellerConfig, getAllJewellerSlugs } from "@/lib/jewellerConfig";
 import { fetchCityRates } from "@/lib/fetchCityRates";
-import { headers } from "next/headers";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -75,17 +74,13 @@ export default async function JewellerPage({ params }: Props) {
     notFound();
   }
 
-  // Fetch gold rate for jeweller's headquarters city
-  const headersList = await headers();
-  const host = headersList.get("host") || "goldmeter.in";
-  
   // Extract city name from headquarters (e.g., "Dubai, UAE" -> "Dubai", "Chennai, Tamil Nadu" -> "Chennai")
   const headquartersCity = jeweller.headquarters.split(",")[0].trim();
   
   // Try to fetch gold rate for the headquarters city
   let goldRateData = null;
   try {
-    const cityRates = await fetchCityRates(headquartersCity, host);
+    const cityRates = await fetchCityRates(headquartersCity);
     if (cityRates.source !== 'mock') {
       goldRateData = {
         gold22k: cityRates.gold22k,

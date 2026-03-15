@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import type { Metadata } from "next";
 import HomeClient, {
   type CityRate,
@@ -70,8 +69,18 @@ type HistoryRate = {
 // Fetch scraped rates including India rate
 // Using Next.js cache with 30-minute revalidation to prevent multiple calls
 async function getScrapedRates() {
-  const headersList = await headers();
-  const host = headersList.get("host") ?? "localhost:3000";
+  const host = (() => {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    if (siteUrl) {
+      try {
+        return new URL(siteUrl).host;
+      } catch {
+        return siteUrl.replace(/^https?:\/\//, "");
+      }
+    }
+    if (process.env.VERCEL_URL) return process.env.VERCEL_URL;
+    return process.env.NODE_ENV === "production" ? "goldmeter.in" : "localhost:3000";
+  })();
   const protocol = host.startsWith("localhost") ? "http" : "https";
   
   console.log("🔄 [HomePage] Fetching scraped rates from API...");

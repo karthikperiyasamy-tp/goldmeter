@@ -53,8 +53,17 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const router = useRouter();
   const rawPathname = usePathname();
-  const pathname = rawPathname.replace(/^\/(hi|ta|te)\//, '/');
+  const pathname = rawPathname.replace(/^\/(hi|ta|te)(\/|$)/, "/");
+  const currentLocale = rawPathname.match(/^\/(hi|ta|te)(?:\/|$)/)?.[1] ?? "en";
+  const localePrefix = currentLocale === "en" ? "" : `/${currentLocale}`;
   const t = useTranslations("nav");
+
+  const withLocalePath = (path: string) => {
+    if (!localePrefix) return path;
+    if (path === "/") return localePrefix;
+    if (path.startsWith("/?")) return `${localePrefix}${path.slice(1)}`;
+    return `${localePrefix}${path}`;
+  };
   
   // List of city pages for highlighting "Gold Rate Today"
   const cityPages = ["ahmedabad", "ayodhya", "bangalore", "bhubaneswar", "chandigarh", "chennai", "coimbatore", "delhi", "hyderabad", "jaipur", "kerala", "kolkata", "lucknow", "madurai", "mangalore", "moodbidri", "mumbai", "mysore", "nagpur", "nashik", "patna", "pune", "rajkot", "salem", "surat", "trichy", "vadodara", "vijayawada", "visakhapatnam"];
@@ -85,16 +94,16 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
     if (citySlug === "") {
       // India selected: stay in current context (gold vs silver)
       if (isSilverRoute) {
-        router.push("/silver-rate");
+        router.push(withLocalePath("/silver-rate"));
       } else {
-        router.push("/?noredirect=true");
+        router.push(withLocalePath("/?noredirect=true"));
       }
     } else {
       // City selected: clear stayOnIndia cookie so geo-redirect can work on future visits
       document.cookie = "stayOnIndia=; path=/; max-age=0";
       // Route within the current context - use /gold-rate/{city} for gold pages
       const targetPath = isSilverRoute ? `/silver-rate/${citySlug}` : `/gold-rate/${citySlug}`;
-      router.push(targetPath);
+      router.push(withLocalePath(targetPath));
     }
     
     setSearchQuery("");
@@ -109,7 +118,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
           onClick={() => {
             onCityChange("India");
             // Navigate to homepage with noredirect param to bypass geo-redirect
-            router.push("/?noredirect=true");
+            router.push(withLocalePath("/?noredirect=true"));
           }}
           className="flex min-w-0 shrink-0 cursor-pointer items-center gap-2.5 transition-opacity hover:opacity-90 sm:gap-3"
         >
@@ -128,7 +137,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
           </div>
         </button>
 
-        <div className="relative hidden flex-1 xl:block">
+        <div className="relative hidden flex-1">
           <div className="flex items-center gap-4 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-600">
             <span className="text-slate-400">⌕</span>
             <input
@@ -224,7 +233,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                   onMouseDown={(e) => {
                     e.preventDefault();
                     setMoreMenuOpen(false);
-                    router.push("/jewellers");
+                    router.push(withLocalePath("/jewellers"));
                   }}
                 >
                   {t("jewellersDirectory")}
@@ -239,7 +248,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                   onMouseDown={(e) => {
                     e.preventDefault();
                     setMoreMenuOpen(false);
-                    router.push("/gold-comparison");
+                    router.push(withLocalePath("/gold-comparison"));
                   }}
                 >
                   {t("compareGoldRates")}
@@ -251,16 +260,10 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
 
         <div className="flex shrink-0 items-center gap-2">
           <button
-            className="hidden h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:border-amber-300 hover:text-amber-600 md:inline-flex xl:hidden"
+            className="hidden h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:border-amber-300 hover:text-amber-600 md:inline-flex"
             onClick={() => {
-              setSearchModalOpen((prev) => {
-                const next = !prev;
-                if (!next) {
-                  setShowSearchResults(false);
-                  setSearchQuery("");
-                }
-                return next;
-              });
+              setSearchModalOpen(true);
+              setShowSearchResults(true);
             }}
             aria-label={t("searchCity")}
             aria-expanded={searchModalOpen}
@@ -275,7 +278,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                 handleCitySelect(selectedCity.slug, selectedCity.name);
               }
             }}
-            className="rounded-full border border-slate-200 bg-white pl-2 pr-6 sm:pl-4 sm:pr-8 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-slate-700 shadow-sm appearance-none cursor-pointer hover:border-amber-300 transition-colors max-w-[100px] sm:max-w-none"
+            className="h-9 rounded-full border border-slate-200 bg-white pl-2 pr-6 text-xs font-medium leading-none text-slate-700 shadow-sm transition-colors hover:border-amber-300 sm:h-10 sm:max-w-none sm:pl-4 sm:pr-8 sm:text-sm appearance-none cursor-pointer max-w-[100px]"
             style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 0.25rem center", backgroundSize: "1rem" }}
             aria-label={t("selectCity")}
           >
@@ -298,7 +301,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
 
       {/* Tablet/Laptop Search Modal */}
       {searchModalOpen && (
-        <div className="absolute left-0 right-0 top-full z-50 border-b border-slate-200 bg-white shadow-lg xl:hidden">
+        <div className="absolute left-0 right-0 top-full z-50 border-b border-slate-200 bg-white shadow-lg">
           <div className="mx-auto max-w-6xl px-4 py-3">
             <div className="relative">
               <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-600">
@@ -310,7 +313,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
-                    setShowSearchResults(e.target.value.length > 0);
+                    setShowSearchResults(true);
                   }}
                   onFocus={() => setShowSearchResults(true)}
                   onKeyDown={(e) => {
