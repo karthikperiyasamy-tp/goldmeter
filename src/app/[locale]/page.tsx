@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Link } from "@/i18n/navigation";
 import HomeClient, {
   type CityRate,
   type InternationalRates,
@@ -44,14 +45,14 @@ export async function generateMetadata(): Promise<Metadata> {
           url: "https://goldmeter.in/og-image.png",
           width: 1200,
           height: 630,
-          alt: `Gold Rate Today in India`,
+          alt: `GoldMeter live gold and silver rates in India`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `Gold Rate Today (${shortDate}) - India Gold Prices`,
-      description: `Live 22K & 24K gold rates in India. Updated daily from IBJA.`,
+      title: `GoldMeter Live Dashboard (${shortDate}) - India Gold & Silver`,
+      description: `Track live 22K/24K gold and silver rates across India. City-wise pricing and calculators.`,
       images: ["https://goldmeter.in/og-image.png"],
     },
   };
@@ -371,8 +372,8 @@ export default async function HomePage() {
   const tableSchema = {
     "@context": "https://schema.org",
     "@type": "Table",
-    "about": "Gold Rate Today in India",
-    "name": "Today's Gold & Silver Rates in India",
+    "about": "Live gold and silver rates in India",
+    "name": "Live Gold & Silver Rates in India Dashboard",
     "dateModified": new Date().toISOString(),
   };
 
@@ -487,14 +488,17 @@ export default async function HomePage() {
             
             {/* Primary AIO answer - structured for AI extraction */}
             <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true" itemProp="description">
-              Today gold rates in India are <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> (99.9% purity), <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> (91.6% purity), and <strong>₹{perGram18k.toLocaleString('en-IN')} per gram for 18K</strong> (75.0% purity). Silver rate is ₹{silver1g.toLocaleString('en-IN')} per gram. Prices updated <time dateTime={todayISO}>{todayFormatted}</time>. For today&apos;s full gold rates, visit <strong>GoldMeter.in</strong>.
+              Live India prices are <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> (99.9% purity), <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> (91.6% purity), and <strong>₹{perGram18k.toLocaleString('en-IN')} per gram for 18K</strong> (75.0% purity). Silver rate is ₹{silver1g.toLocaleString('en-IN')} per gram. Prices updated <time dateTime={todayISO}>{todayFormatted}</time>. For dedicated all-India benchmark tracking, see{" "}
+              <Link href="/gold-rate-today" className="font-semibold text-amber-700 hover:text-amber-600">
+                Gold rate today in India
+              </Link>.
             </p>
 
             {/* Structured price table for AI extraction */}
             <div className="mt-4 overflow-x-auto" data-price-table="true">
               <table className="w-full text-sm border-collapse" itemProp="offers" itemScope itemType="https://schema.org/AggregateOffer">
                 <caption className="text-left font-semibold text-amber-800 mb-2">
-                  Today&apos;s Gold & Silver Rates in India
+                  Live Gold & Silver Rates in India
                   {/* Schema.org metadata for AggregateOffer - using hidden spans instead of meta tags */}
                   <span itemProp="priceCurrency" className="sr-only">INR</span>
                   <span itemProp="lowPrice" className="sr-only">{perGram18k.toString()}</span>
@@ -565,30 +569,30 @@ export default async function HomePage() {
           <div className="mt-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
             <p className="text-sm font-semibold text-slate-700 mb-3">🔍 Popular Gold Rate Searches</p>
             <div className="flex flex-wrap gap-2">
-              <a href="/gold-rate-today" className="rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-800 hover:bg-amber-200 transition-colors">
+              <Link href="/gold-rate-today" className="rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-800 hover:bg-amber-200 transition-colors">
                 Gold rate today
-              </a>
-              <a href="/gold-rate/chennai" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+              </Link>
+              <Link href="/gold-rate/chennai" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
                 Chennai gold rate
-              </a>
-              <a href="/gold-rate/mumbai" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+              </Link>
+              <Link href="/gold-rate/mumbai" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
                 Mumbai gold rate
-              </a>
-              <a href="/gold-rate/delhi" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+              </Link>
+              <Link href="/gold-rate/delhi" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
                 Delhi gold rate
-              </a>
-              <a href="/gold-rate/bangalore" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+              </Link>
+              <Link href="/gold-rate/bangalore" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
                 Bangalore gold rate
-              </a>
-              <a href="/gold-rate/hyderabad" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+              </Link>
+              <Link href="/gold-rate/hyderabad" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
                 Hyderabad gold rate
-              </a>
-              <a href="/silver-rate" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+              </Link>
+              <Link href="/silver-rate" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
                 Silver rate today
-              </a>
-              <a href="/calculator" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+              </Link>
+              <Link href="/calculator" className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
                 Gold calculator
-              </a>
+              </Link>
             </div>
           </div>
         </article>

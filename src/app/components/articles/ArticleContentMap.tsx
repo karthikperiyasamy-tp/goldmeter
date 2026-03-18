@@ -2822,6 +2822,529 @@ function HowToBuildGoldPortfolioContent() {
   );
 }
 
+function GoldRally2026KeyDriversIndiaContent() {
+  return (
+    <>
+      <p>
+        Gold has entered one of its most discussed market phases in recent memory. Across global
+        headlines and Indian finance conversations, the same question keeps coming up: why is
+        gold sustaining strength even when traditional market logic appears mixed? In earlier
+        cycles, investors usually looked for one dominant trigger such as a crisis, a steep
+        interest-rate cut cycle, or a sudden currency shock. In 2026, the picture is broader.
+        Several forces are moving together: persistent central-bank demand, uneven inflation
+        expectations, geopolitical stress, shifting expectations around US rates, and a more
+        fragile confidence in reserve-currency concentration.
+      </p>
+      <p>
+        For Indian buyers, this is not just an international macro story. Domestic prices are
+        shaped by global gold, USD-INR movement, import-cost structure, and local retail behavior.
+        That means your final invoice can move quickly even when local sentiment looks stable. This
+        guide explains the current rally in practical terms and translates it into decision
+        frameworks for investors, savers, and jewellery buyers in India. The goal is not to
+        predict every short-term move; the goal is to improve process quality so your decisions are
+        defensible regardless of what the market does next.
+      </p>
+
+      <h2>Why the 2026 Gold Rally Feels Different</h2>
+      <p>
+        Many past gold rallies were largely narrative-driven and faded once the immediate trigger
+        cooled. The recent move appears different because demand support is coming from multiple
+        channels that do not react the same way to price. Some participants are momentum and
+        sentiment-driven, but others are structural and policy-driven. That combination can produce
+        resilience even during pullbacks.
+      </p>
+      <p>
+        Central banks are a key reason this cycle looks more durable. When sovereign buyers add
+        reserves for diversification, sanction risk management, or long-horizon currency hedging,
+        they are typically less sensitive to short-term technical corrections. At the same time,
+        private investment flows - including ETFs and tactical allocations - can amplify upside
+        during risk-off phases. In practical terms, one group can create the base while another
+        adds momentum. Buyers who treat this rally like a purely speculative spike may misread the
+        depth of support.
+      </p>
+
+      <h2>Central-Bank Buying as a Structural Floor</h2>
+      <p>
+        A major shift over the last few years is how central banks think about reserve composition.
+        Concentration in one or two reserve currencies is now viewed more cautiously by many
+        countries. Gold fits a specific role in this context: it is globally recognized, politically
+        neutral in settlement perception, and not directly tied to one sovereign issuer&apos;s credit
+        profile. For reserve managers, this does not mean replacing currencies entirely; it means
+        reducing concentration risk.
+      </p>
+      <p>
+        Why does this matter for retail investors? Because central-bank demand can absorb supply in
+        periods where speculative demand is weak. That does not eliminate volatility, but it can
+        change the character of downside moves. Instead of deep collapses, the market may show
+        shallower corrections followed by renewed accumulation. For Indian investors, this is a
+        reminder that waiting endlessly for &ldquo;old low levels&rdquo; may not be a reliable strategy in a
+        structurally re-rated market.
+      </p>
+
+      <h2>US Rate Expectations, Real Yields, and Gold</h2>
+      <p>
+        Gold has a strong relationship with real yields and rate expectations, but the relationship
+        is not linear day-to-day. In simple terms, when investors expect easier policy and lower
+        real returns from cash and bonds, gold often benefits. However, when inflation surprises or
+        growth concerns shift quickly, markets can reprice rates in both directions. That is why
+        you may see gold rally strongly for weeks and then pause abruptly after one data-heavy week.
+      </p>
+      <p>
+        Instead of reacting to every policy headline, Indian investors should monitor trend
+        direction across a 4-8 week window: are real-yield expectations broadly falling, stable, or
+        rising? Are central-bank communications increasingly growth-supportive or inflation-focused?
+        This medium-window reading is often more useful than trying to trade one-day comments from
+        policymakers. For most households, allocation discipline beats tactical overtrading.
+      </p>
+
+      <h2>USD-INR Translation: The India-Specific Multiplier</h2>
+      <p>
+        Domestic gold pricing in India is a translation process. Global gold may be quoted in
+        dollars, but your purchase happens in rupees with local cost layering. If global gold rises
+        and the rupee weakens at the same time, Indian prices can climb faster than many buyers
+        expect. Even if global prices pause, rupee depreciation alone can keep domestic prices firm.
+      </p>
+      <p>
+        This translation effect is why Indian buyers should track both global direction and currency
+        behavior. A useful mental model is: global trend sets the base direction, INR trend adjusts
+        domestic amplitude, and local retail practices determine your final invoice quality. Missing
+        any one layer creates blind spots. During volatile periods, these blind spots usually show
+        up as regret after purchase.
+      </p>
+
+      <h2>Geopolitics and Safe-Haven Repricing</h2>
+      <p>
+        Geopolitical stress does not have to become a full-scale crisis to influence gold. Even
+        persistent uncertainty around trade routes, energy markets, sanctions risk, or regional
+        conflicts can increase demand for perceived defensive assets. Gold benefits not only from
+        fear spikes but also from prolonged uncertainty where market participants prefer optionality
+        and liquidity.
+      </p>
+      <p>
+        Importantly, geopolitical support is episodic. It can lift prices rapidly, then fade, then
+        return as headlines evolve. Retail investors should avoid binary decisions based on one
+        event. A better approach is to treat geopolitics as a volatility amplifier and size entries
+        accordingly. If headline risk is high, tranche-based buying usually produces better emotional
+        and financial outcomes than all-at-once buying.
+      </p>
+
+      <h2>ETF Flows, Retail Sentiment, and Momentum Risk</h2>
+      <p>
+        Private investment flows can accelerate trends. When gold momentum strengthens, ETF inflows
+        and retail participation often rise, adding further demand. This reflexive behavior can be
+        helpful for trend followers but dangerous for late entrants who buy without a framework.
+        Momentum markets reward discipline and punish impulse.
+      </p>
+      <p>
+        If you are investing new capital during a strong rally, define your rules before execution:
+        target allocation range, entry schedule, and rebalancing triggers. Without written rules,
+        decisions become headline-driven. In volatile gold markets, headline-driven behavior is one
+        of the fastest paths to buying high and panic-selling on routine pullbacks.
+      </p>
+
+      <h2>What This Rally Means for Jewellery Buyers</h2>
+      <p>
+        Jewellery buyers face a different challenge from investment buyers. High metal rates increase
+        absolute purchase cost, while making charges and wastage can inflate total outflow further.
+        In rising markets, some buyers focus only on whether rates might go even higher and skip
+        invoice optimization. That often leads to preventable overpayment.
+      </p>
+      <p>
+        The practical playbook is simple: compare at least three full invoices on the same day,
+        normalize purity and net weight assumptions, and negotiate non-metal components with written
+        clarity. Even when you cannot control headline gold rates, you can still control invoice
+        efficiency. Over multiple purchases, this discipline can save a meaningful amount.
+      </p>
+
+      <h2>What This Rally Means for Investors and Savers</h2>
+      <p>
+        For portfolio investors, the core question is not whether gold is &ldquo;good&rdquo; or &ldquo;bad&rdquo; in
+        isolation. The question is whether your current portfolio has the right defensive balance for
+        your goals, risk tolerance, and time horizon. Gold can reduce concentration risk, but over-
+        allocation can also create opportunity cost if other assets recover strongly.
+      </p>
+      <p>
+        A practical allocation band approach helps: define a range (for example, a moderate band
+        suited to your profile), accumulate gradually if below band, and rebalance if above band.
+        This turns market volatility into a process advantage. The key is consistency. Allocation
+        rules work only when followed during both excitement and fear.
+      </p>
+
+      <h2>Scenario Planning for the Next 6-12 Months</h2>
+      <h3>Scenario 1: Continued Structural Support</h3>
+      <p>
+        If central-bank buying stays strong and policy uncertainty persists, gold may remain broadly
+        supported even with periodic pullbacks. In this case, disciplined SIP-style accumulation or
+        tranche-based entry can be more practical than waiting for deep corrections that do not
+        arrive.
+      </p>
+      <h3>Scenario 2: Sideways Consolidation</h3>
+      <p>
+        After a strong rally, markets often digest gains through range-bound movement. This can feel
+        frustrating, but it is useful for structured allocation building. Investors can average
+        entries while monitoring whether structural drivers remain intact.
+      </p>
+      <h3>Scenario 3: Deeper Correction</h3>
+      <p>
+        If rate expectations shift abruptly or risk sentiment normalizes quickly, gold can correct
+        more sharply. A pre-defined add-on plan helps avoid emotional errors. Corrections are easier
+        to handle when cash allocation and buy levels are planned in advance.
+      </p>
+
+      <h2>Common Mistakes in a High-Profile Gold Rally</h2>
+      <ul>
+        <li>Confusing global price headlines with final India invoice economics.</li>
+        <li>Buying one large tranche without allocation limits or risk controls.</li>
+        <li>Ignoring currency impact while evaluating domestic entry levels.</li>
+        <li>Comparing only per-gram rate and ignoring making or wastage structure.</li>
+        <li>Using social-media targets as strategy instead of written personal rules.</li>
+        <li>Failing to rebalance after large gains and drifting above comfort allocation.</li>
+      </ul>
+      <p>
+        Most of these mistakes are process failures, not intelligence failures. They happen when
+        buyers skip planning and rely on narrative momentum. A one-page decision checklist can reduce
+        these errors dramatically.
+      </p>
+
+      <h2>Execution Framework for Indian Households</h2>
+      <p>
+        A robust framework has five parts. First, define purpose clearly: jewellery consumption,
+        portfolio diversification, or tactical allocation. Second, decide format mix (physical, SGB,
+        ETF, digital) based on liquidity, tax profile, and holding horizon. Third, implement
+        staggered entry rather than binary entry. Fourth, maintain documentation quality for every
+        purchase. Fifth, review allocation quarterly and rebalance annually.
+      </p>
+      <p>
+        This framework sounds basic, but it works because it converts uncertainty into repeatable
+        behavior. In markets where narratives change weekly, repeatable behavior is a serious
+        advantage. You do not need perfect forecasts to achieve strong long-term outcomes; you need
+        consistent process quality.
+      </p>
+
+      <h2>Signals Worth Tracking Weekly</h2>
+      <ul>
+        <li>Global gold direction over 4-8 week window (not just one-day moves).</li>
+        <li>USD-INR trend and volatility.</li>
+        <li>US real-yield direction and major policy communication tone.</li>
+        <li>Broad risk sentiment and geopolitical escalation/de-escalation signals.</li>
+        <li>Domestic invoice spread across at least two or three trusted sellers.</li>
+      </ul>
+      <p>
+        Tracking these five signals weekly takes less than thirty minutes and significantly improves
+        decision confidence. More data is not always better. Consistent small tracking is often
+        better than occasional deep analysis followed by long gaps.
+      </p>
+      <h2>Format Selection During a Rally</h2>
+      <p>
+        Strong price phases are a good time to revisit format fit. If your goal is long-term
+        portfolio diversification, sovereign and market-linked formats may offer cleaner cost
+        behavior than frequent ad-hoc physical purchases. If your goal is family event planning,
+        physical acquisition remains relevant but should still follow strict invoice discipline.
+      </p>
+      <p>
+        Many households benefit from a mixed approach: one part for investment efficiency and one
+        part for cultural or consumption needs. Mixing is not the problem; unplanned mixing is the
+        problem. Documenting purpose for each purchase prevents later confusion and improves
+        rebalancing decisions.
+      </p>
+
+      <h2>Final Takeaway for 2026</h2>
+      <p>
+        The current gold rally is best understood as a multi-driver environment, not a single-theme
+        spike. Structural reserve demand, policy uncertainty, currency translation effects, and
+        recurring risk episodes are all contributing to price behavior. That does not mean gold can
+        only go up. It means the market deserves a disciplined framework rather than emotional
+        binary calls.
+      </p>
+      <p>
+        For Indian buyers, the winning edge is process: purpose-led allocation, staged execution,
+        invoice transparency, and periodic rebalancing. If you follow these four principles, you can
+        participate in gold with more confidence and less regret - whether the next phase is a
+        breakout, a consolidation, or a correction.
+      </p>
+    </>
+  );
+}
+
+function Budget2026GoldImportDutyImpactIndiaContent() {
+  return (
+    <>
+      <p>
+        Budget announcements often trigger immediate gold-market conversations in India, but the real
+        impact on buyers is usually more nuanced than headlines suggest. In Budget 2026, the
+        government kept gold import duty unchanged. At first glance, that may feel like a non-event.
+        In practice, it has meaningful implications for rate behavior, jeweller pricing strategy,
+        invoice expectations, and planning decisions for households that buy gold regularly.
+      </p>
+      <p>
+        This article breaks down the policy outcome in practical terms. We will cover what
+        &ldquo;unchanged duty&rdquo; actually means in your final bill, why the government may have preferred
+        policy stability, where buyers can still optimize costs, and how to make better decisions in
+        a high-price environment. The objective is not political commentary. The objective is buyer
+        clarity, so your next purchase is based on process rather than confusion.
+      </p>
+
+      <h2>What Budget 2026 Actually Did</h2>
+      <p>
+        The key point is straightforward: no fresh duty hike, no fresh duty cut. For many people,
+        that sounds neutral. But policy neutrality can itself be a deliberate signal. When markets
+        are already digesting global volatility and elevated bullion prices, governments sometimes
+        prefer continuity to avoid creating additional uncertainty in an already sensitive category.
+      </p>
+      <p>
+        For buyers, unchanged duty means your gold pricing mechanics remain familiar. The structure
+        through which international prices convert into domestic rates does not receive a new policy
+        shock from the duty side. That helps with planning because models and expectations remain
+        comparable with recent months.
+      </p>
+
+      <h2>Why Policy Stability Can Be a Strategy</h2>
+      <p>
+        Gold is not just a commodity in India; it is also a savings behavior, cultural asset, and
+        import-sensitive category that affects external balances. Any sudden duty move can influence
+        demand timing, official versus unofficial channels, and trade-flow behavior. In a period
+        where global prices are already volatile, abrupt domestic tax or duty changes can increase
+        noise rather than improve outcomes.
+      </p>
+      <p>
+        By maintaining existing duty levels, policymakers may be choosing predictability over
+        short-term intervention. Predictability has value. It allows jewellers to plan inventory
+        with less policy risk, and it allows households to evaluate purchases with cleaner
+        assumptions. In uncertain markets, stable policy can reduce one layer of decision stress.
+      </p>
+
+      <h2>How Import Duty Travels Into Your Final Invoice</h2>
+      <p>
+        Many buyers think in a single number: the day&apos;s gold rate. But the final jewellery invoice
+        is layered. A simplified sequence is: global benchmark price &rarr; currency conversion &rarr;
+        landed cost adjustments including duty structure &rarr; local wholesale/retail spread &rarr; making,
+        wastage, and tax-related invoice components. Duty is upstream, so it influences base
+        economics before your store-level charges are even added.
+      </p>
+      <p>
+        When duty is unchanged, this upstream layer remains stable in structure, but your final bill
+        can still vary due to currency movement, jeweller margin behavior, making-charge strategy,
+        and demand seasonality. This is why two stores can quote different totals on the same day
+        even though both operate under the same duty regime.
+      </p>
+
+      <h2>What &ldquo;Unchanged Duty&rdquo; Does Not Mean</h2>
+      <p>
+        It does not mean prices will stop moving. Gold prices can still rise or fall because global
+        drivers and USD-INR are dynamic. It also does not mean invoices are automatically fair. A
+        stable duty regime only removes one variable; buyers still need to evaluate making charges,
+        wastage logic, and full-bill transparency.
+      </p>
+      <p>
+        Another common misunderstanding is that unchanged duty should immediately produce identical
+        rates across cities. City-level differences still occur due to logistics, competition
+        intensity, and local demand conditions. Policy stability helps comparability, but it does
+        not remove all retail variation.
+      </p>
+
+      <h2>Who Is Most Affected by This Decision?</h2>
+      <h3>Jewellery Buyers</h3>
+      <p>
+        Jewellery buyers get planning continuity. If you are preparing for weddings or major family
+        purchases, unchanged duty reduces one source of policy-driven timing pressure. You can focus
+        more on invoice optimization, store comparison, and phased buying rather than guessing a new
+        duty shock.
+      </p>
+      <h3>Investment Buyers</h3>
+      <p>
+        Investment buyers usually care more about long-term allocation and macro signals than one
+        budget outcome. For them, unchanged duty means no immediate structural reset in India-side
+        cost assumptions. Strategy can remain focused on allocation bands, format choice, and
+        disciplined entries.
+      </p>
+      <h3>Retail Trade Participants</h3>
+      <p>
+        Jewellers and supply-chain participants benefit from visibility. Policy continuity can reduce
+        abrupt repricing pressure and support cleaner inventory planning. That said, competitive
+        behavior on making and promotional structures still determines who wins buyer trust.
+      </p>
+
+      <h2>A Practical Invoice Lens for 2026 Buyers</h2>
+      <p>
+        In a stable duty regime, your biggest edge comes from invoice discipline. Ask for line-item
+        breakup before payment and compare like-for-like assumptions across stores: purity, net
+        weight basis, making model (fixed or percentage), wastage treatment, and all tax lines.
+        Most overpayment cases happen because buyers compare only rate and discount, not full
+        structure.
+      </p>
+      <p>
+        If two invoices differ materially, do not accept vague explanations. Ask which line item
+        creates the gap and request revised quote. Written clarity is especially important in
+        high-value purchases where small per-gram differences compound into large total amounts.
+      </p>
+
+      <h2>Timing Strategy After Budget 2026</h2>
+      <p>
+        Since duty did not change, timing decisions should rely more on market and family factors
+        than budget speculation. A sensible approach is to track rates over a short window (for
+        example, 10-14 days), then execute in planned tranches instead of one large purchase.
+        Tranches reduce regret risk if volatility increases after your first buy.
+      </p>
+      <p>
+        For event-driven buyers (weddings, festivals), early budgeting is critical. In high-rate
+        environments, delaying all buying to the final week can force poor decisions. Splitting
+        purchases across months and monitoring invoice spreads usually delivers better average
+        outcomes than rushed single-day buying.
+      </p>
+
+      <h2>Budget 2026, Demand Cycles, and Buyer Behavior</h2>
+      <p>
+        Budget outcomes often influence sentiment more than immediate mechanics. If people expected a
+        duty cut and did not get one, some may delay purchases temporarily. Others may accelerate,
+        fearing future uncertainty. This behavioral split can create short-lived demand swings even
+        without any rule change.
+      </p>
+      <p>
+        Smart buyers should avoid copying crowd reaction blindly. Instead, follow a pre-defined
+        purchase plan tied to purpose and budget capacity. Crowd behavior is cyclical; disciplined
+        process is durable. In gold markets, durable process almost always wins over reactive timing.
+      </p>
+
+      <h2>How to Compare Store Offers Correctly in 2026</h2>
+      <ul>
+        <li>Request full draft invoice, not just verbal rate and discount.</li>
+        <li>Normalize purity and weight basis before comparing totals.</li>
+        <li>Separate metal cost from making and wastage in your worksheet.</li>
+        <li>Ask for written policy on exchange and buyback assumptions.</li>
+        <li>Verify hallmark and invoice alignment before any advance payment.</li>
+      </ul>
+      <p>
+        This method is simple but powerful. In most cities, buyers who apply structured comparison
+        can materially reduce hidden costs even when headline rates are similar.
+      </p>
+
+      <h2>Policy Risk Still Exists - Just in a Different Form</h2>
+      <p>
+        Unchanged duty today does not guarantee unchanged policy forever. External balance pressure,
+        global price shocks, currency moves, and domestic demand trends can all influence future
+        policy direction. That is why buyers should avoid planning entirely around one budget event.
+      </p>
+      <p>
+        A better approach is to build policy resilience into your process: stagger purchases,
+        maintain emergency liquidity, avoid over-leverage for discretionary jewellery spending, and
+        preserve documentation quality for every transaction. Resilience reduces the cost of being
+        wrong about future policy timing.
+      </p>
+
+      <h2>Implications for Long-Term Gold Allocation</h2>
+      <p>
+        For long-horizon investors, Budget 2026 reinforces a familiar principle: policy events are
+        important context, but allocation discipline is more important than event prediction. If your
+        target gold allocation is clear, use regular review cycles and rebalance around your band
+        instead of reacting to every headline.
+      </p>
+      <p>
+        Format choice also matters. Physical gold may suit cultural and immediate liquidity needs.
+        Sovereign Gold Bonds may suit long-term tax-aware investors. ETFs may suit flexible
+        portfolio management. A blended format approach can improve both practicality and risk
+        control.
+      </p>
+
+      <h2>Common Buyer Mistakes After a Budget Announcement</h2>
+      <ul>
+        <li>Assuming unchanged duty means unchanged final payable amount.</li>
+        <li>Rushing purchases without multi-store full-invoice comparison.</li>
+        <li>Focusing on discounts while ignoring base assumptions.</li>
+        <li>Treating one policy event as a complete long-term strategy signal.</li>
+        <li>Not documenting quote versions during negotiation.</li>
+        <li>Ignoring buyback and exchange terms at purchase time.</li>
+      </ul>
+      <p>
+        Every mistake above is avoidable with a checklist. Buyer protection in gold is mostly about
+        preparation quality, not luck.
+      </p>
+
+      <h2>2026 Decision Checklist for Indian Households</h2>
+      <p>
+        Before buying, define objective: consumption, gifting, or investment. During quote stage, get
+        at least three comparable invoices with identical assumptions. At purchase, verify hallmark,
+        purity, and documentation consistency. After purchase, store records centrally for resale,
+        exchange, and family tracking. Review total household gold exposure annually so emotional
+        buying does not silently push allocation beyond comfort levels.
+      </p>
+      <p>
+        This checklist is intentionally simple. Complex markets do not always require complex
+        behavior. Repeated simple discipline is often more effective than occasional expert-level
+        analysis followed by inconsistent execution.
+      </p>
+      <h2>What to Watch Before the Next Budget Cycle</h2>
+      <p>
+        Even with current duty stability, forward planning should include an alert list for the next
+        policy cycle: import trends, trade-balance stress, rupee volatility, and domestic demand
+        conditions. These factors often shape policy debate long before formal announcements.
+      </p>
+      <p>
+        Buyers who wait for last-minute budget headlines usually make reactive decisions. Buyers who
+        monitor policy context quarterly can prepare calmly and avoid rushed execution. In practice,
+        preparation is the best hedge against policy surprise.
+      </p>
+      <h2>Documentation Standards That Protect Value</h2>
+      <p>
+        A high-quality gold record should include invoice copy, purity reference, date and place of
+        purchase, and clear breakup of non-metal charges. If a future exchange or resale discussion
+        happens years later, this record quality directly affects your negotiation strength.
+      </p>
+      <p>
+        Families with multiple buyers should keep one shared digital archive rather than scattered
+        paper bills. Centralized records reduce friction and improve continuity when decisions are
+        made by different family members over time.
+      </p>
+      <h2>How to Build a Yearly Buying Plan</h2>
+      <p>
+        Start by dividing your expected yearly requirement into three buckets: essential event
+        purchases, optional discretionary purchases, and long-term investment allocation. Essential
+        buckets can be scheduled earlier, while discretionary buckets can be linked to pre-defined
+        rate windows.
+      </p>
+      <p>
+        For investment-oriented accumulation, monthly or quarterly tranches usually outperform
+        one-time emotional entries. For jewellery goals, pre-committing target quantity and maximum
+        acceptable invoice spread can prevent budget creep.
+      </p>
+      <h2>When to Pause and Re-Evaluate a Purchase</h2>
+      <p>
+        If quote assumptions are unclear, if line-item logic changes between drafts, or if buyback
+        policy remains verbal, pause. A delayed purchase with clarity is usually better than an
+        immediate purchase with unresolved ambiguity.
+      </p>
+      <p>
+        In high-value transactions, one pause can prevent months of regret. Good sellers welcome
+        clarity requests; resistance to clarity is itself useful decision data.
+      </p>
+      <h2>Risk-Control Rules for 2026 Buyers</h2>
+      <ul>
+        <li>Never allocate full intended annual budget in one purchase unless required by necessity.</li>
+        <li>Keep emergency funds separate from discretionary gold spending.</li>
+        <li>Use a written max-allocation band for household gold exposure.</li>
+        <li>Recheck invoice math before payment authorization, not after.</li>
+        <li>Review total family holdings quarterly in the same tracking sheet.</li>
+      </ul>
+      <p>
+        These rules are simple, but they create consistent protection. In policy-stable yet
+        market-volatile periods, consistency is often the highest-value skill a buyer can build.
+      </p>
+
+      <h2>Final Takeaway from Budget 2026</h2>
+      <p>
+        The biggest message from Budget 2026 for gold buyers is continuity, not disruption. Import
+        duty stability removes one variable, but it does not remove market volatility or invoice
+        complexity. That means your advantage still comes from how you buy: structured comparison,
+        phased execution, written clarity, and allocation discipline.
+      </p>
+      <p>
+        If you treat policy news as context and process quality as strategy, you will make better
+        decisions across market cycles. In India&apos;s gold market, this approach consistently produces
+        stronger outcomes than headline-driven buying.
+      </p>
+    </>
+  );
+}
+
 /** Map from article slug → React content component */
 export const ARTICLE_CONTENT_MAP: Record<string, React.ReactNode> = {
   "gold-origins": <GoldOriginsContent />,
@@ -2855,4 +3378,6 @@ export const ARTICLE_CONTENT_MAP: Record<string, React.ReactNode> = {
   "long-term-gold-returns-india": <LongTermGoldReturnsContent />,
   "when-to-sell-gold": <WhenToSellGoldContent />,
   "how-to-build-gold-portfolio": <HowToBuildGoldPortfolioContent />,
+  "gold-rally-2026-key-drivers-india": <GoldRally2026KeyDriversIndiaContent />,
+  "budget-2026-gold-import-duty-impact-india": <Budget2026GoldImportDutyImpactIndiaContent />,
 };

@@ -356,6 +356,28 @@ export const ARTICLES: ArticleMeta[] = [
     category: "investment",
     published: true,
   },
+  {
+    slug: "gold-rally-2026-key-drivers-india",
+    title: "Gold Rally 2026: Key Drivers and What Indian Buyers Should Do",
+    shortTitle: "Gold Rally 2026",
+    date: "Updated Mar 17, 2026",
+    readTime: "13 min read",
+    preview:
+      "Gold has moved through one of its most volatile and closely watched phases in recent memory. Understand the macro drivers behind the 2026 rally and how Indian investors can respond with discipline.",
+    category: "investment",
+    published: true,
+  },
+  {
+    slug: "budget-2026-gold-import-duty-impact-india",
+    title: "Budget 2026 and Gold Import Duty: Practical Impact for Indian Buyers",
+    shortTitle: "Budget 2026 Gold Duty Impact",
+    date: "Updated Mar 17, 2026",
+    readTime: "13 min read",
+    preview:
+      "India kept gold import duty unchanged in Budget 2026. This deep-dive explains what that really means for gold rates, invoices, jewellery buyers, and long-term investors.",
+    category: "buying-tips",
+    published: true,
+  },
 ];
 
 /** Only articles marked published: true — use this for public-facing pages, sitemap, etc. */

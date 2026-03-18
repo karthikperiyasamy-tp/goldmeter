@@ -412,6 +412,8 @@ function getArticleAuthor(slug: string, category: ArticleCategory): AuthorInfo {
     "long-term-gold-returns-india": "rahul",
     "when-to-sell-gold": "arjun",
     "how-to-build-gold-portfolio": "arjun",
+    "gold-rally-2026-key-drivers-india": "arjun",
+    "budget-2026-gold-import-duty-impact-india": "rahul",
   };
 
   const key = slugAuthorMap[slug];

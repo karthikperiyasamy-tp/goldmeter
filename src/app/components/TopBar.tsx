@@ -70,12 +70,12 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   const isGoldRatePage = pathname === "/" || pathname.startsWith("/gold-rate") || cityPages.some(city => pathname === `/${city}`);
   const isSilverRoute = pathname.startsWith("/silver-rate");
   const citySlug = city.toLowerCase();
-  const goldHref = city === "India" ? "/" : `/gold-rate/${citySlug}`;
   const silverHref = city === "India" ? "/silver-rate" : `/silver-rate/${citySlug}`;
   const primaryNavItems = [
     { label: t("portfolio"), href: "/portfolio" },
     { label: t("community"), href: "/community" },
-    { label: t("goldRateToday"), href: goldHref },
+    { label: "Games", href: "/games" },
+    { label: t("goldRateToday"), href: "/gold-rate-today" },
     { label: t("silverRate"), href: silverHref },
     { label: t("calculator"), href: "/calculator" },
     { label: t("articles"), href: "/articles" },

@@ -29,6 +29,36 @@ interface AnalyticsData {
   newUsers: number;
   returningUsers: number;
   realtimeUsers: number;
+  avgSessionDurationSec: number;
+  engagedUsers: number;
+  gamesViews: number;
+  gamesUniqueUsers: number;
+  gamesRealtimeUsers: number;
+  gamesShare: number;
+  geoRedirectFunnel: {
+    homeLandings: number;
+    redirectExpected: number;
+    redirectApplied: number;
+    redirectSkipped: number;
+    finalLandingPageviews: number;
+  };
+  deltas?: {
+    totalViews: number;
+    uniqueUsers: number;
+    bounceRate: number;
+    newUsers: number;
+    returningUsers: number;
+    gamesViews: number;
+    avgSessionDurationSec: number;
+  } | null;
+  sectionDetails?: {
+    section: string;
+    totalViews: number;
+    uniqueUsers: number;
+    topPages: BucketItem[];
+    sources: BucketItem[];
+    topCities: BucketItem[];
+  } | null;
   communityStats: CommunityStats;
 }
 
@@ -69,6 +99,7 @@ const BROWSER_COLORS: Record<string, string> = {
 const SECTION_CFG: Record<string, { emoji: string; color: string }> = {
   "Gold Rate": { emoji: "🥇", color: "bg-amber-500" },
   "Silver Rate": { emoji: "🥈", color: "bg-slate-400" },
+  Games: { emoji: "🎮", color: "bg-violet-500" },
   Portfolio: { emoji: "💼", color: "bg-purple-500" },
   Articles: { emoji: "📝", color: "bg-blue-500" },
   News: { emoji: "📰", color: "bg-emerald-500" },
@@ -98,7 +129,50 @@ function EmptyRow() {
 }
 
 function formatSlug(path: string) {
-  return path.replace(/^\/(articles|news\/recap)\//, "").replace(/-/g, " ");
+  return path
+    .replace(/^\/(?:hi|ta|te)\//, "/")
+    .replace(/^\/(articles|news\/recap)\//, "")
+    .replace(/-/g, " ");
+}
+
+function formatDuration(seconds: number) {
+  if (!seconds || seconds <= 0) return "0s";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  if (mins === 0) return `${secs}s`;
+  return `${mins}m ${secs}s`;
+}
+
+function DeltaBadge({
+  value,
+  inverse = false,
+  suffix = "%",
+}: {
+  value?: number | null;
+  inverse?: boolean;
+  suffix?: string;
+}) {
+  if (value === null || value === undefined || Number.isNaN(value)) return null;
+  const better = inverse ? value < 0 : value > 0;
+  const neutral = value === 0;
+  const cls = neutral
+    ? "bg-slate-100 text-slate-600"
+    : better
+      ? "bg-emerald-100 text-emerald-700"
+      : "bg-rose-100 text-rose-700";
+  const sign = value > 0 ? "+" : "";
+  return (
+    <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold ${cls}`}>
+      {sign}
+      {value.toFixed(1)}
+      {suffix}
+    </span>
+  );
+}
+
+function SafePct({ num, den }: { num: number; den: number }) {
+  if (!den) return <span>0%</span>;
+  return <span>{((num / den) * 100).toFixed(1)}%</span>;
 }
 
 /* ---------- donut ---------- */
@@ -219,6 +293,8 @@ function SlugTable({ items, label }: { items: BucketItem[]; label: string }) {
 
 export default function AnalyticsPage() {
   const [selectedRange, setSelectedRange] = useState("7d");
+  const [compareMode, setCompareMode] = useState(true);
+  const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -229,7 +305,12 @@ export default function AnalyticsPage() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/analytics/summary?range=${selectedRange}`);
+        const params = new URLSearchParams({
+          range: selectedRange,
+          compare: compareMode ? "1" : "0",
+        });
+        if (selectedSection) params.set("section", selectedSection);
+        const res = await fetch(`/api/analytics/summary?${params.toString()}`);
         if (!res.ok) throw new Error("Failed to fetch");
         const result = await res.json();
         if (!cancelled) setData(result);
@@ -242,7 +323,7 @@ export default function AnalyticsPage() {
     return () => {
       cancelled = true;
     };
-  }, [selectedRange]);
+  }, [selectedRange, compareMode, selectedSection]);
 
   const sectionBreakdown = (data?.sectionBreakdown || []).map((s) => ({
     ...s,
@@ -272,20 +353,40 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Range picker */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          {TIME_RANGES.map((r) => (
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {TIME_RANGES.map((r) => (
+              <button
+                key={r.value}
+                onClick={() => setSelectedRange(r.value)}
+                className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${
+                  selectedRange === r.value
+                    ? "bg-amber-500 text-white shadow-sm"
+                    : "bg-white text-slate-600 border border-slate-200 hover:border-amber-300"
+                }`}
+              >
+                {r.label}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setCompareMode((prev) => !prev)}
+            className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors border ${
+              compareMode
+                ? "bg-indigo-600 text-white border-indigo-600"
+                : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300"
+            }`}
+          >
+            {compareMode ? "Compare: ON" : "Compare: OFF"}
+          </button>
+          {selectedSection && (
             <button
-              key={r.value}
-              onClick={() => setSelectedRange(r.value)}
-              className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${
-                selectedRange === r.value
-                  ? "bg-amber-500 text-white shadow-sm"
-                  : "bg-white text-slate-600 border border-slate-200 hover:border-amber-300"
-              }`}
+              onClick={() => setSelectedSection(null)}
+              className="px-3 py-1.5 text-xs rounded-lg font-medium bg-white text-slate-600 border border-slate-200 hover:border-amber-300"
             >
-              {r.label}
+              Clear Section Filter
             </button>
-          ))}
+          )}
         </div>
 
         {/* Loading */}
@@ -301,7 +402,7 @@ export default function AnalyticsPage() {
             <p className="text-red-600 font-medium text-sm mb-1">Failed to load analytics</p>
             <p className="text-xs text-red-400">{error}</p>
             <button
-              onClick={() => setSelectedRange(selectedRange)}
+              onClick={() => window.location.reload()}
               className="mt-3 px-4 py-1.5 bg-red-600 text-white rounded-lg text-xs hover:bg-red-700"
             >
               Retry
@@ -315,11 +416,17 @@ export default function AnalyticsPage() {
             {/* ---- Row 1: KPI cards ---- */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
               <Card>
-                <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-1">Page Views</p>
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <p className="text-[10px] uppercase tracking-wide text-slate-400">Page Views</p>
+                  {compareMode && <DeltaBadge value={data.deltas?.totalViews} />}
+                </div>
                 <p className="text-2xl font-bold text-slate-800">{data.totalViews.toLocaleString()}</p>
               </Card>
               <Card>
-                <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-1">Unique Visitors</p>
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <p className="text-[10px] uppercase tracking-wide text-slate-400">Unique Visitors</p>
+                  {compareMode && <DeltaBadge value={data.deltas?.uniqueUsers} />}
+                </div>
                 <p className="text-2xl font-bold text-slate-800">{data.uniqueUsers.toLocaleString()}</p>
               </Card>
               <Card>
@@ -329,18 +436,147 @@ export default function AnalyticsPage() {
                 </p>
               </Card>
               <Card>
-                <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-1">Bounce Rate</p>
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <p className="text-[10px] uppercase tracking-wide text-slate-400">Bounce Rate</p>
+                  {compareMode && <DeltaBadge value={data.deltas?.bounceRate} inverse />}
+                </div>
                 <p className="text-2xl font-bold text-slate-800">{data.bounceRate}%</p>
               </Card>
               <Card>
-                <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-1">New Visitors</p>
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <p className="text-[10px] uppercase tracking-wide text-slate-400">New Visitors</p>
+                  {compareMode && <DeltaBadge value={data.deltas?.newUsers} />}
+                </div>
                 <p className="text-2xl font-bold text-indigo-600">{data.newUsers.toLocaleString()}</p>
               </Card>
               <Card>
-                <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-1">Returning</p>
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <p className="text-[10px] uppercase tracking-wide text-slate-400">Returning</p>
+                  {compareMode && <DeltaBadge value={data.deltas?.returningUsers} />}
+                </div>
                 <p className="text-2xl font-bold text-amber-600">{data.returningUsers.toLocaleString()}</p>
               </Card>
             </div>
+
+            {/* ---- Row 1B: Engagement + Games ---- */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <Card>
+                <SectionTitle>Engagement Quality</SectionTitle>
+                <div className="grid grid-cols-2 gap-4 text-center">
+                  <div>
+                    <p className="text-2xl font-bold text-emerald-600">
+                      {formatDuration(data.avgSessionDurationSec)}
+                    </p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">
+                      Avg Session (proxy)
+                    </p>
+                    {compareMode && (
+                      <div className="mt-1">
+                        <DeltaBadge value={data.deltas?.avgSessionDurationSec} />
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-indigo-600">
+                      {data.engagedUsers.toLocaleString()}
+                    </p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">
+                      Engaged Users (2+ views)
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card>
+                <SectionTitle>Games Performance</SectionTitle>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                  <div>
+                    <p className="text-xl font-bold text-violet-600">
+                      {data.gamesViews.toLocaleString()}
+                    </p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">Game Views</p>
+                    {compareMode && (
+                      <div className="mt-1">
+                        <DeltaBadge value={data.deltas?.gamesViews} />
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-slate-800">
+                      {data.gamesUniqueUsers.toLocaleString()}
+                    </p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">Unique</p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-emerald-600">
+                      {data.gamesShare.toFixed(1)}%
+                    </p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">Traffic Share</p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-amber-600">
+                      {data.gamesRealtimeUsers}
+                    </p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">Live (5m)</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* ---- Row 1C: Geo Redirect Funnel ---- */}
+            <Card>
+              <SectionTitle>Geo Redirect Funnel</SectionTitle>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
+                <div>
+                  <p className="text-xl font-bold text-slate-800">
+                    {data.geoRedirectFunnel.homeLandings.toLocaleString()}
+                  </p>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-wide">Home Landings</p>
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-amber-600">
+                    {data.geoRedirectFunnel.redirectExpected.toLocaleString()}
+                  </p>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-wide">Redirect Expected</p>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    <SafePct
+                      num={data.geoRedirectFunnel.redirectExpected}
+                      den={data.geoRedirectFunnel.homeLandings}
+                    />
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-emerald-600">
+                    {data.geoRedirectFunnel.redirectApplied.toLocaleString()}
+                  </p>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-wide">Redirect Applied</p>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    <SafePct
+                      num={data.geoRedirectFunnel.redirectApplied}
+                      den={data.geoRedirectFunnel.redirectExpected}
+                    />
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-indigo-600">
+                    {data.geoRedirectFunnel.redirectSkipped.toLocaleString()}
+                  </p>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-wide">Redirect Skipped</p>
+                  <p className="text-[10px] text-slate-400 mt-1">
+                    <SafePct
+                      num={data.geoRedirectFunnel.redirectSkipped}
+                      den={data.geoRedirectFunnel.homeLandings}
+                    />
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-violet-600">
+                    {data.geoRedirectFunnel.finalLandingPageviews.toLocaleString()}
+                  </p>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-wide">Final Landing PV</p>
+                </div>
+              </div>
+            </Card>
 
             {/* ---- Row 2: Section breakdown ---- */}
             {sectionBreakdown.length > 0 && (
@@ -362,8 +598,17 @@ export default function AnalyticsPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-2">
                   {sectionBreakdown.map((sec, i) => {
                     const pct = sectionTotal > 0 ? ((sec.count / sectionTotal) * 100).toFixed(1) : "0";
+                    const selected = selectedSection === sec.label;
                     return (
-                      <div key={i} className="flex items-center gap-2 text-xs">
+                      <button
+                        key={i}
+                        onClick={() => setSelectedSection(sec.label)}
+                        className={`flex w-full items-center gap-2 rounded-lg border px-2 py-1.5 text-xs text-left transition-colors ${
+                          selected
+                            ? "border-amber-300 bg-amber-50"
+                            : "border-transparent hover:border-slate-200 hover:bg-slate-50"
+                        }`}
+                      >
                         <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${sec.color}`} />
                         <span className="text-slate-600">
                           {sec.emoji} {sec.label}
@@ -372,9 +617,35 @@ export default function AnalyticsPage() {
                           {sec.count.toLocaleString()}{" "}
                           <span className="text-slate-400 font-normal">({pct}%)</span>
                         </span>
-                      </div>
+                      </button>
                     );
                   })}
+                </div>
+              </Card>
+            )}
+
+            {selectedSection && data.sectionDetails && (
+              <Card>
+                <div className="flex items-center justify-between mb-3">
+                  <SectionTitle>{data.sectionDetails.section} Drill-down</SectionTitle>
+                  <span className="text-xs text-slate-500">
+                    {data.sectionDetails.totalViews.toLocaleString()} views ·{" "}
+                    {data.sectionDetails.uniqueUsers.toLocaleString()} users
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+                  <div>
+                    <p className="text-xs font-semibold text-slate-600 mb-2">Top Pages</p>
+                    <HBarList items={data.sectionDetails.topPages} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-slate-600 mb-2">Top Sources</p>
+                    <HBarList items={data.sectionDetails.sources} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-slate-600 mb-2">Top Cities</p>
+                    <HBarList items={data.sectionDetails.topCities} />
+                  </div>
                 </div>
               </Card>
             )}
@@ -441,7 +712,11 @@ export default function AnalyticsPage() {
                   <HBarList
                     items={(data.calculatorBreakdown || []).map((c) => ({
                       _id: c._id
-                        .replace(/^\/(calculator|wastage-calculator|purity-converter|investment-calculator|gold-loan-calculator|swp-calculator|sip-calculator).*/, "$1")
+                        .replace(/^\/(?:hi|ta|te)\//, "/")
+                        .replace(
+                          /^\/(calculator|wastage-calculator|purity-converter|investment-calculator|gold-loan-calculator|wedding-gold-planner|sip-calculator|sip-calculator-with-step-up|swp-calculator-with-inflation|hallmark-guide).*/,
+                          "$1"
+                        )
                         .replace(/-/g, " "),
                       count: c.count,
                     }))}

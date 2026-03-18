@@ -166,6 +166,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     alternates: withLocaleAlternates('/swp-calculator-with-inflation'),
   }
 
+  const games = {
+    url: `${baseUrl}/games`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+    alternates: withLocaleAlternates('/games'),
+  }
+
   const portfolio = {
     url: `${baseUrl}/portfolio`,
     lastModified: new Date(),
@@ -294,6 +302,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...localeEntries('/sip-calculator', { lastModified: now, changeFrequency: 'monthly', priority: 0.75 }),
     ...localeEntries('/sip-calculator-with-step-up', { lastModified: now, changeFrequency: 'monthly', priority: 0.75 }),
     ...localeEntries('/swp-calculator-with-inflation', { lastModified: now, changeFrequency: 'monthly', priority: 0.75 }),
+    ...localeEntries('/games', { lastModified: now, changeFrequency: 'weekly', priority: 0.7 }),
     // Content pages
     ...localeEntries('/articles', { lastModified: now, changeFrequency: 'weekly', priority: 0.8 }),
     ...localeEntries('/news', { lastModified: toolDate, changeFrequency: 'daily', priority: 0.75 }),
@@ -324,6 +333,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     sipCalculator,
     sipCalculatorStepUp,
     swpCalculator,
+    games,
     portfolio,
     news,
     recapListing,

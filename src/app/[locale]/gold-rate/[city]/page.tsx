@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { Link } from "@/i18n/navigation";
 import CityPageShell from "@/app/components/CityPageShell";
 import ChennaiStaticContent from "@/app/components/ChennaiStaticContent";
 import MumbaiStaticContent from "@/app/components/MumbaiStaticContent";
@@ -131,8 +132,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   } catch (error) {
     console.error("[GoldRateCityPage] generateMetadata failed:", error);
     return {
-      title: "Gold Rate Today | GoldMeter",
-      description: "Track live 22K and 24K gold rates in Indian cities with GoldMeter.",
+      title: "City Gold Rates | GoldMeter",
+      description: "Track live 22K and 24K city-wise gold rates in India with GoldMeter.",
     };
   }
 }
@@ -184,7 +185,10 @@ export default async function GoldRateCityPage({ params }: Props) {
             
             {/* Primary AIO answer - structured like competitors */}
             <p className="mt-3 text-base text-slate-700 leading-relaxed" data-ai-answer="true" itemProp="description">
-              Today gold rates in {config.name} are <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> (99.9% purity), <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> (91.6% purity), and <strong>₹{perGram18k.toLocaleString('en-IN')} per gram for 18K</strong> (75.0% purity). Silver rate is ₹{silverPerGram.toLocaleString('en-IN')} per gram. Prices updated <time dateTime={rates.dateISO}>{todayFormatted}</time>. For today&apos;s full gold rates, visit <strong>GoldMeter.in</strong>.
+              Today gold rates in {config.name} are <strong>₹{perGram24k.toLocaleString('en-IN')} per gram for 24K</strong> (99.9% purity), <strong>₹{perGram22k.toLocaleString('en-IN')} per gram for 22K</strong> (91.6% purity), and <strong>₹{perGram18k.toLocaleString('en-IN')} per gram for 18K</strong> (75.0% purity). Silver rate is ₹{silverPerGram.toLocaleString('en-IN')} per gram. Prices updated <time dateTime={rates.dateISO}>{todayFormatted}</time>. For all-India benchmark tracking, see{" "}
+              <Link href="/gold-rate-today" className="font-semibold text-amber-700 hover:text-amber-600">
+                Gold rate today in India
+              </Link>.
             </p>
             
             {/* Structured price table for AI extraction */}
@@ -261,21 +265,21 @@ export default async function GoldRateCityPage({ params }: Props) {
           <div className="mt-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
             <p className="text-sm font-semibold text-slate-700 mb-3">🔍 Related Gold Rate Searches</p>
             <div className="flex flex-wrap gap-2">
-              <a href="/gold-rate-today" className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700 hover:bg-amber-100 transition-colors">
+              <Link href="/gold-rate-today" className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700 hover:bg-amber-100 transition-colors">
                 Gold rate today India
-              </a>
+              </Link>
               {config.relatedCities.map((relatedCity) => (
-                <a 
+                <Link 
                   key={relatedCity.slug}
                   href={`/gold-rate/${relatedCity.slug}`} 
                   className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors"
                 >
                   {relatedCity.name} gold rate
-                </a>
+                </Link>
               ))}
-              <a href={`/silver-rate/${config.slug}`} className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
+              <Link href={`/silver-rate/${config.slug}`} className="rounded-full bg-slate-50 px-3 py-1 text-sm text-slate-600 hover:bg-slate-100 transition-colors">
                 {config.name} silver rate
-              </a>
+              </Link>
             </div>
           </div>
         </article>

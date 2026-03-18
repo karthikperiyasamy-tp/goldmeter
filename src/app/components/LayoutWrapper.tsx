@@ -50,7 +50,11 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   // Derive city from URL path
   const getCityFromPath = (path: string): string => {
     // Break path into segments to handle gold-rate, silver-rate, and legacy routes
-    const segments = path.split("/").filter(Boolean);
+    const rawSegments = path.split("/").filter(Boolean);
+    const segments =
+      rawSegments[0] && ["hi", "ta", "te"].includes(rawSegments[0])
+        ? rawSegments.slice(1)
+        : rawSegments;
 
     // Gold rate routes: /gold-rate/{city}
     if (segments[0] === "gold-rate") {

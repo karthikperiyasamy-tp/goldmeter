@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { getGroupedNews } from "@/lib/newsDB";
+import { getGroupedNews, getRecentNews } from "@/lib/newsDB";
 import { getRecentRecaps, formatDateForDisplay } from "@/lib/recapDB";
 import NewsClient from "./NewsClient";
 import InternalLinks from "@/app/components/InternalLinks";
@@ -72,10 +72,12 @@ function RecapCard({ recap }: { recap: DailyRecap }) {
 
 // Server component that fetches initial data
 export default async function NewsPage() {
-  // Fetch news and recaps in parallel for faster page load
-  const [newsResult, recapsResult] = await Promise.allSettled([
+  // Fetch news and recaps in parallel for faster page load.
+  // Also fetch a larger archive list so crawlers can discover older article URLs.
+  const [newsResult, recapsResult, archiveResult] = await Promise.allSettled([
     getGroupedNews(15, 0),
     getRecentRecaps(2), // Show max 2 recaps on news page
+    getRecentNews(200),
   ]);
 
   const initialData = newsResult.status === 'fulfilled' 
@@ -85,12 +87,16 @@ export default async function NewsPage() {
   const recaps = recapsResult.status === 'fulfilled' 
     ? recapsResult.value 
     : [];
+  const archiveArticles = archiveResult.status === "fulfilled" ? archiveResult.value : [];
 
   if (newsResult.status === 'rejected') {
     console.error("Error fetching news:", newsResult.reason);
   }
   if (recapsResult.status === 'rejected') {
     console.error("Error fetching recaps:", recapsResult.reason);
+  }
+  if (archiveResult.status === "rejected") {
+    console.error("Error fetching news archive:", archiveResult.reason);
   }
 
   return (
@@ -173,6 +179,27 @@ export default async function NewsPage() {
             <li><strong>Federal Reserve</strong> - Interest rate decisions impact gold</li>
           </ul>
         </div>
+
+        {archiveArticles.length > 0 && (
+          <section className="mt-8 rounded-2xl border border-slate-100 bg-white p-4">
+            <h2 className="text-base font-semibold text-charcoal">News archive (latest 200)</h2>
+            <p className="mt-1 text-xs text-slate-500">
+              Direct links to recent article pages for easier crawling and discovery.
+            </p>
+            <ul className="mt-3 space-y-2">
+              {archiveArticles.map((article) => (
+                <li key={article._id || article.slug}>
+                  <Link
+                    href={`/news/${article.slug}`}
+                    className="text-sm text-slate-700 hover:text-amber-700 transition-colors"
+                  >
+                    {article.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <InternalLinks currentPath="/news" />
       </section>
