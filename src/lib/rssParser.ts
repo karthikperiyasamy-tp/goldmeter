@@ -128,8 +128,18 @@ async function parseFeed(feed: RSSFeed): Promise<NewsArticle[]> {
         link = $item.find('link').attr('href') || '';
       }
       
-      // Try different tag names for description
-      let description = $item.find('description').first().text().trim();
+      // Description: prefer HTML inner parse (Google News etc. wrap text in tags)
+      const $desc = $item.find('description').first();
+      const descHtml = $desc.html()?.trim() || '';
+      const descPlain = $desc.text().replace(/\s+/g, ' ').trim();
+      let description = descPlain;
+      if (descHtml && descHtml.includes('<')) {
+        const $inner = cheerio.load(descHtml, { xmlMode: false });
+        const fromTags = $inner.text().replace(/\s+/g, ' ').trim();
+        if (fromTags.length > descPlain.length) {
+          description = fromTags;
+        }
+      }
       if (!description) {
         description = $item.find('content').first().text().trim();
         if (!description) {

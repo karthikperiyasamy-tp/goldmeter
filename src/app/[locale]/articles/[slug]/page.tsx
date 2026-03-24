@@ -659,8 +659,8 @@ function buildArticleFaqs(slug: string, shortTitle: string): FaqItem[] {
       { question: `What does ${shortTitle} recommend for buyers?`, answer: "Combine seasonal awareness with systematic buying and live rate tracking for better outcomes." },
     ],
     "gold-price-prediction-2026": [
-      { question: "What do experts predict for gold in 2026?", answer: "Views vary; many expect moderate upside on Fed policy, inflation, and geopolitical uncertainty, but no certainty." },
-      { question: "What are the key drivers for gold in 2026?", answer: "Fed rate path, inflation, rupee movement, central bank buying, and geopolitical events are major factors." },
+      { question: "What do experts predict for gold in 2026?", answer: "Forecasts span a wide band and are revised often. Several institutions have raised year-end 2026 dollar targets as gold outperformed earlier assumptions, but none are guarantees—use them as scenarios." },
+      { question: "What are the key drivers for gold in 2026?", answer: "Fed policy and real yields, the US dollar, central bank buying, ETF and investment flows, geopolitical risk, and—for India—INR/USD and import duty." },
       { question: "How does the Fed impact gold prices?", answer: "Lower rates and dovish policy often support gold; higher rates can pressure it in the short term." },
       { question: "Do geopolitical factors affect gold?", answer: "Yes. Geopolitical stress typically boosts safe-haven demand and can lift gold." },
       { question: "What India-specific factors matter for 2026?", answer: "Import duty, rupee strength, domestic demand, and policy changes can influence local gold rates." },
@@ -1181,6 +1181,8 @@ function buildArticleDeepDive(
       "## Predictions as Scenarios, Not Certainties",
       "No prediction is guaranteed. Treat 2026 forecasts as scenario planning inputs, not investment mandates. Build your strategy around a range of outcomes: bullish, base, and bearish. This reduces overconfidence and regret.",
       "Media headlines often amplify extreme views. Cross-check multiple sources and focus on the consensus range rather than outlier calls.",
+      "## When Banks Revise Targets Higher",
+      "Institutional year-end gold forecasts are not static. When spot prices run ahead of models, analysts reissue higher targets—sometimes by hundreds of dollars per ounce. That is a sign of a strong trend, not proof the new number will be hit. Re-read the assumptions (Fed path, dollar, flows) each time a headline number changes.",
       "## Risk Management Regardless of Prediction",
       "Your allocation and entry strategy should work even if predictions are wrong. Use position sizing, tranche buying, and rebalancing rules that do not depend on any single price target.",
       "Define your maximum acceptable loss and maximum allocation before entering. This discipline protects you when markets move against forecasts.",
@@ -1394,7 +1396,7 @@ function buildArticleConclusion(slug: string, shortTitle: string): string {
     "best-time-of-year-to-buy-gold":
       "Gold prices in India follow seasonal patterns driven by wedding demand, festivals, and global cycles. By tracking multi-month trends and using a staggered buying approach, you can avoid peak-season premiums and improve your average purchase price over time.",
     "gold-price-prediction-2026":
-      "Expert forecasts for gold in 2026 suggest continued strength driven by central bank buying, geopolitical uncertainty, and inflation concerns. However, predictions are scenarios, not certainties. Use them to prepare your portfolio rather than make binary timing bets.",
+      "Gold enters 2026 after a strong cycle: central banks, ETF flows, Fed expectations, and the rupee all matter. Analyst targets have been revised higher in many cases, but they remain conditional scenarios—not reasons to abandon discipline. Build allocation and rebalancing rules that work even if the next headline number changes.",
     "will-gold-reach-2-lakhs":
       "Whether gold reaches ₹2 lakhs depends on global rally conditions, rupee depreciation pace, and sustained demand. Rather than waiting for or fearing milestones, focus on disciplined accumulation at fair prices with proper invoice verification regardless of headline levels.",
     "what-affects-gold-price-india":

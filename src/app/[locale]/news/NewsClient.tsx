@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { GroupedNews, NewsArticle } from "@/lib/newsTypes";
+import { hasMeaningfulSummary } from "@/lib/newsSummary";
 
 type NewsClientProps = {
   initialGroups: GroupedNews[];
@@ -13,6 +14,7 @@ type NewsClientProps = {
 function ArticleCard({ article }: { article: NewsArticle }) {
   const timeAgo = getTimeAgo(new Date(article.publishedAt));
   const articleHref = `/news/${article.slug}`;
+  const hasExcerpt = hasMeaningfulSummary(article.title, article.summary);
 
   return (
     <article className="rounded-2xl border border-slate-100 bg-white p-5 shadow-soft hover:shadow-md transition-shadow">
@@ -26,14 +28,19 @@ function ArticleCard({ article }: { article: NewsArticle }) {
           <p className="text-xs text-slate-500 mt-1">
             {article.sourceName} • {timeAgo}
           </p>
-          <p className="mt-2 text-sm text-slate-600 line-clamp-2">
-            {article.summary}
-          </p>
+          {hasExcerpt ? (
+            <p className="mt-2 text-sm text-slate-600 line-clamp-2">{article.summary}</p>
+          ) : (
+            <p className="mt-2 text-sm text-slate-500">
+              No excerpt in the feed—open this page for context and tools, or read the full story on{" "}
+              {article.sourceName}.
+            </p>
+          )}
           <Link
             href={articleHref}
             className="mt-3 inline-flex text-sm font-semibold text-amber-700 hover:text-amber-800 transition-colors"
           >
-            Read summary on GoldMeter →
+            {hasExcerpt ? "Read summary on GoldMeter →" : "View on GoldMeter →"}
           </Link>
         </div>
         <a

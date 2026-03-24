@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import SilverCityPageShell from "@/app/components/SilverCityPageShell";
 import { fetchCityRates } from "@/lib/fetchCityRates";
@@ -7,6 +8,7 @@ import { getSilverConfig, generateSilverFAQs } from "@/lib/citySilverConfig";
 import { getSilverSections } from "@/lib/citySilverSections";
 import { getSilverExtra } from "@/lib/citySilverExtra";
 import { getSilverTitles } from "@/lib/citySilverTitles";
+import { SILVER_RATE_CITIES } from "@/lib/cities";
 
 type HistoryEntry = {
   date: string;
@@ -26,37 +28,11 @@ function dedupeHistory(history: HistoryEntry[]) {
   return Array.from(byDate.values()).sort((a, b) => a.timestamp - b.timestamp);
 }
 
-// List of supported cities for silver rate pages
-const supportedCities = [
-  "Ahmedabad",
-  "Ayodhya",
-  "Bangalore",
-  "Bhubaneswar",
-  "Chandigarh",
-  "Chennai",
-  "Coimbatore",
-  "Delhi",
-  "Hyderabad",
-  "Jaipur",
-  "Kerala",
-  "Kolkata",
-  "Lucknow",
-  "Madurai",
-  "Mangalore",
-  "Mumbai",
-  "Mysore",
-  "Nagpur",
-  "Nashik",
-  "Patna",
-  "Pune",
-  "Rajkot",
-  "Salem",
-  "Surat",
-  "Trichy",
-  "Vadodara",
-  "Vijayawada",
-  "Visakhapatnam",
-];
+function resolveSilverCity(slug: string): string | null {
+  const lower = slug.toLowerCase();
+  const match = SILVER_RATE_CITIES.find((c) => c.toLowerCase() === lower);
+  return match ?? null;
+}
 
 type Props = {
   params: Promise<{ locale: string; city: string }>;
@@ -64,7 +40,10 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, city } = await params;
-  const cityName = city.charAt(0).toUpperCase() + city.slice(1);
+  const cityName = resolveSilverCity(city);
+  if (!cityName) {
+    return { title: "City Not Found | GoldMeter" };
+  }
   const t = await getTranslations({ locale, namespace: "meta" });
 
   const rates = await fetchCityRates(cityName);
@@ -118,17 +97,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  return supportedCities.map((city) => ({
+  return SILVER_RATE_CITIES.map((city) => ({
     city: city.toLowerCase(),
   }));
 }
 
+/** Only pre-rendered city slugs — unknown paths (e.g. /silver-rate/bilaspur) 404 instead of 500 */
+export const dynamicParams = false;
+
 export default async function SilverCityPage({ params }: Props) {
   const { city } = await params;
-  
-  // Capitalize city name for display/fetching
-  const cityName = city.charAt(0).toUpperCase() + city.slice(1);
-  
+
+  const cityName = resolveSilverCity(city);
+  if (!cityName) {
+    notFound();
+  }
+
   const rates = await fetchCityRates(cityName);
   const history = dedupeHistory(rates.history || []);
 
@@ -210,7 +194,7 @@ export default async function SilverCityPage({ params }: Props) {
             "No, silver prices vary slightly by city due to local taxes and transportation costs.",
         },
       ]}
-      similarCities={supportedCities.filter(c => c !== cityName).slice(0, 5)}
+      similarCities={[...SILVER_RATE_CITIES].filter((c) => c !== cityName).slice(0, 5)}
       silverConfig={silverConfig}
       silverSections={silverSections}
       silverExtra={silverExtra}

@@ -36,6 +36,7 @@ import VijayawadaStaticContent from "@/app/components/VijayawadaStaticContent";
 import VisakhapatnamStaticContent from "@/app/components/VisakhapatnamStaticContent";
 import FreshnessTrustBar from "@/app/components/FreshnessTrustBar";
 import { fetchCityRates } from "@/lib/fetchCityRates";
+import { computeGoldPeriodPercentChanges } from "@/lib/goldRatePeriodChanges";
 import { getCityGoldConfig, getAllCitySlugs, generateFAQs } from "@/lib/cityGoldConfig";
 
 type Props = {
@@ -173,6 +174,14 @@ export default async function GoldRateCityPage({ params }: Props) {
     // Generate FAQs with actual prices
     const faqs = generateFAQs(config, perGram24k, perGram22k);
 
+    const periodPctChanges = computeGoldPeriodPercentChanges({
+      gold22k10g: rates.gold22k,
+      gold24k10g: rates.gold24k,
+      priceChange: rates.priceChange,
+      history: rates.history,
+      dateISO: rates.dateISO,
+    });
+
     return (
       <>
       {/* 🔥 AIO ANSWER BLOCK - Server-rendered plain HTML for AI scrapers */}
@@ -296,6 +305,7 @@ export default async function GoldRateCityPage({ params }: Props) {
         silver1kg={rates.silver1kg}
         priceChange={rates.priceChange}
         history={rates.history}
+        periodPctChanges={periodPctChanges}
         hideAnswerBlock={true}
         localInfo={config.localInfo}
         faqs={faqs}
@@ -346,6 +356,14 @@ export default async function GoldRateCityPage({ params }: Props) {
       Math.round(fallbackRates.gold22k / 10)
     );
 
+    const fallbackPeriodPct = computeGoldPeriodPercentChanges({
+      gold22k10g: fallbackRates.gold22k,
+      gold24k10g: fallbackRates.gold24k,
+      priceChange: fallbackRates.priceChange,
+      history: fallbackRates.history,
+      dateISO: fallbackRates.dateISO,
+    });
+
     return (
       <CityPageShell
         city={config.name}
@@ -357,6 +375,7 @@ export default async function GoldRateCityPage({ params }: Props) {
         silver1kg={fallbackRates.silver1kg}
         priceChange={fallbackRates.priceChange}
         history={fallbackRates.history}
+        periodPctChanges={fallbackPeriodPct}
         localInfo={config.localInfo}
         faqs={fallbackFaqs}
         similarCities={config.similarCities}

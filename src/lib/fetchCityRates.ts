@@ -124,7 +124,7 @@ export async function fetchCityRates(
   // Fetch history and current rates in parallel for better performance
   console.log(`📊 [FetchCityRates] Fetching data for ${cityName}${fallbackCity ? ` (using ${fallbackCity} rates)` : ''}...`);
   const [historyResult, dbDataResult] = await Promise.allSettled([
-    getHistoricalGoldRates(historyCity, 30), // Use fallback city for history if needed
+    getHistoricalGoldRates(historyCity, 40), // 40d so ~30d % chip has a baseline row
     getLatestGoldRates(),
   ]);
 
@@ -216,8 +216,9 @@ export async function fetchCityRates(
   // Fallback to scraping API
   try {
     const protocol = resolvedHost.startsWith('localhost') ? 'http' : 'https';
+    // Use ISR-friendly caching — no-store forces dynamic rendering and breaks static/ISR pages (e.g. silver-rate/[city])
     const response = await fetch(`${protocol}://${resolvedHost}/api/scrape-rates`, {
-      cache: 'no-store',
+      next: { revalidate: 300 },
     });
     
     if (response.ok) {

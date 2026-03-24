@@ -5,6 +5,7 @@ import type { NewsArticle } from "@/lib/newsTypes";
 import type { Metadata } from "next";
 import StructuredData from "@/app/components/StructuredData";
 import ShareButtons from "@/app/components/ShareButtons";
+import { hasMeaningfulSummary } from "@/lib/newsSummary";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -21,12 +22,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  // Ensure description is 110-160 chars - pad short summaries with context
-  let description = article.summary;
+  const meaningful = hasMeaningfulSummary(article.title, article.summary);
+  let description = meaningful
+    ? article.summary
+    : `${article.title} GoldMeter news hub: excerpt not in RSS feed — open ${article.sourceName} for the full story or check live Indian gold rates.`;
   if (description.length < 110) {
-    description = `${article.summary} Read the latest gold market news and price updates on GoldMeter.`;
+    description = `${description} Read gold market updates on GoldMeter.`;
   }
-  // Truncate if too long
   if (description.length > 160) {
     description = description.substring(0, 157) + "...";
   }
@@ -94,6 +96,10 @@ export default async function NewsArticlePage({ params }: Props) {
   const relatedArticles = recentArticles.filter((a) => a.slug !== slug).slice(0, 3);
 
   const articleUrl = `https://goldmeter.in/news/${slug}`;
+  const summaryIsMeaningful = hasMeaningfulSummary(article.title, article.summary);
+  const shareText = summaryIsMeaningful
+    ? article.summary
+    : `${article.title} (via GoldMeter — see publisher link for full article)`;
   const cityLinks = [
     { name: "Chennai", href: "/gold-rate/chennai" },
     { name: "Mumbai", href: "/gold-rate/mumbai" },
@@ -108,7 +114,7 @@ export default async function NewsArticlePage({ params }: Props) {
       <StructuredData
         type="article"
         headline={article.title}
-        description={article.summary}
+        description={summaryIsMeaningful ? article.summary : `${article.title} News on GoldMeter.`}
         url={articleUrl}
         datePublished={article.publishedAt}
         dateModified={article.publishedAt}
@@ -145,7 +151,7 @@ export default async function NewsArticlePage({ params }: Props) {
           <div className="mt-3">
             <ShareButtons
               title={article.title}
-              text={article.summary}
+              text={shareText}
               url={articleUrl}
             />
           </div>
@@ -160,9 +166,51 @@ export default async function NewsArticlePage({ params }: Props) {
             </div>
           )}
 
-          <p className="mt-6 text-lg text-slate-700 leading-relaxed">
-            {article.summary}
-          </p>
+          {summaryIsMeaningful ? (
+            <div className="mt-6">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                Summary
+              </h2>
+              <p className="mt-2 text-lg text-slate-700 leading-relaxed">
+                {article.summary}
+              </p>
+            </div>
+          ) : (
+            <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50/80 p-5">
+              <h2 className="text-base font-semibold text-amber-900">
+                Why you&apos;re not seeing a long summary
+              </h2>
+              <p className="mt-2 text-slate-700 leading-relaxed">
+                GoldMeter pulls headlines from public RSS feeds. Many publishers—especially through
+                Google News—only send the <strong>title</strong> (or a one-line repeat), not a full
+                article excerpt. We still host this page so you can share the story, see the source,
+                and jump to tools like live city rates.
+              </p>
+              <p className="mt-3 text-slate-700 leading-relaxed">
+                <strong>For the actual reporting</strong>, use{" "}
+                <span className="font-medium text-charcoal">Read full article</span> below to open{" "}
+                {article.sourceName} in a new tab.
+              </p>
+              <h3 className="mt-4 text-sm font-semibold text-charcoal">
+                Quick context for gold headlines in India
+              </h3>
+              <ul className="mt-2 list-disc pl-5 text-slate-700 space-y-1.5">
+                <li>
+                  Retail <strong>22K / 24K</strong> prices depend on international benchmark moves,{" "}
+                  <strong>USD/INR</strong>, import duty, and local premiums—not only one futures
+                  print.
+                </li>
+                <li>
+                  Stories about <strong>MCX or &quot;futures&quot;</strong> refer to exchange
+                  contracts; compare with today&apos;s per-gram rates in your city on the{" "}
+                  <Link href="/" className="text-amber-700 font-medium hover:underline">
+                    GoldMeter home page
+                  </Link>
+                  .
+                </li>
+              </ul>
+            </div>
+          )}
 
           {/* Read Full Article Link */}
           <div className="mt-6 p-4 rounded-2xl bg-amber-50 border border-amber-100">

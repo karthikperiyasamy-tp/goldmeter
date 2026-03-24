@@ -227,10 +227,10 @@ export const ARTICLES: ArticleMeta[] = [
     slug: "gold-price-prediction-2026",
     title: "Gold Price Prediction 2026: Expert Forecasts and Key Factors",
     shortTitle: "Gold Price Prediction 2026",
-    date: "Updated Dec 26, 2025",
+    date: "Updated Mar 24, 2026",
     readTime: "12 min read",
     preview:
-      "What do experts predict for gold prices in 2026? We break down the macro factors, geopolitical risks, and demand trends shaping gold's trajectory this year.",
+      "What are analysts saying about gold in 2026 after a strong run? We update the macro picture—Fed policy, central banks, ETFs, and the rupee—and how to use forecasts without betting everything on a single number.",
     category: "investment",
     published: true,
   },

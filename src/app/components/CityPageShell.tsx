@@ -13,6 +13,7 @@ import { GOLD_RATE_CITIES, SILVER_RATE_CITIES } from "@/lib/cities";
 import { getAllJewellers, type JewellerConfig } from "@/lib/jewellerConfig";
 import { getCityMarketData } from "@/lib/cityMarketData";
 import { useTranslations } from "next-intl";
+import type { GoldPeriodPctChanges } from "@/lib/goldRatePeriodChanges";
 
 type LocalInfo = {
   title: string;
@@ -60,6 +61,8 @@ type CityPageShellProps = {
   gold18k?: number | null; // Optional for backward compatibility during migration
   silver1kg?: number | null;
   priceChange?: PriceChange; // Dynamic price change from DB
+  /** % vs yesterday / ~7d / ~30d (24K per 10g chips); computed on server for city gold pages */
+  periodPctChanges: GoldPeriodPctChanges;
   history?: HistoryRateInput[];
   localInfo: LocalInfo[];
   faqs: FAQ[];
@@ -89,6 +92,37 @@ const silverPresets = [
   { label: "1 kg", grams: 1000 },
 ];
 
+function GoldPeriodChip({ label, pct }: { label: string; pct: number | null }) {
+  if (pct === null || !Number.isFinite(pct)) {
+    return (
+      <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-500">
+        <span className="font-medium text-slate-600">{label}</span>
+        <span className="ml-1.5 tabular-nums">—</span>
+      </span>
+    );
+  }
+  const up = pct > 0;
+  const down = pct < 0;
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-semibold tabular-nums ${
+        up
+          ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+          : down
+            ? "border-rose-200 bg-rose-50 text-rose-800"
+            : "border-slate-200 bg-slate-50 text-slate-700"
+      }`}
+      title={`${label}: ${pct >= 0 ? "+" : ""}${pct.toFixed(2)}% (24K / 10g)`}
+    >
+      <span className="font-medium opacity-90">{label}</span>
+      <span className="ml-1.5">
+        {pct > 0 ? "+" : ""}
+        {pct.toFixed(1)}%
+      </span>
+    </span>
+  );
+}
+
 export default function CityPageShell({
   city,
   updated,
@@ -97,6 +131,7 @@ export default function CityPageShell({
   gold18k,
   silver1kg,
   priceChange = { gold22k: 0, gold24k: 0, gold18k: 0, silver1kg: 0 },
+  periodPctChanges,
   history = [],
   localInfo,
   faqs,
@@ -436,6 +471,21 @@ export default function CityPageShell({
                   </div>
                 )}
               </div>
+
+              <div
+                className="mt-5 rounded-2xl border border-amber-100 bg-amber-50/70 px-4 py-3 print:hidden"
+                aria-label={t("periodChangeCaption")}
+              >
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                  {t("periodChangeCaption")}
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <GoldPeriodChip label={t("periodYesterday")} pct={periodPctChanges.yesterday.pct24} />
+                  <GoldPeriodChip label={t("period7Days")} pct={periodPctChanges.week.pct24} />
+                  <GoldPeriodChip label={t("period30Days")} pct={periodPctChanges.month.pct24} />
+                </div>
+              </div>
+
               <div className="mt-6 flex flex-wrap gap-3 text-sm print:hidden">
                 <Link
                   href="#price-chart"
