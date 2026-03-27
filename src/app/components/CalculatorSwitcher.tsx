@@ -27,6 +27,7 @@ const calculatorCategories: CalculatorCategory[] = [
       { nameKey: "purityConverter", href: "/purity-converter", icon: "⚖️", descKey: "convert22k24k" },
       { nameKey: "hallmarkVerifier", href: "/hallmark-guide", icon: "🔍", descKey: "checkGoldPurity" },
       { nameKey: "investmentCalculator", href: "/investment-calculator", icon: "📈", descKey: "goldSIPReturns" },
+      { nameKey: "goldMarketPulse", href: "/gold-market-pulse", icon: "📊", descKey: "technicalIndicators" },
     ],
   },
   {

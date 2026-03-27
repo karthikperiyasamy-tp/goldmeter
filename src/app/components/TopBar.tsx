@@ -72,14 +72,13 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   const citySlug = city.toLowerCase();
   const silverHref = city === "India" ? "/silver-rate" : `/silver-rate/${citySlug}`;
   const primaryNavItems = [
-    { label: t("portfolio"), href: "/portfolio" },
-    { label: t("community"), href: "/community" },
-    { label: "Games", href: "/games" },
     { label: t("goldRateToday"), href: "/gold-rate-today" },
     { label: t("silverRate"), href: silverHref },
     { label: t("calculator"), href: "/calculator" },
+    { label: t("portfolio"), href: "/portfolio" },
     { label: t("articles"), href: "/articles" },
     { label: t("news"), href: "/news" },
+    { label: "Games", href: "/games" },
   ];
 
   // Filter cities based on search query
@@ -111,13 +110,18 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
     setSearchModalOpen(false);
   };
 
+  const moreDropdownItems = [
+    { label: t("jewellersDirectory"), href: "/jewellers", match: () => pathname.startsWith("/jewellers") },
+    { label: t("compareGoldRates"), href: "/gold-comparison", match: () => pathname === "/gold-comparison" },
+    { label: t("community"), href: "/community", match: () => pathname.startsWith("/community") },
+  ];
+
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5">
         <button 
           onClick={() => {
             onCityChange("India");
-            // Navigate to homepage with noredirect param to bypass geo-redirect
             router.push(withLocalePath("/?noredirect=true"));
           }}
           className="flex min-w-0 shrink-0 cursor-pointer items-center gap-2.5 transition-opacity hover:opacity-90 sm:gap-3"
@@ -137,61 +141,32 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
           </div>
         </button>
 
-        <div className="relative hidden flex-1">
-          <div className="flex items-center gap-4 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-600">
-            <span className="text-slate-400">⌕</span>
-            <input
-              className="w-full bg-transparent text-sm text-charcoal outline-none"
-              placeholder={t("searchCityPlaceholder")}
-              aria-label={t("searchCity")}
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setShowSearchResults(e.target.value.length > 0);
-              }}
-              onFocus={() => setShowSearchResults(true)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && filteredCities[0]) {
-                  e.preventDefault();
-                  handleCitySelect(filteredCities[0].slug, filteredCities[0].name);
-                }
-              }}
-            />
-          </div>
+        <nav className="hidden items-center gap-5 text-sm font-medium text-slate-600 lg:flex xl:gap-6">
+          {/* Market Pulse — highlighted pill */}
+          <Link
+            href="/gold-market-pulse"
+            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold transition-colors ${
+              pathname === "/gold-market-pulse"
+                ? "bg-amber-500 text-white shadow-sm"
+                : "bg-amber-50 text-amber-800 ring-1 ring-amber-200 hover:bg-amber-100"
+            }`}
+          >
+            <span className="text-sm leading-none">📊</span>
+            {t("marketPulse")}
+          </Link>
 
-          {/* Search Results Dropdown */}
-          {showSearchResults && (
-            <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-64 overflow-auto rounded-2xl border border-slate-200 bg-white shadow-lg">
-              {filteredCities.length > 0 ? (
-                filteredCities.map((cityOption) => (
-                  <button
-                    key={cityOption.slug}
-                    onClick={() => handleCitySelect(cityOption.slug, cityOption.name)}
-                    className="block w-full px-4 py-3 text-left text-sm text-slate-700 hover:bg-amber-50 hover:text-amber-700 transition-colors"
-                  >
-                    {cityOption.name}
-                  </button>
-                ))
-              ) : (
-                <div className="px-4 py-3 text-sm text-slate-500">No city found</div>
-              )}
-            </div>
-          )}
-        </div>
-
-        <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 xl:gap-8 lg:flex">
           {primaryNavItems.map((item) => {
-            const isActive = item.label === "Gold Rate Today" 
-              ? isGoldRatePage 
-              : item.label === "Silver Rate"
+            const isActive = item.href === "/gold-rate-today"
+              ? isGoldRatePage
+              : item.href === silverHref
                 ? isSilverRoute
                 : pathname === item.href;
-            
+
             return (
               <Link
-                key={item.label}
+                key={item.href}
                 href={item.href}
-                className={`transition-all ${
+                className={`whitespace-nowrap transition-all ${
                   isActive
                     ? "text-amber-600 font-semibold"
                     : "hover:text-amber-600"
@@ -201,14 +176,14 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
               </Link>
             );
           })}
-          
+
           {/* More Menu (3-dot vertical) */}
           <div className="relative">
             <button
               onClick={() => setMoreMenuOpen(!moreMenuOpen)}
               onBlur={() => setTimeout(() => setMoreMenuOpen(false), 150)}
               className={`flex flex-col items-center justify-center gap-[3px] p-2 rounded-lg transition-colors ${
-                moreMenuOpen || pathname.startsWith("/jewellers")
+                moreMenuOpen || moreDropdownItems.some((d) => d.match())
                   ? "text-amber-600"
                   : "text-slate-500 hover:text-amber-600 hover:bg-slate-50"
               }`}
@@ -219,40 +194,29 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
               <span className="w-1 h-1 bg-current rounded-full"></span>
               <span className="w-1 h-1 bg-current rounded-full"></span>
             </button>
-            
-            {/* Dropdown Menu */}
+
             {moreMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 min-w-[180px] rounded-xl border border-slate-200 bg-white shadow-lg z-50 divide-y divide-slate-100">
-                <Link
-                  href="/jewellers"
-                  className={`block px-4 py-3 text-sm font-medium rounded-t-xl transition-colors ${
-                    pathname.startsWith("/jewellers")
-                      ? "text-amber-600 bg-amber-50"
-                      : "text-slate-700 hover:bg-amber-50 hover:text-amber-600"
-                  }`}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    setMoreMenuOpen(false);
-                    router.push(withLocalePath("/jewellers"));
-                  }}
-                >
-                  {t("jewellersDirectory")}
-                </Link>
-                <Link
-                  href="/gold-comparison"
-                  className={`block px-4 py-3 text-sm font-medium rounded-b-xl transition-colors ${
-                    pathname === "/gold-comparison"
-                      ? "text-amber-600 bg-amber-50"
-                      : "text-slate-700 hover:bg-amber-50 hover:text-amber-600"
-                  }`}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    setMoreMenuOpen(false);
-                    router.push(withLocalePath("/gold-comparison"));
-                  }}
-                >
-                  {t("compareGoldRates")}
-                </Link>
+              <div className="absolute right-0 top-full mt-2 min-w-[200px] rounded-xl border border-slate-200 bg-white shadow-lg z-50 divide-y divide-slate-100">
+                {moreDropdownItems.map((item, i) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`block px-4 py-3 text-sm font-medium transition-colors ${
+                      i === 0 ? "rounded-t-xl" : ""
+                    } ${i === moreDropdownItems.length - 1 ? "rounded-b-xl" : ""} ${
+                      item.match()
+                        ? "text-amber-600 bg-amber-50"
+                        : "text-slate-700 hover:bg-amber-50 hover:text-amber-600"
+                    }`}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      setMoreMenuOpen(false);
+                      router.push(withLocalePath(item.href));
+                    }}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
               </div>
             )}
           </div>
@@ -363,24 +327,34 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
         <div className="absolute left-0 right-0 top-full z-50 border-b border-slate-200 bg-white shadow-lg lg:hidden">
           <nav className="mx-auto max-w-6xl px-4 py-4">
             <div className="space-y-1">
+              {/* Market Pulse — highlighted at top */}
+              <Link
+                href="/gold-market-pulse"
+                className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${
+                  pathname === "/gold-market-pulse"
+                    ? "bg-amber-100 text-amber-700"
+                    : "bg-amber-50 text-amber-800 hover:bg-amber-100"
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span>📊</span> {t("marketPulse")}
+              </Link>
+
               {[
                 ...primaryNavItems,
-                { label: t("jewellers"), href: "/jewellers" },
-                { label: t("compareGoldRates"), href: "/gold-comparison" },
+                ...moreDropdownItems.map((d) => ({ label: d.label, href: d.href })),
               ].map((item) => {
-                const isActive = item.label === "Gold Rate Today" 
-                  ? isGoldRatePage 
-                  : item.label === "Silver Rate"
+                const isActive = item.href === "/gold-rate-today"
+                  ? isGoldRatePage
+                  : item.href === silverHref
                     ? isSilverRoute
-                    : item.label === "Jewellers"
+                    : item.href === "/jewellers"
                       ? pathname.startsWith("/jewellers")
-                      : item.label === "Compare Gold Rates"
-                        ? pathname === "/gold-comparison"
-                        : pathname === item.href;
-                
+                      : pathname === item.href;
+
                 return (
                   <Link
-                    key={item.label}
+                    key={item.href}
                     href={item.href}
                     className={`block rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                       isActive
