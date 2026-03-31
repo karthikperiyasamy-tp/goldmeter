@@ -9,6 +9,7 @@ import { getSilverSections } from "@/lib/citySilverSections";
 import { getSilverExtra } from "@/lib/citySilverExtra";
 import { getSilverTitles } from "@/lib/citySilverTitles";
 import { SILVER_RATE_CITIES } from "@/lib/cities";
+import { routing } from "@/i18n/routing";
 
 type HistoryEntry = {
   date: string;
@@ -97,9 +98,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  return SILVER_RATE_CITIES.map((city) => ({
-    city: city.toLowerCase(),
-  }));
+  return routing.locales.flatMap((locale) =>
+    SILVER_RATE_CITIES.map((city) => ({
+      locale,
+      city: city.toLowerCase(),
+    }))
+  );
 }
 
 /** Only pre-rendered city slugs — unknown paths (e.g. /silver-rate/bilaspur) 404 instead of 500 */
