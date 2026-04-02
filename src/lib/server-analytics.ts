@@ -63,6 +63,10 @@ export interface AnalyticsSummary {
   gamesUniqueUsers: number;
   gamesRealtimeUsers: number;
   gamesShare: number;
+  marketPulseViews: number;
+  marketPulseUniqueUsers: number;
+  marketPulseRealtimeUsers: number;
+  marketPulseShare: number;
   geoRedirectFunnel: {
     homeLandings: number;
     redirectExpected: number;
@@ -166,7 +170,7 @@ function getSectionSwitchBranches() {
           {
             $regexMatch: {
               input: "$path",
-              regex: `^/${LOCALE_PREFIX_PATTERN}gold-rate(?:$|/)`,
+              regex: `^/${LOCALE_PREFIX_PATTERN}gold-rate(-today)?(?:$|/)`,
             },
           },
         ],
@@ -181,6 +185,15 @@ function getSectionSwitchBranches() {
         },
       },
       then: "Silver Rate",
+    },
+    {
+      case: {
+        $regexMatch: {
+          input: "$path",
+          regex: `^/${LOCALE_PREFIX_PATTERN}gold-market-pulse(?:$|/)`,
+        },
+      },
+      then: "Market Pulse",
     },
     {
       case: {
@@ -260,9 +273,11 @@ function getSectionSwitchBranches() {
 function getSectionPathRegex(section: string): string | null {
   switch (section) {
     case "Gold Rate":
-      return "^/(?:$|(?:hi|ta|te)/?$|(?:hi/|ta/|te/)?gold-rate(?:$|/))";
+      return "^/(?:$|(?:hi|ta|te)/?$|(?:hi/|ta/|te/)?gold-rate(-today)?(?:$|/))";
     case "Silver Rate":
       return `^/${LOCALE_PREFIX_PATTERN}silver-rate(?:$|/)`;
+    case "Market Pulse":
+      return `^/${LOCALE_PREFIX_PATTERN}gold-market-pulse(?:$|/)`;
     case "Portfolio":
       return `^/${LOCALE_PREFIX_PATTERN}portfolio(?:$|/)`;
     case "Articles":
@@ -464,6 +479,7 @@ export async function getAnalyticsSummary(
     const sourceExpr = getSourceExpr();
     const sectionSwitchBranches = getSectionSwitchBranches();
     const gamesRegex = `^/${LOCALE_PREFIX_PATTERN}games(?:$|/)`;
+    const marketPulseRegex = `^/${LOCALE_PREFIX_PATTERN}gold-market-pulse(?:$|/)`;
 
     const [
       totalViews,
@@ -485,6 +501,9 @@ export async function getAnalyticsSummary(
       gamesUniqueIPs,
       gamesRealtimeIPs,
       geoEvents,
+      marketPulseViews,
+      marketPulseUniqueIPs,
+      marketPulseRealtimeIPs,
     ] = await Promise.all([
       col.countDocuments(match),
       col.distinct("ip", match),
@@ -655,6 +674,12 @@ export async function getAnalyticsSummary(
           { $group: { _id: "$eventName", count: { $sum: 1 } } },
         ])
         .toArray(),
+      col.countDocuments({ ...match, path: { $regex: marketPulseRegex } }),
+      col.distinct("ip", { ...match, path: { $regex: marketPulseRegex } }),
+      col.distinct("ip", {
+        timestamp: { $gte: new Date(Date.now() - 5 * 60_000) },
+        path: { $regex: marketPulseRegex },
+      }),
     ]);
 
     const bounce = (bounceData[0] as { total: number; bounced: number } | undefined) ?? {
@@ -719,6 +744,10 @@ export async function getAnalyticsSummary(
       gamesUniqueUsers: gamesUniqueIPs.length,
       gamesRealtimeUsers: gamesRealtimeIPs.length,
       gamesShare: totalViews > 0 ? Number(((gamesViews / totalViews) * 100).toFixed(1)) : 0,
+      marketPulseViews,
+      marketPulseUniqueUsers: marketPulseUniqueIPs.length,
+      marketPulseRealtimeUsers: marketPulseRealtimeIPs.length,
+      marketPulseShare: totalViews > 0 ? Number(((marketPulseViews / totalViews) * 100).toFixed(1)) : 0,
       geoRedirectFunnel: {
         homeLandings: geoMap.get("home_landing_detected") || 0,
         redirectExpected: geoMap.get("geo_redirect_expected") || 0,

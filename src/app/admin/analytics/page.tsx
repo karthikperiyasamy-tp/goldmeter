@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 
 interface BucketItem {
@@ -35,6 +35,10 @@ interface AnalyticsData {
   gamesUniqueUsers: number;
   gamesRealtimeUsers: number;
   gamesShare: number;
+  marketPulseViews: number;
+  marketPulseUniqueUsers: number;
+  marketPulseRealtimeUsers: number;
+  marketPulseShare: number;
   geoRedirectFunnel: {
     homeLandings: number;
     redirectExpected: number;
@@ -99,6 +103,7 @@ const BROWSER_COLORS: Record<string, string> = {
 const SECTION_CFG: Record<string, { emoji: string; color: string }> = {
   "Gold Rate": { emoji: "🥇", color: "bg-amber-500" },
   "Silver Rate": { emoji: "🥈", color: "bg-slate-400" },
+  "Market Pulse": { emoji: "📈", color: "bg-rose-500" },
   Games: { emoji: "🎮", color: "bg-violet-500" },
   Portfolio: { emoji: "💼", color: "bg-purple-500" },
   Articles: { emoji: "📝", color: "bg-blue-500" },
@@ -298,32 +303,42 @@ export default function AnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const fetchData = useCallback(async (showLoader = true) => {
+    if (showLoader) setLoading(true);
+    setError(null);
+    try {
+      const params = new URLSearchParams({
+        range: selectedRange,
+        compare: compareMode ? "1" : "0",
+      });
+      if (selectedSection) params.set("section", selectedSection);
+      const res = await fetch(`/api/analytics/summary?${params.toString()}`);
+      if (!res.ok) throw new Error("Failed to fetch");
+      const result = await res.json();
+      setData(result);
+      setLastUpdated(new Date());
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to load data");
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedRange, compareMode, selectedSection]);
 
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const params = new URLSearchParams({
-          range: selectedRange,
-          compare: compareMode ? "1" : "0",
-        });
-        if (selectedSection) params.set("section", selectedSection);
-        const res = await fetch(`/api/analytics/summary?${params.toString()}`);
-        if (!res.ok) throw new Error("Failed to fetch");
-        const result = await res.json();
-        if (!cancelled) setData(result);
-      } catch (err: unknown) {
-        if (!cancelled) setError(err instanceof Error ? err.message : "Failed to load data");
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [selectedRange, compareMode, selectedSection]);
+    fetchData();
+  }, [fetchData]);
+
+  useEffect(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    if (autoRefresh) {
+      intervalRef.current = setInterval(() => fetchData(false), 30_000);
+    }
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [autoRefresh, fetchData]);
 
   const sectionBreakdown = (data?.sectionBreakdown || []).map((s) => ({
     ...s,
@@ -347,9 +362,34 @@ export default function AnalyticsPage() {
               </span>
             )}
           </div>
-          <Link href="/" className="text-amber-600 hover:underline text-xs">
-            ← Back to Home
-          </Link>
+          <div className="flex items-center gap-3">
+            {lastUpdated && (
+              <span className="text-[10px] text-slate-400">
+                Updated {lastUpdated.toLocaleTimeString()}
+              </span>
+            )}
+            <button
+              onClick={() => setAutoRefresh((prev) => !prev)}
+              className={`px-2.5 py-1 text-[10px] rounded-lg font-medium transition-colors border ${
+                autoRefresh
+                  ? "bg-emerald-600 text-white border-emerald-600"
+                  : "bg-white text-slate-500 border-slate-200 hover:border-emerald-300"
+              }`}
+              title="Auto-refresh every 30s"
+            >
+              {autoRefresh ? "⟳ Auto" : "⟳ Auto"}
+            </button>
+            <button
+              onClick={() => fetchData()}
+              disabled={loading}
+              className="px-2.5 py-1 text-[10px] rounded-lg font-medium bg-white text-slate-500 border border-slate-200 hover:border-amber-300 disabled:opacity-50"
+            >
+              Refresh
+            </button>
+            <Link href="/" className="text-amber-600 hover:underline text-xs">
+              ← Home
+            </Link>
+          </div>
         </div>
 
         {/* Range picker */}
@@ -458,8 +498,8 @@ export default function AnalyticsPage() {
               </Card>
             </div>
 
-            {/* ---- Row 1B: Engagement + Games ---- */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* ---- Row 1B: Engagement + Games + Market Pulse ---- */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <Card>
                 <SectionTitle>Engagement Quality</SectionTitle>
                 <div className="grid grid-cols-2 gap-4 text-center">
@@ -489,12 +529,12 @@ export default function AnalyticsPage() {
 
               <Card>
                 <SectionTitle>Games Performance</SectionTitle>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                <div className="grid grid-cols-2 gap-3 text-center">
                   <div>
                     <p className="text-xl font-bold text-violet-600">
                       {data.gamesViews.toLocaleString()}
                     </p>
-                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">Game Views</p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">Views</p>
                     {compareMode && (
                       <div className="mt-1">
                         <DeltaBadge value={data.deltas?.gamesViews} />
@@ -511,11 +551,41 @@ export default function AnalyticsPage() {
                     <p className="text-xl font-bold text-emerald-600">
                       {data.gamesShare.toFixed(1)}%
                     </p>
-                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">Traffic Share</p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">Share</p>
                   </div>
                   <div>
                     <p className="text-xl font-bold text-amber-600">
                       {data.gamesRealtimeUsers}
+                    </p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">Live (5m)</p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card>
+                <SectionTitle>Market Pulse Performance</SectionTitle>
+                <div className="grid grid-cols-2 gap-3 text-center">
+                  <div>
+                    <p className="text-xl font-bold text-rose-600">
+                      {(data.marketPulseViews ?? 0).toLocaleString()}
+                    </p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">Views</p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-slate-800">
+                      {(data.marketPulseUniqueUsers ?? 0).toLocaleString()}
+                    </p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">Unique</p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-emerald-600">
+                      {(data.marketPulseShare ?? 0).toFixed(1)}%
+                    </p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wide">Share</p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-amber-600">
+                      {data.marketPulseRealtimeUsers ?? 0}
                     </p>
                     <p className="text-[10px] text-slate-500 uppercase tracking-wide">Live (5m)</p>
                   </div>
@@ -800,13 +870,35 @@ export default function AnalyticsPage() {
               <Card>
                 <SectionTitle>Traffic Over Time</SectionTitle>
                 {data.hourlyTraffic.length > 0 ? (
-                  <div className="space-y-0.5 max-h-64 overflow-y-auto">
-                    {data.hourlyTraffic.map((h, i) => (
-                      <div key={i} className="flex justify-between text-[11px] py-0.5">
-                        <span className="text-slate-500 font-mono">{h._id}</span>
-                        <span className="font-semibold text-slate-800">{h.count}</span>
-                      </div>
-                    ))}
+                  <div className="space-y-0">
+                    <div className="flex items-end gap-px h-40 mb-2">
+                      {(() => {
+                        const maxCount = Math.max(...data.hourlyTraffic.map(h => h.count), 1);
+                        return data.hourlyTraffic.map((h, i) => (
+                          <div
+                            key={i}
+                            className="flex-1 min-w-0 group relative"
+                            title={`${h._id}: ${h.count.toLocaleString()}`}
+                          >
+                            <div
+                              className="w-full bg-amber-400 rounded-t-sm hover:bg-amber-500 transition-colors"
+                              style={{ height: `${Math.max((h.count / maxCount) * 100, 2)}%` }}
+                            />
+                            <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-1 bg-slate-800 text-white text-[9px] px-1.5 py-0.5 rounded whitespace-nowrap z-10">
+                              {h.count.toLocaleString()}
+                            </div>
+                          </div>
+                        ));
+                      })()}
+                    </div>
+                    <div className="flex justify-between text-[9px] text-slate-400 font-mono">
+                      <span>{data.hourlyTraffic[0]?._id?.split(" ").pop()}</span>
+                      <span>{data.hourlyTraffic[data.hourlyTraffic.length - 1]?._id?.split(" ").pop()}</span>
+                    </div>
+                    <p className="text-[10px] text-slate-400 text-right mt-1">
+                      Peak: {Math.max(...data.hourlyTraffic.map(h => h.count)).toLocaleString()} ·
+                      Total: {data.hourlyTraffic.reduce((s, h) => s + h.count, 0).toLocaleString()}
+                    </p>
                   </div>
                 ) : (
                   <EmptyRow />
