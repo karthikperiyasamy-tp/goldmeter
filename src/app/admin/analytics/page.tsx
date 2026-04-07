@@ -63,6 +63,59 @@ interface AnalyticsData {
     sources: BucketItem[];
     topCities: BucketItem[];
   } | null;
+  sectionPerformance: {
+    section: string;
+    totalViews: number;
+    uniqueUsers: number;
+    avgEngagementSec: number;
+    medianEngagementSec: number;
+    bounceRate: number;
+    ctaClicks: number;
+    topPage: string;
+    leastPage: string;
+  }[];
+  calculatorInsights: {
+    calculator: string;
+    views: number;
+    uniqueUsers: number;
+    avgEngagementSec: number;
+    medianEngagementSec: number;
+    interactions: number;
+    completionRate: number;
+  }[];
+  jewellerInsights: {
+    page: string;
+    views: number;
+    uniqueUsers: number;
+    avgEngagementSec: number;
+    ctaClicks: number;
+  }[];
+  goldRateCityInsights: {
+    city: string;
+    views: number;
+    uniqueUsers: number;
+    avgEngagementSec: number;
+    medianEngagementSec: number;
+  }[];
+  goldRateLocaleInsights: {
+    locale: string;
+    views: number;
+    uniqueUsers: number;
+    avgEngagementSec: number;
+  }[];
+  funnels: {
+    calculators: { views: number; interactions: number; cta: number; conversions: number };
+    jewellers: { views: number; interactions: number; cta: number; conversions: number };
+    goldRateCities: { views: number; interactions: number; cta: number; conversions: number };
+  };
+  previous?: AnalyticsData | null;
+  appliedFilters?: {
+    locale?: string;
+    device?: string;
+    source?: string;
+    city?: string;
+    section?: string;
+  };
   communityStats: CommunityStats;
 }
 
@@ -146,6 +199,22 @@ function formatDuration(seconds: number) {
   const secs = Math.floor(seconds % 60);
   if (mins === 0) return `${secs}s`;
   return `${mins}m ${secs}s`;
+}
+
+function formatSlugLabel(value: string) {
+  return value.replace(/^\/(?:hi|ta|te)\//, "/").replace(/^\/+/, "").replace(/-/g, " ");
+}
+
+function pctDelta(curr: number, prev: number) {
+  if (!prev && !curr) return 0;
+  if (!prev && curr > 0) return 100;
+  if (!prev) return 0;
+  return Number((((curr - prev) / prev) * 100).toFixed(1));
+}
+
+function getDropRate(from: number, to: number) {
+  if (!from) return 0;
+  return Number((((from - to) / from) * 100).toFixed(1));
 }
 
 function DeltaBadge({
@@ -297,6 +366,19 @@ function SlugTable({ items, label }: { items: BucketItem[]; label: string }) {
    ================================================================= */
 
 export default function AnalyticsPage() {
+  const [filters, setFilters] = useState<{
+    locale: string;
+    device: string;
+    source: string;
+    city: string;
+    sectionFilter: string;
+  }>({
+    locale: "",
+    device: "",
+    source: "",
+    city: "",
+    sectionFilter: "",
+  });
   const [selectedRange, setSelectedRange] = useState("7d");
   const [compareMode, setCompareMode] = useState(true);
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
@@ -307,6 +389,26 @@ export default function AnalyticsPage() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("analytics_admin_filters_v1");
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as typeof filters;
+      setFilters((prev) => ({ ...prev, ...parsed }));
+    } catch {
+      // Ignore parse errors.
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("analytics_admin_filters_v1", JSON.stringify(filters));
+    } catch {
+      // Ignore storage errors.
+    }
+  }, [filters]);
+
   const fetchData = useCallback(async (showLoader = true) => {
     if (showLoader) setLoading(true);
     setError(null);
@@ -316,6 +418,11 @@ export default function AnalyticsPage() {
         compare: compareMode ? "1" : "0",
       });
       if (selectedSection) params.set("section", selectedSection);
+      if (filters.locale) params.set("locale", filters.locale);
+      if (filters.device) params.set("device", filters.device);
+      if (filters.source) params.set("source", filters.source);
+      if (filters.city) params.set("city", filters.city);
+      if (filters.sectionFilter) params.set("sectionFilter", filters.sectionFilter);
       const res = await fetch(`/api/analytics/summary?${params.toString()}`);
       if (!res.ok) throw new Error("Failed to fetch");
       const result = await res.json();
@@ -326,7 +433,7 @@ export default function AnalyticsPage() {
     } finally {
       setLoading(false);
     }
-  }, [selectedRange, compareMode, selectedSection]);
+  }, [selectedRange, compareMode, selectedSection, filters]);
 
   useEffect(() => {
     fetchData();
@@ -347,6 +454,41 @@ export default function AnalyticsPage() {
     color: SECTION_CFG[s._id]?.color || "bg-gray-400",
   }));
   const sectionTotal = sectionBreakdown.reduce((s, i) => s + i.count, 0);
+  const cityOptions = Array.from(new Set((data?.goldRateCityInsights || []).map((c) => c.city))).sort();
+  const sectionOptions = Array.from(new Set((data?.sectionPerformance || []).map((s) => s.section))).sort();
+  const previousSectionMap = new Map((data?.previous?.sectionPerformance || []).map((s) => [s.section, s]));
+  const previousCalculatorMap = new Map((data?.previous?.calculatorInsights || []).map((c) => [c.calculator, c]));
+  const previousCityMap = new Map((data?.previous?.goldRateCityInsights || []).map((c) => [c.city, c]));
+
+  const actionableInsights = (() => {
+    if (!data) return [] as string[];
+    const lines: string[] = [];
+    const highTrafficLowEng = [...data.sectionPerformance]
+      .filter((s) => s.totalViews > 100 && s.avgEngagementSec < 35)
+      .sort((a, b) => b.totalViews - a.totalViews)[0];
+    if (highTrafficLowEng) {
+      lines.push(`High traffic, low engagement: ${highTrafficLowEng.section} (${highTrafficLowEng.totalViews.toLocaleString()} views, ${formatDuration(highTrafficLowEng.avgEngagementSec)} avg).`);
+    }
+    const highEngLowCta = [...data.sectionPerformance]
+      .filter((s) => s.avgEngagementSec > 60 && s.ctaClicks < Math.max(5, Math.round(s.totalViews * 0.01)))
+      .sort((a, b) => b.avgEngagementSec - a.avgEngagementSec)[0];
+    if (highEngLowCta) {
+      lines.push(`High engagement, low CTA: ${highEngLowCta.section} (${formatDuration(highEngLowCta.avgEngagementSec)} avg, ${highEngLowCta.ctaClicks} CTA clicks).`);
+    }
+    const highestAbandon = [...data.calculatorInsights]
+      .filter((c) => c.interactions >= 10)
+      .sort((a, b) => a.completionRate - b.completionRate)[0];
+    if (highestAbandon) {
+      lines.push(`Calculator with highest abandonment: ${formatSlugLabel(highestAbandon.calculator)} (${highestAbandon.completionRate.toFixed(1)}% completion).`);
+    }
+    const lowGoldCity = [...data.goldRateCityInsights]
+      .filter((c) => c.views > 50 && c.avgEngagementSec < 30)
+      .sort((a, b) => b.views - a.views)[0];
+    if (lowGoldCity) {
+      lines.push(`Gold city page needing content work: ${lowGoldCity.city} (${lowGoldCity.views.toLocaleString()} views, ${formatDuration(lowGoldCity.avgEngagementSec)} avg).`);
+    }
+    return lines;
+  })();
 
   return (
     <div className="min-h-screen bg-slate-50 p-3 md:p-6">
@@ -428,6 +570,78 @@ export default function AnalyticsPage() {
             </button>
           )}
         </div>
+
+        {/* Global sticky filters */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+          <select
+            value={filters.locale}
+            onChange={(e) => setFilters((prev) => ({ ...prev, locale: e.target.value }))}
+            className="rounded-lg border border-slate-200 bg-white px-2 py-2 text-xs text-slate-700"
+          >
+            <option value="">All locales</option>
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="ta">Tamil</option>
+            <option value="te">Telugu</option>
+          </select>
+          <select
+            value={filters.device}
+            onChange={(e) => setFilters((prev) => ({ ...prev, device: e.target.value }))}
+            className="rounded-lg border border-slate-200 bg-white px-2 py-2 text-xs text-slate-700"
+          >
+            <option value="">All devices</option>
+            <option value="desktop">Desktop</option>
+            <option value="mobile">Mobile</option>
+            <option value="tablet">Tablet</option>
+            <option value="bot">Bot</option>
+          </select>
+          <select
+            value={filters.source}
+            onChange={(e) => setFilters((prev) => ({ ...prev, source: e.target.value }))}
+            className="rounded-lg border border-slate-200 bg-white px-2 py-2 text-xs text-slate-700"
+          >
+            <option value="">All sources</option>
+            <option value="direct">Direct</option>
+            <option value="google">Google</option>
+            <option value="search">Search</option>
+            <option value="social">Social</option>
+            <option value="referral">Referral</option>
+          </select>
+          <select
+            value={filters.city}
+            onChange={(e) => setFilters((prev) => ({ ...prev, city: e.target.value }))}
+            className="rounded-lg border border-slate-200 bg-white px-2 py-2 text-xs text-slate-700"
+          >
+            <option value="">All cities</option>
+            {cityOptions.map((city) => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
+          <select
+            value={filters.sectionFilter}
+            onChange={(e) => setFilters((prev) => ({ ...prev, sectionFilter: e.target.value }))}
+            className="rounded-lg border border-slate-200 bg-white px-2 py-2 text-xs text-slate-700"
+          >
+            <option value="">All sections</option>
+            {sectionOptions.map((section) => (
+              <option key={section} value={section}>
+                {section}
+              </option>
+            ))}
+          </select>
+        </div>
+        {(filters.locale || filters.device || filters.source || filters.city || filters.sectionFilter) && (
+          <div className="flex justify-end">
+            <button
+              onClick={() => setFilters({ locale: "", device: "", source: "", city: "", sectionFilter: "" })}
+              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 hover:border-amber-300"
+            >
+              Clear Filters
+            </button>
+          </div>
+        )}
 
         {/* Loading */}
         {loading && (
@@ -649,6 +863,50 @@ export default function AnalyticsPage() {
             </Card>
 
             {/* ---- Row 2: Section breakdown ---- */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              <Card>
+                <SectionTitle>Actionable Insights</SectionTitle>
+                {actionableInsights.length > 0 ? (
+                  <ul className="space-y-2 text-xs text-slate-700">
+                    {actionableInsights.map((insight, idx) => (
+                      <li key={idx} className="rounded-lg border border-amber-100 bg-amber-50 px-3 py-2">
+                        {insight}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <EmptyRow />
+                )}
+              </Card>
+              <Card>
+                <SectionTitle>Section Funnels (View → Interact → CTA → Conversion)</SectionTitle>
+                {data.funnels ? (
+                  <div className="space-y-3 text-xs">
+                    {[
+                      { label: "Calculators", data: data.funnels.calculators },
+                      { label: "Jewellers", data: data.funnels.jewellers },
+                      { label: "Gold Rate Cities", data: data.funnels.goldRateCities },
+                    ].map((f) => (
+                      <div key={f.label} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+                        <p className="mb-2 font-semibold text-slate-700">{f.label}</p>
+                        <div className="grid grid-cols-4 gap-2">
+                          <div><p className="text-slate-400">Views</p><p className="font-semibold text-slate-800">{f.data.views.toLocaleString()}</p></div>
+                          <div><p className="text-slate-400">Interact</p><p className="font-semibold text-slate-800">{f.data.interactions.toLocaleString()}</p></div>
+                          <div><p className="text-slate-400">CTA</p><p className="font-semibold text-slate-800">{f.data.cta.toLocaleString()}</p></div>
+                          <div><p className="text-slate-400">Convert</p><p className="font-semibold text-slate-800">{f.data.conversions.toLocaleString()}</p></div>
+                        </div>
+                        <p className="mt-2 text-[11px] text-slate-500">
+                          Drop: {getDropRate(f.data.views, f.data.interactions).toFixed(1)}% → {getDropRate(f.data.interactions, f.data.cta).toFixed(1)}% → {getDropRate(f.data.cta, f.data.conversions).toFixed(1)}%
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyRow />
+                )}
+              </Card>
+            </div>
+
             {sectionBreakdown.length > 0 && (
               <Card>
                 <SectionTitle>Section Breakdown</SectionTitle>
@@ -899,6 +1157,206 @@ export default function AnalyticsPage() {
                       Peak: {Math.max(...data.hourlyTraffic.map(h => h.count)).toLocaleString()} ·
                       Total: {data.hourlyTraffic.reduce((s, h) => s + h.count, 0).toLocaleString()}
                     </p>
+                  </div>
+                ) : (
+                  <EmptyRow />
+                )}
+              </Card>
+            </div>
+
+            {/* ---- Row 8: Section deep analysis ---- */}
+            <Card>
+              <SectionTitle>Section Engagement Deep Dive</SectionTitle>
+              {(data.sectionPerformance || []).length > 0 ? (
+                <div className="overflow-x-auto -mx-4 md:-mx-5">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-100">
+                        <th className="text-left font-medium text-slate-500 px-4 md:px-5 pb-2">Section</th>
+                        <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Views</th>
+                        <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Users</th>
+                        <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Avg Time (Δ)</th>
+                        <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Median</th>
+                        <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Bounce</th>
+                        <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">CTA</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.sectionPerformance.map((item) => {
+                        const prev = previousSectionMap.get(item.section);
+                        return (
+                        <tr key={item.section} className="border-b border-slate-50 last:border-0">
+                          <td className="px-4 md:px-5 py-2 font-medium text-slate-700">{item.section}</td>
+                          <td className="px-4 md:px-5 py-2 text-right font-semibold text-slate-800">{item.totalViews.toLocaleString()}</td>
+                          <td className="px-4 md:px-5 py-2 text-right text-slate-700">{item.uniqueUsers.toLocaleString()}</td>
+                          <td className="px-4 md:px-5 py-2 text-right text-emerald-700 font-semibold">
+                            {formatDuration(item.avgEngagementSec)}
+                            {prev && (
+                              <span className="ml-1 text-[10px] text-slate-500">
+                                ({pctDelta(item.avgEngagementSec, prev.avgEngagementSec)}%)
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-4 md:px-5 py-2 text-right text-slate-700">{formatDuration(item.medianEngagementSec)}</td>
+                          <td className="px-4 md:px-5 py-2 text-right text-slate-700">{item.bounceRate.toFixed(1)}%</td>
+                          <td className="px-4 md:px-5 py-2 text-right text-amber-700 font-semibold">{item.ctaClicks.toLocaleString()}</td>
+                        </tr>
+                      )})}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <EmptyRow />
+              )}
+            </Card>
+
+            {/* ---- Row 9: Calculator + Jewellers drilldown ---- */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              <Card>
+                <SectionTitle>Calculator Drilldown (Most vs Least)</SectionTitle>
+                {(data.calculatorInsights || []).length > 0 ? (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+                        <p className="text-[10px] uppercase tracking-wide text-emerald-700">Most Used</p>
+                        <p className="text-sm font-semibold text-emerald-900 mt-1">{formatSlugLabel(data.calculatorInsights[0].calculator)}</p>
+                        <p className="text-xs text-emerald-700 mt-1">{data.calculatorInsights[0].views.toLocaleString()} views</p>
+                      </div>
+                      <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+                        <p className="text-[10px] uppercase tracking-wide text-amber-700">Least Used</p>
+                        <p className="text-sm font-semibold text-amber-900 mt-1">
+                          {formatSlugLabel(data.calculatorInsights[data.calculatorInsights.length - 1].calculator)}
+                        </p>
+                        <p className="text-xs text-amber-700 mt-1">
+                          {data.calculatorInsights[data.calculatorInsights.length - 1].views.toLocaleString()} views
+                        </p>
+                      </div>
+                    </div>
+                    <div className="overflow-x-auto -mx-4 md:-mx-5">
+                      <table className="w-full text-xs">
+                        <thead>
+                          <tr className="border-b border-slate-100">
+                            <th className="text-left font-medium text-slate-500 px-4 md:px-5 pb-2">Calculator</th>
+                            <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Avg Time (Δ)</th>
+                            <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Interactions</th>
+                            <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Completion</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data.calculatorInsights.slice(0, 10).map((item) => {
+                            const prev = previousCalculatorMap.get(item.calculator);
+                            return (
+                            <tr key={item.calculator} className="border-b border-slate-50 last:border-0">
+                              <td className="px-4 md:px-5 py-2 text-slate-700">{formatSlugLabel(item.calculator)}</td>
+                              <td className="px-4 md:px-5 py-2 text-right font-semibold text-emerald-700">
+                                {formatDuration(item.avgEngagementSec)}
+                                {prev && (
+                                  <span className="ml-1 text-[10px] text-slate-500">
+                                    ({pctDelta(item.avgEngagementSec, prev.avgEngagementSec)}%)
+                                  </span>
+                                )}
+                              </td>
+                              <td className="px-4 md:px-5 py-2 text-right text-slate-700">{item.interactions.toLocaleString()}</td>
+                              <td className="px-4 md:px-5 py-2 text-right text-amber-700 font-semibold">{item.completionRate.toFixed(1)}%</td>
+                            </tr>
+                          )})}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                ) : (
+                  <EmptyRow />
+                )}
+              </Card>
+
+              <Card>
+                <SectionTitle>Jewellers Drilldown</SectionTitle>
+                {(data.jewellerInsights || []).length > 0 ? (
+                  <div className="overflow-x-auto -mx-4 md:-mx-5">
+                    <table className="w-full text-xs">
+                      <thead>
+                        <tr className="border-b border-slate-100">
+                          <th className="text-left font-medium text-slate-500 px-4 md:px-5 pb-2">Jeweller Page</th>
+                          <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Views</th>
+                          <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Avg Time (Δ)</th>
+                          <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">CTA Clicks</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.jewellerInsights.slice(0, 12).map((item) => (
+                          <tr key={item.page} className="border-b border-slate-50 last:border-0">
+                            <td className="px-4 md:px-5 py-2 text-slate-700">{formatSlugLabel(item.page)}</td>
+                            <td className="px-4 md:px-5 py-2 text-right font-semibold text-slate-800">{item.views.toLocaleString()}</td>
+                            <td className="px-4 md:px-5 py-2 text-right text-emerald-700 font-semibold">{formatDuration(item.avgEngagementSec)}</td>
+                            <td className="px-4 md:px-5 py-2 text-right text-amber-700 font-semibold">{item.ctaClicks.toLocaleString()}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <EmptyRow />
+                )}
+              </Card>
+            </div>
+
+            {/* ---- Row 10: Gold rate city drilldown ---- */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              <Card>
+                <SectionTitle>Gold Rate City Drilldown</SectionTitle>
+                {(data.goldRateCityInsights || []).length > 0 ? (
+                  <div className="overflow-x-auto -mx-4 md:-mx-5">
+                    <table className="w-full text-xs">
+                      <thead>
+                        <tr className="border-b border-slate-100">
+                          <th className="text-left font-medium text-slate-500 px-4 md:px-5 pb-2">City</th>
+                          <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Views</th>
+                          <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Users</th>
+                          <th className="text-right font-medium text-slate-500 px-4 md:px-5 pb-2">Avg Time</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.goldRateCityInsights.slice(0, 15).map((item) => {
+                          const prev = previousCityMap.get(item.city);
+                          return (
+                          <tr key={item.city} className="border-b border-slate-50 last:border-0">
+                            <td className="px-4 md:px-5 py-2 capitalize text-slate-700">{item.city.replace(/-/g, " ")}</td>
+                            <td className="px-4 md:px-5 py-2 text-right font-semibold text-slate-800">{item.views.toLocaleString()}</td>
+                            <td className="px-4 md:px-5 py-2 text-right text-slate-700">{item.uniqueUsers.toLocaleString()}</td>
+                            <td className="px-4 md:px-5 py-2 text-right text-emerald-700 font-semibold">
+                              {formatDuration(item.avgEngagementSec)}
+                              {prev && (
+                                <span className="ml-1 text-[10px] text-slate-500">
+                                  ({pctDelta(item.avgEngagementSec, prev.avgEngagementSec)}%)
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        )})}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <EmptyRow />
+                )}
+              </Card>
+
+              <Card>
+                <SectionTitle>Gold Rate Locale Performance</SectionTitle>
+                {(data.goldRateLocaleInsights || []).length > 0 ? (
+                  <div className="space-y-2">
+                    {data.goldRateLocaleInsights.map((item) => (
+                      <div key={item.locale} className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
+                        <div>
+                          <p className="text-sm font-semibold text-slate-800 uppercase">{item.locale}</p>
+                          <p className="text-[11px] text-slate-500">{item.uniqueUsers.toLocaleString()} users</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-semibold text-slate-800">{item.views.toLocaleString()} views</p>
+                          <p className="text-[11px] font-medium text-emerald-700">{formatDuration(item.avgEngagementSec)} avg</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 ) : (
                   <EmptyRow />

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
+  type AnalyticsFilters,
   getAnalyticsSummary,
   getDaysValueFromRange,
   getSectionDetails,
@@ -16,14 +17,27 @@ export async function GET(request: NextRequest) {
     const range = url.searchParams.get('range') || '7d';
     const compare = url.searchParams.get('compare') === '1';
     const section = url.searchParams.get('section') || '';
+    const locale = (url.searchParams.get('locale') || '').trim();
+    const device = (url.searchParams.get('device') || '').trim();
+    const source = (url.searchParams.get('source') || '').trim();
+    const city = (url.searchParams.get('city') || '').trim().toLowerCase();
+    const sectionFilter = (url.searchParams.get('sectionFilter') || '').trim();
+
+    const filters: AnalyticsFilters = {
+      locale: locale || undefined,
+      device: device || undefined,
+      source: source || undefined,
+      city: city || undefined,
+      section: sectionFilter || undefined,
+    };
     const days = getDaysValueFromRange(range);
     const currentWindow = getWindowForRange(range);
 
     const [current, previous, communityStats, sectionDetails] = await Promise.all([
-      getAnalyticsSummary(days, range, currentWindow),
-      compare ? getAnalyticsSummary(days, range, getPreviousWindow(currentWindow)) : Promise.resolve(null),
+      getAnalyticsSummary(days, range, currentWindow, filters),
+      compare ? getAnalyticsSummary(days, range, getPreviousWindow(currentWindow), filters) : Promise.resolve(null),
       getCommunityStats(),
-      section ? getSectionDetails(days, range, section, currentWindow) : Promise.resolve(null),
+      section ? getSectionDetails(days, range, section, currentWindow, filters) : Promise.resolve(null),
     ]);
 
     if (!current) {
@@ -63,6 +77,7 @@ export async function GET(request: NextRequest) {
       sectionDetails,
       compareEnabled: compare,
       selectedSection: section || null,
+      appliedFilters: filters,
     });
   } catch (error) {
     console.error('[Analytics API] Error:', error);
