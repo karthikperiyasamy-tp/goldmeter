@@ -378,6 +378,50 @@ export const ARTICLES: ArticleMeta[] = [
     category: "buying-tips",
     published: true,
   },
+  {
+    slug: "central-bank-gold-demand-sentiment-2026",
+    title: "Central Bank Gold Demand in 2026: How Official-Sector Sentiment Shapes the Market",
+    shortTitle: "Central Bank Gold Sentiment",
+    date: "Updated Apr 11, 2026",
+    readTime: "18 min read",
+    preview:
+      "Emerging-market reserve managers, diversification narratives, and survey-driven expectations—explained for Indian buyers who want macro context without losing invoice discipline.",
+    category: "investment",
+    published: true,
+  },
+  {
+    slug: "gold-etf-safe-haven-sentiment-2026",
+    title: "Gold ETF Flows and Safe-Haven Sentiment: What Headlines Get Wrong",
+    shortTitle: "Gold ETF Safe-Haven Sentiment",
+    date: "Updated Apr 11, 2026",
+    readTime: "16 min read",
+    preview:
+      "From record inflow headlines to momentum traps—how exchange-traded gold products translate fear into positioning, and how to read flows alongside India’s funds and SGBs.",
+    category: "investment",
+    published: true,
+  },
+  {
+    slug: "gold-usd-real-yields-sentiment",
+    title: "Gold, the US Dollar, and Real Yields: A Sentiment Guide for 2026",
+    shortTitle: "Gold, Dollar & Real Yields",
+    date: "Updated Apr 11, 2026",
+    readTime: "16 min read",
+    preview:
+      "Why gold often tracks real rates and DXY—but sometimes ignores both—and how USD-INR translation should change how Indian households interpret global macro mood.",
+    category: "education",
+    published: true,
+  },
+  {
+    slug: "india-gold-market-sentiment-2026",
+    title: "India Gold Market Sentiment in 2026: Weddings, Policy, and Urban vs Rural Demand",
+    shortTitle: "India Gold Market Sentiment",
+    date: "Updated Apr 11, 2026",
+    readTime: "16 min read",
+    preview:
+      "How cultural demand, import policy, digital gold adoption, and viral price milestones shape mood from showrooms to portfolios—and how to decide calmly when sentiment runs hot.",
+    category: "education",
+    published: true,
+  },
 ];
 
 /** Only articles marked published: true — use this for public-facing pages, sitemap, etc. */

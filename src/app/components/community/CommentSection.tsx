@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   isFirebaseConfigured,
   signInWithGoogle,
@@ -14,6 +14,10 @@ import {
   toggleLike,
   reportComment,
 } from "@/lib/community/comments";
+import {
+  getArticleSeedComments,
+  isSeedComment,
+} from "@/lib/community/articleSeedComments";
 import type { Comment } from "@/types/community";
 import type { User } from "firebase/auth";
 
@@ -49,7 +53,17 @@ interface Props {
   target: string;
 }
 
+function mergeSeedAndRemote(seeds: Comment[], remote: Comment[]): Comment[] {
+  const byId = new Map<string, Comment>();
+  for (const s of seeds) byId.set(s.id, s);
+  for (const r of remote) byId.set(r.id, r);
+  return [...byId.values()].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+}
+
 export default function CommentSection({ target }: Props) {
+  const seedComments = useMemo(() => getArticleSeedComments(target), [target]);
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -63,24 +77,36 @@ export default function CommentSection({ target }: Props) {
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   const fbReady = isFirebaseConfigured();
+  const showSection = fbReady || seedComments.length > 0;
 
   useEffect(() => {
-    if (!fbReady) { setAuthLoading(false); return; }
-    const unsub = onAuthChange((u) => { setUser(u); setAuthLoading(false); });
+    if (!fbReady) {
+      setAuthLoading(false);
+      return;
+    }
+    const unsub = onAuthChange((u) => {
+      setUser(u);
+      setAuthLoading(false);
+    });
     return unsub;
   }, [fbReady]);
 
   const loadComments = useCallback(async () => {
-    if (!fbReady) { setLoading(false); return; }
+    if (!fbReady) {
+      setComments(seedComments);
+      setLoading(false);
+      return;
+    }
     try {
       const data = await getComments(target);
-      setComments(data);
+      setComments(mergeSeedAndRemote(seedComments, data));
     } catch (err) {
       console.error("Failed to load comments:", err);
+      setComments(seedComments);
     } finally {
       setLoading(false);
     }
-  }, [target, fbReady]);
+  }, [target, fbReady, seedComments]);
 
   useEffect(() => { loadComments(); }, [loadComments]);
 
@@ -171,6 +197,7 @@ export default function CommentSection({ target }: Props) {
     user?.uid === c.uid && Date.now() - new Date(c.createdAt).getTime() < 24 * 60 * 60 * 1000;
 
   const renderComment = (c: Comment, isReply = false) => {
+    const seed = isSeedComment(c);
     const isEditing = editingId === c.id;
     const isOwn = user?.uid === c.uid;
     const liked = user ? c.likedBy.includes(user.uid) : false;
@@ -208,27 +235,32 @@ export default function CommentSection({ target }: Props) {
 
             {!isEditing && (
               <div className="flex items-center gap-3 mt-1.5">
-                <button onClick={() => handleLike(c)} disabled={!user}
-                  className={`text-[11px] font-medium transition-colors ${liked ? "text-amber-600" : "text-slate-400 hover:text-amber-600"} disabled:opacity-40`}>
-                  {liked ? "♥" : "♡"} {c.likes > 0 && c.likes}
-                </button>
-                {!isReply && user && (
+                {!seed && (
+                  <button onClick={() => handleLike(c)} disabled={!user}
+                    className={`text-[11px] font-medium transition-colors ${liked ? "text-amber-600" : "text-slate-400 hover:text-amber-600"} disabled:opacity-40`}>
+                    {liked ? "♥" : "♡"} {c.likes > 0 && c.likes}
+                  </button>
+                )}
+                {seed && c.likes > 0 && (
+                  <span className="text-[11px] text-slate-400">♡ {c.likes}</span>
+                )}
+                {!isReply && user && !seed && (
                   <button onClick={() => { setReplyTo(replyTo === c.id ? null : c.id); setReplyText(""); }}
                     className="text-[11px] font-medium text-slate-400 hover:text-amber-600 transition-colors">Reply</button>
                 )}
-                {isOwn && canEdit(c) && (
+                {isOwn && canEdit(c) && !seed && (
                   <button onClick={() => { setEditingId(c.id); setEditText(c.text); }}
                     className="text-[11px] font-medium text-slate-400 hover:text-amber-600 transition-colors">Edit</button>
                 )}
-                {isOwn && (
+                {isOwn && !seed && (
                   <button onClick={() => setDeleteTarget(c.id)}
                     className="text-[11px] font-medium text-slate-400 hover:text-red-500 transition-colors">Delete</button>
                 )}
-                {user && !isOwn && !reported && (
+                {user && !isOwn && !reported && !seed && (
                   <button onClick={() => handleReport(c.id)}
                     className="text-[11px] font-medium text-slate-400 hover:text-red-500 transition-colors">Report</button>
                 )}
-                {reported && (
+                {reported && !seed && (
                   <span className="text-[10px] text-slate-400 italic">Reported</span>
                 )}
               </div>
@@ -263,16 +295,21 @@ export default function CommentSection({ target }: Props) {
     );
   };
 
-  if (!fbReady) return null;
+  if (!showSection) return null;
 
   return (
     <section className="mt-8 print:hidden">
       <h3 className="text-base font-bold text-charcoal mb-4">
         Comments {comments.length > 0 && <span className="text-slate-400 font-normal text-sm">({comments.length})</span>}
       </h3>
+      {!fbReady && seedComments.length > 0 && (
+        <p className="text-xs text-slate-500 mb-3 rounded-lg bg-slate-50 border border-slate-100 px-3 py-2">
+          Sample comments below illustrate how readers discuss this topic. Enable Firebase to post and moderate live comments.
+        </p>
+      )}
 
       {/* Comment form */}
-      {authLoading ? null : user ? (
+      {!fbReady ? null : authLoading ? null : user ? (
         <div className="flex gap-3 mb-4">
           <Avatar name={user.displayName || "U"} photoURL={user.photoURL} size="md" />
           <div className="flex-1">
@@ -291,7 +328,7 @@ export default function CommentSection({ target }: Props) {
             </div>
           </div>
         </div>
-      ) : (
+      ) : fbReady ? (
         <div className="rounded-xl border-2 border-dashed border-amber-200 bg-amber-50/50 p-4 text-center mb-4">
           <p className="text-sm text-slate-600 mb-2">Sign in to join the discussion</p>
           <button onClick={() => signInWithGoogle().catch(console.error)}
@@ -305,7 +342,7 @@ export default function CommentSection({ target }: Props) {
             Sign in with Google
           </button>
         </div>
-      )}
+      ) : null}
 
       {/* Comments list */}
       {loading ? (

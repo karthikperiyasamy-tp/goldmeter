@@ -414,6 +414,10 @@ function getArticleAuthor(slug: string, category: ArticleCategory): AuthorInfo {
     "how-to-build-gold-portfolio": "arjun",
     "gold-rally-2026-key-drivers-india": "arjun",
     "budget-2026-gold-import-duty-impact-india": "rahul",
+    "central-bank-gold-demand-sentiment-2026": "arjun",
+    "gold-etf-safe-haven-sentiment-2026": "arjun",
+    "gold-usd-real-yields-sentiment": "arjun",
+    "india-gold-market-sentiment-2026": "priya",
   };
 
   const key = slugAuthorMap[slug];
@@ -1347,6 +1351,31 @@ function buildArticleDeepDive(
       "Start small and scale with discipline. Add through SIP in gold funds, periodic SGB subscriptions, and planned physical purchases. Avoid lump-sum buying at market peaks.",
       "As portfolio grows, increase review rigor. Larger holdings justify more structured rebalancing and documentation.",
     ],
+    "central-bank-gold-demand-sentiment-2026": [
+      "## From Headlines to Process",
+      "Treat official-sector demand as structural context. Let it inform allocation bands and patience, not same-day urgency at any jeweller quote.",
+      "Cross-check stories with reporting lags and definitions—net vs gross, annual vs quarterly—before updating your plan.",
+      "## India Transmission",
+      "Map global reserve narratives through USD-INR, duty, and local premia. Structural bids abroad do not automatically mean fair invoices locally.",
+    ],
+    "gold-etf-safe-haven-sentiment-2026": [
+      "## Flows Are Positioning, Not Truth",
+      "ETF flows summarise investor mood quickly; they can reverse quickly. Pair flow reads with rates, dollar, and physical market conditions.",
+      "## Domestic Vehicles",
+      "Compare gold funds, international ETFs, and SGBs on tax, tenure, liquidity, and currency—not only past returns during one sentiment regime.",
+    ],
+    "gold-usd-real-yields-sentiment": [
+      "## Multi-Factor Humility",
+      "Real yields and DXY matter, but gold can ignore them briefly when other channels dominate. Avoid single-variable dogma.",
+      "## INR Layer",
+      "Build a simple weekly dashboard: yield trend, dollar index range, INR trend, and your local quote norm. Align horizon to your actual decision frequency.",
+    ],
+    "india-gold-market-sentiment-2026": [
+      "## Culture Plus Arithmetic",
+      "Seasonal demand and social proof are real forces. Counter them with written charge targets, tranche plans, and multi-store quotes.",
+      "## Policy and Media",
+      "Budget and duty headlines need verification against actual quotes. Viral milestones are round numbers, not destiny—keep documentation standards constant.",
+    ],
   };
 
   return deepMap[slug] ?? [
@@ -1419,6 +1448,14 @@ function buildArticleConclusion(slug: string, shortTitle: string): string {
       "Selling gold should be driven by financial goals, portfolio rebalancing needs, or genuine emergencies — not market timing predictions. Understanding tax implications, choosing the right selling channel, and maintaining emotional discipline are the keys to a smart gold exit.",
     "how-to-build-gold-portfolio":
       "A well-built gold portfolio combines physical gold, SGBs, ETFs, and digital gold based on your specific goals and life stage. Start with clear allocation targets, execute through SIPs or planned purchases, and track performance using tools like the GoldMeter portfolio tracker.",
+    "central-bank-gold-demand-sentiment-2026":
+      "Official-sector gold demand is a slow-moving sentiment driver—useful for long-horizon context, not for panic timing. Pair global reserve narratives with rupee translation, allocation bands, and strict invoice discipline so macro literacy improves decisions instead of replacing them.",
+    "gold-etf-safe-haven-sentiment-2026":
+      "ETF flows crystallise fear and relief into measurable positioning: informative, but reversible. Treat safe-haven headlines as one layer among many, size entries with rules, and keep India-specific formats and tax frictions in view when you act.",
+    "gold-usd-real-yields-sentiment":
+      "Real yields and the dollar explain a large slice of institutional gold sentiment, yet markets remain multi-factor. Indian readers should blend global rate and currency context with USD-INR and local quote economics before translating macro mood into purchases.",
+    "india-gold-market-sentiment-2026":
+      "India’s gold sentiment will always mix culture and finance. Respect the emotion, enforce the arithmetic—documentation, charge transparency, tranche execution—and you can participate in tradition without being swept away by viral milestones or showroom urgency.",
   };
 
   return (

@@ -3,6 +3,10 @@
  * Loaded dynamically by /articles/[slug]/page.tsx
  */
 import React from "react";
+import { CentralBankGoldDemandSentiment2026Content } from "./sentimentArticles2026";
+import { GoldEtfSafeHavenSentiment2026Content } from "./sentimentArticleEtfSafeHaven2026";
+import { GoldUsdRealYieldsSentimentContent } from "./sentimentArticleUsdRealYields2026";
+import { IndiaGoldMarketSentiment2026Content } from "./sentimentArticleIndiaGoldMarket2026";
 
 // Re-export content functions that were previously in GoldArticle.tsx
 // Each returns just the body content (no wrapper prose div — the page handles that).
@@ -3398,4 +3402,8 @@ export const ARTICLE_CONTENT_MAP: Record<string, React.ReactNode> = {
   "how-to-build-gold-portfolio": <HowToBuildGoldPortfolioContent />,
   "gold-rally-2026-key-drivers-india": <GoldRally2026KeyDriversIndiaContent />,
   "budget-2026-gold-import-duty-impact-india": <Budget2026GoldImportDutyImpactIndiaContent />,
+  "central-bank-gold-demand-sentiment-2026": <CentralBankGoldDemandSentiment2026Content />,
+  "gold-etf-safe-haven-sentiment-2026": <GoldEtfSafeHavenSentiment2026Content />,
+  "gold-usd-real-yields-sentiment": <GoldUsdRealYieldsSentimentContent />,
+  "india-gold-market-sentiment-2026": <IndiaGoldMarketSentiment2026Content />,
 };
