@@ -69,6 +69,7 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
   const cityPages = ["ahmedabad", "ayodhya", "bangalore", "bhubaneswar", "chandigarh", "chennai", "coimbatore", "delhi", "hyderabad", "jaipur", "kerala", "kolkata", "lucknow", "madurai", "mangalore", "moodbidri", "mumbai", "mysore", "nagpur", "nashik", "patna", "pune", "rajkot", "salem", "surat", "trichy", "vadodara", "vijayawada", "visakhapatnam"];
   const isGoldRatePage = pathname === "/" || pathname.startsWith("/gold-rate") || cityPages.some(city => pathname === `/${city}`);
   const isSilverRoute = pathname.startsWith("/silver-rate");
+  const isWorldGoldPage = pathname === "/world-gold-price";
   const citySlug = city.toLowerCase();
   const silverHref = city === "India" ? "/silver-rate" : `/silver-rate/${citySlug}`;
   const primaryNavItems = [
@@ -153,6 +154,18 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
           >
             <span className="text-sm leading-none">📊</span>
             {t("marketPulse")}
+          </Link>
+
+          <Link
+            href="/world-gold-price"
+            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold transition-colors ${
+              isWorldGoldPage
+                ? "bg-slate-800 text-white shadow-sm"
+                : "bg-slate-100 text-slate-800 ring-1 ring-slate-200 hover:bg-slate-200"
+            }`}
+          >
+            <span className="text-sm leading-none">🌍</span>
+            {t("worldGoldChart")}
           </Link>
 
           {primaryNavItems.map((item) => {
@@ -338,6 +351,18 @@ export default function TopBar({ city, onCityChange }: TopBarProps) {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <span>📊</span> {t("marketPulse")}
+              </Link>
+
+              <Link
+                href="/world-gold-price"
+                className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${
+                  isWorldGoldPage
+                    ? "bg-slate-800 text-white"
+                    : "bg-slate-100 text-slate-800 hover:bg-slate-200"
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span>🌍</span> {t("worldGoldChart")}
               </Link>
 
               {[

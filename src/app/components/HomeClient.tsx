@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import CitySelector from "./CitySelector";
 import PriceHero from "./PriceHero";
 import RateCard from "./RateCard";
@@ -118,6 +119,7 @@ export default function HomeClient({
   recentRecaps = [],
 }: HomeClientProps) {
   const router = useRouter();
+  const tg = useTranslations("goldRate");
 
   // Client-side fallback for city detection (when middleware IP headers are missing)
   useEffect(() => {
@@ -430,6 +432,15 @@ export default function HomeClient({
               International prices are temporarily unavailable. Please check back soon.
             </p>
           )}
+          <p className="mt-4 text-sm text-slate-600">
+            <Link
+              href="/world-gold-price"
+              className="font-semibold text-amber-700 underline decoration-amber-300 underline-offset-2 hover:text-amber-800"
+            >
+              {tg("worldGoldChartSidebar")}
+            </Link>{" "}
+            {tg("worldGoldChartHomeSuffix")}
+          </p>
         </section>
       </main>
 

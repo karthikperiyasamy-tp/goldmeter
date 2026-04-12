@@ -279,6 +279,11 @@ export default function CityPageShell({
               → Gold Hallmarking in India
             </Link>
           </li>
+          <li>
+            <Link href="/world-gold-price" className="block py-1 text-sm text-slate-600 hover:text-emerald-700 transition-colors font-medium">
+              → {t("worldGoldChartSidebar")}
+            </Link>
+          </li>
         </ul>
         <Link
           href="/articles"

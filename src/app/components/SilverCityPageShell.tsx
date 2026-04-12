@@ -146,6 +146,11 @@ export default function SilverCityPageShell({
               → Gold Hallmarking in India
             </Link>
           </li>
+          <li>
+            <Link href="/world-gold-price" className="block py-1 text-sm text-slate-600 hover:text-emerald-700 transition-colors font-medium">
+              → {tg("worldGoldChartSidebar")}
+            </Link>
+          </li>
         </ul>
         <Link
           href="/articles"

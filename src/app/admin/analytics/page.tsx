@@ -157,6 +157,7 @@ const SECTION_CFG: Record<string, { emoji: string; color: string }> = {
   "Gold Rate": { emoji: "🥇", color: "bg-amber-500" },
   "Silver Rate": { emoji: "🥈", color: "bg-slate-400" },
   "Market Pulse": { emoji: "📈", color: "bg-rose-500" },
+  "World Gold": { emoji: "🌍", color: "bg-slate-600" },
   Games: { emoji: "🎮", color: "bg-violet-500" },
   Portfolio: { emoji: "💼", color: "bg-purple-500" },
   Articles: { emoji: "📝", color: "bg-blue-500" },

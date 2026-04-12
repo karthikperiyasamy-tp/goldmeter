@@ -53,6 +53,7 @@ export default function PageViewTracker() {
     if (normalized === "/" || normalized.startsWith("/gold-rate") || normalized.startsWith("/gold-rate-today")) return "Gold Rate";
     if (normalized.startsWith("/silver-rate")) return "Silver Rate";
     if (normalized.startsWith("/gold-market-pulse")) return "Market Pulse";
+    if (normalized.startsWith("/world-gold-price")) return "World Gold";
     if (normalized.startsWith("/portfolio")) return "Portfolio";
     if (normalized.startsWith("/articles")) return "Articles";
     if (normalized.startsWith("/news")) return "News";
@@ -73,6 +74,7 @@ export default function PageViewTracker() {
     if (normalized.startsWith("/news/recap/")) return "recap_detail";
     if (normalized.startsWith("/news/")) return "news_detail";
     if (normalized.startsWith("/articles/")) return "article_detail";
+    if (normalized === "/world-gold-price") return "world_gold_chart";
     return "general";
   };
 

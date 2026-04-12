@@ -679,7 +679,7 @@ export default async function GoldRateTodayPage() {
                 How Gold Rate Is Calculated in India
               </h3>
               <p>
-                The simplified formula is: <em>International gold price (USD/oz) × USD/INR rate ÷ 31.1035 = price per gram in INR</em>. Import duty, GST, and jeweller margins are added on top. This is why the retail gold rate today will always be higher than the raw calculated benchmark. To understand the full breakdown with worked examples, read our detailed guide on <Link href="/articles/how-gold-rate-is-calculated-india" className="text-amber-600 hover:text-amber-700 font-medium">how gold rate is calculated in India</Link>.
+                The simplified formula is: <em>International gold price (USD/oz) × USD/INR rate ÷ 31.1035 = price per gram in INR</em>. Import duty, GST, and jeweller margins are added on top. This is why the retail gold rate today will always be higher than the raw calculated benchmark. To understand the full breakdown with worked examples, read our detailed guide on <Link href="/articles/how-gold-rate-is-calculated-india" className="text-amber-600 hover:text-amber-700 font-medium">how gold rate is calculated in India</Link>. For a live interactive XAU/USD chart and how global spot relates to Indian 22K/24K, see our <Link href="/world-gold-price" className="text-amber-600 hover:text-amber-700 font-medium">world gold price page</Link>.
               </p>
 
               <h3 className="text-lg font-semibold text-charcoal mt-6 mb-2">

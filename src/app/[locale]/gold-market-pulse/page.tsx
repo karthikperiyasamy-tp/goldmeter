@@ -314,6 +314,8 @@ export default async function GoldMarketPulsePage({ params }: PageProps) {
                 <Link href="/purity-converter" className="text-xs text-green-700 hover:underline">{t("purityConverter")}</Link>
                 <span className="text-slate-300">·</span>
                 <Link href="/investment-calculator" className="text-xs text-green-700 hover:underline">{t("investmentCalc")}</Link>
+                <span className="text-slate-300">·</span>
+                <Link href="/world-gold-price" className="text-xs text-green-700 hover:underline">{t("worldGoldChartTool")}</Link>
               </div>
             </div>
 

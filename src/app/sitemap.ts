@@ -126,6 +126,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     alternates: withLocaleAlternates('/articles'),
   }
 
+  const worldGoldPrice = {
+    url: `${baseUrl}/world-gold-price`,
+    lastModified: new Date(),
+    changeFrequency: 'hourly' as const,
+    priority: 0.88,
+    alternates: withLocaleAlternates('/world-gold-price'),
+  }
+
   const articlePages = PUBLISHED_ARTICLES.map((a) => ({
     url: `${baseUrl}/articles/${a.slug}`,
     lastModified: new Date(getArticleDateISO(a)),
@@ -282,6 +290,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // High-priority pages
     ...localeEntries('/', { lastModified: now, changeFrequency: 'hourly', priority: 1 }),
     ...localeEntries('/gold-rate-today', { lastModified: now, changeFrequency: 'hourly', priority: 1 }),
+    ...localeEntries('/world-gold-price', { lastModified: now, changeFrequency: 'hourly', priority: 0.85 }),
     // Gold rate city pages
     ...cities.flatMap((city) =>
       localeEntries(`/gold-rate/${city}`, { lastModified: now, changeFrequency: 'hourly', priority: 0.9 })
@@ -320,6 +329,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // English (default) pages
     homepage,
     goldRateToday,
+    worldGoldPrice,
     ...cityPages,
     calculator,
     wastageCalculator,

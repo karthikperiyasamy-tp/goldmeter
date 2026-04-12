@@ -8,6 +8,7 @@ export default function Footer() {
 
   const mainLinks = [
     { label: t("goldRateToday"), href: "/gold-rate-today" },
+    { label: t("worldGoldChart"), href: "/world-gold-price" },
     { label: t("articlesGuides"), href: "/articles" },
     { label: t("jewellersDirectory"), href: "/jewellers" },
     { label: t("silverRate"), href: "/silver-rate" },

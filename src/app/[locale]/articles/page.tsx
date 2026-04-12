@@ -1,8 +1,11 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { getTranslations } from "next-intl/server";
 import { PUBLISHED_ARTICLES, ARTICLE_CATEGORIES, getArticleDateISO } from "@/lib/articles";
 import ArticlesListClient from "@/app/components/articles/ArticlesListClient";
 
-export default function ArticlesPage() {
+export default async function ArticlesPage() {
+  const tc = await getTranslations("common");
+
   return (
     <div className="min-h-screen bg-[#fffdf7] pb-12">
       <div className="mx-auto max-w-6xl px-4 pt-6">
@@ -28,12 +31,21 @@ export default function ArticlesPage() {
             prices, and everything you need to make smarter gold decisions in
             India.
           </p>
-          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-            Start with the live benchmark:{' '}
-            <Link href="/gold-rate-today" className="font-semibold underline hover:text-amber-700">
-              Gold rate today in India
-            </Link>
-            .
+          <div className="mt-4 space-y-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+            <p>
+              Start with the live benchmark:{' '}
+              <Link href="/gold-rate-today" className="font-semibold underline hover:text-amber-700">
+                Gold rate today in India
+              </Link>
+              .
+            </p>
+            <p>
+              {tc("worldGoldArticlesCalloutBefore")}{' '}
+              <Link href="/world-gold-price" className="font-semibold underline hover:text-amber-700">
+                {tc("worldGoldArticlesCalloutLink")}
+              </Link>{' '}
+              {tc("worldGoldArticlesCalloutAfter")}
+            </p>
           </div>
         </header>
 
