@@ -1,9 +1,10 @@
 import { MongoClient } from 'mongodb';
 import axios from 'axios';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_MODEL = 'gemini-2.5-flash';
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 if (!MONGODB_URI || !GEMINI_API_KEY) {
   console.error('❌ Missing MONGODB_URI or GEMINI_API_KEY');
@@ -109,6 +110,62 @@ async function fetchTwitterTrends(): Promise<string> {
   }
 }
 
+async function fetchWithRetry(prompt: string): Promise<Response> {
+  const maxAttempts = 3;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 4096,
+        },
+      }),
+    });
+
+    if (response.ok) return response;
+
+    if (response.status === 429 && attempt < maxAttempts) {
+      const delay = 500 * attempt;
+      console.warn(`Gemini 429, retrying in ${delay}ms`);
+      await new Promise((res) => setTimeout(res, delay));
+      continue;
+    }
+
+    return response;
+  }
+
+  throw new Error('Gemini API retries exhausted');
+}
+
+async function generateWithGemini(prompt: string): Promise<string> {
+  if (!GEMINI_API_KEY) {
+    throw new Error('GEMINI_API_KEY is not configured');
+  }
+
+  console.log(`🤖 Calling Gemini API (model: ${GEMINI_MODEL})...`);
+
+  const response = await fetchWithRetry(prompt);
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Gemini API error:', errorText);
+    throw new Error(`Gemini API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+  if (!text) {
+    throw new Error('No content generated from Gemini');
+  }
+
+  return text;
+}
+
 async function generateArticleWithGemini(
   goldData: string,
   silverData: string,
@@ -116,9 +173,6 @@ async function generateArticleWithGemini(
   twitterTrends: string,
   economicEvents: string
 ): Promise<GeneratedArticle> {
-  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY!);
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-
   const prompt = `You are a professional financial news writer for Goldmeter.in.
 
 Your task is to create a unique, SEO-optimized article of at least 700 words based on the latest data provided below.
@@ -179,9 +233,7 @@ IMPORTANT: Format your response EXACTLY as follows, with these sections clearly 
 
 Do not include any other text outside these sections.`;
 
-  console.log('🤖 Calling Gemini API...');
-  const result = await model.generateContent(prompt);
-  const text = result.response.text();
+  const text = await generateWithGemini(prompt);
 
   const titleMatch = text.match(/## TITLE\n(.*?)(?=##|$)/s);
   const metaMatch = text.match(/## META_DESCRIPTION\n(.*?)(?=##|$)/s);
