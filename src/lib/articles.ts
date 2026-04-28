@@ -1,15 +1,18 @@
 /** Shared articles metadata — used by /articles page, city sidebar, footer, etc. */
 
+import { getDatabase } from './mongodb';
+
 export interface ArticleMeta {
   slug: string;
   title: string;
-  shortTitle: string;
+  shortTitle?: string;
   date: string;
-  readTime: string;
+  readTime?: string;
   preview: string;
-  category: "education" | "investment" | "buying-tips";
+  category?: "education" | "investment" | "buying-tips" | "trending";
   /** When false, the article is hidden from listings, sitemap, and search engines. */
   published?: boolean;
+  isAiGenerated?: boolean;
 }
 
 export const ARTICLES: ArticleMeta[] = [
@@ -427,6 +430,62 @@ export const ARTICLES: ArticleMeta[] = [
 /** Only articles marked published: true — use this for public-facing pages, sitemap, etc. */
 export const PUBLISHED_ARTICLES = ARTICLES.filter((a) => a.published === true);
 
+/** Fetch trending articles from MongoDB */
+export async function getTrendingArticles(limit: number = 30): Promise<ArticleMeta[]> {
+  try {
+    const db = await getDatabase();
+    const collection = db.collection('trending_articles');
+    
+    const articles = await collection
+      .find({ isPublished: true })
+      .sort({ date: -1 })
+      .limit(limit)
+      .toArray();
+    
+    return articles.map((a: any) => ({
+      slug: a.slug,
+      title: a.title,
+      date: new Date(a.date).toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      }),
+      preview: a.metaDescription,
+      category: 'trending' as const,
+      published: true,
+      isAiGenerated: a.isAiGenerated || false,
+    }));
+  } catch (error) {
+    console.warn('⚠️  Could not fetch trending articles:', error);
+    return [];
+  }
+}
+
+/** Get article content from MongoDB by slug */
+export async function getTrendingArticleBySlug(
+  slug: string
+): Promise<{ content: string; title: string; metaDescription: string; tags: string[] } | null> {
+  try {
+    const db = await getDatabase();
+    const collection = db.collection('trending_articles');
+    
+    const article = await collection.findOne({ slug, isPublished: true });
+    
+    if (article) {
+      return {
+        content: article.content,
+        title: article.title,
+        metaDescription: article.metaDescription,
+        tags: article.tags || [],
+      };
+    }
+    return null;
+  } catch (error) {
+    console.warn(`⚠️  Could not fetch trending article ${slug}:`, error);
+    return null;
+  }
+}
+
 /** Parse "Updated MMM DD, YYYY" → ISO date string (e.g. "2025-12-08") */
 export function getArticleDateISO(article: ArticleMeta): string {
   const match = article.date.match(/Updated\s+(.+)/);
@@ -441,4 +500,5 @@ export const ARTICLE_CATEGORIES: { key: ArticleMeta["category"]; label: string; 
   { key: "education", label: "Gold Education", icon: "📚" },
   { key: "investment", label: "Gold Investment Guides", icon: "📈" },
   { key: "buying-tips", label: "Gold Buying Tips", icon: "💡" },
+  { key: "trending", label: "Trending Topics", icon: "🔥" },
 ];

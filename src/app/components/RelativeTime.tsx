@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 function getRelativeTime(dateISO: string): string {
   const now = Date.now();
-  const then = new Date(dateISO).getTime();
+  const then = new Date(dateISO).getTime(); // Parse ISO string correctly (with or without 'Z')
   const diffMs = now - then;
 
   if (diffMs < 0) return "just now";

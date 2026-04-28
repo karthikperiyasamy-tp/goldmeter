@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { getAllRecaps } from '@/lib/recapDB'
 import { GOLD_RATE_CITIES, SILVER_RATE_CITIES, getCitySlug } from '@/lib/cities'
 import { getAllJewellerSlugs } from '@/lib/jewellerConfig'
-import { PUBLISHED_ARTICLES, getArticleDateISO } from '@/lib/articles'
+import { PUBLISHED_ARTICLES, getArticleDateISO, getTrendingArticles } from '@/lib/articles'
 import { getRecentNews } from '@/lib/newsDB'
 
 export const revalidate = 3600
@@ -36,19 +36,27 @@ function localeEntries(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Fetch recaps and news articles from DB in parallel
+  // Fetch recaps, news articles, and trending articles from DB in parallel
   let recaps: Array<{ slug: string; publishedAt: Date }> = []
   let newsArticles: Array<{ slug: string; publishedAt: Date }> = []
+  let trendingArticles: Array<{ slug: string; date: Date }> = []
   try {
-    const [recapsResult, newsResult] = await Promise.allSettled([
+    const [recapsResult, newsResult, trendingResult] = await Promise.allSettled([
       getAllRecaps(60),
       getRecentNews(100),
+      getTrendingArticles(50),
     ])
     if (recapsResult.status === 'fulfilled') recaps = recapsResult.value
     if (newsResult.status === 'fulfilled') {
       newsArticles = newsResult.value
         .filter((a) => a.slug)
         .map((a) => ({ slug: a.slug, publishedAt: new Date(a.publishedAt) }))
+    }
+    if (trendingResult.status === 'fulfilled') {
+      trendingArticles = trendingResult.value.map((a) => ({
+        slug: a.slug,
+        date: new Date(a.date),
+      }))
     }
   } catch (error) {
     console.error('Error fetching data for sitemap:', error)
@@ -140,6 +148,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: 'monthly' as const,
     priority: 0.8,
     alternates: withLocaleAlternates(`/articles/${a.slug}`),
+  }))
+
+  // Trending articles (AI-generated, from MongoDB)
+  const trendingArticlePages = trendingArticles.map((article) => ({
+    url: `${baseUrl}/articles/${article.slug}`,
+    lastModified: article.date,
+    changeFrequency: 'monthly' as const,
+    priority: 0.75, // Slightly lower than static articles
+    alternates: withLocaleAlternates(`/articles/${article.slug}`),
   }))
 
   const hallmarkGuide = {
@@ -339,6 +356,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     weddingGoldPlanner,
     articlesHub,
     ...articlePages,
+    ...trendingArticlePages,
     hallmarkGuide,
     sipCalculator,
     sipCalculatorStepUp,

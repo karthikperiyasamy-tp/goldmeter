@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ARTICLES, PUBLISHED_ARTICLES, getArticleDateISO } from "@/lib/articles";
+import { ARTICLES, PUBLISHED_ARTICLES, getArticleDateISO, getTrendingArticleBySlug } from "@/lib/articles";
 import { ARTICLE_CONTENT_MAP } from "@/app/components/articles/ArticleContentMap";
 import LiveGoldRateMention from "@/app/components/articles/LiveGoldRateMention";
 import ArticleCityRatesSidebar from "@/app/components/articles/ArticleCityRatesSidebar";
@@ -17,56 +17,114 @@ export function generateStaticParams() {
 /** Per-article SEO metadata */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const article = ARTICLES.find((a) => a.slug === slug);
-  if (!article) return {};
-
-  const isPublished = article.published === true;
-
-  return {
-    title: `${article.title} — GoldMeter`,
-    description: article.preview,
-    alternates: { canonical: `/articles/${slug}` },
-    keywords: [
-      article.shortTitle,
-      "gold",
-      "gold guide",
-      "gold india",
-      article.category,
-    ],
-    openGraph: {
-      title: article.title,
+  
+  // Check static articles first
+  let article = ARTICLES.find((a) => a.slug === slug);
+  if (article) {
+    const isPublished = article.published === true;
+    return {
+      title: `${article.title} — GoldMeter`,
       description: article.preview,
-      url: `https://goldmeter.in/articles/${slug}`,
-      siteName: "GoldMeter",
-      locale: "en_IN",
-      type: "article",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: article.title,
-      description: article.preview,
-    },
-    // Block search engines from indexing unpublished articles
-    ...(isPublished ? {} : { robots: { index: false, follow: false } }),
-  };
+      alternates: { canonical: `/articles/${slug}` },
+      keywords: [
+        article.shortTitle || article.title,
+        "gold",
+        "gold guide",
+        "gold india",
+        article.category || "gold",
+      ],
+      openGraph: {
+        title: article.title,
+        description: article.preview,
+        url: `https://goldmeter.in/articles/${slug}`,
+        siteName: "GoldMeter",
+        locale: "en_IN",
+        type: "article",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: article.title,
+        description: article.preview,
+      },
+      ...(isPublished ? {} : { robots: { index: false, follow: false } }),
+    };
+  }
+
+  // Check trending articles from MongoDB
+  const trendingArticle = await getTrendingArticleBySlug(slug);
+  if (trendingArticle) {
+    return {
+      title: `${trendingArticle.title} — GoldMeter`,
+      description: trendingArticle.metaDescription,
+      alternates: { canonical: `/articles/${slug}` },
+      keywords: trendingArticle.tags,
+      openGraph: {
+        title: trendingArticle.title,
+        description: trendingArticle.metaDescription,
+        url: `https://goldmeter.in/articles/${slug}`,
+        siteName: "GoldMeter",
+        locale: "en_IN",
+        type: "article",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: trendingArticle.title,
+        description: trendingArticle.metaDescription,
+      },
+    };
+  }
+
+  return {};
 }
 
 export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
-  const article = ARTICLES.find((a) => a.slug === slug);
-  const content = ARTICLE_CONTENT_MAP[slug];
+  
+  // Try static articles first
+  let article = ARTICLES.find((a) => a.slug === slug);
+  let content = article ? ARTICLE_CONTENT_MAP[slug] : null;
+  let isTrending = false;
+
+  // If not found, try trending articles from MongoDB
+  if (!article || !content) {
+    const trendingArticle = await getTrendingArticleBySlug(slug);
+    if (trendingArticle) {
+      isTrending = true;
+      const today = new Date();
+      article = {
+        slug,
+        title: trendingArticle.title,
+        date: today.toLocaleDateString('en-IN', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        }),
+        preview: trendingArticle.metaDescription,
+        category: 'trending' as const,
+        published: true,
+        isAiGenerated: true,
+      };
+      // For trending articles, store the raw HTML content for rendering
+      // We'll render it directly in the article body section
+      content = { 
+        children: trendingArticle.content 
+      } as any; // Use any to bypass type checking since trending articles use HTML
+    }
+  }
 
   if (!article || !content) notFound();
 
   // Suggest related articles (same category, exclude current, only published)
-  const related = PUBLISHED_ARTICLES.filter(
-    (a) => a.category === article.category && a.slug !== slug
-  ).slice(0, 3);
-  const faqs = buildArticleFaqs(slug, article.shortTitle);
-  const deepDiveParagraphs = buildArticleDeepDive(slug, article.shortTitle, article.category);
-  const conclusionText = buildArticleConclusion(slug, article.shortTitle);
+  const related = article.category 
+    ? PUBLISHED_ARTICLES.filter(
+      (a) => a.category === article.category && a.slug !== slug
+    ).slice(0, 3)
+    : [];
+  const faqs = buildArticleFaqs(slug, article.shortTitle || article.title);
+  const deepDiveParagraphs = buildArticleDeepDive(slug, article.shortTitle || article.title, article.category || 'education');
+  const conclusionText = buildArticleConclusion(slug, article.shortTitle || article.title);
   const renderExtraConclusion = !INLINE_CONCLUSION_SLUGS.has(slug);
-  const author = getArticleAuthor(slug, article.category);
+  const author = getArticleAuthor(slug, article.category || 'education');
   const tools = [
     { label: "Portfolio Tracker", href: "/portfolio", tone: "emerald" },
     { label: "Gold Price Calculator", href: "/calculator", tone: "amber" },
@@ -147,7 +205,11 @@ export default async function ArticlePage({ params }: Props) {
                 [&_em]:text-slate-800
               "
             >
-              {content}
+              {typeof content === 'string' ? (
+                <div dangerouslySetInnerHTML={{ __html: content }} />
+              ) : (
+                content
+              )}
               {deepDiveParagraphs.map((para, idx) =>
                 para.startsWith("## ") ? (
                   <h2 key={`deep-h-${idx}`}>{para.slice(3)}</h2>
@@ -330,7 +392,7 @@ export default async function ArticlePage({ params }: Props) {
 }
 
 type FaqItem = { question: string; answer: string };
-type ArticleCategory = "education" | "investment" | "buying-tips";
+type ArticleCategory = "education" | "investment" | "buying-tips" | "trending";
 const INLINE_CONCLUSION_SLUGS = new Set<string>([]);
 
 /* ── Author System ─────────────────────────────────────────────── */
@@ -428,6 +490,7 @@ function getArticleAuthor(slug: string, category: ArticleCategory): AuthorInfo {
     education: "priya",
     investment: "arjun",
     "buying-tips": "kavitha",
+    trending: "arjun", // AI-generated articles default to Arjun
   };
   return AUTHORS[categoryFallback[category]];
 }

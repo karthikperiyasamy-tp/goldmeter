@@ -1,10 +1,21 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
-import { PUBLISHED_ARTICLES, ARTICLE_CATEGORIES, getArticleDateISO } from "@/lib/articles";
+import { PUBLISHED_ARTICLES, ARTICLE_CATEGORIES, getArticleDateISO, getTrendingArticles } from "@/lib/articles";
 import ArticlesListClient from "@/app/components/articles/ArticlesListClient";
 
 export default async function ArticlesPage() {
   const tc = await getTranslations("common");
+  
+  // Fetch both static and trending articles
+  const staticArticles = PUBLISHED_ARTICLES;
+  const trendingArticles = await getTrendingArticles(10);
+  
+  // Merge and sort by date (newest first)
+  const allArticles = [...trendingArticles, ...staticArticles].sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    return dateB - dateA;
+  });
 
   return (
     <div className="min-h-screen bg-[#fffdf7] pb-12">
@@ -51,7 +62,7 @@ export default async function ArticlesPage() {
 
         {/* Client component handles sort + filter */}
         <ArticlesListClient
-          articles={PUBLISHED_ARTICLES}
+          articles={allArticles}
           categories={ARTICLE_CATEGORIES}
         />
 
@@ -71,8 +82,10 @@ export default async function ArticlesPage() {
                 name: "GoldMeter",
                 url: "https://goldmeter.in",
               },
-              mainEntity: PUBLISHED_ARTICLES.map((a) => {
-                const isoDate = getArticleDateISO(a);
+              mainEntity: allArticles.map((a) => {
+                const isoDate = staticArticles.find(sa => sa.slug === a.slug) 
+                  ? getArticleDateISO(staticArticles.find(sa => sa.slug === a.slug)!)
+                  : new Date().toISOString().split('T')[0];
                 return {
                   "@type": "Article",
                   headline: a.title,

@@ -144,7 +144,7 @@ export default async function GoldRateTodayPage() {
     month: 'long',
     year: 'numeric'
   });
-  const todayISO = new Date().toISOString().split('T')[0];
+  const todayISO = new Date().toISOString(); // Full ISO timestamp with time and timezone
   const updateTime = new Date().toLocaleTimeString('en-IN', {
     hour: 'numeric',
     minute: '2-digit',

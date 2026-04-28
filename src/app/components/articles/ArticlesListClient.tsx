@@ -28,7 +28,7 @@ export default function ArticlesListClient({ articles, categories }: Props) {
       // Shortest first
       list.sort(
         (a, b) =>
-          parseInt(a.readTime) - parseInt(b.readTime)
+          (parseInt(a.readTime || "0") || 0) - (parseInt(b.readTime || "0") || 0)
       );
     }
     // "category" keeps the original order (grouped by category)
@@ -41,7 +41,7 @@ export default function ArticlesListClient({ articles, categories }: Props) {
     return categories
       .map((cat) => ({
         ...cat,
-        items: filtered.filter((a) => a.category === cat.key),
+        items: filtered.filter((a) => (a.category || 'education') === cat.key),
       }))
       .filter((g) => g.items.length > 0);
   }, [categories, filtered, sortBy]);
@@ -67,7 +67,7 @@ export default function ArticlesListClient({ articles, categories }: Props) {
             {categories.map((cat) => (
               <button
                 key={cat.key}
-                onClick={() => setFilterCat(cat.key)}
+                onClick={() => setFilterCat(cat.key || 'all')}
                 className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                   filterCat === cat.key
                     ? "bg-amber-600 text-white"

@@ -6,9 +6,12 @@
   "scripts": {
     "scrape": "tsx scrape-gold-rates.ts",
     "fetch-news": "tsx scrape-news.ts",
-    "generate-recap": "tsx generate-recap.ts"
+    "generate-recap": "tsx generate-recap.ts",
+    "generate-article": "tsx generate-daily-article.ts"
   },
   "dependencies": {
+    "@google/generative-ai": "^latest",
+    "axios": "^latest",
     "cheerio": "^1.0.0",
     "mongodb": "^6.3.0"
   },
