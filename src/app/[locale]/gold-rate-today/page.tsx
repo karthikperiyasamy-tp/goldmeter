@@ -697,6 +697,7 @@ export default async function GoldRateTodayPage() {
   );
 }
 
-// Cache page for 5 minutes
-export const revalidate = 300;
+// Tag-driven freshness: GH Actions hit /api/revalidate-gold-rates after each scrape.
+// Page-level revalidate is a 30m safety net during rollout; can be raised once webhook is verified.
+export const revalidate = 1800;
 

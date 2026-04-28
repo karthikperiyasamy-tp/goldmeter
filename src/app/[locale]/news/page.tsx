@@ -207,5 +207,5 @@ export default async function NewsPage() {
   );
 }
 
-// Cache page for 5 minutes (300 seconds) - combined with DB-level caching
-export const revalidate = 300;
+// Tag-driven freshness via /api/revalidate-gold-rates (tag=news); page is a 30m safety net.
+export const revalidate = 1800;

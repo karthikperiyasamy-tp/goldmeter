@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getLatestGoldRates } from "@/lib/goldRatesDB";
 
-export const revalidate = 300; // Cache for 5 minutes
+export const revalidate = 1800;
 
 export async function GET() {
   try {

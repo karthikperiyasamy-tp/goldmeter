@@ -50,10 +50,7 @@ export async function POST(request: NextRequest) {
 
     // Bust cached latest rates so fresh silver/gold values show up immediately
     try {
-      // Next.js revalidateTag signature varies; ignore result and swallow errors
-      // to avoid build-time type issues across versions.
-      // @ts-expect-error - compatible with current Next runtime
-      revalidateTag('gold-rates');
+      revalidateTag('gold-rates', 'max');
     } catch (e) {
       console.warn('⚠️  [Admin] revalidateTag failed:', e);
     }

@@ -94,6 +94,7 @@ const nextConfig: NextConfig = {
       'hyderabad',
       'jaipur',
       'kerala',
+      'kochi',
       'kolkata',
       'lucknow',
       'madurai',
@@ -108,6 +109,7 @@ const nextConfig: NextConfig = {
       'rajkot',
       'salem',
       'surat',
+      'tirunelveli',
       'trichy',
       'vadodara',
       'vijayawada',
@@ -130,7 +132,30 @@ const nextConfig: NextConfig = {
       }))
     );
 
-    return [...englishRedirects, ...localeRedirects];
+    const typoRedirects = [
+      { source: "/gold-rate/tirunveli", destination: "/gold-rate/tirunelveli", permanent: true },
+      { source: "/silver-rate/tirunveli", destination: "/silver-rate/tirunelveli", permanent: true },
+      { source: "/tirunveli", destination: "/gold-rate/tirunelveli", permanent: true },
+      ...locales.flatMap((locale) => ([
+        {
+          source: `/${locale}/gold-rate/tirunveli`,
+          destination: `/${locale}/gold-rate/tirunelveli`,
+          permanent: true,
+        },
+        {
+          source: `/${locale}/silver-rate/tirunveli`,
+          destination: `/${locale}/silver-rate/tirunelveli`,
+          permanent: true,
+        },
+        {
+          source: `/${locale}/tirunveli`,
+          destination: `/${locale}/gold-rate/tirunelveli`,
+          permanent: true,
+        },
+      ])),
+    ];
+
+    return [...englishRedirects, ...localeRedirects, ...typoRedirects];
   },
 };
 

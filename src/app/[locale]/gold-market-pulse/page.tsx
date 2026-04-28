@@ -10,7 +10,7 @@ import {
 import CalculatorSwitcher from "@/app/components/CalculatorSwitcher";
 import MarketPulseCharts from "@/app/components/MarketPulseCharts";
 
-export const revalidate = 300;
+export const revalidate = 1800;
 
 type PageProps = { params: Promise<{ locale: string }> };
 

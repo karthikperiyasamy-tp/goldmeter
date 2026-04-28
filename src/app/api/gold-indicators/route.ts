@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getHistoricalGoldRates } from "@/lib/goldRatesDB";
 import { computeAllIndicators, type PricePoint } from "@/lib/goldIndicators";
 
-export const revalidate = 300;
+export const revalidate = 1800;
 
 export async function GET() {
   try {

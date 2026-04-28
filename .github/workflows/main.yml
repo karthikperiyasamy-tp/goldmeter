@@ -2,13 +2,7 @@ name: Gold Rate Scraping
 
 on:
   schedule:
-    # ===== OPTIMIZED SCHEDULE =====
-    
-    # Early morning: Get rates before market activity
     - cron: '30 1 * * *'      # 7:00 AM IST
-    
-    # Critical morning window: 9:00 AM - 10:30 AM IST (every 10 mins)
-    # Captures GoodReturns preliminary → final rate transition
     - cron: '30 3 * * *'      # 9:00 AM IST
     - cron: '40 3 * * *'      # 9:10 AM IST
     - cron: '50 3 * * *'      # 9:20 AM IST
@@ -19,35 +13,30 @@ on:
     - cron: '40 4 * * *'      # 10:10 AM IST
     - cron: '50 4 * * *'      # 10:20 AM IST
     - cron: '0 5 * * *'       # 10:30 AM IST
-    
-    # Daytime: 12 PM - 8 PM IST (every 2 hours)
     - cron: '30 6 * * *'      # 12:00 PM IST
     - cron: '30 8 * * *'      # 2:00 PM IST
     - cron: '30 10 * * *'     # 4:00 PM IST
     - cron: '30 12 * * *'     # 6:00 PM IST
     - cron: '30 14 * * *'     # 8:00 PM IST
-    
-    # Overnight: 10 PM - 6 AM IST (every 4 hours)
     - cron: '30 16 * * *'     # 10:00 PM IST
     - cron: '30 20 * * *'     # 2:00 AM IST
     - cron: '0 0 * * *'       # 5:30 AM IST
-    
-  workflow_dispatch: # Allows manual trigger
+  workflow_dispatch:
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Cache npm dependencies
         uses: actions/cache@v4
         with:
@@ -55,16 +44,35 @@ jobs:
           key: ${{ runner.os }}-scripts-${{ hashFiles('scripts/package.json') }}
           restore-keys: |
             ${{ runner.os }}-scripts-
-      
+
       - name: Install dependencies
         working-directory: scripts
         run: npm install
-      
+
       - name: Run gold rate scraper
         working-directory: scripts
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: npx tsx scrape-gold-rates.ts
-      
+
+      - name: Trigger Vercel revalidate (gold-rates)
+        if: success()
+        env:
+          SITE_URL: ${{ secrets.SITE_URL || 'https://goldmeter.in' }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+        run: |
+          set -e
+          if [ -z "${REVALIDATE_SECRET}" ]; then
+            echo "::warning::REVALIDATE_SECRET not set; skipping revalidate"
+            exit 0
+          fi
+          curl --fail --silent --show-error \
+               --max-time 10 \
+               -X POST "${SITE_URL}/api/revalidate-gold-rates" \
+               -H "Content-Type: application/json" \
+               -H "x-revalidate-secret: ${REVALIDATE_SECRET}" \
+               -d '{"tag":"gold-rates"}'
+          echo
+
       - name: Log completion
-        run: echo "✅ Gold rate scraping completed at $(date -u)"
+        run: echo "Gold rate scraping completed at $(date -u)"

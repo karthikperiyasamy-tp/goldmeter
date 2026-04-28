@@ -211,6 +211,6 @@ export default async function SilverCityPage({ params }: Props) {
 // Metadata is defined in layout.tsx for this route
 // Removed duplicate generateMetadata to prevent canonical/title conflicts
 
-// Cache page for 5 minutes - combined with DB-level caching
-export const revalidate = 300;
+// Tag-driven freshness via /api/revalidate-gold-rates; page is a 30m safety net during rollout.
+export const revalidate = 1800;
 

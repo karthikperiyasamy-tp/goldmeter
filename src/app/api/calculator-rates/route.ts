@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getLatestGoldRates } from '@/lib/goldRatesDB';
 
-// Cache for 5 minutes at edge and in browser
-export const revalidate = 300;
+export const revalidate = 1800;
 
 /**
  * API endpoint to fetch all city rates for the calculator

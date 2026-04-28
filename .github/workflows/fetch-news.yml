@@ -2,25 +2,23 @@ name: Fetch Gold News
 
 on:
   schedule:
-    # Runs every 6 hours
-    # 12 AM, 6 AM, 12 PM, 6 PM (UTC)
     - cron: '0 */6 * * *'
-  workflow_dispatch: # Allows manual trigger
+  workflow_dispatch:
 
 jobs:
   fetch-news:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Cache npm dependencies
         uses: actions/cache@v4
         with:
@@ -28,16 +26,35 @@ jobs:
           key: ${{ runner.os }}-scripts-${{ hashFiles('scripts/package.json') }}
           restore-keys: |
             ${{ runner.os }}-scripts-
-      
+
       - name: Install dependencies
         working-directory: scripts
         run: npm install
-      
+
       - name: Run news fetcher
         working-directory: scripts
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: npx tsx scrape-news.ts
-      
+
+      - name: Trigger Vercel revalidate (news)
+        if: success()
+        env:
+          SITE_URL: ${{ secrets.SITE_URL || 'https://goldmeter.in' }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+        run: |
+          set -e
+          if [ -z "${REVALIDATE_SECRET}" ]; then
+            echo "::warning::REVALIDATE_SECRET not set; skipping revalidate"
+            exit 0
+          fi
+          curl --fail --silent --show-error \
+               --max-time 10 \
+               -X POST "${SITE_URL}/api/revalidate-gold-rates" \
+               -H "Content-Type: application/json" \
+               -H "x-revalidate-secret: ${REVALIDATE_SECRET}" \
+               -d '{"tag":"news"}'
+          echo
+
       - name: Log completion
-        run: echo "✅ News fetch completed at $(date -u)"
+        run: echo "News fetch completed at $(date -u)"
