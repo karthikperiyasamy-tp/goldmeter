@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ARTICLES, PUBLISHED_ARTICLES, getArticleDateISO, getTrendingArticleBySlug } from "@/lib/articles";
+import { ARTICLES, PUBLISHED_ARTICLES, getArticleDateISO } from "@/lib/articles";
+import { getTrendingArticleBySlug } from "@/lib/articles-server";
 import { ARTICLE_CONTENT_MAP } from "@/app/components/articles/ArticleContentMap";
 import LiveGoldRateMention from "@/app/components/articles/LiveGoldRateMention";
 import ArticleCityRatesSidebar from "@/app/components/articles/ArticleCityRatesSidebar";

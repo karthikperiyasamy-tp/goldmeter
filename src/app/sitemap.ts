@@ -2,7 +2,8 @@ import { MetadataRoute } from 'next'
 import { getAllRecaps } from '@/lib/recapDB'
 import { GOLD_RATE_CITIES, SILVER_RATE_CITIES, getCitySlug } from '@/lib/cities'
 import { getAllJewellerSlugs } from '@/lib/jewellerConfig'
-import { PUBLISHED_ARTICLES, getArticleDateISO, getTrendingArticles } from '@/lib/articles'
+import { PUBLISHED_ARTICLES, getArticleDateISO } from '@/lib/articles'
+import { getTrendingArticles } from '@/lib/articles-server'
 import { getRecentNews } from '@/lib/newsDB'
 
 export const revalidate = 3600

@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
-import { PUBLISHED_ARTICLES, ARTICLE_CATEGORIES, getArticleDateISO, getTrendingArticles } from "@/lib/articles";
+import { PUBLISHED_ARTICLES, ARTICLE_CATEGORIES, getArticleDateISO } from "@/lib/articles";
+import { getTrendingArticles } from "@/lib/articles-server";
 import ArticlesListClient from "@/app/components/articles/ArticlesListClient";
 
 export default async function ArticlesPage() {
