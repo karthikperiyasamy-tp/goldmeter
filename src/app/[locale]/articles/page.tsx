@@ -4,6 +4,10 @@ import { PUBLISHED_ARTICLES, ARTICLE_CATEGORIES, getArticleDateISO } from "@/lib
 import { getTrendingArticles } from "@/lib/articles-server";
 import ArticlesListClient from "@/app/components/articles/ArticlesListClient";
 
+// Revalidate articles page every 6 hours (21600 seconds)
+// Cache is primarily busted by revalidateTag('articles') from article generation script
+export const revalidate = 21600;
+
 export default async function ArticlesPage() {
   const tc = await getTranslations("common");
   

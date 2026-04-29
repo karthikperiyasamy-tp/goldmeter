@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "latest",
     "cheerio": "^1.0.0",
+    "dotenv": "^16.0.0",
     "mongodb": "^6.3.0"
   },
   "devDependencies": {

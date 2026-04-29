@@ -1,13 +1,27 @@
 import { MongoClient } from 'mongodb';
 import axios from 'axios';
+import * as dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Load environment variables from .env.local
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '..', '.env.local') });
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_MODEL = 'gemini-2.5-flash';
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+
+// Try models in order of preference (newest first)
+const GEMINI_MODELS = ['gemini-3-flash', 'gemini-2.5-flash'];
+let GEMINI_MODEL = GEMINI_MODELS[0];
+let GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 if (!MONGODB_URI || !GEMINI_API_KEY) {
   console.error('❌ Missing MONGODB_URI or GEMINI_API_KEY');
+  console.error('   MONGODB_URI:', MONGODB_URI ? '✓ set' : '✗ missing');
+  console.error('   GEMINI_API_KEY:', GEMINI_API_KEY ? '✓ set' : '✗ missing');
+  console.error('   Looked in:', path.join(__dirname, '..', '.env.local'));
   process.exit(1);
 }
 
@@ -90,23 +104,22 @@ async function fetchNewsHeadlines(): Promise<string> {
 async function fetchEconomicEvents(): Promise<string> {
   try {
     console.log('📅 Fetching economic events...');
-    // You can integrate with an economic calendar API here (e.g., tradingeconomics, forexfactory)
-    // For now, placeholder
-    return 'Check for Fed, ECB, or RBI announcements scheduled for today or tomorrow.';
+    // Placeholder - Gemini will incorporate current context in the article
+    return 'Current date: ' + new Date().toISOString().split('T')[0];
   } catch (error) {
     console.warn('⚠️  Could not fetch economic events:', error);
-    return 'No specific economic events tracked today.';
+    return '';
   }
 }
 
 async function fetchTwitterTrends(): Promise<string> {
   try {
-    console.log('🐦 Fetching Twitter trends (simulated)...');
-    // Twitter API requires bearer token; for now, return placeholder
-    return 'Trending topics: #Gold, #Silver, #Inflation, #FedDecision';
+    console.log('🐦 Fetching Twitter trends (Gemini will incorporate current trends)...');
+    // Let Gemini handle current trends in the article based on its knowledge
+    return 'Current date: ' + new Date().toISOString().split('T')[0];
   } catch (error) {
     console.warn('⚠️  Could not fetch Twitter trends:', error);
-    return 'No trending data available';
+    return '';
   }
 }
 
@@ -128,9 +141,31 @@ async function fetchWithRetry(prompt: string): Promise<Response> {
 
     if (response.ok) return response;
 
+    // Try next model if current one is not available (404)
+    if (response.status === 404) {
+      console.warn(`⚠️  Model ${GEMINI_MODEL} not available, trying next...`);
+      const nextModelIndex = GEMINI_MODELS.indexOf(GEMINI_MODEL) + 1;
+      if (nextModelIndex < GEMINI_MODELS.length) {
+        GEMINI_MODEL = GEMINI_MODELS[nextModelIndex];
+        GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+        console.log(`✅ Switched to model: ${GEMINI_MODEL}`);
+        attempt--; // Don't count this as an attempt
+        continue;
+      }
+    }
+
+    // Rate limiting - retry with backoff
     if (response.status === 429 && attempt < maxAttempts) {
       const delay = 500 * attempt;
-      console.warn(`Gemini 429, retrying in ${delay}ms`);
+      console.warn(`⚠️  Gemini 429 (rate limit), retrying in ${delay}ms...`);
+      await new Promise((res) => setTimeout(res, delay));
+      continue;
+    }
+
+    // Server temporarily unavailable - retry with backoff
+    if (response.status === 503 && attempt < maxAttempts) {
+      const delay = 1000 * attempt;
+      console.warn(`⚠️  Gemini 503 (unavailable), retrying in ${delay}ms...`);
       await new Promise((res) => setTimeout(res, delay));
       continue;
     }
@@ -173,48 +208,51 @@ async function generateArticleWithGemini(
   twitterTrends: string,
   economicEvents: string
 ): Promise<GeneratedArticle> {
-  const prompt = `You are a professional financial news writer for Goldmeter.in.
+  const prompt = `You are a professional financial news writer for Goldmeter.in with access to current information.
 
-Your task is to create a unique, SEO-optimized article of at least 700 words based on the latest data provided below.
+Your task is to create a unique, SEO-optimized article of at least 700 words about gold and silver markets today.
+
+IMPORTANT: Use your knowledge of current events, market trends, and real-world developments to enhance this article. If you know of relevant:
+- Central bank decisions or announcements (Fed, ECB, RBI, etc.)
+- Geopolitical events affecting precious metals
+- Currency movements (especially USD/INR)
+- Inflation or interest rate developments
+- Market sentiment or trending topics on financial platforms
+
+...please naturally incorporate them into the article.
 
 Requirements:
-1. Write in a professional yet simple tone.
+1. Write in a professional yet simple tone, suitable for Indian gold investors.
 2. The article must be plagiarism-free and human-like.
 3. Include a compelling SEO-friendly headline.
 4. Include an engaging introduction.
-5. Explain why gold and silver prices are moving today.
-6. Mention global economic or geopolitical events affecting prices.
-7. Mention central bank/Fed/inflation/interest rate updates if relevant.
-8. Include India gold/silver price mentions if available.
+5. Explain why gold and silver prices are moving today (use real current knowledge).
+6. Mention relevant global economic or geopolitical events (research these if needed).
+7. Mention central bank/Fed/inflation/interest rate updates if relevant today.
+8. Include India gold/silver price mentions with the data provided.
 9. Include expert-style analysis and possible future outlook.
-10. End with a conclusion for investors/traders.
+10. End with a conclusion for investors/traders in India.
 11. Use short paragraphs for readability.
 12. Naturally include SEO keywords such as:
-   "gold price today",
-   "silver price today",
-   "gold rate in India",
-   "silver rate in India",
-   "why gold price is falling",
-   "why gold price is rising",
-   "why silver price is falling",
-   "why silver price is rising"
+    "gold price today",
+    "silver price today",
+    "gold rate in India",
+    "silver rate in India",
+    "why gold price is falling",
+    "why gold price is rising",
+    "why silver price is falling",
+    "why silver price is rising"
 
-Data to use:
+TODAY'S DATA TO REFERENCE:
 -------------------
-Gold Price Data:
+Gold Price Data (India):
 ${goldData}
 
-Silver Price Data:
+Silver Price Data (India):
 ${silverData}
 
-Latest News Headlines:
+Recent News Headlines:
 ${newsHeadlines}
-
-Trending Topics / Twitter:
-${twitterTrends}
-
-Economic Events:
-${economicEvents}
 -------------------
 
 IMPORTANT: Format your response EXACTLY as follows, with these sections clearly marked:
@@ -293,6 +331,39 @@ async function saveArticleToMongoDB(article: GeneratedArticle): Promise<string> 
   }
 }
 
+async function triggerVercelRevalidation(): Promise<void> {
+  try {
+    const REVALIDATE_SECRET = process.env.REVALIDATE_SECRET;
+    const revalidateUrl = process.env.REVALIDATE_URL || 'https://goldmeter.in/api/revalidate-gold-rates';
+
+    if (!REVALIDATE_SECRET) {
+      console.warn('⚠️  REVALIDATE_SECRET not set, skipping Vercel revalidation');
+      return;
+    }
+
+    console.log('🔄 Triggering Vercel ISR revalidation...');
+    const response = await fetch(revalidateUrl, {
+      method: 'POST',
+      headers: {
+        'x-revalidate-secret': REVALIDATE_SECRET,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tags: ['articles'], // Revalidate articles tag
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('✅ Vercel revalidation triggered:', data);
+    } else {
+      console.warn('⚠️  Vercel revalidation failed:', response.status);
+    }
+  } catch (error) {
+    console.warn('⚠️  Could not trigger Vercel revalidation:', error);
+  }
+}
+
 async function main() {
   try {
     console.log('🚀 Starting daily article generation...');
@@ -312,6 +383,9 @@ async function main() {
     );
 
     const slug = await saveArticleToMongoDB(article);
+
+    // Trigger Vercel revalidation to update the articles page
+    await triggerVercelRevalidation();
 
     console.log(`
 ✅ Daily article generation completed successfully!
