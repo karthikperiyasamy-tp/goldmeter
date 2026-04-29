@@ -7,6 +7,7 @@ const ALLOWED_TAGS = new Set([
   "gold-rates",
   "news",
   "international-gold-rates",
+  "trending-articles",
 ]);
 
 type RevalidateBody = {

@@ -1,4 +1,5 @@
 import { getDatabase } from './mongodb';
+import { unstable_cache } from 'next/cache';
 import type { ArticleMeta } from './articles';
 
 /**
@@ -6,7 +7,8 @@ import type { ArticleMeta } from './articles';
  * This module must never be imported on the client side
  */
 
-export async function getTrendingArticles(limit: number = 30): Promise<ArticleMeta[]> {
+// Fetch trending articles with caching and tag for revalidation
+const fetchTrendingArticlesUncached = async (limit: number): Promise<ArticleMeta[]> => {
   try {
     const db = await getDatabase();
     const collection = db.collection('trending_articles');
@@ -34,7 +36,13 @@ export async function getTrendingArticles(limit: number = 30): Promise<ArticleMe
     console.warn('⚠️  Could not fetch trending articles:', error);
     return [];
   }
-}
+};
+
+export const getTrendingArticles = unstable_cache(
+  fetchTrendingArticlesUncached,
+  ['trending-articles'],
+  { tags: ['trending-articles'], revalidate: 3600 } // 1 hour cache, revalidatable via tag
+);
 
 export async function getTrendingArticleBySlug(
   slug: string

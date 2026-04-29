@@ -349,7 +349,7 @@ async function triggerVercelRevalidation(): Promise<void> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        tags: ['articles'], // Revalidate articles tag
+        tag: 'trending-articles', // Revalidate trending articles cache tag
       }),
     });
 
