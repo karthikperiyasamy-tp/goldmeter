@@ -7,8 +7,9 @@ import type { ArticleMeta } from './articles';
  * This module must never be imported on the client side
  */
 
-// Fetch trending articles with caching and tag for revalidation
-const fetchTrendingArticlesUncached = async (limit: number): Promise<ArticleMeta[]> => {
+// Fetch trending articles from MongoDB without parameters
+// This ensures consistent caching behavior
+const fetchTrendingArticlesFromDB = async (): Promise<ArticleMeta[]> => {
   try {
     const db = await getDatabase();
     const collection = db.collection('trending_articles');
@@ -16,7 +17,7 @@ const fetchTrendingArticlesUncached = async (limit: number): Promise<ArticleMeta
     const articles = await collection
       .find({ isPublished: true })
       .sort({ date: -1 })
-      .limit(limit)
+      .limit(50) // Fetch up to 50 articles
       .toArray();
     
     return articles.map((a: any) => ({
@@ -38,10 +39,17 @@ const fetchTrendingArticlesUncached = async (limit: number): Promise<ArticleMeta
   }
 };
 
+// Wrap with caching and revalidation tag
 export const getTrendingArticles = unstable_cache(
-  fetchTrendingArticlesUncached,
+  async (limit?: number) => {
+    const articles = await fetchTrendingArticlesFromDB();
+    return articles.slice(0, limit || 30);
+  },
   ['trending-articles'],
-  { tags: ['trending-articles'], revalidate: 3600 } // 1 hour cache, revalidatable via tag
+  { 
+    tags: ['trending-articles'],
+    revalidate: 60 // Cache for 1 minute to ensure fresh data
+  }
 );
 
 export async function getTrendingArticleBySlug(
@@ -67,3 +75,13 @@ export async function getTrendingArticleBySlug(
     return null;
   }
 }
+
+// Also provide a way to revalidate specific article if needed
+export const revalidateTrendingArticlesTag = async () => {
+  const { revalidateTag } = await import('next/cache');
+  try {
+    revalidateTag('trending-articles', 'default');
+  } catch (error) {
+    console.warn('Could not revalidate trending articles tag:', error);
+  }
+};

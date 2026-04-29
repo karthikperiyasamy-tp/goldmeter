@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 export const runtime = "edge";
 
@@ -13,6 +13,7 @@ const ALLOWED_TAGS = new Set([
 type RevalidateBody = {
   tag?: string;
   tags?: string[];
+  path?: string;
 };
 
 export async function POST(request: NextRequest) {
@@ -58,7 +59,23 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  for (const t of tags) revalidateTag(t, "max");
+  // Revalidate tags and paths
+  for (const t of tags) {
+    try {
+      revalidateTag(t, "default");
+    } catch (error) {
+      console.warn(`Could not revalidate tag ${t}:`, error);
+    }
+  }
+
+  // Also revalidate /articles path for trending articles
+  if (tags.includes("trending-articles")) {
+    try {
+      revalidatePath("/articles");
+    } catch (error) {
+      console.warn(`Could not revalidate /articles path:`, error);
+    }
+  }
 
   return NextResponse.json({ ok: true, revalidated: tags, at: Date.now() });
 }

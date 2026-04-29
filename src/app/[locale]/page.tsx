@@ -359,7 +359,7 @@ export default async function HomePage() {
     month: 'long',
     year: 'numeric'
   });
-  const todayISO = new Date().toISOString().split('T')[0];
+  const todayISO = new Date().toISOString(); // Use full ISO string with timestamp
   
   // Format time for display
   const timeFormatted = new Date().toLocaleTimeString('en-IN', {
