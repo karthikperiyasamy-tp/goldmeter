@@ -297,7 +297,7 @@ async function saveArticleToMongoDB(article: GeneratedArticle): Promise<string> 
   const client = new MongoClient(MONGODB_URI!);
   try {
     await client.connect();
-    const db = client.db('goldmeter');
+    const db = client.db('goldrate'); // Use goldrate database like other collections
     const collection = db.collection('trending_articles');
 
     const slug = article.title
