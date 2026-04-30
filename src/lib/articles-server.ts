@@ -59,19 +59,24 @@ export async function getTrendingArticleBySlug(
     const db = await getDatabase();
     const collection = db.collection('trending_articles');
     
+    console.log(`[getTrendingArticleBySlug] Looking for slug: ${slug}`);
+    
     const article = await collection.findOne({ slug, isPublished: true });
     
     if (article) {
+      console.log(`[getTrendingArticleBySlug] Found article: ${article.title}`);
       return {
-        content: article.content,
-        title: article.title,
-        metaDescription: article.metaDescription,
+        content: article.content || '',
+        title: article.title || '',
+        metaDescription: article.metaDescription || '',
         tags: article.tags || [],
       };
     }
+    
+    console.warn(`[getTrendingArticleBySlug] No article found for slug: ${slug}`);
     return null;
   } catch (error) {
-    console.warn(`⚠️  Could not fetch trending article ${slug}:`, error);
+    console.error(`❌ Could not fetch trending article ${slug}:`, error);
     return null;
   }
 }

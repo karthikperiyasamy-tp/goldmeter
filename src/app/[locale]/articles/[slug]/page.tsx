@@ -113,7 +113,10 @@ export default async function ArticlePage({ params }: Props) {
     }
   }
 
-  if (!article || !content) notFound();
+  if (!article || !content) {
+    console.warn(`[ArticlePage] Article not found: ${slug}`);
+    notFound();
+  }
 
   // Suggest related articles (same category, exclude current, only published)
   const related = article.category 
