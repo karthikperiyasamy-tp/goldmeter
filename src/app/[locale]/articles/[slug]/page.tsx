@@ -95,21 +95,19 @@ export default async function ArticlePage({ params }: Props) {
       article = {
         slug,
         title: trendingArticle.title,
+        shortTitle: trendingArticle.title,
         date: today.toLocaleDateString('en-IN', {
           year: 'numeric',
           month: 'short',
           day: 'numeric',
         }),
+        readTime: "5 min read",
         preview: trendingArticle.metaDescription,
         category: 'trending' as const,
         published: true,
         isAiGenerated: true,
       };
-      // For trending articles, store the raw HTML content for rendering
-      // We'll render it directly in the article body section
-      content = { 
-        children: trendingArticle.content 
-      } as any; // Use any to bypass type checking since trending articles use HTML
+      content = trendingArticle.content;
     }
   }
 
