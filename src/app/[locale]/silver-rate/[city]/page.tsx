@@ -211,6 +211,7 @@ export default async function SilverCityPage({ params }: Props) {
 // Metadata is defined in layout.tsx for this route
 // Removed duplicate generateMetadata to prevent canonical/title conflicts
 
-// Tag-driven freshness via /api/revalidate-gold-rates; page is a 30m safety net during rollout.
-export const revalidate = 1800;
+// Tag-driven freshness via /api/revalidate-gold-rates; 6h safety net since GitHub Actions
+// busts the 'gold-rates' tag after each scrape (this is the source of truth for freshness).
+export const revalidate = 21600;
 

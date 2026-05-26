@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getLatestGoldRates } from '@/lib/goldRatesDB';
 
-export const revalidate = 1800;
+// 6h matches the page-level revalidate strategy; tag bust on 'gold-rates' invalidates this too.
+export const revalidate = 21600;
 
 /**
  * API endpoint to fetch all city rates for the calculator
@@ -34,7 +35,7 @@ export async function GET() {
         source: 'database',
       }, {
         headers: {
-          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+          'Cache-Control': 'public, s-maxage=21600, stale-while-revalidate=86400',
         },
       });
     }
@@ -58,7 +59,7 @@ export async function GET() {
       source: 'fallback',
     }, {
       headers: {
-        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        'Cache-Control': 'public, s-maxage=21600, stale-while-revalidate=86400',
       },
     });
     

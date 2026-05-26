@@ -207,5 +207,6 @@ export default async function NewsPage() {
   );
 }
 
-// Tag-driven freshness via /api/revalidate-gold-rates (tag=news); page is a 30m safety net.
-export const revalidate = 1800;
+// Tag-driven freshness via /api/revalidate-gold-rates (tag=news); 6h safety net.
+// News is refreshed by GH Actions cron which busts the 'news' tag.
+export const revalidate = 21600;

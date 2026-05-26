@@ -184,22 +184,24 @@ export default function PageViewTracker() {
       } catch {}
     }
 
-    if (shouldSendOnce(`analytics_event_final_landing_${pathname}`)) {
-      sendEvent("final_landing_pageview");
-    }
+    // Single enriched pageview per route — replaces the previous trio of
+    // final_landing_pageview + page_view_enriched + /api/track image pixel,
+    // which together caused ~3x function invocations per page load.
     if (shouldSendOnce(`analytics_event_page_view_enriched_${pathname}`)) {
       sendEvent("page_view_enriched", {
         referrer: typeof document !== "undefined" ? document.referrer || null : null,
       });
     }
-
-    const img = new Image(1, 1);
-    img.src = `/api/track?path=${encodeURIComponent(pathname)}`;
   }, [pathname]);
 
   useEffect(() => {
     if (pathname.startsWith("/admin/")) return;
 
+    // Heartbeat caps engagement tracking at ~5 minutes per page with one beat per minute.
+    // Previously this was every 15s for the entire session, which was the single biggest
+    // source of function invocations (~240/hr per active user).
+    const sessionStart = Date.now();
+    const MAX_DURATION_MS = 5 * 60_000;
     let lastInteractionAt = Date.now();
     const onInteract = () => {
       lastInteractionAt = Date.now();
@@ -209,12 +211,16 @@ export default function PageViewTracker() {
     interactionEvents.forEach((evt) => window.addEventListener(evt, onInteract, { passive: true }));
 
     const heartbeat = window.setInterval(() => {
+      if (Date.now() - sessionStart > MAX_DURATION_MS) {
+        clearInterval(heartbeat);
+        return;
+      }
       const visible = document.visibilityState === "visible";
       const active = Date.now() - lastInteractionAt < 30_000;
       if (visible && active) {
         sendEvent("engagement_heartbeat");
       }
-    }, 15_000);
+    }, 60_000);
 
     return () => {
       clearInterval(heartbeat);
@@ -224,21 +230,21 @@ export default function PageViewTracker() {
 
   useEffect(() => {
     if (pathname.startsWith("/admin/")) return;
-    const sentDepths = new Set<number>();
-    const thresholds = [25, 50, 75, 100];
+    // Single scroll_depth event per page at 50% threshold instead of 4 per page,
+    // and only emitted once even on revisits. Keeps a coarse signal without the cost.
+    let sent = false;
     const onScroll = () => {
+      if (sent) return;
       const doc = document.documentElement;
       const maxScrollable = Math.max(1, doc.scrollHeight - doc.clientHeight);
       const pct = Math.min(100, Math.round((window.scrollY / maxScrollable) * 100));
-      for (const depth of thresholds) {
-        if (pct >= depth && !sentDepths.has(depth)) {
-          sentDepths.add(depth);
-          sendEvent("scroll_depth", { depth });
-        }
+      if (pct >= 50) {
+        sent = true;
+        sendEvent("scroll_depth", { depth: 50 });
+        window.removeEventListener("scroll", onScroll);
       }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, [pathname]);
 

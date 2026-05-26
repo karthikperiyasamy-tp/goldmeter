@@ -315,16 +315,15 @@ async function getLatestGoldRatesUncached(): Promise<{
 
 /**
  * Get latest gold rates for all cities (cached version)
- * Cache duration: 30 minutes (1800 seconds) as a safety net.
- * The cache is also busted on demand by the GitHub Actions scraper, which calls
- * /api/revalidate-gold-rates -> revalidateTag('gold-rates') after a successful Mongo write.
- * Once we've verified the webhook is firing reliably we can raise this to 21600 (6h).
+ * Cache duration: 6h safety net. The cache is busted on demand by the GitHub Actions
+ * scraper which calls /api/revalidate-gold-rates -> revalidateTag('gold-rates') after a
+ * successful Mongo write, so freshness comes from the tag bust, not this revalidate.
  */
 export const getLatestGoldRates = unstable_cache(
   getLatestGoldRatesUncached,
   ['latest-gold-rates-v3'],
   {
-    revalidate: 1800,
+    revalidate: 21600,
     tags: ['gold-rates'],
   }
 );
@@ -400,7 +399,7 @@ export async function getHistoricalGoldRates(
     () => getHistoricalGoldRatesUncached(city, days),
     [`historical-gold-rates-${city}-${days}`],
     {
-      revalidate: 1800, // Cache for 30 minutes
+      revalidate: 21600, // 6h safety net; busted on demand by 'gold-rates' tag.
       tags: ['gold-rates', `city-${city}`],
     }
   );

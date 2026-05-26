@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { getLatestGoldRates } from "@/lib/goldRatesDB";
 
-export const revalidate = 1800;
+// 6h matches the page-level revalidate strategy; tag bust on 'gold-rates' invalidates this too.
+export const revalidate = 21600;
 
 export async function GET() {
   try {
@@ -39,8 +40,8 @@ export async function GET() {
       },
     }, {
       headers: {
-        // Cache for 5 minutes at edge, serve stale for 10 more minutes while revalidating
-        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        // Cache for 6h at edge, serve stale for 24h while revalidating. Tag bust still wins.
+        'Cache-Control': 'public, s-maxage=21600, stale-while-revalidate=86400',
       },
     });
   } catch (error) {

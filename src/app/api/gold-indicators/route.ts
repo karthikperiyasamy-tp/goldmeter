@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { getHistoricalGoldRates } from "@/lib/goldRatesDB";
 import { computeAllIndicators, type PricePoint } from "@/lib/goldIndicators";
 
-export const revalidate = 1800;
+// Indicators are computed from historical rates that only update daily; 6h is plenty.
+export const revalidate = 21600;
 
 export async function GET() {
   try {
@@ -41,7 +42,7 @@ export async function GET() {
       },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+          "Cache-Control": "public, s-maxage=21600, stale-while-revalidate=86400",
         },
       },
     );

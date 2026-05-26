@@ -698,6 +698,6 @@ export default async function GoldRateTodayPage() {
 }
 
 // Tag-driven freshness: GH Actions hit /api/revalidate-gold-rates after each scrape.
-// Page-level revalidate is a 30m safety net during rollout; can be raised once webhook is verified.
-export const revalidate = 1800;
+// 6h safety net — tag bust is the source of truth, this only matters if revalidation webhook fails.
+export const revalidate = 21600;
 

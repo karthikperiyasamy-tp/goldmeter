@@ -10,7 +10,8 @@ import {
 import CalculatorSwitcher from "@/app/components/CalculatorSwitcher";
 import MarketPulseCharts from "@/app/components/MarketPulseCharts";
 
-export const revalidate = 1800;
+// 6h safety net — gold-market-pulse derives from historical rates which only change daily.
+export const revalidate = 21600;
 
 type PageProps = { params: Promise<{ locale: string }> };
 

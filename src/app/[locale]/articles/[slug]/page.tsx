@@ -207,11 +207,7 @@ export default async function ArticlePage({ params }: Props) {
                 [&_em]:text-slate-800
               "
             >
-              {typeof content === 'string' ? (
-                <div dangerouslySetInnerHTML={{ __html: content }} />
-              ) : (
-                content
-              )}
+              {typeof content === 'string' ? renderGeneratedArticleContent(content) : content}
               {deepDiveParagraphs.map((para, idx) =>
                 para.startsWith("## ") ? (
                   <h2 key={`deep-h-${idx}`}>{para.slice(3)}</h2>
@@ -396,6 +392,83 @@ export default async function ArticlePage({ params }: Props) {
 type FaqItem = { question: string; answer: string };
 type ArticleCategory = "education" | "investment" | "buying-tips" | "trending";
 const INLINE_CONCLUSION_SLUGS = new Set<string>([]);
+
+function renderInlineMarkdown(text: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+
+  return parts.map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
+
+    return part;
+  });
+}
+
+function splitLongParagraph(text: string, maxLength = 700) {
+  const sentences = text.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g) || [text];
+  const paragraphs: string[] = [];
+  let current = "";
+
+  for (const sentence of sentences) {
+    const next = `${current}${sentence}`.trim();
+    if (current && next.length > maxLength) {
+      paragraphs.push(current.trim());
+      current = sentence.trimStart();
+    } else {
+      current = next;
+    }
+  }
+
+  if (current.trim()) paragraphs.push(current.trim());
+  return paragraphs;
+}
+
+function getGeneratedArticleBlocks(content: string) {
+  const normalized = content
+    .replace(/\r\n/g, "\n")
+    .replace(/\s+(\*\*[^*\n]{10,120}:[^*\n]{0,80}\*\*)/g, "\n\n$1")
+    .trim();
+
+  return normalized
+    .split(/\n{2,}/)
+    .flatMap((block) => {
+      const trimmed = block.trim();
+      if (!trimmed) return [];
+      if (trimmed.startsWith("## ") || trimmed.startsWith("### ")) return [trimmed];
+      return splitLongParagraph(trimmed);
+    });
+}
+
+function renderGeneratedArticleContent(content: string) {
+  const blocks = getGeneratedArticleBlocks(content);
+
+  return (
+    <>
+      {blocks.map((block, index) => {
+        if (block.startsWith("## ")) {
+          return <h2 key={index}>{block.slice(3)}</h2>;
+        }
+
+        if (block.startsWith("### ")) {
+          return <h3 key={index}>{block.slice(4)}</h3>;
+        }
+
+        const boldHeadingMatch = block.match(/^\*\*([^*]+)\*\*\s*(.*)$/);
+        if (boldHeadingMatch && boldHeadingMatch[1].includes(":")) {
+          return (
+            <section key={index}>
+              <h2>{boldHeadingMatch[1]}</h2>
+              {boldHeadingMatch[2] ? <p>{renderInlineMarkdown(boldHeadingMatch[2])}</p> : null}
+            </section>
+          );
+        }
+
+        return <p key={index}>{renderInlineMarkdown(block)}</p>;
+      })}
+    </>
+  );
+}
 
 /* ── Author System ─────────────────────────────────────────────── */
 
