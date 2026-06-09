@@ -123,6 +123,62 @@ function isSuspiciousDifference(existingRate: number, newRate: number): boolean 
   return diff === 10;
 }
 
+/**
+ * Parse the combined "Gram | 24K | 22K | 18K" table that GoodReturns now uses
+ * on both the India page and per-city pages. Returns per-10g prices (the row where
+ * the first column is "10"), matching what the rest of the codebase expects.
+ */
+function parseCombinedGoodReturnsTable($: cheerio.CheerioAPI): {
+  gold24k: number | null;
+  gold22k: number | null;
+  gold18k: number | null;
+} {
+  let gold24k: number | null = null;
+  let gold22k: number | null = null;
+  let gold18k: number | null = null;
+
+  $('table').each((_, table) => {
+    if (gold24k && gold22k && gold18k) return;
+
+    const $table = $(table);
+    const rows = $table.find('tr');
+    if (rows.length < 2) return;
+
+    const headerCells = $(rows[0])
+      .find('th, td')
+      .map((_, c) => $(c).text().trim().toLowerCase())
+      .get();
+
+    if (headerCells.length < 3) return;
+
+    const gramIdx = headerCells.findIndex((h) => h === 'gram' || h.startsWith('gram'));
+    const idx24k = headerCells.findIndex((h) => h.replace(/\s+/g, '').includes('24k'));
+    const idx22k = headerCells.findIndex((h) => h.replace(/\s+/g, '').includes('22k'));
+    const idx18k = headerCells.findIndex((h) => h.replace(/\s+/g, '').includes('18k'));
+
+    if (gramIdx === -1 || idx24k === -1 || idx22k === -1) return;
+
+    rows.each((_, row) => {
+      const cells = $(row).find('td');
+      const minCells = Math.max(gramIdx, idx24k, idx22k, idx18k) + 1;
+      if (cells.length < minCells) return;
+
+      const gramText = $(cells[gramIdx]).text().trim();
+      if (gramText !== '10') return;
+
+      const p24 = extractPrice($(cells[idx24k]).text());
+      const p22 = extractPrice($(cells[idx22k]).text());
+      const p18 = idx18k !== -1 ? extractPrice($(cells[idx18k]).text()) : null;
+
+      if (p24 && !gold24k) gold24k = p24;
+      if (p22 && !gold22k) gold22k = p22;
+      if (p18 && !gold18k) gold18k = p18;
+    });
+  });
+
+  return { gold24k, gold22k, gold18k };
+}
+
 // ============================================================================
 // SILVER SCRAPING
 // ============================================================================
@@ -191,12 +247,16 @@ async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
     const html = await goldResponse.text();
     const $ = cheerio.load(html);
 
-    let gold22k: number | null = null;
-    let gold24k: number | null = null;
-    let gold18k: number | null = null;
     let silver1kg: number | null = silverPrice;
 
-    // Strategy 1: Look for tables
+    // Primary strategy: GoodReturns now uses one combined "Gram | 24K | 22K | 18K" table.
+    const combined = parseCombinedGoodReturnsTable($);
+    let gold24k: number | null = combined.gold24k;
+    let gold22k: number | null = combined.gold22k;
+    let gold18k: number | null = combined.gold18k;
+
+    // Legacy strategy 1 (per-carat tables prefixed by "Carat" + "India" text). Kept as a
+    // safety net in case GoodReturns reverts the layout for some pages.
     $('table').each((_, table) => {
       const tableContext = $(table).prevAll().first().text();
 
@@ -207,7 +267,7 @@ async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
             const gramCell = $(cells[0]).text().trim();
             if (gramCell === '10') {
               const price = extractPrice($(cells[1]).text());
-              if (price) gold24k = price;
+              if (price && !gold24k) gold24k = price;
             }
           }
         });
@@ -220,7 +280,7 @@ async function scrapeGoodReturnsIndia(): Promise<GoldRate> {
             const gramCell = $(cells[0]).text().trim();
             if (gramCell === '10') {
               const price = extractPrice($(cells[1]).text());
-              if (price) gold22k = price;
+              if (price && !gold22k) gold22k = price;
             }
           }
         });
@@ -308,12 +368,15 @@ async function scrapeGoodReturnsCity(citySlug: string): Promise<GoldRate> {
     const html = await goldResponse.text();
     const $ = cheerio.load(html);
 
-    let gold22k: number | null = null;
-    let gold24k: number | null = null;
-    let gold18k: number | null = null;
     let silver1kg: number | null = silverPrice;
 
-    // Strategy 1: Find rate cards
+    // Primary strategy: same combined "Gram | 24K | 22K | 18K" table that's now on city pages too.
+    const combined = parseCombinedGoodReturnsTable($);
+    let gold24k: number | null = combined.gold24k;
+    let gold22k: number | null = combined.gold22k;
+    let gold18k: number | null = combined.gold18k;
+
+    // Legacy strategy: card-style "24K Gold" elements with per-gram prices, kept as fallback.
     const elements = $('div, section, article').toArray();
 
     for (const elem of elements) {
