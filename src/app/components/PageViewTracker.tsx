@@ -1,14 +1,25 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
+
+type BufferedEvent = {
+  eventName: string;
+  path: string;
+  metadata: Record<string, unknown>;
+};
 
 /**
  * Client-side page view tracker
- * Sends page views to API route (which can use MongoDB)
+ *
+ * Events are buffered and flushed in a single batched request per page lifecycle
+ * (on route change, tab hide, or unload) instead of one request per event. This
+ * collapses ~8-10 function invocations per page view into ~1, which is the single
+ * biggest lever on Vercel function-invocation and compute cost.
  */
 export default function PageViewTracker() {
   const pathname = usePathname();
+  const bufferRef = useRef<BufferedEvent[]>([]);
 
   const getSessionId = () => {
     try {
@@ -83,22 +94,12 @@ export default function PageViewTracker() {
     return normalized.match(/^\/(?:gold-rate|silver-rate)\/([^/]+)$/)?.[1] || null;
   };
 
-  const sendEvent = (eventName: string, metadata?: Record<string, unknown>) => {
-    const enriched = {
-      sessionId: getSessionId(),
-      section: getSection(pathname),
-      pageType: getPageType(pathname),
-      subSection: getCalculatorType(pathname) || undefined,
-      locale: getLocale(pathname),
-      citySlug: getCitySlug(pathname),
-      calculatorType: getCalculatorType(pathname) || undefined,
-      ...metadata,
-    };
-    const payload = JSON.stringify({
-      eventName,
-      path: pathname,
-      metadata: enriched,
-    });
+  const flush = () => {
+    const events = bufferRef.current;
+    if (!events.length) return;
+    bufferRef.current = [];
+
+    const payload = JSON.stringify({ events });
 
     try {
       if (navigator.sendBeacon) {
@@ -116,6 +117,31 @@ export default function PageViewTracker() {
       body: payload,
       keepalive: true,
     }).catch(() => {});
+  };
+
+  // Keep the latest flush available to listeners registered once on mount.
+  const flushRef = useRef(flush);
+  flushRef.current = flush;
+
+  // Buffer an event for the current page. It is sent later in a single batched
+  // request when the page is left/hidden, rather than immediately.
+  const sendEvent = (eventName: string, metadata?: Record<string, unknown>) => {
+    const enriched = {
+      sessionId: getSessionId(),
+      section: getSection(pathname),
+      pageType: getPageType(pathname),
+      subSection: getCalculatorType(pathname) || undefined,
+      locale: getLocale(pathname),
+      citySlug: getCitySlug(pathname),
+      calculatorType: getCalculatorType(pathname) || undefined,
+      ...metadata,
+    };
+    bufferRef.current.push({ eventName, path: pathname, metadata: enriched });
+
+    // Safety valve: never let the buffer grow unbounded on a long-lived session.
+    if (bufferRef.current.length >= 25) {
+      flush();
+    }
   };
 
   const shouldSendOnce = (key: string, ttlMs: number = 15_000) => {
@@ -193,6 +219,29 @@ export default function PageViewTracker() {
       });
     }
   }, [pathname]);
+
+  // Flush this page's buffered events when navigating to another route (cleanup runs
+  // before the next route's effects) or when the component unmounts.
+  useEffect(() => {
+    return () => {
+      flushRef.current();
+    };
+  }, [pathname]);
+
+  // Register flush-on-hide listeners once. visibilitychange (hidden) and pagehide are
+  // the reliable points to send beacons, especially on mobile where unload may not fire.
+  useEffect(() => {
+    const onHide = () => {
+      if (document.visibilityState === "hidden") flushRef.current();
+    };
+    const onPageHide = () => flushRef.current();
+    document.addEventListener("visibilitychange", onHide);
+    window.addEventListener("pagehide", onPageHide);
+    return () => {
+      document.removeEventListener("visibilitychange", onHide);
+      window.removeEventListener("pagehide", onPageHide);
+    };
+  }, []);
 
   useEffect(() => {
     if (pathname.startsWith("/admin/")) return;

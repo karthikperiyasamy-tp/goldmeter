@@ -48,7 +48,9 @@ export const getTrendingArticles = unstable_cache(
   ['trending-articles'],
   { 
     tags: ['trending-articles'],
-    revalidate: 60 // Cache for 1 minute to ensure fresh data
+    // 6h safety net. The daily article generator busts the 'trending-articles' tag after
+    // publishing, so new articles still appear immediately without a 1-minute poll.
+    revalidate: 21600
   }
 );
 

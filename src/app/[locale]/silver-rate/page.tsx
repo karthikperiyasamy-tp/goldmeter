@@ -1,4 +1,5 @@
 import SilverCityPageShell from "@/app/components/SilverCityPageShell";
+import { locales } from "@/i18n/routing";
 import { fetchCityRates } from "@/lib/fetchCityRates";
 import { getSilverConfig, generateSilverFAQs } from "@/lib/citySilverConfig";
 import { getSilverSections } from "@/lib/citySilverSections";
@@ -149,4 +150,10 @@ export const metadata = {
 // Tag-driven freshness via /api/revalidate-gold-rates; 6h safety net since GitHub Actions
 // busts the 'gold-rates' tag after each scrape (this is the source of truth for freshness).
 export const revalidate = 21600;
+
+// Prerender one static (ISR) page per locale so this route is served from the CDN
+// instead of invoking a function on every request.
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
 

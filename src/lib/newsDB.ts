@@ -131,7 +131,7 @@ export async function getGroupedNews(
     () => getGroupedNewsUncached(limit, offset),
     [`grouped-news-${limit}-${offset}`],
     {
-      revalidate: 300, // Cache for 5 minutes
+      revalidate: 21600, // 6h safety net; busted on demand via 'news' tag when the cron fetches news.
       tags: ['news'],
     }
   );
@@ -180,7 +180,7 @@ export async function getRecentNews(limit: number = 5): Promise<NewsArticle[]> {
     () => getRecentNewsUncached(limit),
     [`recent-news-${limit}`],
     {
-      revalidate: 300, // Cache for 5 minutes
+      revalidate: 21600, // 6h safety net; busted on demand via 'news' tag when the cron fetches news.
       tags: ['news'],
     }
   );

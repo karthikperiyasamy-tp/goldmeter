@@ -99,7 +99,7 @@ export const getInternationalRates = unstable_cache(
   scrapeInternationalRates,
   ["international-gold-rates-v1"],
   {
-    revalidate: 1800, // 30 minutes
+    revalidate: 21600, // 6h safety net; busted on demand via 'international-gold-rates' tag.
     tags: ["international-gold-rates"],
   },
 );

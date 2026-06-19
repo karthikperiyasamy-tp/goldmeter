@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
+import { locales } from "@/i18n/routing";
 import { PUBLISHED_ARTICLES, ARTICLE_CATEGORIES, getArticleDateISO } from "@/lib/articles";
 import { getTrendingArticles } from "@/lib/articles-server";
 import ArticlesListClient from "@/app/components/articles/ArticlesListClient";
@@ -8,8 +9,21 @@ import ArticlesListClient from "@/app/components/articles/ArticlesListClient";
 // Cache is primarily busted by revalidateTag('articles') from article generation script
 export const revalidate = 21600;
 
-export default async function ArticlesPage() {
-  const tc = await getTranslations("common");
+// Prerender one static (ISR) page per locale so this route is served from the CDN
+// instead of invoking a function on every request.
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
+export default async function ArticlesPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  // Pass the locale explicitly so this page can be statically generated per locale
+  // instead of falling back to request-time (dynamic) locale resolution.
+  const tc = await getTranslations({ locale, namespace: "common" });
   
   // Fetch both static and trending articles
   const staticArticles = PUBLISHED_ARTICLES;

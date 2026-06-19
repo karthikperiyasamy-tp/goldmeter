@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
+import { locales } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import Script from "next/script";
 import { getLatestGoldRates, getHistoricalGoldRates } from "@/lib/goldRatesDB";
@@ -700,4 +701,10 @@ export default async function GoldRateTodayPage() {
 // Tag-driven freshness: GH Actions hit /api/revalidate-gold-rates after each scrape.
 // 6h safety net — tag bust is the source of truth, this only matters if revalidation webhook fails.
 export const revalidate = 21600;
+
+// Prerender one static (ISR) page per locale so this high-traffic route is served from
+// the CDN instead of invoking a function on every request.
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
 

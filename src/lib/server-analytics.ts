@@ -1094,8 +1094,78 @@ export async function trackServerPageView(request: NextRequest, path: string) {
   }
 }
 
+function buildAnalyticsEvent(
+  eventName: string,
+  path: string,
+  shared: {
+    referrer: string | null;
+    userAgent: string | null;
+    ip: string | null;
+    country: string | null;
+    city: string | null;
+  },
+  metadata?: Record<string, unknown>
+): AnalyticsEvent {
+  const sectionFromPath = getPathSection(path);
+  return {
+    timestamp: new Date(),
+    eventName,
+    path,
+    referrer: shared.referrer,
+    userAgent: shared.userAgent,
+    ip: shared.ip,
+    country: shared.country,
+    city: shared.city,
+    metadata,
+    section: (typeof metadata?.section === "string" ? metadata.section : sectionFromPath) || "Other",
+    subSection: typeof metadata?.subSection === "string" ? metadata.subSection : null,
+    pageType: typeof metadata?.pageType === "string" ? metadata.pageType : getPageType(path),
+    locale: typeof metadata?.locale === "string" ? metadata.locale : getLocaleFromPath(path),
+    citySlug: typeof metadata?.citySlug === "string" ? metadata.citySlug : getCitySlug(path),
+    calculatorType:
+      typeof metadata?.calculatorType === "string" ? metadata.calculatorType : getCalculatorType(path),
+    sessionId: typeof metadata?.sessionId === "string" ? metadata.sessionId : null,
+    userId: typeof metadata?.userId === "string" ? metadata.userId : null,
+    referrerSource: getSourceFromReferrer(shared.referrer),
+  };
+}
+
 /**
- * Track lightweight analytics events (funnel/behavior events)
+ * Track a batch of lightweight analytics events in a single DB round-trip.
+ * The client buffers a page's events and flushes them together, so this typically
+ * receives several events per request (one request per page view instead of per event).
+ */
+export async function trackServerAnalyticsEvents(
+  request: NextRequest,
+  events: Array<{ eventName: string; path: string; metadata?: Record<string, unknown> }>
+) {
+  try {
+    if (!events.length) return;
+
+    const forwarded = request.headers.get("x-forwarded-for");
+    const realIp = request.headers.get("x-real-ip");
+    const ip = forwarded?.split(",")[0] || realIp || null;
+    const shared = {
+      ip,
+      userAgent: request.headers.get("user-agent"),
+      referrer: request.headers.get("referer") || request.headers.get("referrer"),
+      country: request.headers.get("x-vercel-ip-country") || null,
+      city: request.headers.get("x-vercel-ip-city") || null,
+    };
+
+    const docs = events.map((e) => buildAnalyticsEvent(e.eventName, e.path, shared, e.metadata));
+
+    const db = await getDatabase();
+    await db.collection("analytics_events").insertMany(docs, { ordered: false });
+  } catch (error) {
+    // Fail silently - analytics events must never break UX.
+    console.error("❌ [Analytics Events] Error:", error);
+  }
+}
+
+/**
+ * Track a single analytics event. Kept for any server-side callers; the client batches
+ * via trackServerAnalyticsEvents.
  */
 export async function trackServerAnalyticsEvent(
   request: NextRequest,
@@ -1103,45 +1173,7 @@ export async function trackServerAnalyticsEvent(
   path: string,
   metadata?: Record<string, unknown>
 ) {
-  try {
-    const forwarded = request.headers.get("x-forwarded-for");
-    const realIp = request.headers.get("x-real-ip");
-    const ip = forwarded?.split(",")[0] || realIp || null;
-
-    const userAgent = request.headers.get("user-agent");
-    const referrer = request.headers.get("referer") || request.headers.get("referrer");
-    const country = request.headers.get("x-vercel-ip-country") || null;
-    const city = request.headers.get("x-vercel-ip-city") || null;
-
-    const sectionFromPath = getPathSection(path);
-    const event: AnalyticsEvent = {
-      timestamp: new Date(),
-      eventName,
-      path,
-      referrer,
-      userAgent,
-      ip,
-      country,
-      city,
-      metadata,
-      section: (typeof metadata?.section === "string" ? metadata.section : sectionFromPath) || "Other",
-      subSection: typeof metadata?.subSection === "string" ? metadata.subSection : null,
-      pageType: typeof metadata?.pageType === "string" ? metadata.pageType : getPageType(path),
-      locale: typeof metadata?.locale === "string" ? metadata.locale : getLocaleFromPath(path),
-      citySlug: typeof metadata?.citySlug === "string" ? metadata.citySlug : getCitySlug(path),
-      calculatorType:
-        typeof metadata?.calculatorType === "string" ? metadata.calculatorType : getCalculatorType(path),
-      sessionId: typeof metadata?.sessionId === "string" ? metadata.sessionId : null,
-      userId: typeof metadata?.userId === "string" ? metadata.userId : null,
-      referrerSource: getSourceFromReferrer(referrer),
-    };
-
-    const db = await getDatabase();
-    await db.collection("analytics_events").insertOne(event);
-  } catch (error) {
-    // Fail silently - analytics events must never break UX.
-    console.error("❌ [Analytics Events] Error:", error);
-  }
+  await trackServerAnalyticsEvents(request, [{ eventName, path, metadata }]);
 }
 
 /**

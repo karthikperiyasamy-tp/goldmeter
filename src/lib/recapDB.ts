@@ -188,7 +188,7 @@ export async function getAllRecaps(limit: number = 30): Promise<DailyRecap[]> {
     () => getAllRecapsUncached(limit),
     [`all-recaps-${limit}`],
     {
-      revalidate: 300, // Cache for 5 minutes
+      revalidate: 21600, // 6h safety net; busted on demand via 'recaps' tag when a recap is generated.
       tags: ['recaps'],
     }
   );
