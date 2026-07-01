@@ -171,6 +171,10 @@ export default async function GoldRateCityPage({ params }: Props) {
       hour12: true
     });
 
+    // Full ISO timestamp for the "Updated X ago" badge. rates.dateISO is date-only
+    // (midnight UTC) which makes RelativeTime always report "N hours since midnight".
+    const updatedISO = new Date().toISOString();
+
     // Generate FAQs with actual prices
     const faqs = generateFAQs(config, perGram24k, perGram22k);
 
@@ -253,7 +257,7 @@ export default async function GoldRateCityPage({ params }: Props) {
             </div>
             
             <FreshnessTrustBar
-              dateISO={rates.dateISO}
+              dateISO={updatedISO}
               dateLabel={todayFormatted}
               timeLabel={timeFormatted}
             />

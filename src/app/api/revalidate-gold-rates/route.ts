@@ -62,7 +62,10 @@ export async function POST(request: NextRequest) {
           // Revalidate tags and paths
           for (const t of tags) {
             try {
-              revalidateTag(t, 'max');
+              // { expire: 0 } = immediate expiry (blocking revalidate on next request).
+              // Required for webhook/external callers so freshness is not deferred to a
+              // lazy background refetch like the 'max' (stale-while-revalidate) profile.
+              revalidateTag(t, { expire: 0 });
             } catch (error) {
               console.warn(`Could not revalidate tag ${t}:`, error);
             }

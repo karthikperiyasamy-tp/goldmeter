@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
     // Fast Origin Transfer) for identical output.
     if (saveResult.changed > 0) {
       try {
-        revalidateTag('gold-rates', 'max');
+        revalidateTag('gold-rates', { expire: 0 });
         console.log(`✅ [Cron] Busted gold-rates cache tag (${saveResult.changed} changed)`);
       } catch (e) {
         console.warn('⚠️  [Cron] revalidateTag failed:', e);

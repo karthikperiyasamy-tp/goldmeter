@@ -87,7 +87,7 @@ export async function getTrendingArticleBySlug(
 export const revalidateTrendingArticlesTag = async () => {
   const { revalidateTag } = await import('next/cache');
   try {
-    revalidateTag('trending-articles', 'max');
+    revalidateTag('trending-articles', { expire: 0 });
   } catch (error) {
     console.warn('Could not revalidate trending articles tag:', error);
   }
