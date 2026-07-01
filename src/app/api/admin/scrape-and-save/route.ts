@@ -48,12 +48,12 @@ export async function POST(request: NextRequest) {
       console.warn('⚠️  [Admin] No international rates to save');
     }
 
-    // Bust cached latest rates so fresh silver/gold values show up immediately
-    try {
-      revalidateTag('gold-rates', 'default');
-    } catch (e) {
-      console.warn('⚠️  [Admin] revalidateTag failed:', e);
-    }
+      // Bust cached latest rates so fresh silver/gold values show up immediately
+      try {
+        revalidateTag('gold-rates', 'default');
+      } catch (e) {
+        console.warn('⚠️  [Admin] revalidateTag failed:', e);
+      }
     
     if (!saveResult.success) {
       throw new Error('Failed to save rates to database');

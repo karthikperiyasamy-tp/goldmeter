@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { saveGoldRates } from '@/lib/goldRatesDB';
 import { performScraping } from '../../scrape-rates/route';
 import { saveInternationalRates } from '@/lib/internationalRatesDB';
@@ -59,6 +60,15 @@ export async function GET(request: NextRequest) {
     
     const successMessage = `Cron job completed: ${saveResult.saved} rates saved, ${saveResult.skipped} skipped (suspicious ₹10 diff), ${saveResult.errors} errors`;
     console.log(`✅ [Cron] ${successMessage}`);
+    
+    // Bust the cache so the static ISR pages regenerate with fresh DB data.
+    // This is the critical link between scraping and display freshness.
+    try {
+      revalidateTag('gold-rates', 'default');
+      console.log('✅ [Cron] Busted gold-rates cache tag');
+    } catch (e) {
+      console.warn('⚠️  [Cron] revalidateTag failed:', e);
+    }
     
     return NextResponse.json({
       success: true,

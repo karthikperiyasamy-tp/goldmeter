@@ -59,14 +59,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Revalidate tags and paths
-  for (const t of tags) {
-    try {
-      revalidateTag(t, "default");
-    } catch (error) {
-      console.warn(`Could not revalidate tag ${t}:`, error);
-    }
-  }
+          // Revalidate tags and paths
+          for (const t of tags) {
+            try {
+              revalidateTag(t, 'default');
+            } catch (error) {
+              console.warn(`Could not revalidate tag ${t}:`, error);
+            }
+          }
 
   // Also revalidate /articles path for trending articles
   if (tags.includes("trending-articles")) {
