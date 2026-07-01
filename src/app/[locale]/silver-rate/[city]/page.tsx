@@ -213,5 +213,5 @@ export default async function SilverCityPage({ params }: Props) {
 
 // Tag-driven freshness via /api/revalidate-gold-rates; 6h safety net since GitHub Actions
 // busts the 'gold-rates' tag after each scrape (this is the source of truth for freshness).
-export const revalidate = 21600;
+export const revalidate = 86400;
 

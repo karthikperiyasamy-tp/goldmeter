@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
 
       // Bust cached latest rates so fresh silver/gold values show up immediately
       try {
-        revalidateTag('gold-rates', 'default');
+        revalidateTag('gold-rates', 'max');
       } catch (e) {
         console.warn('⚠️  [Admin] revalidateTag failed:', e);
       }

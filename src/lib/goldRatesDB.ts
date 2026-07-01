@@ -48,7 +48,7 @@ function isSuspiciousDifference(existingRate: number, newRate: number): boolean 
 export async function saveGoldRates(
   indiaRates: { gold22k: number | null; gold24k: number | null; gold18k: number | null; silver1kg: number | null },
   cityRates: CityRates
-): Promise<{ success: boolean; saved: number; errors: number; skipped: number }> {
+): Promise<{ success: boolean; saved: number; errors: number; skipped: number; changed: number }> {
   try {
     const db = await getDatabase();
     const collection = db.collection<GoldRateDocument>(COLLECTION_NAME);
@@ -60,8 +60,21 @@ export async function saveGoldRates(
     let saved = 0;
     let errors = 0;
     let skipped = 0;
+    // `changed` counts only rows whose actual values differ from what's already in
+    // the DB. This is what drives cache revalidation — if nothing changed we skip
+    // the (expensive) ISR regeneration of ~250 pages.
+    let changed = 0;
 
     const hasSilverValue = (value: number | null | undefined) => value !== null && value !== undefined;
+
+    const ratesDiffer = (
+      existing: GoldRateDocument,
+      next: { gold22k: number | null; gold24k: number | null; gold18k: number | null; silver1kg: number | null }
+    ) =>
+      existing.gold_22k !== next.gold22k ||
+      existing.gold_24k !== next.gold24k ||
+      (next.gold18k != null && existing.gold_18k !== next.gold18k) ||
+      (hasSilverValue(next.silver1kg) && existing.silver_1kg !== next.silver1kg);
 
     // Save India rate
     if (indiaRates.gold22k && indiaRates.gold24k) {
@@ -78,6 +91,7 @@ export async function saveGoldRates(
             console.log(`⏭️ [DB] Skipping India update - suspicious ₹10/10g difference (likely preliminary data). Existing: 22K=₹${existingIndia.gold_22k}, 24K=₹${existingIndia.gold_24k}. New: 22K=₹${indiaRates.gold22k}, 24K=₹${indiaRates.gold24k}`);
             skipped++;
           } else {
+            const didChange = ratesDiffer(existingIndia, indiaRates);
             // Update with new rate
             await collection.updateOne(
               { city: 'India', date: today },
@@ -93,6 +107,7 @@ export async function saveGoldRates(
               }
             );
             saved++;
+            if (didChange) changed++;
             console.log(`✅ [DB] Updated India rates: 22K=₹${indiaRates.gold22k}, 24K=₹${indiaRates.gold24k}, Silver=₹${indiaRates.silver1kg}`);
           }
         } else {
@@ -109,6 +124,7 @@ export async function saveGoldRates(
             updated_at: now,
           } as GoldRateDocument);
           saved++;
+          changed++;
           console.log(`✅ [DB] Saved India rates: 22K=₹${indiaRates.gold22k}, 24K=₹${indiaRates.gold24k}, Silver=₹${indiaRates.silver1kg}`);
         }
       } catch (error) {
@@ -133,6 +149,7 @@ export async function saveGoldRates(
               console.log(`⏭️ [DB] Skipping ${cityName} update - suspicious ₹10/10g difference`);
               skipped++;
             } else {
+              const didChange = ratesDiffer(existingCity, rates);
               // Update with new rate
               await collection.updateOne(
                 { city: cityName, date: today },
@@ -148,6 +165,7 @@ export async function saveGoldRates(
                 }
               );
               saved++;
+              if (didChange) changed++;
             }
           } else {
             // Insert new rate
@@ -163,6 +181,7 @@ export async function saveGoldRates(
               updated_at: now,
             } as GoldRateDocument);
             saved++;
+            changed++;
           }
         } catch (error) {
           console.error(`❌ [DB] Error saving ${cityName} rates:`, error);
@@ -171,12 +190,12 @@ export async function saveGoldRates(
       }
     }
 
-    console.log(`📊 [DB] Summary: ${saved} saved, ${skipped} skipped (suspicious ₹10 diff), ${errors} errors`);
+    console.log(`📊 [DB] Summary: ${saved} saved, ${changed} changed, ${skipped} skipped (suspicious ₹10 diff), ${errors} errors`);
     
-    return { success: true, saved, errors, skipped };
+    return { success: true, saved, errors, skipped, changed };
   } catch (error) {
     console.error('❌ [DB] Database error:', error);
-    return { success: false, saved: 0, errors: 1, skipped: 0 };
+    return { success: false, saved: 0, errors: 1, skipped: 0, changed: 0 };
   }
 }
 
@@ -315,15 +334,15 @@ async function getLatestGoldRatesUncached(): Promise<{
 
 /**
  * Get latest gold rates for all cities (cached version)
- * Cache duration: 6h safety net. The cache is busted on demand by the GitHub Actions
- * scraper which calls /api/revalidate-gold-rates -> revalidateTag('gold-rates') after a
- * successful Mongo write, so freshness comes from the tag bust, not this revalidate.
+ * Cache duration: 24h safety net. Freshness comes from the on-demand tag bust
+ * (revalidateTag('gold-rates')) fired by the scraper only when rates actually
+ * changed — so this long TTL just prevents needless recompute on days with no change.
  */
 export const getLatestGoldRates = unstable_cache(
   getLatestGoldRatesUncached,
   ['latest-gold-rates-v3'],
   {
-    revalidate: 21600,
+    revalidate: 86400,
     tags: ['gold-rates'],
   }
 );

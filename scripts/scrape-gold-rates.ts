@@ -9,7 +9,26 @@
  */
 
 import * as cheerio from 'cheerio';
+import { appendFileSync } from 'fs';
 import { getDatabase, closeConnection } from './lib/mongodb.js';
+
+/**
+ * Expose whether rates changed so the GitHub Action can conditionally revalidate
+ * the site cache. Writes `changed=<bool>` to $GITHUB_OUTPUT (used by later steps)
+ * and prints a stable marker line for logs.
+ */
+function emitRatesChanged(changed: boolean): void {
+  const value = changed ? 'true' : 'false';
+  console.log(`::rates-changed::${value}`);
+  const outputFile = process.env.GITHUB_OUTPUT;
+  if (outputFile) {
+    try {
+      appendFileSync(outputFile, `changed=${value}\n`);
+    } catch (e) {
+      console.warn('⚠️  [Scraper] Could not write GITHUB_OUTPUT:', e);
+    }
+  }
+}
 
 // ============================================================================
 // TYPES
@@ -556,7 +575,7 @@ async function scrapeInternationalRates(): Promise<InternationalRates | null> {
 async function saveGoldRates(
   indiaRates: GoldRate,
   cityRates: CityRates
-): Promise<{ success: boolean; saved: number; errors: number; skipped: number }> {
+): Promise<{ success: boolean; saved: number; errors: number; skipped: number; changed: number }> {
   try {
     const db = await getDatabase();
     const collection = db.collection<GoldRateDocument>('gold_prices');
@@ -568,8 +587,17 @@ async function saveGoldRates(
     let saved = 0;
     let errors = 0;
     let skipped = 0;
+    // Counts rows whose values actually differ from what's already stored. Only
+    // used to decide whether the site cache needs to be revalidated.
+    let changed = 0;
 
     const hasSilverValue = (value: number | null | undefined) => value !== null && value !== undefined;
+
+    const ratesDiffer = (existing: GoldRateDocument, next: GoldRate) =>
+      existing.gold_22k !== next.gold22k ||
+      existing.gold_24k !== next.gold24k ||
+      (next.gold18k != null && existing.gold_18k !== next.gold18k) ||
+      (hasSilverValue(next.silver1kg) && existing.silver_1kg !== next.silver1kg);
 
     // Save India rate
     if (indiaRates.gold22k && indiaRates.gold24k) {
@@ -584,6 +612,7 @@ async function saveGoldRates(
             console.log(`⏭️ [DB] Skipping India update - suspicious ₹10/10g difference`);
             skipped++;
           } else {
+            const didChange = ratesDiffer(existingIndia, indiaRates);
             await collection.updateOne(
               { city: 'India', date: today },
               {
@@ -598,6 +627,7 @@ async function saveGoldRates(
               }
             );
             saved++;
+            if (didChange) changed++;
             console.log(`✅ [DB] Updated India rates: 22K=₹${indiaRates.gold22k}, 24K=₹${indiaRates.gold24k}`);
           }
         } else {
@@ -613,6 +643,7 @@ async function saveGoldRates(
             updated_at: now,
           } as GoldRateDocument);
           saved++;
+          changed++;
           console.log(`✅ [DB] Saved India rates: 22K=₹${indiaRates.gold22k}, 24K=₹${indiaRates.gold24k}`);
         }
       } catch (error) {
@@ -635,6 +666,7 @@ async function saveGoldRates(
               console.log(`⏭️ [DB] Skipping ${cityName} update - suspicious ₹10/10g difference`);
               skipped++;
             } else {
+              const didChange = ratesDiffer(existingCity, rates);
               await collection.updateOne(
                 { city: cityName, date: today },
                 {
@@ -649,6 +681,7 @@ async function saveGoldRates(
                 }
               );
               saved++;
+              if (didChange) changed++;
             }
           } else {
             await collection.insertOne({
@@ -663,6 +696,7 @@ async function saveGoldRates(
               updated_at: now,
             } as GoldRateDocument);
             saved++;
+            changed++;
           }
         } catch (error) {
           console.error(`❌ [DB] Error saving ${cityName} rates:`, error);
@@ -671,11 +705,11 @@ async function saveGoldRates(
       }
     }
 
-    console.log(`📊 [DB] Summary: ${saved} saved, ${skipped} skipped, ${errors} errors`);
-    return { success: true, saved, errors, skipped };
+    console.log(`📊 [DB] Summary: ${saved} saved, ${changed} changed, ${skipped} skipped, ${errors} errors`);
+    return { success: true, saved, errors, skipped, changed };
   } catch (error) {
     console.error('❌ [DB] Database error:', error);
-    return { success: false, saved: 0, errors: 1, skipped: 0 };
+    return { success: false, saved: 0, errors: 1, skipped: 0, changed: 0 };
   }
 }
 
@@ -801,7 +835,15 @@ async function main() {
     }
 
     console.log('✅ [Scraper] Scraping completed successfully');
-    console.log(`📊 [Scraper] Final: ${saveResult.saved} saved, ${saveResult.skipped} skipped, ${saveResult.errors} errors`);
+    console.log(`📊 [Scraper] Final: ${saveResult.saved} saved, ${saveResult.changed} changed, ${saveResult.skipped} skipped, ${saveResult.errors} errors`);
+
+    // Signal to the GitHub Action whether a cache revalidation is warranted.
+    // The revalidate step should be gated on this so we don't regenerate ~250
+    // ISR pages when the scraped rates are identical to what's already stored.
+    emitRatesChanged(saveResult.changed > 0);
+    if (saveResult.changed === 0) {
+      console.log('⏭️  [Scraper] No rate changes — revalidation should be skipped');
+    }
 
     // Close MongoDB connection
     await closeConnection();

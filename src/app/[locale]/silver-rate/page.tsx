@@ -149,7 +149,7 @@ export const metadata = {
 
 // Tag-driven freshness via /api/revalidate-gold-rates; 6h safety net since GitHub Actions
 // busts the 'gold-rates' tag after each scrape (this is the source of truth for freshness).
-export const revalidate = 21600;
+export const revalidate = 86400;
 
 // Prerender one static (ISR) page per locale so this route is served from the CDN
 // instead of invoking a function on every request.

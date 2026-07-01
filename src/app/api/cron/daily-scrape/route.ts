@@ -58,16 +58,21 @@ export async function GET(request: NextRequest) {
       throw new Error('Failed to save rates to database');
     }
     
-    const successMessage = `Cron job completed: ${saveResult.saved} rates saved, ${saveResult.skipped} skipped (suspicious ₹10 diff), ${saveResult.errors} errors`;
+    const successMessage = `Cron job completed: ${saveResult.saved} rates saved, ${saveResult.changed} changed, ${saveResult.skipped} skipped (suspicious ₹10 diff), ${saveResult.errors} errors`;
     console.log(`✅ [Cron] ${successMessage}`);
     
-    // Bust the cache so the static ISR pages regenerate with fresh DB data.
-    // This is the critical link between scraping and display freshness.
-    try {
-      revalidateTag('gold-rates', 'default');
-      console.log('✅ [Cron] Busted gold-rates cache tag');
-    } catch (e) {
-      console.warn('⚠️  [Cron] revalidateTag failed:', e);
+    // Only bust the cache when at least one rate value actually changed. Purging
+    // when nothing changed would needlessly regenerate ~250 ISR pages (ISR Writes +
+    // Fast Origin Transfer) for identical output.
+    if (saveResult.changed > 0) {
+      try {
+        revalidateTag('gold-rates', 'max');
+        console.log(`✅ [Cron] Busted gold-rates cache tag (${saveResult.changed} changed)`);
+      } catch (e) {
+        console.warn('⚠️  [Cron] revalidateTag failed:', e);
+      }
+    } else {
+      console.log('⏭️  [Cron] No rate changes — skipping cache revalidation to save cost');
     }
     
     return NextResponse.json({

@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
           // Revalidate tags and paths
           for (const t of tags) {
             try {
-              revalidateTag(t, 'default');
+              revalidateTag(t, 'max');
             } catch (error) {
               console.warn(`Could not revalidate tag ${t}:`, error);
             }
