@@ -59,17 +59,17 @@ export async function POST(request: NextRequest) {
     );
   }
 
-          // Revalidate tags and paths
-          for (const t of tags) {
-            try {
-              // { expire: 0 } = immediate expiry (blocking revalidate on next request).
-              // Required for webhook/external callers so freshness is not deferred to a
-              // lazy background refetch like the 'max' (stale-while-revalidate) profile.
-              revalidateTag(t, { expire: 0 });
-            } catch (error) {
-              console.warn(`Could not revalidate tag ${t}:`, error);
-            }
-          }
+  // Revalidate tags and paths
+  for (const t of tags) {
+    try {
+      // { expire: 0 } = immediate expiry (blocking revalidate on next request).
+      // Required for webhook/external callers so freshness is not deferred to a
+      // lazy background refetch like the 'max' (stale-while-revalidate) profile.
+      revalidateTag(t, { expire: 0 });
+    } catch (error) {
+      console.warn(`Could not revalidate tag ${t}:`, error);
+    }
+  }
 
   // Also revalidate /articles path for trending articles
   if (tags.includes("trending-articles")) {

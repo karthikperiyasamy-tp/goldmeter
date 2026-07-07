@@ -32,13 +32,14 @@ jobs:
         run: npm install
 
       - name: Run news fetcher
+        id: news
         working-directory: scripts
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: npx tsx scrape-news.ts
 
       - name: Trigger Vercel revalidate (news)
-        if: success()
+        if: success() && steps.news.outputs.changed == 'true'
         env:
           SITE_URL: ${{ secrets.SITE_URL || 'https://goldmeter.in' }}
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}

@@ -10,7 +10,25 @@
 
 import * as cheerio from 'cheerio';
 import https from 'https';
+import { appendFileSync } from 'fs';
 import { getDatabase, closeConnection } from './lib/mongodb.js';
+
+/**
+ * Expose whether new articles were added so the GitHub Action can conditionally
+ * revalidate the site cache (avoids regenerating news pages when nothing changed).
+ */
+function emitNewsChanged(changed: boolean): void {
+  const value = changed ? 'true' : 'false';
+  console.log(`::news-changed::${value}`);
+  const outputFile = process.env.GITHUB_OUTPUT;
+  if (outputFile) {
+    try {
+      appendFileSync(outputFile, `changed=${value}\n`);
+    } catch (e) {
+      console.warn('⚠️  [News Scraper] Could not write GITHUB_OUTPUT:', e);
+    }
+  }
+}
 
 // ============================================================================
 // TYPES
@@ -321,6 +339,7 @@ async function main() {
 
     if (articles.length === 0) {
       console.log('ℹ️ [News Scraper] No articles found');
+      emitNewsChanged(false);
       await closeConnection();
       process.exit(0);
     }
@@ -330,6 +349,12 @@ async function main() {
 
     console.log('✅ [News Scraper] News fetch completed');
     console.log(`📊 [News Scraper] Final: ${inserted} new articles saved, ${skipped} skipped`);
+
+    // Only revalidate when at least one new article was actually inserted.
+    emitNewsChanged(inserted > 0);
+    if (inserted === 0) {
+      console.log('⏭️  [News Scraper] No new articles — revalidation should be skipped');
+    }
 
     await closeConnection();
     process.exit(0);

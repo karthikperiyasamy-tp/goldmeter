@@ -46,17 +46,12 @@ jobs:
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
         run: |
           set -e
-          if [ -z "${REVALIDATE_SECRET}" ]; then
-            echo "::warning::REVALIDATE_SECRET not set; skipping revalidate"
-            exit 0
-          fi
-          curl --fail --silent --show-error \
-               --max-time 10 \
+          if [ -z "${REVALIDATE_SECRET}" ]; then echo "::warning::no secret"; exit 0; fi
+          curl --fail --silent --show-error --max-time 10 \
                -X POST "${SITE_URL}/api/revalidate-gold-rates" \
                -H "Content-Type: application/json" \
                -H "x-revalidate-secret: ${REVALIDATE_SECRET}" \
-               -d '{"tags":["gold-rates","news"]}'
-          echo
+               -d '{"tag":"trending-articles"}'
 
       - name: Log completion
         run: echo "✅ Daily article generation completed at $(date -u)"
