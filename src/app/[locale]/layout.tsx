@@ -119,8 +119,8 @@ export default async function LocaleLayout({ children, params }: Props) {
             </Script>
           </>
         )}
-        <script src="https://quge5.com/88/tag.min.js" data-zone="258916" async data-cfasync="false"></script>
-        <script
+        <Script src="https://quge5.com/88/tag.min.js" data-zone="258916" async data-cfasync="false"></Script>
+        <Script
     id="monetag-popup"
     strategy="afterInteractive"
   >
@@ -135,7 +135,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           .appendChild(document.createElement('script'))
       );
     `}
-  </script>
+  </Script>
       </head>
       <body
         className="bg-[#fffdf7] text-charcoal min-h-screen"
