@@ -119,8 +119,6 @@ export default async function LocaleLayout({ children, params }: Props) {
             </Script>
           </>
         )}
-     
-        <Script>(function(s){s.dataset.zone='11275969',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</Script>
         
       </head>
       <body
