@@ -119,6 +119,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             </Script>
           </>
         )}
+        <script src="https://quge5.com/88/tag.min.js" data-zone="258916" async data-cfasync="false"></script>
       </head>
       <body
         className="bg-[#fffdf7] text-charcoal min-h-screen"
