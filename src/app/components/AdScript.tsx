@@ -17,6 +17,15 @@ export default function AdScript() {
     s.type = "text/javascript";
     s.setAttribute("data-cfasync", "false");
     document.body.appendChild(s);
+
+    // Monetag In-Page Push
+    if (!document.getElementById("monetag-inpage")) {
+      const monetag = document.createElement("script");
+      monetag.id = "monetag-inpage";
+      monetag.dataset.zone = "11275969";
+      monetag.src = "https://nap5k.com/tag.min.js";
+      document.body.appendChild(monetag);
+    }
   }, []);
 
   return null;
