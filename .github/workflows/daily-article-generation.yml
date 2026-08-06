@@ -1,9 +1,9 @@
 name: Daily Article Generation
 
 on:
-  schedule:
+  #schedule:
     # 6:00 PM IST = 12:30 PM UTC
-    - cron: '30 12 * * *'
+    #- cron: '30 12 * * *'
   workflow_dispatch:
 
 jobs:
