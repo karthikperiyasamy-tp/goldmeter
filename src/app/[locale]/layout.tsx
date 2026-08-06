@@ -92,6 +92,12 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale}>
       <head>
+        {/* CSP rule allowing video media and ad connections */}
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="media-src 'self' https: blob:; connect-src 'self' https:;"
+        />
+        
         {/* Bidvertiser Verification Code */}
         <div dangerouslySetInnerHTML={{ __html: "<!-- Bidvertiser2106540 -->" }} />
         
