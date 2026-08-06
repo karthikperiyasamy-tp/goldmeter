@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   title: "GoldMeter — Daily India Gold Prices & Tools",
   description:
     "Track live 22K & 24K gold prices across Indian cities, compare trends, and calculate jewellery costs with GoldMeter.",
+  referrer: "no-referrer-when-downgrade",
   metadataBase: new URL("https://goldmeter.in"),
   alternates: {
     canonical: "/",
