@@ -4,7 +4,21 @@ import { useEffect } from "react";
 
 export default function AdScript() {
   useEffect(() => {
-    if (document.getElementById("AdsCoreLoader101206")) return;
+    // Prevent duplicate script insertion in modern React Strict Mode
+    const scriptId = "hilltopads-ad-script";
+    if (document.getElementById(scriptId)) return;
+
+    // Inject the third-party ad script dynamically
+    const s = document.createElement("script");
+    s.id = scriptId;
+    s.src = "//shameful-farm.com/bKXAVcs.djGll/0uYyWPcG/zenmH9mulZFUPlDkdPMTIcLymOoTjUs5iOoT/cjtRNPzIIx5uNZjDAXw-MpQv";
+    s.async = true;
+    s.referrerPolicy = "no-referrer-when-downgrade";
+
+    // Attach to document body or head
+    document.body.appendChild(s);
+    
+    //if (document.getElementById("AdsCoreLoader101206")) return;
 
     // const container = document.createElement("div");
     // container.className = "ads-core-ads";
