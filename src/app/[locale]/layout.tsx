@@ -91,6 +91,9 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale}>
       <head>
+        {/* Bidvertiser Verification Code */}
+        <div dangerouslySetInnerHTML={{ __html: "<!-- Bidvertiser2106540 -->" }} />
+        
         {GA_MEASUREMENT_ID && (
           <>
             <Script
