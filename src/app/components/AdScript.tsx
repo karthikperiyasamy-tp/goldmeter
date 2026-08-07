@@ -17,6 +17,19 @@ export default function AdScript() {
 
     // Attach to document body or head
     document.body.appendChild(s);
+
+    // Prevent duplicate script execution
+    const scriptId2 = "hilltopads-popunder-script";
+    if (document.getElementById(scriptId2)) return;
+
+    // Inject the Popunder script
+    const s2 = document.createElement("script2");
+    s2.id = scriptId2;
+    s2.src = "//windy-imagination.com/c.D_9N6ybQ2Y5C1TSrWbQQ9/N/z/IT5cO_D/QiwH0/Ss0Z3XMOjbkU4MNID/EUzB";
+    s2.async = true;
+    s2.referrerPolicy = "no-referrer-when-downgrade";
+
+    document.body.appendChild(s2);
     
     //if (document.getElementById("AdsCoreLoader101206")) return;
 
