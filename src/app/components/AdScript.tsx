@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 export default function AdScript() {
   useEffect(() => {
-    // 1. First Ad Script (Video / Native)
+    // 1. First HilltopAds Script (Video / Native)
     const scriptId1 = "hilltopads-ad-script";
     if (!document.getElementById(scriptId1)) {
       const s1 = document.createElement("script");
@@ -15,7 +15,7 @@ export default function AdScript() {
       document.body.appendChild(s1);
     }
 
-    // 2. Popunder Script (Zone #7298409)
+    // 2. HilltopAds Popunder Script (Zone #7298409)
     const scriptId2 = "hilltopads-popunder-7298409";
     if (!document.getElementById(scriptId2)) {
       const s2 = document.createElement("script");
@@ -24,6 +24,17 @@ export default function AdScript() {
       s2.async = true;
       s2.referrerPolicy = "no-referrer-when-downgrade";
       document.body.appendChild(s2);
+    }
+
+    // 3. AdsBoosters Script (AdsCoreLoader101206)
+    const scriptId3 = "AdsCoreLoader101206";
+    if (!document.getElementById(scriptId3)) {
+      const s3 = document.createElement("script");
+      s3.id = scriptId3;
+      s3.type = "text/javascript";
+      s3.src = "https://sads.adsboosters.xyz/6b25da1d7c79a47dd21b1764379d56a3.js";
+      s3.setAttribute("data-cfasync", "false");
+      document.body.appendChild(s3);
     }
   }, []);
 
